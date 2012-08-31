@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.CsvToBean;
@@ -23,6 +25,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class GsleClient implements Lims {
+	
+	Logger log = LoggerFactory.getLogger(GsleClient.class);
 	
 	private String key;
 	private String url;
@@ -105,6 +109,8 @@ public class GsleClient implements Lims {
 			if (response.getStatus() != 200) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
+			
+			log.error("** getSample: \n{}", response.getEntity());
 			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
 					.getBytes())));
 			
