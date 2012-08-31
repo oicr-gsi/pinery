@@ -11,12 +11,15 @@
 
     <!-- can replace annotation-config with component scan. -->
 
+    <context:property-placeholder location="classpath:application.properties,classpath:pinery.properties" ignore-unresolvable="true" ignore-resource-not-found="true" />
 
+<!--
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location">
             <value>/WEB-INF/application.properties</value>
         </property>
     </bean>
+-->
 
     <bean id="gsleClient" class="ca.on.oicr.pinery.lims.gsle.GsleClient">
         <property name="key" value="${gsle.key}" />
