@@ -1,6 +1,10 @@
 package ca.on.oicr.ws.dto;
 
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 import ca.on.oicr.pinery.api.Sample;
+import ca.on.oicr.pinery.api.SampleProject;
 
 /**
  * Methods to convert between domain objects and dtos.
@@ -8,6 +12,7 @@ import ca.on.oicr.pinery.api.Sample;
  */
 public final class Dtos {
 
+	private static DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.dateTimeNoMillis();
 
 	public static SampleDto asDto(Sample from) {
 		SampleDto dto = new SampleDto();
@@ -17,35 +22,19 @@ public final class Dtos {
 		return dto;
 	}
 
-//	public static AttributeDto asDto(Attribute from) {
-//		AttributeDto dto = new AttributeDto();
-//		dto.setName(from.getTag());
-//		dto.setValue(from.getValue());
-//		dto.setUnit(from.getUnit());
-//		return dto;
-//	}
-//
-//
-//}
-//
-//	public static FileDto asDto(File file) {
-//		FileDto dto = new FileDto();
-//		dto.setFilePath(file.getFilePath());
-//		if (file.getMetaType() != null) {
-//			dto.setMetaType(file.getMetaType());
+	public static SampleProjectDto asDto(SampleProject from) {
+		SampleProjectDto dto = new SampleProjectDto();
+		dto.setName(from.getName());
+		dto.setCount(from.getCount());
+//		if(from.getArchivedCount() != null) {
+//			dto.setArchivedCount(from.getArchivedCount());
 //		}
-//		if (file.getDescription() != null) {
-//			dto.setDescription(file.getDescription());
-//		}
-//		if (file.getMd5sum() != null) {
-//			dto.setMd5sum(file.getMd5sum());
-//		}
-//		if (file.getSize() != null) {
-//			dto.setSize(file.getSize());
-//		}
-//		if (file.getType() != null) {
-//			dto.setType(file.getType());
-//		}
-//		return dto;
-//	}
+		if (from.getEarliest() != null) {
+			dto.setEarliest(dateTimeFormatter.print(from.getEarliest().getTime()));
+		}
+		if (from.getLatest() != null) {
+			dto.setLatest(dateTimeFormatter.print(from.getLatest().getTime()));
+		}
+		return dto;
+	}
 }

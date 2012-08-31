@@ -1,5 +1,7 @@
 package ca.on.oicr.pinery.ws;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -13,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ca.on.oicr.pinery.api.Sample;
+import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.service.SampleService;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.SampleDto;
+import ca.on.oicr.ws.dto.SampleProjectDto;
 
 import com.google.common.collect.Lists;
 
@@ -33,7 +37,6 @@ public class SampleResource {
 	@Produces({ "application/json" })
 	@Path("/samples")
 	public List<SampleDto> getFiles() {
-		System.out.println("Hello");
 		List<Sample> samples = sampleService.getSamples();
 		List<SampleDto> result = Lists.newArrayList();
 		for(Sample sample : samples) {
@@ -70,6 +73,25 @@ public class SampleResource {
 //		final URI uri = uriInfo.getAbsolutePathBuilder().build();
 //		builder.setUrl(uri.toString());
 //		return builder.build();
+	}
+	
+	@GET
+	@Produces({ "application/json" })
+	@Path("/samples/projects")
+	public List<SampleProjectDto> getSampleProjects() {
+		List<SampleProject> projects = sampleService.getSampleProjects();
+		List<SampleProjectDto> result = Lists.newArrayList();
+		for(SampleProject sampleProject : projects) {
+			result.add(Dtos.asDto(sampleProject));
+		}
+		Collections.sort(result, new Comparator<SampleProjectDto>() {
+
+			@Override
+			public int compare(SampleProjectDto o1, SampleProjectDto o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		return result;
 	}
 	
 }

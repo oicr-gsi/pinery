@@ -17,5 +17,7 @@ public interface Lims {
 	public List<Sample> getSamples();
 	
 	public Sample getSample(Integer id);
+	
+	public List<SampleProject> getSampleProjects();
 
 }

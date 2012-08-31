@@ -28,6 +28,9 @@
         <guava.version>11.0.2</guava.version>
         <liquibase.version>2.0.5</liquibase.version>
         <mysql.version>5.1.21</mysql.version>
+        <slf4j.version>1.6.6</slf4j.version>
+        <log4j.version>1.2.16</log4j.version>
+        <joda-time.version>2.1</joda-time.version>
         <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>7.0.0.pre5</jetty-maven-plugin.version>
     </properties>
@@ -57,6 +60,26 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
+            </dependency>
             <dependency>
                 <groupId>ca.on.oicr</groupId>
                 <artifactId>pinery-api</artifactId>

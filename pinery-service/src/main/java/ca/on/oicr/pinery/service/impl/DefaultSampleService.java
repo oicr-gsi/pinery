@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Sample;
+import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.service.SampleService;
 
 @Service
@@ -25,6 +26,8 @@ public class DefaultSampleService implements SampleService {
 		return lims.getSample(id);
 	}
 
-
-
+	@Override
+	public List<SampleProject> getSampleProjects() {
+		return lims.getSampleProjects();
+	}
 }

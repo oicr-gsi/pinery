@@ -12,10 +12,12 @@ import org.jboss.resteasy.client.ClientResponse;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.CsvToBean;
-import au.com.bytecode.opencsv.bean.HeaderColumnNameMappingStrategy;
+import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Sample;
-import ca.on.oicr.pinery.lims.DefaultSample;
+import ca.on.oicr.pinery.api.SampleProject;
+import ca.on.oicr.pinery.lims.DefaultSampleProject;
+import ca.on.oicr.pinery.lims.GsleSample;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -55,14 +57,8 @@ public class GsleClient implements Lims {
 			}
 			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
 					.getBytes())));
-			
 			return getSamples(br);
 
-//			CSVReader reader = new CSVReader(br, '\t');
-//			String[] nextLine;
-//			while ((nextLine = reader.readNext()) != null) {
-//				System.out.println(nextLine[0] + " " + nextLine[2] + " " + nextLine[10]);
-//			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -71,20 +67,29 @@ public class GsleClient implements Lims {
 	
 	List<Sample> getSamples(Reader reader) {
 		CSVReader csvReader = new CSVReader(reader, '\t');
-//		HeaderColumnNameTranslateMappingStrategy<DefaultSample> strat = new HeaderColumnNameTranslateMappingStrategy<DefaultSample>();
-		HeaderColumnNameMappingStrategy<DefaultSample> strat = new HeaderColumnNameMappingStrategy<DefaultSample>();
-		strat.setType(DefaultSample.class);
+		HeaderColumnNameTranslateMappingStrategy<GsleSample> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSample>();
+		strat.setType(GsleSample.class);
 		Map<String, String> map = Maps.newHashMap();
-		map.put("template_id", "id");
+		map.put("template_id", "idString");
 		map.put("name", "name");
-//		strat.setColumnMapping(map);
-//		strat.
+		map.put("description", "description");
+		map.put("created_at", "createdString");
+		map.put("modified_at", "modifiedString");
+		map.put("is_archived", "archivedString");
+		strat.setColumnMapping(map);
 		
-		CsvToBean<DefaultSample> csvToBean = new CsvToBean<DefaultSample>();
-		List<DefaultSample> defaultSamples = csvToBean.parse(strat, csvReader);
+		CsvToBean<GsleSample> csvToBean = new CsvToBean<GsleSample>();
+		List<GsleSample> defaultSamples = csvToBean.parse(strat, csvReader);
 		List<Sample> samples = Lists.newArrayList();
 		for(Sample defaultSample : defaultSamples) {
 			samples.add(defaultSample);
+//			System.out.println("*** " + defaultSample.getName() + " [" + defaultSample.getCreated() + "] [" + defaultSample.getModified() + "] " + defaultSample.getDescription() + " isArchived[" + defaultSample.getArchived() + "]");
+		}
+		System.out.println("---- Missing dates ----");
+		for( Sample foo : samples) {
+			if(foo.getModified() == null || foo.getCreated() == null) {
+				System.out.println("*** " + foo.getName() + " [" + foo.getCreated() + "] [" + foo.getModified() + "] " + foo.getDescription() + " isArchived[" + foo.getArchived() + "]");
+			}
 		}
 		return samples;
 	}
@@ -111,6 +116,39 @@ public class GsleClient implements Lims {
 			System.out.println(e);
 		}
 		return null;
+	}
+
+	@Override
+	public List<SampleProject> getSampleProjects() {
+		List<Sample> samples = getSamples();
+		Map<String, SampleProject> projectMap = Maps.newHashMap();
+		for(Sample sample : samples) {
+			SampleProject project = projectMap.get(sample.getProject());
+			if(project == null) {
+				project = new  DefaultSampleProject();
+				project.setName(sample.getProject());
+				project.setCount(1);
+				project.setEarliest(sample.getCreated());
+				project.setLatest(sample.getModified());
+				if(sample.getArchived()) {
+					project.setArchivedCount(1);
+				}
+				projectMap.put(sample.getProject(), project);
+			} else {
+				project.setCount(project.getCount() + 1);
+				if(sample.getArchived()) { project.setArchivedCount(project.getArchivedCount() + 1); }
+				if(sample.getCreated() != null && project.getEarliest() != null && sample.getCreated().before(project.getEarliest())) {
+					project.setEarliest(sample.getCreated());
+				}
+				if(sample.getModified() != null && project.getLatest() != null && sample.getModified().after(project.getLatest())) {
+					project.setLatest(sample.getModified());
+				}
+			}
+		}
+		
+		
+		List<SampleProject> result = Lists.newArrayList(projectMap.values());
+		return result;
 	}
 
 }

@@ -24,8 +24,8 @@ public class GsleClientTest {
 	@Ignore
 	@Test
 	public void testGetTemplates() throws Exception {
-		List<Sample> samples = sut. getSamples();
-		for(Sample sample: samples) {
+		List<Sample> samples = sut.getSamples();
+		for (Sample sample : samples) {
 			System.out.println(sample.getDescription() + "    " + sample.getId());
 		}
 		assertThat(samples.size(), is(22737));
@@ -33,10 +33,9 @@ public class GsleClientTest {
 
 	@Test
 	public void testCsvToSample() throws Exception {
-		String s = "template_id\tname\tdescription\n" + "123456\tPCSI_01\tFirst PCSI File\n" + "09878\tMMPC_02\tSecond PCSI File";
-//		String s = "123456\tPCSI_01\tFirst PCSI File\n" + "09878\tMMPC_02\tSecond PCSI File";
+		String s = "template_id\tname\tdescription\n" + "123456\tPCSI_01\tFirst PCSI File\n"
+				+ "09878\tMMPC_02\tSecond PCSI File";
 		List<Sample> samples = sut.getSamples(new StringReader(s));
 		assertThat(samples.size(), is(2));
 	}
-
 }
