@@ -100,10 +100,12 @@ public class GsleClient implements Lims {
 
 	@Override
 	public Sample getSample(Integer id) {
+		log.error("Inside getSample with id [{}]", id);
 		try {
 			ClientRequest request = new ClientRequest(
 					"http://" + url + "/SQLApi?key=" + key + ";id=15888;header=1;bind=" + id);
 			request.accept("text/plain");
+			log.error("The uri is [{}].", request.getUri());
 			ClientResponse<String> response = request.get(String.class);
 
 			if (response.getStatus() != 200) {
