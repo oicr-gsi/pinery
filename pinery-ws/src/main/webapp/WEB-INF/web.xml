@@ -24,6 +24,10 @@
        <param-value>/resteasy</param-value>
     </context-param>
     -->
+    
+   <listener>
+      <listener-class>ca.on.oicr.pinery.ws.LogListener</listener-class>
+   </listener>
 
     <listener>
         <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
@@ -32,7 +36,7 @@
    <listener>
       <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
    </listener>
-    
+   
     <servlet>
         <servlet-name>Resteasy</servlet-name>
         <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
