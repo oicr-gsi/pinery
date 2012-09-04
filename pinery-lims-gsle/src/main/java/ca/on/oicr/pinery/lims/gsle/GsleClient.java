@@ -50,21 +50,25 @@ public class GsleClient implements Lims {
 
 	@Override
 	public List<Sample> getSamples() {
+		log.error("Inside getSamples");
 		try {
 			ClientRequest request = new ClientRequest(
 					"http://" + url + "/SQLApi?key=" + key + ";id=15887;header=1");
+			log.error("The uri is [{}].", request.getUri());
 			request.accept("text/plain");
 			ClientResponse<String> response = request.get(String.class);
 
 			if (response.getStatus() != 200) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
+			log.error("** getSample: \n{}", response.getEntity());
 			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
 					.getBytes())));
 			return getSamples(br);
 
 		} catch (Exception e) {
 			System.out.println(e);
+			e.printStackTrace(System.out);
 		}
 		return null;
 	}
