@@ -26,6 +26,8 @@ public class GsleClient implements Lims {
 	
 //	Logger log = LoggerFactory.getLogger(GsleClient.class);
 	
+	public final static String UTF8 = "UTF8";
+	
 	private String key;
 	private String url;
 	
@@ -61,12 +63,14 @@ public class GsleClient implements Lims {
 			}
 //			log.error("** getSample: \n{}", response.getEntity());
 			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes())));
+					.getBytes(UTF8))));
 			return getSamples(br);
 
 		} catch (Exception e) {
 			System.out.println(e);
 			e.printStackTrace(System.out);
+		} finally {
+			
 		}
 		return null;
 	}
@@ -116,7 +120,7 @@ public class GsleClient implements Lims {
 			
 //			log.error("** getSample: \n{}", response.getEntity());
 			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes())));
+					.getBytes(UTF8))));
 			
 			List<Sample> samples = getSamples(br);
 			if(samples.size() == 1) {
