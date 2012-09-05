@@ -112,19 +112,19 @@ public class DefaultSample implements Sample {
 	}
 	@Override
 	public Date getCreated() {
-		return new Date(created.getTime());
+		return created != null ? new Date(created.getTime()) : null;
 	}
 	@Override
 	public void setCreated(Date created) {
-		this.created = new Date(created.getTime());
+		this.created = created != null ? new Date(created.getTime()) : null;
 	}
 	@Override
 	public Date getModified() {
-		return new Date(modified.getTime());
+		return modified != null ? new Date(modified.getTime()) : null;
 	}
 	@Override
 	public void setModified(Date modified) {
-		this.modified = new Date(modified.getTime());
+		this.modified = modified != null ? new Date(modified.getTime()) : null;
 	}
 
 
