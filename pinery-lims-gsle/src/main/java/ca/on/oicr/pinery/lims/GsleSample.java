@@ -6,15 +6,12 @@ import java.util.regex.Pattern;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GsleSample extends DefaultSample {
 
-//	Logger logger = LoggerFactory.getLogger(GsleSample.class);
-	
-	private String idString;
-	private String createdString;
-	private String modifiedString;
-	private String archivedString;
+	private final Logger logger = LoggerFactory.getLogger(GsleSample.class);
 
 	public static final String NONE = "NONE";
 
@@ -39,7 +36,7 @@ public class GsleSample extends DefaultSample {
 				DateTime dateTime = dateTimeFormatter.parseDateTime(created);
 				setCreated(dateTime.toDate());
 			} catch (IllegalArgumentException e) {
-//				logger.error("Error converting created [{}] date format. {}", created, e );
+				logger.error("Error converting created [{}] date format. {}", created, e );
 			}
 		}
 	}
@@ -50,7 +47,7 @@ public class GsleSample extends DefaultSample {
 			DateTime dateTime = dateTimeFormatter.parseDateTime(modified);
 			setModified(dateTime.toDate());
 			} catch(IllegalArgumentException e) {
-//				logger.error("Error converting modified [{}] date format. {}", modified, e );
+				logger.error("Error converting modified [{}] date format. {}", modified, e );
 			}
 		}
 	}
