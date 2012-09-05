@@ -63,7 +63,7 @@ public class GsleClient implements Lims {
 			}
 //			log.error("** getSample: \n{}", response.getEntity());
 			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes(UTF8))));
+					.getBytes(UTF8)),UTF8));
 			return getSamples(br);
 
 		} catch (Exception e) {
@@ -120,7 +120,7 @@ public class GsleClient implements Lims {
 			
 //			log.error("** getSample: \n{}", response.getEntity());
 			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes(UTF8))));
+					.getBytes(UTF8)),UTF8));
 			
 			List<Sample> samples = getSamples(br);
 			if(samples.size() == 1) {
