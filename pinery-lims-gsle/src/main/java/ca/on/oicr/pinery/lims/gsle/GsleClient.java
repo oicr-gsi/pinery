@@ -69,8 +69,6 @@ public class GsleClient implements Lims {
 		} catch (Exception e) {
 			System.out.println(e);
 			e.printStackTrace(System.out);
-		} finally {
-			
 		}
 		return null;
 	}
