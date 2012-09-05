@@ -62,7 +62,7 @@ public class GsleSample extends DefaultSample {
 	}
 
 	public void setArchivedString(String archivedString) {
-		if (archivedString != null && archivedString.equals(1)) {
+		if (archivedString != null && archivedString.equals("1")) {
 			setArchived(Boolean.TRUE);
 		}
 		setArchived(Boolean.FALSE);
