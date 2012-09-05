@@ -9,8 +9,6 @@ import java.util.Map;
 
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.CsvToBean;
@@ -26,7 +24,7 @@ import com.google.common.collect.Maps;
 
 public class GsleClient implements Lims {
 	
-	Logger log = LoggerFactory.getLogger(GsleClient.class);
+//	Logger log = LoggerFactory.getLogger(GsleClient.class);
 	
 	private String key;
 	private String url;
@@ -50,18 +48,18 @@ public class GsleClient implements Lims {
 
 	@Override
 	public List<Sample> getSamples() {
-		log.error("Inside getSamples");
+//		log.error("Inside getSamples");
 		try {
 			ClientRequest request = new ClientRequest(
 					"http://" + url + "/SQLApi?key=" + key + ";id=15887;header=1");
-			log.error("The uri is [{}].", request.getUri());
+//			log.error("The uri is [{}].", request.getUri());
 			request.accept("text/plain");
 			ClientResponse<String> response = request.get(String.class);
 
 			if (response.getStatus() != 200) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
-			log.error("** getSample: \n{}", response.getEntity());
+//			log.error("** getSample: \n{}", response.getEntity());
 			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
 					.getBytes())));
 			return getSamples(br);
@@ -104,19 +102,19 @@ public class GsleClient implements Lims {
 
 	@Override
 	public Sample getSample(Integer id) {
-		log.error("Inside getSample with id [{}]", id);
+//		log.error("Inside getSample with id [{}]", id);
 		try {
 			ClientRequest request = new ClientRequest(
 					"http://" + url + "/SQLApi?key=" + key + ";id=15888;header=1;bind=" + id);
 			request.accept("text/plain");
-			log.error("The uri is [{}].", request.getUri());
+//			log.error("The uri is [{}].", request.getUri());
 			ClientResponse<String> response = request.get(String.class);
 
 			if (response.getStatus() != 200) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
 			
-			log.error("** getSample: \n{}", response.getEntity());
+//			log.error("** getSample: \n{}", response.getEntity());
 			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
 					.getBytes())));
 			
