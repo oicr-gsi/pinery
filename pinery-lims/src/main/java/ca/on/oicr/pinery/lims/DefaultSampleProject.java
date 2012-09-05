@@ -34,22 +34,22 @@ public class DefaultSampleProject implements SampleProject {
 
 	@Override
 	public Date getEarliest() {
-		return earliest;
+		return new Date(earliest.getTime());
 	}
 
 	@Override
 	public void setEarliest(Date earliest) {
-		this.earliest = earliest;
+		this.earliest = new Date(earliest.getTime());
 	}
 
 	@Override
 	public Date getLatest() {
-		return latest;
+		return new Date(latest.getTime());
 	}
 
 	@Override
 	public void setLatest(Date latest) {
-		this.latest = latest;
+		this.latest = new Date(latest.getTime());
 	}
 
 	@Override
