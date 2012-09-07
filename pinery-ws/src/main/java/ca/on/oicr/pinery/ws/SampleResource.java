@@ -3,12 +3,21 @@ package ca.on.oicr.pinery.ws;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
+import org.jboss.resteasy.spi.BadRequestException;
+import org.jboss.resteasy.spi.NotFoundException;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +34,8 @@ import com.google.common.collect.Lists;
 @Path("/")
 public class SampleResource {
 
+	private static final Logger log = LoggerFactory.getLogger(SampleResource.class);
+
 	// Will use this later to add urls to returned resources.
 	// @Context
 	// private UriInfo uriInfo;
@@ -37,6 +48,52 @@ public class SampleResource {
 	@Path("/samples")
 	public List<SampleDto> getFiles() {
 		List<Sample> samples = sampleService.getSamples();
+		List<SampleDto> result = Lists.newArrayList();
+		for (Sample sample : samples) {
+			result.add(Dtos.asDto(sample));
+		}
+		// List<FsFile> fsFiles = fsFileService.getFsFiles();
+		// if (fsFiles.isEmpty()) {
+		// throw new NotFoundException("", Response.noContent()
+		// .status(Status.NOT_FOUND).build());
+		// }
+		// List<FsFileDto> result = Lists.newArrayList();
+		// for (FsFile fsFile : fsFiles) {
+		// FsFileDto.Builder builder = Dtos.asDto(fsFile);
+		// final URI uri = uriInfo.getBaseUriBuilder().path("file")
+		// .path(fsFile.getFsFileId().toString()).build();
+		// builder.setUrl(uri.toString());
+		// result.add(builder.build());
+		// }
+		return result;
+	}
+
+	@GET
+	@Produces({ "application/json" })
+	@Path("/samples2")
+	public List<SampleDto> getSamples(@QueryParam("archived") Boolean archived,
+			@QueryParam("project") Set<String> projects, @QueryParam("type") Set<String> types,
+			@QueryParam("before") String before, @QueryParam("after") String after) {
+		log.debug("archived = [{}].", archived);
+		for (String type : types) {
+			log.debug("type={}", type);
+		}
+		DateTime beforeDateTime = null;
+		DateTime afterDateTime = null;
+		try {
+			if (before != null && !before.equals("")) {
+				beforeDateTime = DateTime.parse(before);
+			}
+			if (after != null && !after.equals("")) {
+				afterDateTime = DateTime.parse(after);
+			}
+		} catch (IllegalArgumentException e) {
+			throw new BadRequestException("Invalid date format in parameter [before] or [after]. Use ISO8601 formatting. " + e.getMessage(), e);
+		}
+		List<Sample> samples = sampleService.getSamples2(archived, projects, types, beforeDateTime, afterDateTime);
+		if(samples.isEmpty()) {
+			throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
+		}
 		List<SampleDto> result = Lists.newArrayList();
 		for (Sample sample : samples) {
 			result.add(Dtos.asDto(sample));

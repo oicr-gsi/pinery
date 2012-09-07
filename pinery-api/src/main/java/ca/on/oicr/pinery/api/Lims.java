@@ -1,6 +1,9 @@
 package ca.on.oicr.pinery.api;
 
 import java.util.List;
+import java.util.Set;
+
+import org.joda.time.DateTime;
 
 public interface Lims {
 	
@@ -19,5 +22,7 @@ public interface Lims {
 	public Sample getSample(Integer id);
 	
 	public List<SampleProject> getSampleProjects();
+	
+	public List<Sample> getSamples2(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after);
 
 }
