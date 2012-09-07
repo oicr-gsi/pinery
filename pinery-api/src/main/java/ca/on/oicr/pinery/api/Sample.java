@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.api;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public interface Sample {
 
@@ -23,8 +24,8 @@ public interface Sample {
 	public void setTissueType(String tissueType);
 	public String getProject();
 	public void setProject(String project);
-	public List<Attribute> getAttributes();
-	public void setAttributes(List<Attribute> attributes);
+	public Set<Attribute> getAttributes();
+	public void setAttributes(Set<Attribute> attributes);
 	public Boolean getArchived();
 	public void setArchived(Boolean archived);
 	public Date getCreated();

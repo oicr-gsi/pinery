@@ -1,5 +1,7 @@
 package ca.on.oicr.ws.dto;
 
+import java.util.Set;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -26,6 +28,7 @@ public class SampleDto {
 	private PreparationKitDto preparationKit;
 	private String projectName;
 	private String sampleType;
+	private Set<AttributeDto> attributes;
 
 	public String getUrl() {
 		return url;
@@ -146,6 +149,14 @@ public class SampleDto {
 
 	public void setSampleType(String sampleType) {
 		this.sampleType = sampleType;
+	}
+
+	public Set<AttributeDto> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(Set<AttributeDto> attributes) {
+		this.attributes = attributes;
 	}
 
 

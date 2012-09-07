@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.lims;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.PreparationKit;
@@ -18,7 +19,7 @@ public class DefaultSample implements Sample {
 	private String sampleType;
 	private String tissueType;
 	private String project;
-	private List<Attribute> attributes;
+	private Set<Attribute> attributes;
 	private Boolean archived;
 	private Date created;
 	private Date modified;
@@ -136,12 +137,12 @@ public class DefaultSample implements Sample {
 	}
 
 	@Override
-	public List<Attribute> getAttributes() {
+	public Set<Attribute> getAttributes() {
 		return attributes;
 	}
 
 	@Override
-	public void setAttributes(List<Attribute> attributes) {
+	public void setAttributes(Set<Attribute> attributes) {
 		this.attributes = attributes;
 	}
 

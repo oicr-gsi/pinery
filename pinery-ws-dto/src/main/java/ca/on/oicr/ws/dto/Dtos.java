@@ -1,11 +1,16 @@
 package ca.on.oicr.ws.dto;
 
+import java.util.Set;
+
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
+import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.PreparationKit;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
+
+import com.google.common.collect.Sets;
 
 /**
  * Methods to convert between domain objects and dtos.
@@ -50,6 +55,30 @@ public final class Dtos {
 		}
 		if(from.getSampleType() != null) {
 			dto.setSampleType(from.getSampleType());
+		}
+		if(from.getAttributes() != null && !from.getAttributes().isEmpty()) {
+			dto.setAttributes(asDto(from.getAttributes()));
+		}
+		return dto;
+	}
+	
+	public static Set<AttributeDto> asDto(Set<Attribute> from) {
+		Set<AttributeDto> dtoSet = Sets.newHashSet();
+		for(Attribute attribute : from) {
+			dtoSet.add(asDto(attribute));
+		}
+		return dtoSet;
+	}
+	
+	public static AttributeDto asDto(Attribute from) {
+		AttributeDto dto = new AttributeDto();
+//		if(from.getId() != null) {
+//		}
+		if(from.getName() != null) {
+			dto.setName(from.getName());
+		}
+		if(from.getValue() != null) {
+			dto.setValue(from.getValue());
 		}
 		return dto;
 	}

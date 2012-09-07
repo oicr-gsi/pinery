@@ -19,14 +19,17 @@ import org.slf4j.LoggerFactory;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
+import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
+import ca.on.oicr.pinery.lims.GsleAttribute;
 import ca.on.oicr.pinery.lims.GsleSample;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class GsleClient implements Lims {
 
@@ -51,32 +54,89 @@ public class GsleClient implements Lims {
 		return null;
 	}
 
-//	@Override
-//	public List<Sample> getSamples() {
-//		// log.error("Inside getSamples");
-//		try {
-//			ClientRequest request = new ClientRequest("http://" + url + "/SQLApi?key=" + key + ";id=15887;header=1");
-//			// log.error("The uri is [{}].", request.getUri());
-//			request.accept("text/plain");
-//			ClientResponse<String> response = request.get(String.class);
-//
-//			if (response.getStatus() != 200) {
-//				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-//			}
-//			// log.error("** getSample: \n{}", response.getEntity());
-//			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-//					.getBytes(UTF8)), UTF8));
-//			return getSamples(br);
-//
-//		} catch (Exception e) {
-//			System.out.println(e);
-//			e.printStackTrace(System.out);
-//		}
-//		return null;
-//	}
-	
+	// @Override
+	// public List<Sample> getSamples() {
+	// // log.error("Inside getSamples");
+	// try {
+	// ClientRequest request = new ClientRequest("http://" + url +
+	// "/SQLApi?key=" + key + ";id=15887;header=1");
+	// // log.error("The uri is [{}].", request.getUri());
+	// request.accept("text/plain");
+	// ClientResponse<String> response = request.get(String.class);
+	//
+	// if (response.getStatus() != 200) {
+	// throw new RuntimeException("Failed : HTTP error code : " +
+	// response.getStatus());
+	// }
+	// // log.error("** getSample: \n{}", response.getEntity());
+	// BufferedReader br = new BufferedReader(new InputStreamReader(new
+	// ByteArrayInputStream(response.getEntity()
+	// .getBytes(UTF8)), UTF8));
+	// return getSamples(br);
+	//
+	// } catch (Exception e) {
+	// System.out.println(e);
+	// e.printStackTrace(System.out);
+	// }
+	// return null;
+	// }
+
 	private List<Sample> getSamples() {
 		return getSamples(null, null, null, null, null);
+	}
+
+	private Map<Integer, Set<Attribute>> getAttributes() {
+		Map<Integer, Set<Attribute>> result = Maps.newHashMap();
+		
+		StringBuilder url = getBaseUrl("74401");
+		try {
+			ClientRequest request = new ClientRequest(url.toString());
+			request.accept("text/plain");
+			ClientResponse<String> response = request.get(String.class);
+
+			if (response.getStatus() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			}
+			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
+					.getBytes(UTF8)), UTF8));
+			result = getAttributes(br);
+
+		} catch (Exception e) {
+			System.out.println(e);
+			e.printStackTrace(System.out);
+		}
+		return result;
+	}
+
+	private Map<Integer, Set<Attribute>> getAttributes(Reader reader) {
+		Map<Integer, Set<Attribute>> result = Maps.newHashMap();
+
+		CSVReader csvReader = new CSVReader(reader, '\t');
+		HeaderColumnNameTranslateMappingStrategy<GsleAttribute> strat = new HeaderColumnNameTranslateMappingStrategy<GsleAttribute>();
+		strat.setType(GsleAttribute.class);
+		Map<String, String> map = Maps.newHashMap();
+		map.put("template_id", "idString");
+		map.put("display_label", "name");
+		map.put("value", "value");
+		strat.setColumnMapping(map);
+
+		CsvToBean<GsleAttribute> csvToBean = new CsvToBean<GsleAttribute>();
+		List<GsleAttribute> defaultAttributes = csvToBean.parse(strat, csvReader);
+		for (Attribute attribute : defaultAttributes) {
+			if (!result.containsKey(attribute.getId())) {
+				result.put(attribute.getId(), Sets.<Attribute> newHashSet());
+			}
+			result.get(attribute.getId()).add(attribute);
+		}
+		return result;
+	}
+	
+	private List<Sample> addAttributes(List<Sample> samples) {
+		Map<Integer, Set<Attribute>> attributes = getAttributes();
+		for(Sample sample : samples) {
+			sample.setAttributes(attributes.get(sample.getId()));
+		}
+		return samples;
 	}
 
 	@Override
@@ -97,7 +157,7 @@ public class GsleClient implements Lims {
 		} else {
 			sb.append(";bind=%");
 		}
-		if(types != null && !types.isEmpty()) {
+		if (types != null && !types.isEmpty()) {
 			sb.append(getSetSqlString(types, null));
 		} else {
 			sb.append(";bind=%");
@@ -137,10 +197,10 @@ public class GsleClient implements Lims {
 		map.put("created_at", "createdString");
 		map.put("modified_at", "modifiedString");
 		map.put("is_archived", "archivedString");
-		map.put("tube_barcode","tubeBarcode");
-		map.put("volume","volumeString");
-		map.put("concentration","concentrationString");
-		map.put("storage_location","storageLocation");
+		map.put("tube_barcode", "tubeBarcode");
+		map.put("volume", "volumeString");
+		map.put("concentration", "concentrationString");
+		map.put("storage_location", "storageLocation");
 		map.put("prep_kit_name", "prepKitName");
 		map.put("prep_kit_description", "prepKitDescription");
 		strat.setColumnMapping(map);
@@ -155,6 +215,7 @@ public class GsleClient implements Lims {
 			// + "] " + defaultSample.getDescription() + " isArchived[" +
 			// defaultSample.getArchived() + "]");
 		}
+		samples = addAttributes(samples);
 		System.out.println("---- Missing dates ----");
 		for (Sample foo : samples) {
 			if (foo.getModified() == null || foo.getCreated() == null) {
@@ -171,7 +232,7 @@ public class GsleClient implements Lims {
 		try {
 			ClientRequest request = new ClientRequest("http://" + url + "/SQLApi?key=" + key
 					+ ";id=74399;header=1;bind=" + id);
-//			+ ";id=15888;header=1;bind=" + id);
+			// + ";id=15888;header=1;bind=" + id);
 			request.accept("text/plain");
 			// log.error("The uri is [{}].", request.getUri());
 			ClientResponse<String> response = request.get(String.class);
