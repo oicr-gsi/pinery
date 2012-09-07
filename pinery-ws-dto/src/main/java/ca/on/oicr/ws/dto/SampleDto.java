@@ -1,13 +1,13 @@
 package ca.on.oicr.ws.dto;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-@XmlRootElement(name = "Sample")
+@XmlRootElement(name = "sample")
 @JsonAutoDetect
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class SampleDto {
@@ -15,20 +15,17 @@ public class SampleDto {
 	private String url;
 	private String name;
 	private String description;
-	@JsonProperty("tube_barcode")
 	private String tubeBarcode;
 	private Float volume;
 	private Float concentration;
-	@JsonProperty("storage_location")
 	private String storageLocation;
-	@JsonProperty("created_date")
 	private String createdDate;
-	@JsonProperty("modified_date")
 	private String modifiedDate;
 	private Integer id;
 	private Boolean archived;
-	@JsonProperty("preparation_kit")
 	private PreparationKitDto preparationKit;
+	private String projectName;
+	private String sampleType;
 
 	public String getUrl() {
 		return url;
@@ -62,6 +59,7 @@ public class SampleDto {
 		this.id = id;
 	}
 
+	@XmlElement(name="tube_barcode")
 	public String getTubeBarcode() {
 		return tubeBarcode;
 	}
@@ -72,6 +70,7 @@ public class SampleDto {
 
 
 
+	@XmlElement(name="storage_location")
 	public String getStorageLocation() {
 		return storageLocation;
 	}
@@ -80,6 +79,7 @@ public class SampleDto {
 		this.storageLocation = storageLocation;
 	}
 
+	@XmlElement(name="creation_date")
 	public String getCreatedDate() {
 		return createdDate;
 	}
@@ -88,6 +88,7 @@ public class SampleDto {
 		this.createdDate = createdDate;
 	}
 
+	@XmlElement(name="modified_date")
 	public String getModifiedDate() {
 		return modifiedDate;
 	}
@@ -104,6 +105,7 @@ public class SampleDto {
 		this.archived = archived;
 	}
 
+	@XmlElement(name="preparation_kit")
 	public PreparationKitDto getPreparationKit() {
 		return preparationKit;
 	}
@@ -127,5 +129,25 @@ public class SampleDto {
 	public void setConcentration(Float concentration) {
 		this.concentration = concentration;
 	}
+
+	@XmlElement(name="project_name")
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	@XmlElement(name="sample_type")
+	public String getSampleType() {
+		return sampleType;
+	}
+
+	public void setSampleType(String sampleType) {
+		this.sampleType = sampleType;
+	}
+
+
 
 }

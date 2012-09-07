@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class GsleSample extends DefaultSample {
 
-	private static final Logger logger = LoggerFactory.getLogger(GsleSample.class);
+	private static final Logger log = LoggerFactory.getLogger(GsleSample.class);
 
 	public static final String NONE = "NONE";
 
@@ -36,7 +36,7 @@ public class GsleSample extends DefaultSample {
 				DateTime dateTime = dateTimeFormatter.parseDateTime(created);
 				setCreated(dateTime.toDate());
 			} catch (IllegalArgumentException e) {
-				logger.error("Error converting created [{}] date format. {}", created, e);
+				log.error("Error converting created [{}] date format. {}", created, e);
 			}
 		}
 	}
@@ -47,7 +47,7 @@ public class GsleSample extends DefaultSample {
 				DateTime dateTime = dateTimeFormatter.parseDateTime(modified);
 				setModified(dateTime.toDate());
 			} catch (IllegalArgumentException e) {
-				logger.error("Error converting modified [{}] date format. {}", modified, e);
+				log.error("Error converting modified [{}] date format. {}", modified, e);
 			}
 		}
 	}
@@ -74,18 +74,25 @@ public class GsleSample extends DefaultSample {
 		if (description != null && !description.equals(""))
 			getOrCreatePreparationKit().setDescription(description);
 	}
-	
+
 	public void setVolumeString(String volumeString) {
-		if(volumeString != null && !volumeString.equals("")) {
-			setVolume(Float.parseFloat(volumeString));
+		if (volumeString != null && !volumeString.equals("")) {
+			try {
+				setVolume(Float.parseFloat(volumeString));
+			} catch (NumberFormatException e) {
+				log.error("The volume [{}] is not a valid float value. {}", volumeString, e);
+			}
 		}
 	}
-	
+
 	public void setConcentrationString(String concentrationString) {
-		if(concentrationString != null && !concentrationString.equals("")) {
+		if (concentrationString != null && !concentrationString.equals("")) {
+			try {
 			setConcentration(Float.parseFloat(concentrationString));
+			} catch(NumberFormatException e) {
+				log.error("The concentration [{}] is not a valid float value. {}", concentrationString, e);
+			}
 		}
 	}
-	
-	
+
 }

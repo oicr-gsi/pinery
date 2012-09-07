@@ -45,6 +45,12 @@ public final class Dtos {
 		if(from.getPreparationKit() != null) {
 			dto.setPreparationKit(asDto(from.getPreparationKit()));
 		}
+		if(from.getProject() != null) {
+			dto.setProjectName(from.getProject());
+		}
+		if(from.getSampleType() != null) {
+			dto.setSampleType(from.getSampleType());
+		}
 		return dto;
 	}
 	

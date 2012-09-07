@@ -7,7 +7,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-@XmlRootElement
+@XmlRootElement(name = "attribute")
 @JsonAutoDetect
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class AttributeDto {

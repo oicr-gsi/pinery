@@ -7,7 +7,7 @@ import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-@XmlRootElement(name = "SampleProject")
+@XmlRootElement(name = "sample_project")
 @JsonAutoDetect
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class SampleProjectDto {
@@ -52,7 +52,7 @@ public class SampleProjectDto {
 		this.latest = latest;
 	}
 
-	@XmlElement(name="archived-count")
+	@XmlElement(name="archived_count")
 	public Integer getArchivedCount() {
 		return archivedCount;
 	}
