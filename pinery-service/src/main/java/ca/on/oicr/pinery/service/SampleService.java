@@ -10,12 +10,11 @@ import ca.on.oicr.pinery.api.SampleProject;
 
 public interface SampleService {
 
-	public List<Sample> getSamples();
-	
-	public List<Sample> getSamples2(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after);
-	
+	public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, DateTime before,
+			DateTime after);
+
 	public Sample getSample(Integer id);
-	
+
 	public List<SampleProject> getSampleProjects();
 
 }

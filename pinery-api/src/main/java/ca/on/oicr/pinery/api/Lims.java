@@ -13,16 +13,10 @@ public interface Lims {
 	 */
 	public List<String> getProjects();
 	
-	/**
-	 * Returns all the samples.
-	 * @return
-	 */
-	public List<Sample> getSamples();
-	
 	public Sample getSample(Integer id);
 	
 	public List<SampleProject> getSampleProjects();
 	
-	public List<Sample> getSamples2(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after);
+	public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after);
 
 }

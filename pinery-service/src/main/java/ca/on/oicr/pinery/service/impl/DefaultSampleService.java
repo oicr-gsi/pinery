@@ -19,11 +19,6 @@ public class DefaultSampleService implements SampleService {
 	private Lims lims;
 
 	@Override
-	public List<Sample> getSamples() {
-		return lims.getSamples();
-	}
-
-	@Override
 	public Sample getSample(Integer id) {
 		return lims.getSample(id);
 	}
@@ -34,7 +29,7 @@ public class DefaultSampleService implements SampleService {
 	}
 
 	@Override
-	public List<Sample> getSamples2(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after) {
-		return lims.getSamples2(archived, projects, types, before, after);
+	public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after) {
+		return lims.getSamples(archived, projects, types, before, after);
 	}
 }

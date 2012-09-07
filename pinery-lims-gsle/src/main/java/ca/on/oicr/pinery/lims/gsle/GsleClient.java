@@ -51,32 +51,36 @@ public class GsleClient implements Lims {
 		return null;
 	}
 
-	@Override
-	public List<Sample> getSamples() {
-		// log.error("Inside getSamples");
-		try {
-			ClientRequest request = new ClientRequest("http://" + url + "/SQLApi?key=" + key + ";id=15887;header=1");
-			// log.error("The uri is [{}].", request.getUri());
-			request.accept("text/plain");
-			ClientResponse<String> response = request.get(String.class);
-
-			if (response.getStatus() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}
-			// log.error("** getSample: \n{}", response.getEntity());
-			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes(UTF8)), UTF8));
-			return getSamples(br);
-
-		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace(System.out);
-		}
-		return null;
+//	@Override
+//	public List<Sample> getSamples() {
+//		// log.error("Inside getSamples");
+//		try {
+//			ClientRequest request = new ClientRequest("http://" + url + "/SQLApi?key=" + key + ";id=15887;header=1");
+//			// log.error("The uri is [{}].", request.getUri());
+//			request.accept("text/plain");
+//			ClientResponse<String> response = request.get(String.class);
+//
+//			if (response.getStatus() != 200) {
+//				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+//			}
+//			// log.error("** getSample: \n{}", response.getEntity());
+//			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
+//					.getBytes(UTF8)), UTF8));
+//			return getSamples(br);
+//
+//		} catch (Exception e) {
+//			System.out.println(e);
+//			e.printStackTrace(System.out);
+//		}
+//		return null;
+//	}
+	
+	private List<Sample> getSamples() {
+		return getSamples(null, null, null, null, null);
 	}
 
 	@Override
-	public List<Sample> getSamples2(Boolean archived, Set<String> projects, Set<String> types, DateTime before,
+	public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, DateTime before,
 			DateTime after) {
 		if (before == null) {
 			before = DateTime.now().plusDays(1);
@@ -133,6 +137,12 @@ public class GsleClient implements Lims {
 		map.put("created_at", "createdString");
 		map.put("modified_at", "modifiedString");
 		map.put("is_archived", "archivedString");
+		map.put("tube_barcode","tubeBarcode");
+		map.put("volume","volume");
+		map.put("concentration","concentration");
+		map.put("storage_location","storageLocation");
+		map.put("prep_kit_name", "prepKitName");
+		map.put("prep_kit_description", "prepKitDescription");
 		strat.setColumnMapping(map);
 
 		CsvToBean<GsleSample> csvToBean = new CsvToBean<GsleSample>();

@@ -46,31 +46,6 @@ public class SampleResource {
 	@GET
 	@Produces({ "application/json" })
 	@Path("/samples")
-	public List<SampleDto> getFiles() {
-		List<Sample> samples = sampleService.getSamples();
-		List<SampleDto> result = Lists.newArrayList();
-		for (Sample sample : samples) {
-			result.add(Dtos.asDto(sample));
-		}
-		// List<FsFile> fsFiles = fsFileService.getFsFiles();
-		// if (fsFiles.isEmpty()) {
-		// throw new NotFoundException("", Response.noContent()
-		// .status(Status.NOT_FOUND).build());
-		// }
-		// List<FsFileDto> result = Lists.newArrayList();
-		// for (FsFile fsFile : fsFiles) {
-		// FsFileDto.Builder builder = Dtos.asDto(fsFile);
-		// final URI uri = uriInfo.getBaseUriBuilder().path("file")
-		// .path(fsFile.getFsFileId().toString()).build();
-		// builder.setUrl(uri.toString());
-		// result.add(builder.build());
-		// }
-		return result;
-	}
-
-	@GET
-	@Produces({ "application/json" })
-	@Path("/samples2")
 	public List<SampleDto> getSamples(@QueryParam("archived") Boolean archived,
 			@QueryParam("project") Set<String> projects, @QueryParam("type") Set<String> types,
 			@QueryParam("before") String before, @QueryParam("after") String after) {
@@ -90,7 +65,7 @@ public class SampleResource {
 		} catch (IllegalArgumentException e) {
 			throw new BadRequestException("Invalid date format in parameter [before] or [after]. Use ISO8601 formatting. " + e.getMessage(), e);
 		}
-		List<Sample> samples = sampleService.getSamples2(archived, projects, types, beforeDateTime, afterDateTime);
+		List<Sample> samples = sampleService.getSamples(archived, projects, types, beforeDateTime, afterDateTime);
 		if(samples.isEmpty()) {
 			throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
 		}

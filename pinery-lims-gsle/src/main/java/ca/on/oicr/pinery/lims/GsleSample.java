@@ -36,7 +36,7 @@ public class GsleSample extends DefaultSample {
 				DateTime dateTime = dateTimeFormatter.parseDateTime(created);
 				setCreated(dateTime.toDate());
 			} catch (IllegalArgumentException e) {
-				logger.error("Error converting created [{}] date format. {}", created, e );
+				logger.error("Error converting created [{}] date format. {}", created, e);
 			}
 		}
 	}
@@ -44,10 +44,10 @@ public class GsleSample extends DefaultSample {
 	public void setModifiedString(String modified) {
 		if (modified != null && !modified.equals("")) {
 			try {
-			DateTime dateTime = dateTimeFormatter.parseDateTime(modified);
-			setModified(dateTime.toDate());
-			} catch(IllegalArgumentException e) {
-				logger.error("Error converting modified [{}] date format. {}", modified, e );
+				DateTime dateTime = dateTimeFormatter.parseDateTime(modified);
+				setModified(dateTime.toDate());
+			} catch (IllegalArgumentException e) {
+				logger.error("Error converting modified [{}] date format. {}", modified, e);
 			}
 		}
 	}
@@ -63,5 +63,15 @@ public class GsleSample extends DefaultSample {
 			setArchived(Boolean.TRUE);
 		}
 		setArchived(Boolean.FALSE);
+	}
+
+	public void setPrepKitName(String name) {
+		if (name != null && !name.equals(""))
+			getPreparationKit().setName(name);
+	}
+
+	public void setPrepKitDescription(String description) {
+		if (description != null && !description.equals(""))
+			getPreparationKit().setName(description);
 	}
 }

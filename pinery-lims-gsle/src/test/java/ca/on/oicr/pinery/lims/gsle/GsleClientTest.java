@@ -7,7 +7,6 @@ import java.io.StringReader;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ca.on.oicr.pinery.api.Sample;
@@ -19,16 +18,6 @@ public class GsleClientTest {
 	@Before
 	public void setUp() throws Exception {
 		sut = new GsleClient();
-	}
-
-	@Ignore
-	@Test
-	public void testGetTemplates() throws Exception {
-		List<Sample> samples = sut.getSamples();
-		for (Sample sample : samples) {
-			System.out.println(sample.getDescription() + "    " + sample.getId());
-		}
-		assertThat(samples.size(), is(22737));
 	}
 
 	@Test
