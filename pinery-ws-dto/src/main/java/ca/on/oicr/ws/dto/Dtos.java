@@ -33,12 +33,12 @@ public final class Dtos {
 		if(from.getTubeBarcode() != null) {
 			dto.setTubeBarcode(from.getTubeBarcode());
 		}
-//		if(from.getVolume() != null) {
-//			dto.setVolume(from.getVolume());
-//		}
-//		if(from.getConcentration() != null) {
-//			dto.setConcentration(from.getConcentration());
-//		}
+		if(from.getVolume() != null) {
+			dto.setVolume(from.getVolume());
+		}
+		if(from.getConcentration() != null) {
+			dto.setConcentration(from.getConcentration());
+		}
 		if(from.getStorageLocation() != null) {
 			dto.setStorageLocation(from.getStorageLocation());
 		}

@@ -75,5 +75,17 @@ public class GsleSample extends DefaultSample {
 			getOrCreatePreparationKit().setDescription(description);
 	}
 	
+	public void setVolumeString(String volumeString) {
+		if(volumeString != null && !volumeString.equals("")) {
+			setVolume(Float.parseFloat(volumeString));
+		}
+	}
+	
+	public void setConcentrationString(String concentrationString) {
+		if(concentrationString != null && !concentrationString.equals("")) {
+			setConcentration(Float.parseFloat(concentrationString));
+		}
+	}
+	
 	
 }

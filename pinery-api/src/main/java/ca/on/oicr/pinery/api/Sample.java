@@ -33,10 +33,10 @@ public interface Sample {
 	public void setModified(Date modified);
 	public String getTubeBarcode();
 	public void setTubeBarcode(String tubeBarcode);
-	public String getVolume();
-	public void setVolume(String volume);
-	public String getConcentration();
-	public void setConcentration(String concentration);
+	public Float getVolume();
+	public void setVolume(Float volume);
+	public Float getConcentration();
+	public void setConcentration(Float concentration);
 	public String getStorageLocation();
 	public void setStorageLocation(String storageLocation);
 	public PreparationKit getPreparationKit();

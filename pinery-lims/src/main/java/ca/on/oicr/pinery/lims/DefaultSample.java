@@ -23,8 +23,8 @@ public class DefaultSample implements Sample {
 	private Date created;
 	private Date modified;
 	private String tubeBarcode;
-	private String volume; // Why no units.
-	private String concentration;
+	private Float volume; // Why no units.
+	private Float concentration;
 	private String storageLocation;
 	private PreparationKit preparationKit;
 
@@ -32,9 +32,9 @@ public class DefaultSample implements Sample {
 	public PreparationKit getPreparationKit() {
 		return preparationKit;
 	}
-	
+
 	public PreparationKit getOrCreatePreparationKit() {
-		if(preparationKit == null) {
+		if (preparationKit == null) {
 			preparationKit = new DefaultPreparationKit();
 		}
 		return preparationKit;
@@ -186,26 +186,6 @@ public class DefaultSample implements Sample {
 	}
 
 	@Override
-	public String getVolume() {
-		return volume;
-	}
-
-	@Override
-	public void setVolume(String volume) {
-		this.volume = volume != null && !volume.equals("") ? volume : null;
-	}
-
-	@Override
-	public String getConcentration() {
-		return concentration;
-	}
-
-	@Override
-	public void setConcentration(String concentration) {
-		this.concentration = concentration;
-	}
-
-	@Override
 	public String getStorageLocation() {
 		return storageLocation;
 	}
@@ -214,4 +194,23 @@ public class DefaultSample implements Sample {
 	public void setStorageLocation(String storageLocation) {
 		this.storageLocation = storageLocation != null && !storageLocation.equals("") ? storageLocation : null;
 	}
+
+	public Float getVolume() {
+		return volume;
+	}
+
+	public void setVolume(Float volume) {
+		this.volume = volume;
+	}
+
+	public Float getConcentration() {
+		return concentration;
+	}
+
+	public void setConcentration(Float concentration) {
+		this.concentration = concentration;
+	}
+
+
+
 }

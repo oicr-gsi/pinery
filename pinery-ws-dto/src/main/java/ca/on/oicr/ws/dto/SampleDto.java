@@ -17,8 +17,8 @@ public class SampleDto {
 	private String description;
 	@JsonProperty("tube_barcode")
 	private String tubeBarcode;
-	private Integer volume;
-	private Integer concentration;
+	private Float volume;
+	private Float concentration;
 	@JsonProperty("storage_location")
 	private String storageLocation;
 	@JsonProperty("created_date")
@@ -70,21 +70,7 @@ public class SampleDto {
 		this.tubeBarcode = tubeBarcode;
 	}
 
-	public Integer getVolume() {
-		return volume;
-	}
 
-	public void setVolume(Integer volume) {
-		this.volume = volume;
-	}
-
-	public Integer getConcentration() {
-		return concentration;
-	}
-
-	public void setConcentration(Integer concentration) {
-		this.concentration = concentration;
-	}
 
 	public String getStorageLocation() {
 		return storageLocation;
@@ -124,6 +110,22 @@ public class SampleDto {
 
 	public void setPreparationKit(PreparationKitDto preparationKit) {
 		this.preparationKit = preparationKit;
+	}
+
+	public Float getVolume() {
+		return volume;
+	}
+
+	public void setVolume(Float volume) {
+		this.volume = volume;
+	}
+
+	public Float getConcentration() {
+		return concentration;
+	}
+
+	public void setConcentration(Float concentration) {
+		this.concentration = concentration;
 	}
 
 }

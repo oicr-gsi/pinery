@@ -138,8 +138,8 @@ public class GsleClient implements Lims {
 		map.put("modified_at", "modifiedString");
 		map.put("is_archived", "archivedString");
 		map.put("tube_barcode","tubeBarcode");
-		map.put("volume","volume");
-		map.put("concentration","concentration");
+		map.put("volume","volumeString");
+		map.put("concentration","concentrationString");
 		map.put("storage_location","storageLocation");
 		map.put("prep_kit_name", "prepKitName");
 		map.put("prep_kit_description", "prepKitDescription");
