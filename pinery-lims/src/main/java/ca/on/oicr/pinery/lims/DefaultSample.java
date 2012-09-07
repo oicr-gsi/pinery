@@ -30,6 +30,10 @@ public class DefaultSample implements Sample {
 
 	@Override
 	public PreparationKit getPreparationKit() {
+		return preparationKit;
+	}
+	
+	public PreparationKit getOrCreatePreparationKit() {
 		if(preparationKit == null) {
 			preparationKit = new DefaultPreparationKit();
 		}

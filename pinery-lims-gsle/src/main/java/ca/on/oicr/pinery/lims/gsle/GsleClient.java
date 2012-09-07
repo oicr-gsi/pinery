@@ -170,7 +170,8 @@ public class GsleClient implements Lims {
 		// log.error("Inside getSample with id [{}]", id);
 		try {
 			ClientRequest request = new ClientRequest("http://" + url + "/SQLApi?key=" + key
-					+ ";id=15888;header=1;bind=" + id);
+					+ ";id=74399;header=1;bind=" + id);
+//			+ ";id=15888;header=1;bind=" + id);
 			request.accept("text/plain");
 			// log.error("The uri is [{}].", request.getUri());
 			ClientResponse<String> response = request.get(String.class);
