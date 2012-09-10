@@ -203,6 +203,8 @@ public class GsleClient implements Lims {
 		map.put("storage_location", "storageLocation");
 		map.put("prep_kit_name", "prepKitName");
 		map.put("prep_kit_description", "prepKitDescription");
+		map.put("status", "statusString");
+		map.put("state", "stateString");
 		strat.setColumnMapping(map);
 
 		CsvToBean<GsleSample> csvToBean = new CsvToBean<GsleSample>();

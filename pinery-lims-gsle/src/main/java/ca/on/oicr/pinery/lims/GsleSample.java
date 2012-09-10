@@ -74,6 +74,18 @@ public class GsleSample extends DefaultSample {
 		if (description != null && !description.equals(""))
 			getOrCreatePreparationKit().setDescription(description);
 	}
+	
+	public void setStatusString(String status) {
+		if(status != null && !status.equals("")) {
+			getOrCreateStatus().setName(status);
+		}
+	}
+	
+	public void setStateString(String state) {
+		if(state != null && !state.equals("")) {
+			getOrCreateStatus().setState(state);
+		}
+	}
 
 	public void setVolumeString(String volumeString) {
 		if (volumeString != null && !volumeString.equals("")) {

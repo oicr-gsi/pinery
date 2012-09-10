@@ -9,6 +9,7 @@ import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.PreparationKit;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
+import ca.on.oicr.pinery.api.Status;
 
 import com.google.common.collect.Sets;
 
@@ -50,6 +51,9 @@ public final class Dtos {
 		if(from.getPreparationKit() != null) {
 			dto.setPreparationKit(asDto(from.getPreparationKit()));
 		}
+		if(from.getStatus() != null) {
+			dto.setStatus(asDto(from.getStatus()));
+		}
 		if(from.getProject() != null) {
 			dto.setProjectName(from.getProject());
 		}
@@ -90,6 +94,17 @@ public final class Dtos {
 		}
 		if(from.getDescription() != null) {
 			dto.setDescription(from.getDescription());
+		}
+		return dto;
+	}
+	
+	public static StatusDto asDto(Status from) {
+		StatusDto dto = new StatusDto();
+		if(from.getName() != null) {
+			dto.setName(from.getName());
+		}
+		if(from.getState() != null) {
+			dto.setState(from.getState());
 		}
 		return dto;
 	}

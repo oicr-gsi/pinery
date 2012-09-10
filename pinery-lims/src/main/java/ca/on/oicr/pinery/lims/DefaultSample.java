@@ -7,6 +7,7 @@ import java.util.Set;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.PreparationKit;
 import ca.on.oicr.pinery.api.Sample;
+import ca.on.oicr.pinery.api.Status;
 
 public class DefaultSample implements Sample {
 
@@ -28,6 +29,24 @@ public class DefaultSample implements Sample {
 	private Float concentration;
 	private String storageLocation;
 	private PreparationKit preparationKit;
+	private Status status;
+
+	public Status getOrCreateStatus() {
+		if(status == null) {
+			status = new DefaultStatus();
+		}
+		return status;
+	}
+	
+	@Override
+	public Status getStatus() {
+		return status;
+	}
+
+	@Override
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 
 	@Override
 	public PreparationKit getPreparationKit() {

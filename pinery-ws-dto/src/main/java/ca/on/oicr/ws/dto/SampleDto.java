@@ -29,6 +29,7 @@ public class SampleDto {
 	private String projectName;
 	private String sampleType;
 	private Set<AttributeDto> attributes;
+	private StatusDto status;
 
 	public String getUrl() {
 		return url;
@@ -159,6 +160,12 @@ public class SampleDto {
 		this.attributes = attributes;
 	}
 
+	public StatusDto getStatus() {
+		return status;
+	}
 
+	public void setStatus(StatusDto status) {
+		this.status = status;
+	}
 
 }

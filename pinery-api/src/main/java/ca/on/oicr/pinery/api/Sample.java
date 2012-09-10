@@ -42,5 +42,7 @@ public interface Sample {
 	public void setStorageLocation(String storageLocation);
 	public PreparationKit getPreparationKit();
 	public void setPreparationKit(PreparationKit preparationKit);
+	public Status getStatus();
+	public void setStatus(Status status);
 	
 }
