@@ -26,6 +26,8 @@ import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.lims.GsleAttribute;
 import ca.on.oicr.pinery.lims.GsleSample;
+import ca.on.oicr.pinery.lims.GsleSampleChildren;
+import ca.on.oicr.pinery.lims.GsleSampleParents;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -131,10 +133,116 @@ public class GsleClient implements Lims {
 		return result;
 	}
 	
+	private Map<Integer, Set<Integer>> getChildren() {
+		Map<Integer, Set<Integer>> result = Maps.newHashMap();
+		
+		StringBuilder url = getBaseUrl("74418");
+		try {
+			ClientRequest request = new ClientRequest(url.toString());
+			request.accept("text/plain");
+			ClientResponse<String> response = request.get(String.class);
+
+			if (response.getStatus() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			}
+			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
+					.getBytes(UTF8)), UTF8));
+			result = getChildren(br);
+
+		} catch (Exception e) {
+			System.out.println(e);
+			e.printStackTrace(System.out);
+		}
+		return result;
+	}
+	
+	private Map<Integer, Set<Integer>> getChildren(Reader reader) {
+		Map<Integer, Set<Integer>> result = Maps.newHashMap();
+
+		CSVReader csvReader = new CSVReader(reader, '\t');
+		HeaderColumnNameTranslateMappingStrategy<GsleSampleChildren> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSampleChildren>();
+		strat.setType(GsleSampleChildren.class);
+		Map<String, String> map = Maps.newHashMap();
+		map.put("parent_id", "parentString");
+		map.put("child_id", "childString");
+		strat.setColumnMapping(map);
+
+		CsvToBean<GsleSampleChildren> csvToBean = new CsvToBean<GsleSampleChildren>();
+		List<GsleSampleChildren> defaultAttributes = csvToBean.parse(strat, csvReader);
+		for (GsleSampleChildren attribute : defaultAttributes) {
+			if (!result.containsKey(attribute.getParent())) {
+				result.put(attribute.getParent(), Sets.<Integer> newHashSet());
+			}
+			result.get(attribute.getParent()).add(attribute.getChild());
+		}
+		return result;
+	}
+	
+	private Map<Integer, Set<Integer>> getParents() {
+		Map<Integer, Set<Integer>> result = Maps.newHashMap();
+		
+		StringBuilder url = getBaseUrl("74419");
+		try {
+			ClientRequest request = new ClientRequest(url.toString());
+			request.accept("text/plain");
+			ClientResponse<String> response = request.get(String.class);
+
+			if (response.getStatus() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			}
+			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
+					.getBytes(UTF8)), UTF8));
+			result = getParents(br);
+
+		} catch (Exception e) {
+			System.out.println(e);
+			e.printStackTrace(System.out);
+		}
+		return result;
+	}
+	
+	private Map<Integer, Set<Integer>> getParents(Reader reader) {
+		Map<Integer, Set<Integer>> result = Maps.newHashMap();
+
+		CSVReader csvReader = new CSVReader(reader, '\t');
+		HeaderColumnNameTranslateMappingStrategy<GsleSampleParents> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSampleParents>();
+		strat.setType(GsleSampleParents.class);
+		Map<String, String> map = Maps.newHashMap();
+		map.put("template_id", "templateString");
+		map.put("parent_id", "parentString");
+		strat.setColumnMapping(map);
+
+		CsvToBean<GsleSampleParents> csvToBean = new CsvToBean<GsleSampleParents>();
+		List<GsleSampleParents> defaultAttributes = csvToBean.parse(strat, csvReader);
+		for (GsleSampleParents attribute : defaultAttributes) {
+			if (!result.containsKey(attribute.getTemplate())) {
+				result.put(attribute.getTemplate(), Sets.<Integer> newHashSet());
+			}
+			result.get(attribute.getTemplate()).add(attribute.getParent());
+		}
+		return result;
+	}
+	
 	private List<Sample> addAttributes(List<Sample> samples) {
 		Map<Integer, Set<Attribute>> attributes = getAttributes();
 		for(Sample sample : samples) {
 			sample.setAttributes(attributes.get(sample.getId()));
+		}
+		return samples;
+	}
+	
+	private List<Sample> addChildren(List<Sample> samples) {
+		Map<Integer, Set<Integer>> children = getChildren();
+		for(Sample sample : samples) {
+			sample.setChildren(children.get(sample.getId()));
+		}
+		return samples;
+	}
+	
+	private List<Sample> addParents(List<Sample> samples) {
+		Map<Integer, Set<Integer>> parents = getParents();
+		for(Sample sample : samples) {
+			sample.setParents(parents.get(sample.getId()));
 		}
 		return samples;
 	}
@@ -218,6 +326,8 @@ public class GsleClient implements Lims {
 			// defaultSample.getArchived() + "]");
 		}
 		samples = addAttributes(samples);
+		samples = addChildren(samples);
+		samples = addParents(samples);
 		System.out.println("---- Missing dates ----");
 		for (Sample foo : samples) {
 			if (foo.getModified() == null || foo.getCreated() == null) {

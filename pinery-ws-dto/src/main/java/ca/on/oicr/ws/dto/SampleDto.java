@@ -30,6 +30,8 @@ public class SampleDto {
 	private String sampleType;
 	private Set<AttributeDto> attributes;
 	private StatusDto status;
+	private Set<String> children;
+	private Set<String> parents;
 
 	public String getUrl() {
 		return url;
@@ -166,6 +168,22 @@ public class SampleDto {
 
 	public void setStatus(StatusDto status) {
 		this.status = status;
+	}
+
+	public Set<String> getChildren() {
+		return children;
+	}
+
+	public void setChildren(Set<String> children) {
+		this.children = children;
+	}
+
+	public Set<String> getParents() {
+		return parents;
+	}
+
+	public void setParents(Set<String> parents) {
+		this.parents = parents;
 	}
 
 }

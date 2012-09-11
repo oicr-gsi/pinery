@@ -32,6 +32,7 @@ import ca.on.oicr.ws.dto.SampleDto;
 import ca.on.oicr.ws.dto.SampleProjectDto;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 @Component
 @Path("/")
@@ -74,10 +75,23 @@ public class SampleResource {
 			throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
 		}
 		List<SampleDto> result = Lists.newArrayList();
+		final URI baseUri = uriInfo.getBaseUriBuilder().path("sample").build();
 		for (Sample sample : samples) {
 			SampleDto dto = Dtos.asDto(sample);
-			final URI uri = uriInfo.getBaseUriBuilder().path("file").path(dto.getId().toString()).build();
-			dto.setUrl(uri.toString());
+			dto.setUrl(baseUri + "/" + dto.getId().toString());
+			if (sample.getChildren() != null && !sample.getChildren().isEmpty()) {
+				dto.setChildren(Sets.<String> newHashSet());
+				for (Integer childId : sample.getChildren()) {
+					dto.getChildren().add(baseUri + "/" + childId);
+				}
+			}
+			addParents(sample, dto);
+//			if (sample.getParents() != null && !sample.getParents().isEmpty()) {
+//				dto.setParents(Sets.<String> newHashSet());
+//				for (Integer parentId : sample.getParents()) {
+//					dto.getParents().add(baseUri + "/" + parentId);
+//				}
+//			}
 			result.add(dto);
 		}
 		return result;
@@ -86,11 +100,19 @@ public class SampleResource {
 	@GET
 	@Produces({ "application/json" })
 	@Path("/sample/{id}")
-	public SampleDto getFile(@PathParam("id") Integer id) {
+	public SampleDto getSample(@PathParam("id") Integer id) {
 		Sample sample = sampleService.getSample(id);
 		SampleDto dto = Dtos.asDto(sample);
 		final URI uri = uriInfo.getAbsolutePathBuilder().build();
 		dto.setUrl(uri.toString());
+		final URI baseUri = uriInfo.getBaseUriBuilder().path("sample").build();
+		if (sample.getChildren() != null && !sample.getChildren().isEmpty()) {
+			dto.setChildren(Sets.<String> newHashSet());
+			for (Integer childId : sample.getChildren()) {
+				dto.getChildren().add(baseUri + "/" + childId);
+			}
+		}
+		addParents(sample, dto);
 		return dto;
 	}
 
@@ -111,6 +133,27 @@ public class SampleResource {
 			}
 		});
 		return result;
+	}
+
+	private void  addParents(Sample sample, SampleDto dto) {
+		// Keep a temporary Set of parents. We'll check to see if any of these
+		// are null. (Indicates root of tree.)
+		Set<String> parents = Sets.newHashSet();
+		if (sample.getParents() != null && !sample.getParents().isEmpty()) {
+			for (Integer parentId : sample.getParents()) {
+				// Ignore null, as this idicates the root of the tree.
+				if (parentId != null) {
+					parents.add(parentId.toString());
+				}
+			}
+		}
+		if(!parents.isEmpty()) {
+			dto.setParents(Sets.<String> newHashSet());
+			final URI baseUri = uriInfo.getBaseUriBuilder().path("sample").build();
+			for(String parentId : parents) {
+				dto.getParents().add(baseUri + "/" + parentId);
+			}
+		}
 	}
 
 }

@@ -1,7 +1,6 @@
 package ca.on.oicr.pinery.lims;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import ca.on.oicr.pinery.api.Attribute;
@@ -15,8 +14,8 @@ public class DefaultSample implements Sample {
 	private String name;
 	private String description;
 	private Integer id;
-	private List<Integer> parents;
-	private List<Integer> children;
+	private Set<Integer> parents;
+	private Set<Integer> children;
 	private String sampleType;
 	private String tissueType;
 	private String project;
@@ -105,25 +104,7 @@ public class DefaultSample implements Sample {
 		this.id = id;
 	}
 
-	@Override
-	public List<Integer> getParents() {
-		return parents;
-	}
 
-	@Override
-	public void setParents(List<Integer> parents) {
-		this.parents = parents;
-	}
-
-	@Override
-	public List<Integer> getChildren() {
-		return children;
-	}
-
-	@Override
-	public void setChildren(List<Integer> children) {
-		this.children = children;
-	}
 
 	@Override
 	public String getSampleType() {
@@ -229,6 +210,26 @@ public class DefaultSample implements Sample {
 
 	public void setConcentration(Float concentration) {
 		this.concentration = concentration;
+	}
+
+	@Override
+	public Set<Integer> getParents() {
+		return parents;
+	}
+
+	@Override
+	public void setParents(Set<Integer> parents) {
+		this.parents = parents;
+	}
+
+	@Override
+	public Set<Integer> getChildren() {
+		return children;
+	}
+
+	@Override
+	public void setChildren(Set<Integer> children) {
+		this.children = children;
 	}
 
 
