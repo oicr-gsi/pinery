@@ -63,6 +63,9 @@ public final class Dtos {
 		if(from.getAttributes() != null && !from.getAttributes().isEmpty()) {
 			dto.setAttributes(asDto(from.getAttributes()));
 		}
+		if(from.getSampleType() != null && !from.getSampleType().equals("")) {
+			dto.setSampleType(from.getSampleType());
+		}
 		return dto;
 	}
 	
