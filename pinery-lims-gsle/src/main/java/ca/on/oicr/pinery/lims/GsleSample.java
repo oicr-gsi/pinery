@@ -74,15 +74,15 @@ public class GsleSample extends DefaultSample {
 		if (description != null && !description.equals(""))
 			getOrCreatePreparationKit().setDescription(description);
 	}
-	
+
 	public void setStatusString(String status) {
-		if(status != null && !status.equals("")) {
+		if (status != null && !status.equals("")) {
 			getOrCreateStatus().setName(status);
 		}
 	}
-	
+
 	public void setStateString(String state) {
-		if(state != null && !state.equals("")) {
+		if (state != null && !state.equals("")) {
 			getOrCreateStatus().setState(state);
 		}
 	}
@@ -100,22 +100,26 @@ public class GsleSample extends DefaultSample {
 	public void setConcentrationString(String concentrationString) {
 		if (concentrationString != null && !concentrationString.equals("")) {
 			try {
-			setConcentration(Float.parseFloat(concentrationString));
-			} catch(NumberFormatException e) {
+				setConcentration(Float.parseFloat(concentrationString));
+			} catch (NumberFormatException e) {
 				log.error("The concentration [{}] is not a valid float value. {}", concentrationString, e);
 			}
 		}
 	}
-	
+
 	public void setCreatedByIdString(String createdByIdString) {
-		if(createdByIdString != null && !createdByIdString.equals("")) {
+		if (createdByIdString != null && !createdByIdString.equals("")) {
 			setCreatedById(Integer.parseInt(createdByIdString));
 		}
 	}
-	
+
 	public void setModifiedByIdString(String modifiedByIdString) {
-		if(modifiedByIdString != null && !modifiedByIdString.equals("") ) {
-			setModifiedById(Integer.parseInt(modifiedByIdString));
+		if (modifiedByIdString != null && !modifiedByIdString.equals("")) {
+			try {
+				setModifiedById(Integer.parseInt(modifiedByIdString));
+			} catch (NumberFormatException e) {
+				log.error("The modified by id [{}] is not a valid integer value. {}", modifiedByIdString, e);
+			}
 		}
 	}
 

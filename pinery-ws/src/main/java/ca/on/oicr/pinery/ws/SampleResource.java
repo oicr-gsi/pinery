@@ -26,10 +26,12 @@ import org.springframework.stereotype.Component;
 
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
+import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.service.SampleService;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.SampleDto;
 import ca.on.oicr.ws.dto.SampleProjectDto;
+import ca.on.oicr.ws.dto.TypeDto;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -121,7 +123,7 @@ public class SampleResource {
 
 	@GET
 	@Produces({ "application/json" })
-	@Path("/samples/projects")
+	@Path("/sample/projects")
 	public List<SampleProjectDto> getSampleProjects() {
 		List<SampleProject> projects = sampleService.getSampleProjects();
 		List<SampleProjectDto> result = Lists.newArrayList();
@@ -132,6 +134,25 @@ public class SampleResource {
 
 			@Override
 			public int compare(SampleProjectDto o1, SampleProjectDto o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		return result;
+	}
+	
+	@GET
+	@Produces({ "application/json" })
+	@Path("/sample/types")
+	public List<TypeDto> getTypes() {
+		List<Type> types = sampleService.getTypes();
+		List<TypeDto> result = Lists.newArrayList();
+		for (Type type : types) {
+			result.add(Dtos.asDto(type));
+		}
+		Collections.sort(result, new Comparator<TypeDto>() {
+
+			@Override
+			public int compare(TypeDto o1, TypeDto o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});

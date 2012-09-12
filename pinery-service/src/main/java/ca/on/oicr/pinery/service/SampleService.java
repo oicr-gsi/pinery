@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
+import ca.on.oicr.pinery.api.Type;
 
 public interface SampleService {
 
@@ -16,5 +17,7 @@ public interface SampleService {
 	public Sample getSample(Integer id);
 
 	public List<SampleProject> getSampleProjects();
+	
+	public List<Type> getTypes();
 
 }

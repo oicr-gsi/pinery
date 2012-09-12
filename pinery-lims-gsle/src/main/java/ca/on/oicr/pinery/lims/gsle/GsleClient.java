@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.joda.time.DateTime;
@@ -23,8 +24,10 @@ import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
+import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
+import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.GsleAttribute;
 import ca.on.oicr.pinery.lims.GsleSample;
 import ca.on.oicr.pinery.lims.GsleSampleChildren;
@@ -405,6 +408,44 @@ public class GsleClient implements Lims {
 		}
 
 		List<SampleProject> result = Lists.newArrayList(projectMap.values());
+		return result;
+	}
+
+	@Override
+	public List<Type> getTypes() {
+		List<Sample> samples = getSamples();
+		Map<String, Type> typeMap = Maps.newHashMap();
+		for (Sample sample : samples) {
+			if (!StringUtils.isBlank(sample.getSampleType())) {
+				Type type = typeMap.get(sample.getSampleType());
+				if (type == null) {
+					type = new DefaultType();
+					type.setName(sample.getSampleType());
+					type.setCount(1);
+					type.setEarliest(sample.getCreated());
+					type.setLatest(sample.getModified());
+					if (sample.getArchived()) {
+						type.setArchivedCount(1);
+					}
+					typeMap.put(sample.getSampleType(), type);
+				} else {
+					type.setCount(type.getCount() + 1);
+					if (sample.getArchived()) {
+						type.setArchivedCount(type.getArchivedCount() + 1);
+					}
+					if (sample.getCreated() != null && type.getEarliest() != null
+							&& sample.getCreated().before(type.getEarliest())) {
+						type.setEarliest(sample.getCreated());
+					}
+					if (sample.getModified() != null && type.getLatest() != null
+							&& sample.getModified().after(type.getLatest())) {
+						type.setLatest(sample.getModified());
+					}
+				}
+			}
+		}
+
+		List<Type> result = Lists.newArrayList(typeMap.values());
 		return result;
 	}
 

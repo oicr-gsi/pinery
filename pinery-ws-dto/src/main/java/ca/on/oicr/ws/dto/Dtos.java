@@ -11,6 +11,7 @@ import ca.on.oicr.pinery.api.PreparationKit;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Status;
+import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
 
 import com.google.common.collect.Sets;
@@ -116,6 +117,22 @@ public final class Dtos {
 
 	public static SampleProjectDto asDto(SampleProject from) {
 		SampleProjectDto dto = new SampleProjectDto();
+		dto.setName(from.getName());
+		dto.setCount(from.getCount());
+		// if(from.getArchivedCount() != null) {
+		// dto.setArchivedCount(from.getArchivedCount());
+		// }
+		if (from.getEarliest() != null) {
+			dto.setEarliest(dateTimeFormatter.print(from.getEarliest().getTime()));
+		}
+		if (from.getLatest() != null) {
+			dto.setLatest(dateTimeFormatter.print(from.getLatest().getTime()));
+		}
+		return dto;
+	}
+	
+	public static TypeDto asDto(Type from) {
+		TypeDto dto = new TypeDto();
 		dto.setName(from.getName());
 		dto.setCount(from.getCount());
 		// if(from.getArchivedCount() != null) {

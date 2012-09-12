@@ -22,5 +22,7 @@ public interface Lims {
 	public List<User> getUsers();
 
 	public User getUser(Integer id);
+	
+	public List<Type> getTypes();
 
 }
