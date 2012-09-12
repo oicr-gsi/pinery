@@ -86,12 +86,14 @@ public class SampleResource {
 				}
 			}
 			addParents(sample, dto);
-//			if (sample.getParents() != null && !sample.getParents().isEmpty()) {
-//				dto.setParents(Sets.<String> newHashSet());
-//				for (Integer parentId : sample.getParents()) {
-//					dto.getParents().add(baseUri + "/" + parentId);
-//				}
-//			}
+			addUsers(sample, dto);
+			// if (sample.getParents() != null &&
+			// !sample.getParents().isEmpty()) {
+			// dto.setParents(Sets.<String> newHashSet());
+			// for (Integer parentId : sample.getParents()) {
+			// dto.getParents().add(baseUri + "/" + parentId);
+			// }
+			// }
 			result.add(dto);
 		}
 		return result;
@@ -113,6 +115,7 @@ public class SampleResource {
 			}
 		}
 		addParents(sample, dto);
+		addUsers(sample, dto);
 		return dto;
 	}
 
@@ -135,7 +138,7 @@ public class SampleResource {
 		return result;
 	}
 
-	private void  addParents(Sample sample, SampleDto dto) {
+	private void addParents(Sample sample, SampleDto dto) {
 		// Keep a temporary Set of parents. We'll check to see if any of these
 		// are null. (Indicates root of tree.)
 		Set<String> parents = Sets.newHashSet();
@@ -147,12 +150,22 @@ public class SampleResource {
 				}
 			}
 		}
-		if(!parents.isEmpty()) {
+		if (!parents.isEmpty()) {
 			dto.setParents(Sets.<String> newHashSet());
 			final URI baseUri = uriInfo.getBaseUriBuilder().path("sample").build();
-			for(String parentId : parents) {
+			for (String parentId : parents) {
 				dto.getParents().add(baseUri + "/" + parentId);
 			}
+		}
+	}
+
+	private void addUsers(Sample sample, SampleDto dto) {
+		final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
+		if(sample.getCreatedById() != null) {
+			dto.setCreatedByUrl(baseUri + sample.getCreatedById().toString());
+		}
+		if (sample.getModifiedById() != null) {
+			dto.setModifiedByUrl(baseUri + sample.getModifiedById().toString());
 		}
 	}
 

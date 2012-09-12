@@ -18,5 +18,9 @@ public interface Lims {
 	public List<SampleProject> getSampleProjects();
 	
 	public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after);
+	
+	public List<User> getUsers();
+
+	public User getUser(Integer id);
 
 }

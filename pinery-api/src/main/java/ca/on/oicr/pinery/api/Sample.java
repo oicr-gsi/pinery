@@ -81,4 +81,11 @@ public interface Sample {
 
 	public void setStatus(Status status);
 
+	public Integer getCreatedById();
+
+	public void setCreatedById(Integer createdById);
+
+	public Integer getModifiedById();
+
+	public void setModifiedById(Integer modifiedById);
 }

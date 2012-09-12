@@ -22,7 +22,9 @@ public class SampleDto {
 	private Float concentration;
 	private String storageLocation;
 	private String createdDate;
+	private String createdByUrl;
 	private String modifiedDate;
+	private String modifiedByUrl;
 	private Integer id;
 	private Boolean archived;
 	private PreparationKitDto preparationKit;
@@ -85,7 +87,7 @@ public class SampleDto {
 		this.storageLocation = storageLocation;
 	}
 
-	@XmlElement(name="creation_date")
+	@XmlElement(name="created_date")
 	public String getCreatedDate() {
 		return createdDate;
 	}
@@ -184,6 +186,24 @@ public class SampleDto {
 
 	public void setParents(Set<String> parents) {
 		this.parents = parents;
+	}
+
+	@XmlElement(name="created_by_url")
+	public String getCreatedByUrl() {
+		return createdByUrl;
+	}
+
+	public void setCreatedByUrl(String createdByUrl) {
+		this.createdByUrl = createdByUrl;
+	}
+
+	@XmlElement(name="modified_by_url")
+	public String getModifiedByUrl() {
+		return modifiedByUrl;
+	}
+
+	public void setModifiedByUrl(String modifiedByUrl) {
+		this.modifiedByUrl = modifiedByUrl;
 	}
 
 }

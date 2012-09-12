@@ -23,11 +23,13 @@ import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
+import ca.on.oicr.pinery.api.User;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.lims.GsleAttribute;
 import ca.on.oicr.pinery.lims.GsleSample;
 import ca.on.oicr.pinery.lims.GsleSampleChildren;
 import ca.on.oicr.pinery.lims.GsleSampleParents;
+import ca.on.oicr.pinery.lims.GsleUser;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -89,7 +91,7 @@ public class GsleClient implements Lims {
 
 	private Map<Integer, Set<Attribute>> getAttributes() {
 		Map<Integer, Set<Attribute>> result = Maps.newHashMap();
-		
+
 		StringBuilder url = getBaseUrl("74401");
 		try {
 			ClientRequest request = new ClientRequest(url.toString());
@@ -132,10 +134,10 @@ public class GsleClient implements Lims {
 		}
 		return result;
 	}
-	
+
 	private Map<Integer, Set<Integer>> getChildren() {
 		Map<Integer, Set<Integer>> result = Maps.newHashMap();
-		
+
 		StringBuilder url = getBaseUrl("74418");
 		try {
 			ClientRequest request = new ClientRequest(url.toString());
@@ -155,7 +157,7 @@ public class GsleClient implements Lims {
 		}
 		return result;
 	}
-	
+
 	private Map<Integer, Set<Integer>> getChildren(Reader reader) {
 		Map<Integer, Set<Integer>> result = Maps.newHashMap();
 
@@ -177,10 +179,10 @@ public class GsleClient implements Lims {
 		}
 		return result;
 	}
-	
+
 	private Map<Integer, Set<Integer>> getParents() {
 		Map<Integer, Set<Integer>> result = Maps.newHashMap();
-		
+
 		StringBuilder url = getBaseUrl("74419");
 		try {
 			ClientRequest request = new ClientRequest(url.toString());
@@ -200,7 +202,7 @@ public class GsleClient implements Lims {
 		}
 		return result;
 	}
-	
+
 	private Map<Integer, Set<Integer>> getParents(Reader reader) {
 		Map<Integer, Set<Integer>> result = Maps.newHashMap();
 
@@ -222,26 +224,26 @@ public class GsleClient implements Lims {
 		}
 		return result;
 	}
-	
+
 	private List<Sample> addAttributes(List<Sample> samples) {
 		Map<Integer, Set<Attribute>> attributes = getAttributes();
-		for(Sample sample : samples) {
+		for (Sample sample : samples) {
 			sample.setAttributes(attributes.get(sample.getId()));
 		}
 		return samples;
 	}
-	
+
 	private List<Sample> addChildren(List<Sample> samples) {
 		Map<Integer, Set<Integer>> children = getChildren();
-		for(Sample sample : samples) {
+		for (Sample sample : samples) {
 			sample.setChildren(children.get(sample.getId()));
 		}
 		return samples;
 	}
-	
+
 	private List<Sample> addParents(List<Sample> samples) {
 		Map<Integer, Set<Integer>> parents = getParents();
-		for(Sample sample : samples) {
+		for (Sample sample : samples) {
 			sample.setParents(parents.get(sample.getId()));
 		}
 		return samples;
@@ -303,7 +305,9 @@ public class GsleClient implements Lims {
 		map.put("name", "name");
 		map.put("description", "description");
 		map.put("created_at", "createdString");
+		map.put("created_by", "createdByIdString");
 		map.put("modified_at", "modifiedString");
+		map.put("modified_by", "modifiedByIdString");
 		map.put("is_archived", "archivedString");
 		map.put("tube_barcode", "tubeBarcode");
 		map.put("volume", "volumeString");
@@ -452,4 +456,85 @@ public class GsleClient implements Lims {
 		return ";bind=" + sb.toString();
 	}
 
+	@Override
+	public List<User> getUsers() {
+		List<User> result = Lists.newArrayList();
+
+		StringBuilder url = getBaseUrl("74432");
+		try {
+			ClientRequest request = new ClientRequest(url.toString());
+			request.accept("text/plain");
+			ClientResponse<String> response = request.get(String.class);
+
+			if (response.getStatus() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			}
+			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
+					.getBytes(UTF8)), UTF8));
+			result = getUsers(br);
+		} catch (Exception e) {
+			System.out.println(e);
+			e.printStackTrace(System.out);
+		}
+		return result;
+	}
+
+	@Override
+	public User getUser(Integer id) {
+		User result = null;
+
+		StringBuilder url = getBaseUrl("74433");
+		url.append(";bind=");
+		url.append(id);
+		try {
+			ClientRequest request = new ClientRequest(url.toString());
+			request.accept("text/plain");
+			ClientResponse<String> response = request.get(String.class);
+
+			if (response.getStatus() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			}
+			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
+					.getBytes(UTF8)), UTF8));
+			List<User> users = getUsers(br);
+			if (users.size() == 1) {
+				result = users.get(0);
+			}
+
+		} catch (Exception e) {
+			System.out.println(e);
+			e.printStackTrace(System.out);
+		}
+		return result;
+	}
+
+	List<User> getUsers(Reader reader) {
+		CSVReader csvReader = new CSVReader(reader, '\t');
+		HeaderColumnNameTranslateMappingStrategy<GsleUser> strat = new HeaderColumnNameTranslateMappingStrategy<GsleUser>();
+		strat.setType(GsleUser.class);
+		Map<String, String> map = Maps.newHashMap();
+		map.put("user_id", "idString");
+		map.put("title", "title");
+		map.put("firstname", "firstname");
+		map.put("lastname", "lastname");
+		map.put("institution", "institution");
+		map.put("phone", "phone");
+		map.put("email", "email");
+		map.put("active", "archivedString");
+		map.put("lab_comment", "comment");
+		map.put("created_at", "createdString");
+		map.put("created_by", "createdByIdString");
+		map.put("modified_at", "modifiedString");
+		map.put("modified_by", "modifiedByIdString");
+		strat.setColumnMapping(map);
+
+		CsvToBean<GsleUser> csvToBean = new CsvToBean<GsleUser>();
+		List<GsleUser> defaultUsers = csvToBean.parse(strat, csvReader);
+		List<User> samples = Lists.newArrayList();
+		for (User defaultUser : defaultUsers) {
+			samples.add(defaultUser);
+		}
+
+		return samples;
+	}
 }

@@ -22,7 +22,9 @@ public class DefaultSample implements Sample {
 	private Set<Attribute> attributes;
 	private Boolean archived;
 	private Date created;
+	private Integer createdById;
 	private Date modified;
+	private Integer modifiedById;
 	private String tubeBarcode;
 	private Float volume; // Why no units.
 	private Float concentration;
@@ -230,6 +232,26 @@ public class DefaultSample implements Sample {
 	@Override
 	public void setChildren(Set<Integer> children) {
 		this.children = children;
+	}
+
+	@Override
+	public Integer getCreatedById() {
+		return createdById;
+	}
+
+	@Override
+	public void setCreatedById(Integer createdById) {
+		this.createdById = createdById;
+	}
+
+	@Override
+	public Integer getModifiedById() {
+		return modifiedById;
+	}
+
+	@Override
+	public void setModifiedById(Integer modifiedById) {
+		this.modifiedById = modifiedById;
 	}
 
 
