@@ -21,11 +21,13 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import ca.on.oicr.pinery.api.Attribute;
+import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
+import ca.on.oicr.pinery.lims.DefaultAttributeName;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.GsleAttribute;
@@ -446,6 +448,46 @@ public class GsleClient implements Lims {
 		}
 
 		List<Type> result = Lists.newArrayList(typeMap.values());
+		return result;
+	}
+
+	@Override
+	public List<AttributeName> getAttributeNames() {
+		List<Sample> samples = getSamples();
+		Map<String, AttributeName> attributeNameMap = Maps.newHashMap();
+		for (Sample sample : samples) {
+			if (sample.getAttributes() != null) {
+				for (Attribute attribute : sample.getAttributes()) {
+					AttributeName attributeName = attributeNameMap.get(attribute.getName());
+					if (attributeName == null) {
+						attributeName = new DefaultAttributeName();
+						attributeName.setName(attribute.getName());
+						attributeName.setCount(1);
+						attributeName.setEarliest(sample.getCreated());
+						attributeName.setLatest(sample.getModified());
+						if (sample.getArchived()) {
+							attributeName.setArchivedCount(1);
+						}
+						attributeNameMap.put(attribute.getName(), attributeName);
+					} else {
+						attributeName.setCount(attributeName.getCount() + 1);
+						if (sample.getArchived()) {
+							attributeName.setArchivedCount(attributeName.getArchivedCount() + 1);
+						}
+						if (sample.getCreated() != null && attributeName.getEarliest() != null
+								&& sample.getCreated().before(attributeName.getEarliest())) {
+							attributeName.setEarliest(sample.getCreated());
+						}
+						if (sample.getModified() != null && attributeName.getLatest() != null
+								&& sample.getModified().after(attributeName.getLatest())) {
+							attributeName.setLatest(sample.getModified());
+						}
+					}
+				}
+			}
+		}
+
+		List<AttributeName> result = Lists.newArrayList(attributeNameMap.values());
 		return result;
 	}
 

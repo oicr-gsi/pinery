@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
@@ -37,5 +38,10 @@ public class DefaultSampleService implements SampleService {
 	@Override
 	public List<Type> getTypes() {
 		return lims.getTypes();
+	}
+
+	@Override
+	public List<AttributeName> getAttributeNames() {
+		return lims.getAttributeNames();
 	}
 }

@@ -7,6 +7,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import ca.on.oicr.pinery.api.Attribute;
+import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.PreparationKit;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
@@ -130,9 +131,25 @@ public final class Dtos {
 		}
 		return dto;
 	}
-	
+
 	public static TypeDto asDto(Type from) {
 		TypeDto dto = new TypeDto();
+		dto.setName(from.getName());
+		dto.setCount(from.getCount());
+		// if(from.getArchivedCount() != null) {
+		// dto.setArchivedCount(from.getArchivedCount());
+		// }
+		if (from.getEarliest() != null) {
+			dto.setEarliest(dateTimeFormatter.print(from.getEarliest().getTime()));
+		}
+		if (from.getLatest() != null) {
+			dto.setLatest(dateTimeFormatter.print(from.getLatest().getTime()));
+		}
+		return dto;
+	}
+
+	public static AttributeNameDto asDto(AttributeName from) {
+		AttributeNameDto dto = new AttributeNameDto();
 		dto.setName(from.getName());
 		dto.setCount(from.getCount());
 		// if(from.getArchivedCount() != null) {
@@ -160,25 +177,25 @@ public final class Dtos {
 		if (from.getModified() != null) {
 			dto.setModifiedDate(dateTimeFormatter.print(from.getModified().getTime()));
 		}
-		if(!StringUtils.isBlank(from.getTitle())) {
+		if (!StringUtils.isBlank(from.getTitle())) {
 			dto.setTitle(from.getTitle());
 		}
-		if(!StringUtils.isBlank(from.getFirstname())) {
+		if (!StringUtils.isBlank(from.getFirstname())) {
 			dto.setFirstname(from.getFirstname());
 		}
-		if(!StringUtils.isBlank(from.getLastname())) {
+		if (!StringUtils.isBlank(from.getLastname())) {
 			dto.setLastname(from.getLastname());
 		}
-		if(!StringUtils.isBlank(from.getEmail())) {
+		if (!StringUtils.isBlank(from.getEmail())) {
 			dto.setEmail(from.getEmail());
 		}
-		if(!StringUtils.isBlank(from.getPhone())) {
+		if (!StringUtils.isBlank(from.getPhone())) {
 			dto.setPhone(from.getPhone());
 		}
-		if(!StringUtils.isBlank(from.getComment())) {
+		if (!StringUtils.isBlank(from.getComment())) {
 			dto.setComment(from.getComment());
 		}
-		if(!StringUtils.isBlank(from.getInstitution())) {
+		if (!StringUtils.isBlank(from.getInstitution())) {
 			dto.setInstitution(from.getInstitution());
 		}
 		return dto;

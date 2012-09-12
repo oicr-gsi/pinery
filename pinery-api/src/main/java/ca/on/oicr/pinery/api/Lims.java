@@ -24,5 +24,7 @@ public interface Lims {
 	public User getUser(Integer id);
 	
 	public List<Type> getTypes();
+	
+	public List<AttributeName> getAttributeNames();
 
 }

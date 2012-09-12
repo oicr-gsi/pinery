@@ -24,10 +24,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.service.SampleService;
+import ca.on.oicr.ws.dto.AttributeNameDto;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.SampleDto;
 import ca.on.oicr.ws.dto.SampleProjectDto;
@@ -153,6 +155,25 @@ public class SampleResource {
 
 			@Override
 			public int compare(TypeDto o1, TypeDto o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		return result;
+	}
+	
+	@GET
+	@Produces({ "application/json" })
+	@Path("/sample/attributenames")
+	public List<AttributeNameDto> getAttributeNames() {
+		List<AttributeName> attributeNames = sampleService.getAttributeNames();
+		List<AttributeNameDto> result = Lists.newArrayList();
+		for (AttributeName attributeName : attributeNames) {
+			result.add(Dtos.asDto(attributeName));
+		}
+		Collections.sort(result, new Comparator<AttributeNameDto>() {
+
+			@Override
+			public int compare(AttributeNameDto o1, AttributeNameDto o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});
