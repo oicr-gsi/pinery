@@ -1,13 +1,17 @@
 package ca.on.oicr.ws.dto;
 
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.Change;
+import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.PreparationKit;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
@@ -15,6 +19,7 @@ import ca.on.oicr.pinery.api.Status;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
@@ -160,6 +165,36 @@ public final class Dtos {
 		}
 		if (from.getLatest() != null) {
 			dto.setLatest(dateTimeFormatter.print(from.getLatest().getTime()));
+		}
+		return dto;
+	}
+
+	public static ChangeDto asDto(Change from) {
+		ChangeDto dto = new ChangeDto();
+		if (!StringUtils.isBlank(from.getAction())) {
+			dto.setAction(from.getAction());
+		}
+		if (!StringUtils.isBlank(from.getComment())) {
+			dto.setComment(from.getComment());
+		}
+		if (from.getCreated() != null) {
+			dto.setCreatedDate(dateTimeFormatter.print(from.getCreated().getTime()));
+			dto.setCreated(new DateTime(from.getCreated()));
+		}
+		if(from.getCreatedById() != null) {
+			dto.setCreatedById(from.getCreatedById());
+		}
+		return dto;
+	}
+	
+	public static ChangeLogDto asDto(ChangeLog from) {
+		ChangeLogDto dto = new ChangeLogDto();
+		if(!from.getChanges().isEmpty() ) {
+			List<ChangeDto> changes = Lists.newArrayList();
+			for(Change change : from.getChanges()) {
+				changes.add(asDto(change));
+			}
+			dto.setChanges(changes);
 		}
 		return dto;
 	}

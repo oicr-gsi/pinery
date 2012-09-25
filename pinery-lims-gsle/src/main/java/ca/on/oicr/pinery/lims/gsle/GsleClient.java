@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,15 +23,19 @@ import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.Change;
+import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
 import ca.on.oicr.pinery.lims.DefaultAttributeName;
+import ca.on.oicr.pinery.lims.DefaultChangeLog;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.GsleAttribute;
+import ca.on.oicr.pinery.lims.GsleChange;
 import ca.on.oicr.pinery.lims.GsleSample;
 import ca.on.oicr.pinery.lims.GsleSampleChildren;
 import ca.on.oicr.pinery.lims.GsleSampleParents;
@@ -619,5 +624,96 @@ public class GsleClient implements Lims {
 		}
 
 		return samples;
+	}
+
+	@Override
+	public List<ChangeLog> getChangeLogs() {
+		List<ChangeLog> result = Lists.newArrayList();
+
+		StringBuilder url = getBaseUrl("76371");
+		try {
+			ClientRequest request = new ClientRequest(url.toString());
+			request.accept("text/plain");
+			ClientResponse<String> response = request.get(String.class);
+
+			if (response.getStatus() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			}
+			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
+					.getBytes(UTF8)), UTF8));
+			result = getChangeLogs(br);
+		} catch (Exception e) {
+			System.out.println(e);
+			e.printStackTrace(System.out);
+		}
+		return result;
+	}
+	
+	List<ChangeLog> getChangeLogs(Reader reader) {
+		CSVReader csvReader = new CSVReader(reader, '\t');
+		HeaderColumnNameTranslateMappingStrategy<GsleChange> strat = new HeaderColumnNameTranslateMappingStrategy<GsleChange>();
+		strat.setType(GsleChange.class);
+		Map<String, String> map = Maps.newHashMap();
+		map.put("template_id", "sampleIdString");
+		map.put("cmnt", "comment");
+		map.put("notes", "action");
+		map.put("created_by", "createdByIdString");
+		map.put("created_at", "createdString");
+		strat.setColumnMapping(map);
+
+		CsvToBean<GsleChange> csvToBean = new CsvToBean<GsleChange>();
+		List<GsleChange> defaultUsers = csvToBean.parse(strat, csvReader);
+		List<Change> changes = Lists.newArrayList();
+		for (Change defaultUser : defaultUsers) {
+			changes.add(defaultUser);
+		}
+
+		return getChangeLogs(changes);
+	}
+	
+	List<ChangeLog> getChangeLogs(List<Change> changes) {
+		Map<Integer, ChangeLog> changeLogMap = Maps.newHashMap();
+		
+		for(Change change : changes) {
+			if(changeLogMap.containsKey(((GsleChange)change).getSampleId())) {
+				changeLogMap.get(((GsleChange)change).getSampleId()).getChanges().add(change);
+			} else {
+				ChangeLog changeLog = new DefaultChangeLog();
+				changeLog.setSampleId(((GsleChange)change).getSampleId());
+				Set<Change> changeSet = Sets.newHashSet();
+				changeSet.add(change);
+				changeLog.setChanges(changeSet);
+				changeLogMap.put(((GsleChange)change).getSampleId(), changeLog);
+			}
+		}
+		return new ArrayList<ChangeLog>(changeLogMap.values());
+	}
+
+	@Override
+	public ChangeLog getChangeLog(Integer id) {
+		ChangeLog result = null;
+
+		StringBuilder url = getBaseUrl("76372");
+		url.append(";bind=");
+		url.append(id);
+		try {
+			ClientRequest request = new ClientRequest(url.toString());
+			request.accept("text/plain");
+			ClientResponse<String> response = request.get(String.class);
+
+			if (response.getStatus() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			}
+			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
+					.getBytes(UTF8)), UTF8));
+			List<ChangeLog> changeLogs = getChangeLogs(br);
+			if (changeLogs.size() == 1) {
+				result = changeLogs.get(0);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			e.printStackTrace(System.out);
+		}
+		return result;
 	}
 }

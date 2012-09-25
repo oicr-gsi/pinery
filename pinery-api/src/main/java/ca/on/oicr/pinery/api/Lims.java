@@ -26,5 +26,9 @@ public interface Lims {
 	public List<Type> getTypes();
 	
 	public List<AttributeName> getAttributeNames();
+	
+	public List<ChangeLog> getChangeLogs();
+	
+	public ChangeLog getChangeLog(Integer id);
 
 }

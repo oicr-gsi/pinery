@@ -25,11 +25,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.service.SampleService;
 import ca.on.oicr.ws.dto.AttributeNameDto;
+import ca.on.oicr.ws.dto.ChangeDto;
+import ca.on.oicr.ws.dto.ChangeLogDto;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.SampleDto;
 import ca.on.oicr.ws.dto.SampleProjectDto;
@@ -141,7 +144,7 @@ public class SampleResource {
 		});
 		return result;
 	}
-	
+
 	@GET
 	@Produces({ "application/json" })
 	@Path("/sample/types")
@@ -160,7 +163,7 @@ public class SampleResource {
 		});
 		return result;
 	}
-	
+
 	@GET
 	@Produces({ "application/json" })
 	@Path("/sample/attributenames")
@@ -203,7 +206,7 @@ public class SampleResource {
 
 	private void addUsers(Sample sample, SampleDto dto) {
 		final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
-		if(sample.getCreatedById() != null) {
+		if (sample.getCreatedById() != null) {
 			dto.setCreatedByUrl(baseUri + sample.getCreatedById().toString());
 		}
 		if (sample.getModifiedById() != null) {
@@ -211,4 +214,59 @@ public class SampleResource {
 		}
 	}
 
+	private void addChangeUser(ChangeDto dto) {
+		final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
+		if (dto.getCreatedById() != null) {
+			dto.setCreatedByUrl(baseUri + dto.getCreatedById().toString());
+		}
+	}
+
+	@GET
+	@Produces({ "application/json" })
+	@Path("/sample/changelogs")
+	public List<ChangeLogDto> getChangeLogs() {
+		List<ChangeLog> changeLogs = sampleService.getChangeLogs();
+		List<ChangeLogDto> result = Lists.newArrayList();
+
+		final URI baseUri = uriInfo.getBaseUriBuilder().path("sample/").build();
+		for (ChangeLog changeLog : changeLogs) {
+			ChangeLogDto dto = Dtos.asDto(changeLog);
+			dto.setSampleUrl(baseUri + changeLog.getSampleId().toString());
+			for (ChangeDto change : dto.getChanges()) {
+				addChangeUser(change);
+			}
+			Collections.sort(dto.getChanges(), new Comparator<ChangeDto>() {
+
+				@Override
+				public int compare(ChangeDto o1, ChangeDto o2) {
+					return o1.getCreated().compareTo(o2.getCreated());
+				}
+
+			});
+			result.add(dto);
+		}
+		return result;
+	}
+	
+	@GET
+	@Produces({ "application/json" })
+	@Path("/sample/{id}/changelog")
+	public ChangeLogDto getChangeLog(@PathParam("id") Integer id) {
+		ChangeLog changeLog = sampleService.getChangeLog(id);
+		ChangeLogDto dto = Dtos.asDto(changeLog);
+		final URI uri = uriInfo.getBaseUriBuilder().path("sample").path(changeLog.getSampleId().toString()).build();
+		dto.setSampleUrl(uri.toString());
+		for (ChangeDto change : dto.getChanges()) {
+			addChangeUser(change);
+		}
+		Collections.sort(dto.getChanges(), new Comparator<ChangeDto>() {
+
+			@Override
+			public int compare(ChangeDto o1, ChangeDto o2) {
+				return o1.getCreated().compareTo(o2.getCreated());
+			}
+
+		});
+		return dto;
+	}
 }

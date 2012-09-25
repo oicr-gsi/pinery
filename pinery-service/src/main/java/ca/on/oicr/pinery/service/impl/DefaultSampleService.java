@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
@@ -43,5 +44,15 @@ public class DefaultSampleService implements SampleService {
 	@Override
 	public List<AttributeName> getAttributeNames() {
 		return lims.getAttributeNames();
+	}
+
+	@Override
+	public List<ChangeLog> getChangeLogs() {
+		return lims.getChangeLogs();
+	}
+
+	@Override
+	public ChangeLog getChangeLog(Integer id) {
+		return lims.getChangeLog(id);
 	}
 }
