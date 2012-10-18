@@ -21,8 +21,13 @@ public class GsleSample extends DefaultSample {
 			.appendHourOfDay(2).appendLiteral(':').appendMinuteOfHour(2).appendLiteral(':').appendSecondOfMinute(2)
 			.appendTimeZoneOffset(null, true, 1, 1).toFormatter();
 
+	/**
+	 * Determines sample project name based on library nomeclature.
+	 * {@link https://wiki.oicr.on.ca/display/MCPHERSON/LIMS+Guidelines#LIMSGuidelines-LibraryNomencalture}
+	 * Sample names start with a project name 3 to 5 characters long in uppercase terminated with an underscore.
+	 */
 	public String getProject() {
-		Pattern pattern = Pattern.compile("^([A-Z]{3,4})_.*$");
+		Pattern pattern = Pattern.compile("^([A-Z]{3,5})_.*$");
 		Matcher matcher = pattern.matcher(getName());
 		if (matcher.find()) {
 			return matcher.group(1);
