@@ -25,10 +25,6 @@
     </context-param>
     -->
     
-   <listener>
-      <listener-class>ca.on.oicr.pinery.ws.LogListener</listener-class>
-   </listener>
-
     <listener>
         <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
     </listener>
