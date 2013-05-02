@@ -3,14 +3,10 @@ package ca.on.oicr.pinery.lims;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.sql.Timestamp;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
-import org.joda.time.format.ISODateTimeFormat;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class GsleSampleTest {
@@ -47,24 +43,8 @@ public class GsleSampleTest {
 		sut.setCreatedString("2012-06-12 14:47:09-04");
 	}
 	
-	@Ignore
 	@Test
-	public void testShit() throws Exception {
-		Timestamp foo = Timestamp.valueOf("2012-06-12 14:47:09-04");
-		System.out.println(foo.toString());
-	}
-	
-	@Ignore
-	@Test
-	public void testdoo() throws Exception {
-		 DateTimeFormatter dateTimeFormatter = ISODateTimeFormat
-				.dateParser();
-		DateTime dt = dateTimeFormatter.parseDateTime("2012-06-12 14:47:09");
-		System.out.println("hi " + dt);
-	}
-	
-	@Test
-	public void testFreaky() throws Exception {
+	public void testCustomGsleFormat() throws Exception {
 		DateTimeFormatter fmt = new DateTimeFormatterBuilder()
         .appendYear(4, 4)
         .appendLiteral('-')
@@ -80,7 +60,7 @@ public class GsleSampleTest {
         .appendTimeZoneOffset(null, true, 1, 1)
         .toFormatter();
 		DateTime dt = fmt.parseDateTime("2012-06-12 21:47:09-04");
-		System.out.println("turd " + dt.toString() + "    " + fmt.print(dt));
+		System.out.println("Custom format " + dt.toString() + "    " + fmt.print(dt));
 	}
 
 }
