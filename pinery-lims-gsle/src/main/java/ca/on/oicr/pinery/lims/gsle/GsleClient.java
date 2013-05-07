@@ -25,6 +25,8 @@ import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Change;
 import ca.on.oicr.pinery.api.ChangeLog;
+import ca.on.oicr.pinery.api.Instrument;
+import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
@@ -36,6 +38,8 @@ import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.GsleAttribute;
 import ca.on.oicr.pinery.lims.GsleChange;
+import ca.on.oicr.pinery.lims.GsleInstrument;
+import ca.on.oicr.pinery.lims.GsleInstrumentModel;
 import ca.on.oicr.pinery.lims.GsleSample;
 import ca.on.oicr.pinery.lims.GsleSampleChildren;
 import ca.on.oicr.pinery.lims.GsleSampleParents;
@@ -716,4 +720,163 @@ public class GsleClient implements Lims {
 		}
 		return result;
 	}
+
+   @Override
+   public List<InstrumentModel> getInstrumentModels() {
+           List<InstrumentModel> result = Lists.newArrayList();
+
+           // TODO: Create query and update mapping
+           StringBuilder url = getBaseUrl("74418");
+           try {
+                   ClientRequest request = new ClientRequest(url.toString());
+                   request.accept("text/plain");
+                   ClientResponse<String> response = request.get(String.class);
+
+                   if (response.getStatus() != 200) {
+                           throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+                   }
+                   BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
+                                   .getBytes(UTF8)), UTF8));
+                   result = getInstrumentModels(br);
+           } catch (Exception e) {
+                   System.out.println(e);
+                   e.printStackTrace(System.out);
+           }
+           return result;
+   }
+
+   List<InstrumentModel> getInstrumentModels(Reader reader) {
+           CSVReader csvReader = new CSVReader(reader, '\t');
+           HeaderColumnNameTranslateMappingStrategy<GsleInstrumentModel> strat = new HeaderColumnNameTranslateMappingStrategy<GsleInstrumentModel>();
+           strat.setType(GsleInstrumentModel.class);
+           Map<String, String> map = Maps.newHashMap();
+           map.put("model_id", "idString");
+           map.put("name", "name");
+//           map.put("vendor", "vendor");
+           map.put("created_at", "createdString");
+           map.put("created_by", "createdByIdString");
+           map.put("modified_at", "modifiedString");
+           map.put("modified_by", "modifiedByIdString");
+           strat.setColumnMapping(map);
+
+           CsvToBean<GsleInstrumentModel> csvToBean = new CsvToBean<GsleInstrumentModel>();
+           List<GsleInstrumentModel> defaultUsers = csvToBean.parse(strat, csvReader);
+           List<InstrumentModel> samples = Lists.newArrayList();
+           for (InstrumentModel defaultUser : defaultUsers) {
+                   samples.add(defaultUser);
+           }
+
+           return samples;
+   }
+
+   @Override
+   public InstrumentModel getInstrumentModel(Integer id) {
+      InstrumentModel result = null;
+
+      StringBuilder url = getBaseUrl("117701");
+      url.append(";bind=");
+      url.append(id);
+      try {
+              ClientRequest request = new ClientRequest(url.toString());
+              request.accept("text/plain");
+              ClientResponse<String> response = request.get(String.class);
+
+              if (response.getStatus() != 200) {
+                      throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+              }
+              BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
+                              .getBytes(UTF8)), UTF8));
+              List<InstrumentModel> instrumentModels = getInstrumentModels(br);
+              if(instrumentModels.size() == 1) {
+                 result = instrumentModels.get(0);
+              }
+
+      } catch (Exception e) {
+              System.out.println(e);
+              e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   @Override
+   public List<Instrument> getInstruments(Integer instrumentModelId) {
+      List<Instrument> result = Lists.newArrayList();
+
+      // TODO: Create query and update mapping
+      StringBuilder url = getBaseUrl("117755");
+      url.append(";bind=");
+      url.append(instrumentModelId);
+      try {
+              ClientRequest request = new ClientRequest(url.toString());
+              request.accept("text/plain");
+              ClientResponse<String> response = request.get(String.class);
+
+              if (response.getStatus() != 200) {
+                      throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+              }
+              BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
+                              .getBytes(UTF8)), UTF8));
+              result = getInstruments(br);
+      } catch (Exception e) {
+              System.out.println(e);
+              e.printStackTrace(System.out);
+      }
+      return result;
+   }
+   
+   List<Instrument> getInstruments(Reader reader) {
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleInstrument> strat = new HeaderColumnNameTranslateMappingStrategy<GsleInstrument>();
+      strat.setType(GsleInstrument.class);
+      Map<String, String> map = Maps.newHashMap();
+      map.put("instr_id", "idString");
+      map.put("name", "name");
+      map.put("created_at", "createdString");
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleInstrument> csvToBean = new CsvToBean<GsleInstrument>();
+      List<GsleInstrument> defaultInstruments = csvToBean.parse(strat, csvReader);
+      List<Instrument> samples = Lists.newArrayList();
+      for (Instrument defaultUser : defaultInstruments) {
+              samples.add(defaultUser);
+      }
+
+      return samples;
+}
+
+   @Override
+   public Instrument getInstrument(Integer instrumentModelId, Integer instrumentId) {
+      Instrument result = null;
+
+      StringBuilder url = getBaseUrl("118008");
+      url.append(";bind=");
+      url.append(instrumentModelId);
+      url.append(";bind=");
+      url.append(instrumentId);
+      try {
+              ClientRequest request = new ClientRequest(url.toString());
+              request.accept("text/plain");
+              ClientResponse<String> response = request.get(String.class);
+
+              if (response.getStatus() != 200) {
+                      throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+              }
+              BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
+                              .getBytes(UTF8)), UTF8));
+              List<Instrument> instruments = getInstruments(br);
+              if(instruments.size() == 1) {
+                 result = instruments.get(0);
+              }
+
+      } catch (Exception e) {
+              System.out.println(e);
+              e.printStackTrace(System.out);
+      }
+      return result;
+   }
+   
+   
+   
+   
+   
 }

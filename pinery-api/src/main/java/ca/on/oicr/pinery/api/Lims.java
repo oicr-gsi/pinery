@@ -30,5 +30,13 @@ public interface Lims {
 	public List<ChangeLog> getChangeLogs();
 	
 	public ChangeLog getChangeLog(Integer id);
+	
+	public List<InstrumentModel> getInstrumentModels();
+	
+	public InstrumentModel getInstrumentModel(Integer id);
+	
+	public  List<Instrument> getInstruments(Integer instrumentModelId);
+	
+	public Instrument getInstrument(Integer instrumentModelId, Integer instrumentId);
 
 }
