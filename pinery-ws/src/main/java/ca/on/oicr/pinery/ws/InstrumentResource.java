@@ -13,20 +13,15 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.spi.NotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
-import ca.on.oicr.pinery.api.User;
 import ca.on.oicr.pinery.service.InstrumentService;
-import ca.on.oicr.pinery.service.UserService;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.InstrumentDto;
 import ca.on.oicr.ws.dto.InstrumentModelDto;
-import ca.on.oicr.ws.dto.UserDto;
 
 import com.google.common.collect.Lists;
 
@@ -34,13 +29,8 @@ import com.google.common.collect.Lists;
 @Path("/")
 public class InstrumentResource {
 
-   private static final Logger log = LoggerFactory.getLogger(InstrumentResource.class);
-
    @Context
    private UriInfo uriInfo;
-
-   @Autowired
-   private UserService userService;
 
    @Autowired
    private InstrumentService instrumentService;
@@ -74,6 +64,7 @@ public class InstrumentResource {
    @Path("/instrumentmodel/{id}")
    public InstrumentModelDto getInstrumentModel(@PathParam("id") Integer id) {
       InstrumentModel instrumentModel = instrumentService.getInstrumentModel(id);
+      if (instrumentModel == null) { throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build()); }
       InstrumentModelDto dto = Dtos.asDto(instrumentModel);
 
       final URI uri = uriInfo.getAbsolutePathBuilder().build();
@@ -112,24 +103,13 @@ public class InstrumentResource {
    @Path("/instrumentmodel/{model_id}/instrument/{id}")
    public InstrumentDto getInstrument(@PathParam("model_id") Integer instrumentModelId, @PathParam("id") Integer instrumentId) {
       Instrument instrument = instrumentService.getInstrument(instrumentModelId, instrumentId);
+      if (instrument == null) { throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build()); }
 
-            
-            InstrumentDto dto = Dtos.asDto(instrument);
+      InstrumentDto dto = Dtos.asDto(instrument);
 
       final URI uri = uriInfo.getBaseUriBuilder().path("instrumentmodel").build();
-            dto.setUrl(uri + "/" + instrumentModelId + "/instrument/" + dto.getId().toString());
-            dto.setInstrumentModel(uri + "/" + instrumentModelId);
-            return dto;
+      dto.setUrl(uri + "/" + instrumentModelId + "/instrument/" + dto.getId().toString());
+      dto.setInstrumentModel(uri + "/" + instrumentModelId);
+      return dto;
    }
-
-   private void addUsers(User user, UserDto dto) {
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
-      if (user.getCreatedById() != null) {
-         dto.setCreatedByUrl(baseUri + user.getCreatedById().toString());
-      }
-      if (user.getModifiedById() != null) {
-         dto.setModifiedByUrl(baseUri + user.getModifiedById().toString());
-      }
-   }
-
 }
