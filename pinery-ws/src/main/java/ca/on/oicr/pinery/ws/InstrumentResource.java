@@ -24,9 +24,15 @@ import ca.on.oicr.ws.dto.InstrumentDto;
 import ca.on.oicr.ws.dto.InstrumentModelDto;
 
 import com.google.common.collect.Lists;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiError;
+import com.wordnik.swagger.annotations.ApiErrors;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 @Component
 @Path("/")
+@Api(value = "/instrument", description = "Operations about instruments")
 public class InstrumentResource {
 
    @Context
@@ -38,6 +44,8 @@ public class InstrumentResource {
    @GET
    @Produces({ "application/json" })
    @Path("/instrumentmodels")
+   @ApiOperation(value = "List all instrument models", multiValueResponse = true, responseClass = "ca.on.oicr.ws.dto.InstrumentModelDto")
+   @ApiErrors(value = { @ApiError(code = 404, reason = "No instruments found") })
    public List<InstrumentModelDto> getInstrumentModels() {
       List<InstrumentModel> instrumentModels = instrumentService.getInstrumentModels();
       if (instrumentModels.isEmpty()) { throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build()); }
@@ -62,7 +70,11 @@ public class InstrumentResource {
    @GET
    @Produces({ "application/json" })
    @Path("/instrumentmodel/{id}")
-   public InstrumentModelDto getInstrumentModel(@PathParam("id") Integer id) {
+   @ApiOperation(value = "Find instrument model by ID", responseClass = "ca.on.oicr.ws.dto.InstrumentModelDto")
+   @ApiErrors(value = { @ApiError(code = 400, reason = "Invalid ID supplied"),
+         @ApiError(code = 404, reason = "Instrument not found") })
+   public InstrumentModelDto getInstrumentModel(
+         @ApiParam(value = "ID of instrument model that needs to be fetched", required = true) @PathParam("id") Integer id) {
       InstrumentModel instrumentModel = instrumentService.getInstrumentModel(id);
       if (instrumentModel == null) { throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build()); }
       InstrumentModelDto dto = Dtos.asDto(instrumentModel);
@@ -83,7 +95,11 @@ public class InstrumentResource {
    @GET
    @Produces({ "application/json" })
    @Path("/instrumentmodel/{id}/instruments")
-   public List<InstrumentDto> getInstruments(@PathParam("id") Integer id) {
+   @ApiOperation(value = "List all instruments for a given instrument model ID", multiValueResponse = true, responseClass = "ca.on.oicr.ws.dto.InstrumentDto")
+   @ApiErrors(value = { @ApiError(code = 400, reason = "Invalid ID supplied"),
+         @ApiError(code = 404, reason = "No instruments found") })
+   public List<InstrumentDto> getInstruments(
+         @ApiParam(value = "ID of instrument model", required = true) @PathParam("id") Integer id) {
       List<Instrument> instruments = instrumentService.getInstruments(id);
 
       if (instruments.isEmpty()) { throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build()); }
@@ -101,7 +117,12 @@ public class InstrumentResource {
    @GET
    @Produces({ "application/json" })
    @Path("/instrumentmodel/{model_id}/instrument/{id}")
-   public InstrumentDto getInstrument(@PathParam("model_id") Integer instrumentModelId, @PathParam("id") Integer instrumentId) {
+   @ApiOperation(value = "Fine instrument by ID", responseClass = "ca.on.oicr.ws.dto.InstrumentDto")
+   @ApiErrors(value = { @ApiError(code = 400, reason = "Invalid ID supplied"),
+         @ApiError(code = 404, reason = "No instrument found") })
+   public InstrumentDto getInstrument(
+         @ApiParam(value = "ID of instrument model", required = true) @PathParam("model_id") Integer instrumentModelId,
+         @ApiParam(value = "ID of instrument", required = true) @PathParam("id") Integer instrumentId) {
       Instrument instrument = instrumentService.getInstrument(instrumentModelId, instrumentId);
       if (instrument == null) { throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build()); }
 
