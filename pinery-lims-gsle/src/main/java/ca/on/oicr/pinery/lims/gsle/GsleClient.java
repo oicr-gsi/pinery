@@ -152,7 +152,7 @@ public class GsleClient implements Lims {
 	private Map<Integer, Set<Integer>> getChildren() {
 		Map<Integer, Set<Integer>> result = Maps.newHashMap();
 
-		StringBuilder url = getBaseUrl("74418");
+                StringBuilder url = getBaseUrl("74419");
 		try {
 			ClientRequest request = new ClientRequest(url.toString());
 			request.accept("text/plain");
@@ -180,7 +180,7 @@ public class GsleClient implements Lims {
 		strat.setType(GsleSampleChildren.class);
 		Map<String, String> map = Maps.newHashMap();
 		map.put("parent_id", "parentString");
-		map.put("child_id", "childString");
+		map.put("template_id", "childString");
 		strat.setColumnMapping(map);
 
 		CsvToBean<GsleSampleChildren> csvToBean = new CsvToBean<GsleSampleChildren>();
