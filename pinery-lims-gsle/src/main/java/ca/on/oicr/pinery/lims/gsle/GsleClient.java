@@ -51,722 +51,798 @@ import com.google.common.collect.Sets;
 
 public class GsleClient implements Lims {
 
-	private static final Logger log = LoggerFactory.getLogger(GsleClient.class);
-
-	public final static String UTF8 = "UTF8";
-
-	private String key;
-	private String url;
-
-	public void setKey(String key) {
-		this.key = key;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	@Override
-	public List<String> getProjects() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	// @Override
-	// public List<Sample> getSamples() {
-	// // log.error("Inside getSamples");
-	// try {
-	// ClientRequest request = new ClientRequest("http://" + url +
-	// "/SQLApi?key=" + key + ";id=15887;header=1");
-	// // log.error("The uri is [{}].", request.getUri());
-	// request.accept("text/plain");
-	// ClientResponse<String> response = request.get(String.class);
-	//
-	// if (response.getStatus() != 200) {
-	// throw new RuntimeException("Failed : HTTP error code : " +
-	// response.getStatus());
-	// }
-	// // log.error("** getSample: \n{}", response.getEntity());
-	// BufferedReader br = new BufferedReader(new InputStreamReader(new
-	// ByteArrayInputStream(response.getEntity()
-	// .getBytes(UTF8)), UTF8));
-	// return getSamples(br);
-	//
-	// } catch (Exception e) {
-	// System.out.println(e);
-	// e.printStackTrace(System.out);
-	// }
-	// return null;
-	// }
-
-	private List<Sample> getSamples() {
-		return getSamples(null, null, null, null, null);
-	}
-
-	private Map<Integer, Set<Attribute>> getAttributes() {
-		Map<Integer, Set<Attribute>> result = Maps.newHashMap();
-
-		StringBuilder url = getBaseUrl("74401");
-		try {
-			ClientRequest request = new ClientRequest(url.toString());
-			request.accept("text/plain");
-			ClientResponse<String> response = request.get(String.class);
-
-			if (response.getStatus() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}
-			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes(UTF8)), UTF8));
-			result = getAttributes(br);
-
-		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace(System.out);
-		}
-		return result;
-	}
-
-	private Map<Integer, Set<Attribute>> getAttributes(Reader reader) {
-		Map<Integer, Set<Attribute>> result = Maps.newHashMap();
-
-		CSVReader csvReader = new CSVReader(reader, '\t');
-		HeaderColumnNameTranslateMappingStrategy<GsleAttribute> strat = new HeaderColumnNameTranslateMappingStrategy<GsleAttribute>();
-		strat.setType(GsleAttribute.class);
-		Map<String, String> map = Maps.newHashMap();
-		map.put("template_id", "idString");
-		map.put("display_label", "name");
-		map.put("value", "value");
-		strat.setColumnMapping(map);
-
-		CsvToBean<GsleAttribute> csvToBean = new CsvToBean<GsleAttribute>();
-		List<GsleAttribute> defaultAttributes = csvToBean.parse(strat, csvReader);
-		for (Attribute attribute : defaultAttributes) {
-			if (!result.containsKey(attribute.getId())) {
-				result.put(attribute.getId(), Sets.<Attribute> newHashSet());
-			}
-			result.get(attribute.getId()).add(attribute);
-		}
-		return result;
-	}
-
-	private Map<Integer, Set<Integer>> getChildren() {
-		Map<Integer, Set<Integer>> result = Maps.newHashMap();
-
-                StringBuilder url = getBaseUrl("74419");
-		try {
-			ClientRequest request = new ClientRequest(url.toString());
-			request.accept("text/plain");
-			ClientResponse<String> response = request.get(String.class);
-
-			if (response.getStatus() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}
-			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes(UTF8)), UTF8));
-			result = getChildren(br);
-
-		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace(System.out);
-		}
-		return result;
-	}
-
-	private Map<Integer, Set<Integer>> getChildren(Reader reader) {
-		Map<Integer, Set<Integer>> result = Maps.newHashMap();
-
-		CSVReader csvReader = new CSVReader(reader, '\t');
-		HeaderColumnNameTranslateMappingStrategy<GsleSampleChildren> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSampleChildren>();
-		strat.setType(GsleSampleChildren.class);
-		Map<String, String> map = Maps.newHashMap();
-		map.put("parent_id", "parentString");
-		map.put("template_id", "childString");
-		strat.setColumnMapping(map);
-
-		CsvToBean<GsleSampleChildren> csvToBean = new CsvToBean<GsleSampleChildren>();
-		List<GsleSampleChildren> defaultAttributes = csvToBean.parse(strat, csvReader);
-		for (GsleSampleChildren attribute : defaultAttributes) {
-			if (!result.containsKey(attribute.getParent())) {
-				result.put(attribute.getParent(), Sets.<Integer> newHashSet());
-			}
-			result.get(attribute.getParent()).add(attribute.getChild());
-		}
-		return result;
-	}
-
-	private Map<Integer, Set<Integer>> getParents() {
-		Map<Integer, Set<Integer>> result = Maps.newHashMap();
-
-		StringBuilder url = getBaseUrl("74419");
-		try {
-			ClientRequest request = new ClientRequest(url.toString());
-			request.accept("text/plain");
-			ClientResponse<String> response = request.get(String.class);
-
-			if (response.getStatus() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}
-			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes(UTF8)), UTF8));
-			result = getParents(br);
-
-		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace(System.out);
-		}
-		return result;
-	}
-
-	private Map<Integer, Set<Integer>> getParents(Reader reader) {
-		Map<Integer, Set<Integer>> result = Maps.newHashMap();
-
-		CSVReader csvReader = new CSVReader(reader, '\t');
-		HeaderColumnNameTranslateMappingStrategy<GsleSampleParents> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSampleParents>();
-		strat.setType(GsleSampleParents.class);
-		Map<String, String> map = Maps.newHashMap();
-		map.put("template_id", "templateString");
-		map.put("parent_id", "parentString");
-		strat.setColumnMapping(map);
-
-		CsvToBean<GsleSampleParents> csvToBean = new CsvToBean<GsleSampleParents>();
-		List<GsleSampleParents> defaultAttributes = csvToBean.parse(strat, csvReader);
-		for (GsleSampleParents attribute : defaultAttributes) {
-			if (!result.containsKey(attribute.getTemplate())) {
-				result.put(attribute.getTemplate(), Sets.<Integer> newHashSet());
-			}
-			result.get(attribute.getTemplate()).add(attribute.getParent());
-		}
-		return result;
-	}
-
-	private List<Sample> addAttributes(List<Sample> samples) {
-		Map<Integer, Set<Attribute>> attributes = getAttributes();
-		for (Sample sample : samples) {
-			sample.setAttributes(attributes.get(sample.getId()));
-		}
-		return samples;
-	}
-
-	private List<Sample> addChildren(List<Sample> samples) {
-		Map<Integer, Set<Integer>> children = getChildren();
-		for (Sample sample : samples) {
-			sample.setChildren(children.get(sample.getId()));
-		}
-		return samples;
-	}
-
-	private List<Sample> addParents(List<Sample> samples) {
-		Map<Integer, Set<Integer>> parents = getParents();
-		for (Sample sample : samples) {
-			sample.setParents(parents.get(sample.getId()));
-		}
-		return samples;
-	}
-
-	@Override
-	public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, DateTime before,
-			DateTime after) {
-		if (before == null) {
-			before = DateTime.now().plusDays(1);
-		}
-		if (after == null) {
-			after = DateTime.now().withYear(2005);
-		}
-		// log.error("Inside getSamples");
-		StringBuilder sb = getBaseUrl("74209");
-		sb.append(getArchivedSqlString(archived));
-		// sb.append(";bind=OVCA_%|ACC_%");
-		if (projects != null && !projects.isEmpty()) {
-			sb.append(getSetSqlString(projects, "_%"));
-		} else {
-			sb.append(";bind=%");
-		}
-		if (types != null && !types.isEmpty()) {
-			sb.append(getSetSqlString(types, null));
-		} else {
-			sb.append(";bind=%");
-		}
-		sb.append(getDateSqlString(after));
-		sb.append(getDateSqlString(before));
-		log.error("Samples url [{}].", sb.toString());
-		try {
-			ClientRequest request = new ClientRequest(sb.toString());
-			// log.error("The uri is [{}].", request.getUri());
-			request.accept("text/plain");
-			ClientResponse<String> response = request.get(String.class);
-
-			if (response.getStatus() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}
-			// log.error("** getSample: \n{}", response.getEntity());
-			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes(UTF8)), UTF8));
-			return getSamples(br);
-
-		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace(System.out);
-		}
-		return null;
-	}
-
-	List<Sample> getSamples(Reader reader) {
-		CSVReader csvReader = new CSVReader(reader, '\t');
-		HeaderColumnNameTranslateMappingStrategy<GsleSample> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSample>();
-		strat.setType(GsleSample.class);
-		Map<String, String> map = Maps.newHashMap();
-		map.put("template_id", "idString");
-		map.put("name", "name");
-		map.put("description", "description");
-		map.put("created_at", "createdString");
-		map.put("created_by", "createdByIdString");
-		map.put("modified_at", "modifiedString");
-		map.put("modified_by", "modifiedByIdString");
-		map.put("is_archived", "archivedString");
-		map.put("tube_barcode", "tubeBarcode");
-		map.put("volume", "volumeString");
-		map.put("concentration", "concentrationString");
-		map.put("storage_location", "storageLocation");
-		map.put("prep_kit_name", "prepKitName");
-		map.put("prep_kit_description", "prepKitDescription");
-		map.put("status", "statusString");
-		map.put("state", "stateString");
-		map.put("type_name", "sampleType");
-		strat.setColumnMapping(map);
-
-		CsvToBean<GsleSample> csvToBean = new CsvToBean<GsleSample>();
-		List<GsleSample> defaultSamples = csvToBean.parse(strat, csvReader);
-		List<Sample> samples = Lists.newArrayList();
-		for (Sample defaultSample : defaultSamples) {
-			samples.add(defaultSample);
-			// System.out.println("*** " + defaultSample.getName() + " [" +
-			// defaultSample.getCreated() + "] [" + defaultSample.getModified()
-			// + "] " + defaultSample.getDescription() + " isArchived[" +
-			// defaultSample.getArchived() + "]");
-		}
-		samples = addAttributes(samples);
-		samples = addChildren(samples);
-		samples = addParents(samples);
-		System.out.println("---- Missing dates ----");
-		for (Sample foo : samples) {
-			if (foo.getModified() == null || foo.getCreated() == null) {
-				System.out.println("*** " + foo.getName() + " [" + foo.getCreated() + "] [" + foo.getModified() + "] "
-						+ foo.getDescription() + " isArchived[" + foo.getArchived() + "]");
-			}
-		}
-		return samples;
-	}
-
-	@Override
-	public Sample getSample(Integer id) {
-		// log.error("Inside getSample with id [{}]", id);
-		try {
-			ClientRequest request = new ClientRequest("http://" + url + "/SQLApi?key=" + key
-					+ ";id=74399;header=1;bind=" + id);
-			// + ";id=15888;header=1;bind=" + id);
-			request.accept("text/plain");
-			// log.error("The uri is [{}].", request.getUri());
-			ClientResponse<String> response = request.get(String.class);
-
-			if (response.getStatus() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}
-
-			// log.error("** getSample: \n{}", response.getEntity());
-			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes(UTF8)), UTF8));
-
-			List<Sample> samples = getSamples(br);
-			if (samples.size() == 1) {
-				return samples.get(0);
-			}
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		return null;
-	}
-
-	@Override
-	public List<SampleProject> getSampleProjects() {
-		List<Sample> samples = getSamples();
-		Map<String, SampleProject> projectMap = Maps.newHashMap();
-		for (Sample sample : samples) {
-			SampleProject project = projectMap.get(sample.getProject());
-			if (project == null) {
-				project = new DefaultSampleProject();
-				project.setName(sample.getProject());
-				project.setCount(1);
-				project.setEarliest(sample.getCreated());
-				project.setLatest(sample.getModified());
-				if (sample.getArchived()) {
-					project.setArchivedCount(1);
-				}
-				projectMap.put(sample.getProject(), project);
-			} else {
-				project.setCount(project.getCount() + 1);
-				if (sample.getArchived()) {
-					project.setArchivedCount(project.getArchivedCount() + 1);
-				}
-				if (sample.getCreated() != null && project.getEarliest() != null
-						&& sample.getCreated().before(project.getEarliest())) {
-					project.setEarliest(sample.getCreated());
-				}
-				if (sample.getModified() != null && project.getLatest() != null
-						&& sample.getModified().after(project.getLatest())) {
-					project.setLatest(sample.getModified());
-				}
-			}
-		}
-
-		List<SampleProject> result = Lists.newArrayList(projectMap.values());
-		return result;
-	}
-
-	@Override
-	public List<Type> getTypes() {
-		List<Sample> samples = getSamples();
-		Map<String, Type> typeMap = Maps.newHashMap();
-		for (Sample sample : samples) {
-			if (!StringUtils.isBlank(sample.getSampleType())) {
-				Type type = typeMap.get(sample.getSampleType());
-				if (type == null) {
-					type = new DefaultType();
-					type.setName(sample.getSampleType());
-					type.setCount(1);
-					type.setEarliest(sample.getCreated());
-					type.setLatest(sample.getModified());
-					if (sample.getArchived()) {
-						type.setArchivedCount(1);
-					}
-					typeMap.put(sample.getSampleType(), type);
-				} else {
-					type.setCount(type.getCount() + 1);
-					if (sample.getArchived()) {
-						type.setArchivedCount(type.getArchivedCount() + 1);
-					}
-					if (sample.getCreated() != null && type.getEarliest() != null
-							&& sample.getCreated().before(type.getEarliest())) {
-						type.setEarliest(sample.getCreated());
-					}
-					if (sample.getModified() != null && type.getLatest() != null
-							&& sample.getModified().after(type.getLatest())) {
-						type.setLatest(sample.getModified());
-					}
-				}
-			}
-		}
-
-		List<Type> result = Lists.newArrayList(typeMap.values());
-		return result;
-	}
-
-	@Override
-	public List<AttributeName> getAttributeNames() {
-		List<Sample> samples = getSamples();
-		Map<String, AttributeName> attributeNameMap = Maps.newHashMap();
-		for (Sample sample : samples) {
-			if (sample.getAttributes() != null) {
-				for (Attribute attribute : sample.getAttributes()) {
-					AttributeName attributeName = attributeNameMap.get(attribute.getName());
-					if (attributeName == null) {
-						attributeName = new DefaultAttributeName();
-						attributeName.setName(attribute.getName());
-						attributeName.setCount(1);
-						attributeName.setEarliest(sample.getCreated());
-						attributeName.setLatest(sample.getModified());
-						if (sample.getArchived()) {
-							attributeName.setArchivedCount(1);
-						}
-						attributeNameMap.put(attribute.getName(), attributeName);
-					} else {
-						attributeName.setCount(attributeName.getCount() + 1);
-						if (sample.getArchived()) {
-							attributeName.setArchivedCount(attributeName.getArchivedCount() + 1);
-						}
-						if (sample.getCreated() != null && attributeName.getEarliest() != null
-								&& sample.getCreated().before(attributeName.getEarliest())) {
-							attributeName.setEarliest(sample.getCreated());
-						}
-						if (sample.getModified() != null && attributeName.getLatest() != null
-								&& sample.getModified().after(attributeName.getLatest())) {
-							attributeName.setLatest(sample.getModified());
-						}
-					}
-				}
-			}
-		}
-
-		List<AttributeName> result = Lists.newArrayList(attributeNameMap.values());
-		return result;
-	}
-
-	StringBuilder getBaseUrl(String sqlApiQueryId) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("http://");
-		sb.append(url);
-		sb.append("/SQLApi?key=");
-		sb.append(key);
-		sb.append(";id=");
-		sb.append(sqlApiQueryId);
-		sb.append(";header=1");
-		return sb;
-	}
-
-	String getArchivedSqlString(Boolean archived) {
-		if (archived == null) {
-			return ";bind=0;bind=1";
-		}
-		if (archived) {
-			return ";bind=1;bind=1";
-		} else {
-			return ";bind=0;bind=0";
-		}
-	}
-
-	String getDateSqlString(DateTime date) {
-		try {
-			return ";bind=" + URLEncoder.encode(GsleSample.dateTimeFormatter.print(date), "UTF8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	String getSetSqlString(Set<String> set, String postscript) {
-		StringBuilder sb = new StringBuilder();
-		for (String item : set) {
-			try {
-				sb.append(URLEncoder.encode(item, "UTF8"));
-			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException(e);
-			}
-			if (postscript != null) {
-				sb.append(postscript);
-			}
-			sb.append('|');
-		}
-		sb.setLength(sb.length() - 1);
-		return ";bind=" + sb.toString();
-	}
-
-	@Override
-	public List<User> getUsers() {
-		List<User> result = Lists.newArrayList();
-
-		StringBuilder url = getBaseUrl("74432");
-		try {
-			ClientRequest request = new ClientRequest(url.toString());
-			request.accept("text/plain");
-			ClientResponse<String> response = request.get(String.class);
-
-			if (response.getStatus() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}
-			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes(UTF8)), UTF8));
-			result = getUsers(br);
-		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace(System.out);
-		}
-		return result;
-	}
-
-	@Override
-	public User getUser(Integer id) {
-		User result = null;
-
-		StringBuilder url = getBaseUrl("74433");
-		url.append(";bind=");
-		url.append(id);
-		try {
-			ClientRequest request = new ClientRequest(url.toString());
-			request.accept("text/plain");
-			ClientResponse<String> response = request.get(String.class);
-
-			if (response.getStatus() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}
-			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes(UTF8)), UTF8));
-			List<User> users = getUsers(br);
-			if (users.size() == 1) {
-				result = users.get(0);
-			}
-
-		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace(System.out);
-		}
-		return result;
-	}
-
-	List<User> getUsers(Reader reader) {
-		CSVReader csvReader = new CSVReader(reader, '\t');
-		HeaderColumnNameTranslateMappingStrategy<GsleUser> strat = new HeaderColumnNameTranslateMappingStrategy<GsleUser>();
-		strat.setType(GsleUser.class);
-		Map<String, String> map = Maps.newHashMap();
-		map.put("user_id", "idString");
-		map.put("title", "title");
-		map.put("firstname", "firstname");
-		map.put("lastname", "lastname");
-		map.put("institution", "institution");
-		map.put("phone", "phone");
-		map.put("email", "email");
-		map.put("active", "archivedString");
-		map.put("lab_comment", "comment");
-		map.put("created_at", "createdString");
-		map.put("created_by", "createdByIdString");
-		map.put("modified_at", "modifiedString");
-		map.put("modified_by", "modifiedByIdString");
-		strat.setColumnMapping(map);
-
-		CsvToBean<GsleUser> csvToBean = new CsvToBean<GsleUser>();
-		List<GsleUser> defaultUsers = csvToBean.parse(strat, csvReader);
-		List<User> samples = Lists.newArrayList();
-		for (User defaultUser : defaultUsers) {
-			samples.add(defaultUser);
-		}
-
-		return samples;
-	}
-
-	@Override
-	public List<ChangeLog> getChangeLogs() {
-		List<ChangeLog> result = Lists.newArrayList();
-
-		StringBuilder url = getBaseUrl("76371");
-		try {
-			ClientRequest request = new ClientRequest(url.toString());
-			request.accept("text/plain");
-			ClientResponse<String> response = request.get(String.class);
-
-			if (response.getStatus() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}
-			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes(UTF8)), UTF8));
-			result = getChangeLogs(br);
-		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace(System.out);
-		}
-		return result;
-	}
-	
-	List<ChangeLog> getChangeLogs(Reader reader) {
-		CSVReader csvReader = new CSVReader(reader, '\t');
-		HeaderColumnNameTranslateMappingStrategy<GsleChange> strat = new HeaderColumnNameTranslateMappingStrategy<GsleChange>();
-		strat.setType(GsleChange.class);
-		Map<String, String> map = Maps.newHashMap();
-		map.put("template_id", "sampleIdString");
-		map.put("cmnt", "comment");
-		map.put("notes", "action");
-		map.put("created_by", "createdByIdString");
-		map.put("created_at", "createdString");
-		strat.setColumnMapping(map);
-
-		CsvToBean<GsleChange> csvToBean = new CsvToBean<GsleChange>();
-		List<GsleChange> defaultUsers = csvToBean.parse(strat, csvReader);
-		List<Change> changes = Lists.newArrayList();
-		for (Change defaultUser : defaultUsers) {
-			changes.add(defaultUser);
-		}
-
-		return getChangeLogs(changes);
-	}
-	
-	List<ChangeLog> getChangeLogs(List<Change> changes) {
-		Map<Integer, ChangeLog> changeLogMap = Maps.newHashMap();
-		
-		for(Change change : changes) {
-			if(changeLogMap.containsKey(((GsleChange)change).getSampleId())) {
-				changeLogMap.get(((GsleChange)change).getSampleId()).getChanges().add(change);
-			} else {
-				ChangeLog changeLog = new DefaultChangeLog();
-				changeLog.setSampleId(((GsleChange)change).getSampleId());
-				Set<Change> changeSet = Sets.newHashSet();
-				changeSet.add(change);
-				changeLog.setChanges(changeSet);
-				changeLogMap.put(((GsleChange)change).getSampleId(), changeLog);
-			}
-		}
-		return new ArrayList<ChangeLog>(changeLogMap.values());
-	}
-
-	@Override
-	public ChangeLog getChangeLog(Integer id) {
-		ChangeLog result = null;
-
-		StringBuilder url = getBaseUrl("76372");
-		url.append(";bind=");
-		url.append(id);
-		try {
-			ClientRequest request = new ClientRequest(url.toString());
-			request.accept("text/plain");
-			ClientResponse<String> response = request.get(String.class);
-
-			if (response.getStatus() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}
-			BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-					.getBytes(UTF8)), UTF8));
-			List<ChangeLog> changeLogs = getChangeLogs(br);
-			if (changeLogs.size() == 1) {
-				result = changeLogs.get(0);
-			}
-		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace(System.out);
-		}
-		return result;
-	}
+   private Map<String, String> barcodeMap = Maps.newHashMap();
+
+   private static final Logger log = LoggerFactory.getLogger(GsleClient.class);
+
+   public final static String UTF8 = "UTF8";
+
+   private String key;
+   private String url;
+
+   public void setKey(String key) {
+      this.key = key;
+   }
+
+   public void setUrl(String url) {
+      this.url = url;
+   }
+
+   @Override
+   public List<String> getProjects() {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   // @Override
+   // public List<Sample> getSamples() {
+   // // log.error("Inside getSamples");
+   // try {
+   // ClientRequest request = new ClientRequest("http://" + url +
+   // "/SQLApi?key=" + key + ";id=15887;header=1");
+   // // log.error("The uri is [{}].", request.getUri());
+   // request.accept("text/plain");
+   // ClientResponse<String> response = request.get(String.class);
+   //
+   // if (response.getStatus() != 200) {
+   // throw new RuntimeException("Failed : HTTP error code : " +
+   // response.getStatus());
+   // }
+   // // log.error("** getSample: \n{}", response.getEntity());
+   // BufferedReader br = new BufferedReader(new InputStreamReader(new
+   // ByteArrayInputStream(response.getEntity()
+   // .getBytes(UTF8)), UTF8));
+   // return getSamples(br);
+   //
+   // } catch (Exception e) {
+   // System.out.println(e);
+   // e.printStackTrace(System.out);
+   // }
+   // return null;
+   // }
+
+   private List<Sample> getSamples() {
+      return getSamples(null, null, null, null, null);
+   }
+
+   private Map<Integer, Set<Attribute>> getAttributes() {
+
+      getDataBase();
+      // replace1();
+
+      Map<Integer, Set<Attribute>> result = Maps.newHashMap();
+
+      StringBuilder url = getBaseUrl("74401");
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         result = getAttributes(br);
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   private Map<Integer, Set<Attribute>> getAttributes(Reader reader) {
+      Map<Integer, Set<Attribute>> result = Maps.newHashMap();
+
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleAttribute> strat = new HeaderColumnNameTranslateMappingStrategy<GsleAttribute>();
+      strat.setType(GsleAttribute.class);
+      Map<String, String> map = Maps.newHashMap();
+      map.put("template_id", "idString");
+      map.put("display_label", "name");
+      map.put("value", "value");
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleAttribute> csvToBean = new CsvToBean<GsleAttribute>();
+      List<GsleAttribute> defaultAttributes = csvToBean.parse(strat, csvReader);
+      for (Attribute attribute : defaultAttributes) {
+         if (!result.containsKey(attribute.getId())) {
+            result.put(attribute.getId(), Sets.<Attribute> newHashSet());
+         }
+         result.get(attribute.getId()).add(attribute);
+      }
+      return result;
+   }
+
+   private Map<Integer, Set<Integer>> getChildren() {
+      Map<Integer, Set<Integer>> result = Maps.newHashMap();
+
+      StringBuilder url = getBaseUrl("74419");
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         result = getChildren(br);
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   private Map<Integer, Set<Integer>> getChildren(Reader reader) {
+      Map<Integer, Set<Integer>> result = Maps.newHashMap();
+
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleSampleChildren> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSampleChildren>();
+      strat.setType(GsleSampleChildren.class);
+      Map<String, String> map = Maps.newHashMap();
+      map.put("parent_id", "parentString");
+      map.put("template_id", "childString");
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleSampleChildren> csvToBean = new CsvToBean<GsleSampleChildren>();
+      List<GsleSampleChildren> defaultAttributes = csvToBean.parse(strat, csvReader);
+      for (GsleSampleChildren attribute : defaultAttributes) {
+         if (!result.containsKey(attribute.getParent())) {
+            result.put(attribute.getParent(), Sets.<Integer> newHashSet());
+         }
+         result.get(attribute.getParent()).add(attribute.getChild());
+      }
+      return result;
+   }
+
+   private Map<Integer, Set<Integer>> getParents() {
+      Map<Integer, Set<Integer>> result = Maps.newHashMap();
+
+      StringBuilder url = getBaseUrl("74419");
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         result = getParents(br);
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   private Map<Integer, Set<Integer>> getParents(Reader reader) {
+      Map<Integer, Set<Integer>> result = Maps.newHashMap();
+
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleSampleParents> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSampleParents>();
+      strat.setType(GsleSampleParents.class);
+      Map<String, String> map = Maps.newHashMap();
+      map.put("template_id", "templateString");
+      map.put("parent_id", "parentString");
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleSampleParents> csvToBean = new CsvToBean<GsleSampleParents>();
+      List<GsleSampleParents> defaultAttributes = csvToBean.parse(strat, csvReader);
+      for (GsleSampleParents attribute : defaultAttributes) {
+         if (!result.containsKey(attribute.getTemplate())) {
+            result.put(attribute.getTemplate(), Sets.<Integer> newHashSet());
+         }
+         result.get(attribute.getTemplate()).add(attribute.getParent());
+      }
+      return result;
+   }
+
+   private List<Sample> addAttributes(List<Sample> samples) {
+      Map<Integer, Set<Attribute>> attributes = getAttributes();
+      for (Sample sample : samples) {
+         sample.setAttributes(attributes.get(sample.getId()));
+      }
+      return samples;
+   }
+
+   private List<Sample> addChildren(List<Sample> samples) {
+      Map<Integer, Set<Integer>> children = getChildren();
+      for (Sample sample : samples) {
+         sample.setChildren(children.get(sample.getId()));
+      }
+      return samples;
+   }
+
+   private List<Sample> addParents(List<Sample> samples) {
+      Map<Integer, Set<Integer>> parents = getParents();
+      for (Sample sample : samples) {
+         sample.setParents(parents.get(sample.getId()));
+      }
+      return samples;
+   }
+
+   @Override
+   public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after) {
+      if (before == null) {
+         before = DateTime.now().plusDays(1);
+      }
+      if (after == null) {
+         after = DateTime.now().withYear(2005);
+      }
+      // log.error("Inside getSamples");
+      StringBuilder sb = getBaseUrl("74209");
+      sb.append(getArchivedSqlString(archived));
+      // sb.append(";bind=OVCA_%|ACC_%");
+      if (projects != null && !projects.isEmpty()) {
+         sb.append(getSetSqlString(projects, "_%"));
+      } else {
+         sb.append(";bind=%");
+      }
+      if (types != null && !types.isEmpty()) {
+         sb.append(getSetSqlString(types, null));
+      } else {
+         sb.append(";bind=%");
+      }
+      sb.append(getDateSqlString(after));
+      sb.append(getDateSqlString(before));
+      log.error("Samples url [{}].", sb.toString());
+      try {
+         ClientRequest request = new ClientRequest(sb.toString());
+         // log.error("The uri is [{}].", request.getUri());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         // log.error("** getSample: \n{}", response.getEntity());
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         return getSamples(br);
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return null;
+   }
+
+   List<Sample> getSamples(Reader reader) {
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleSample> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSample>();
+      strat.setType(GsleSample.class);
+      Map<String, String> map = Maps.newHashMap();
+      map.put("template_id", "idString");
+      map.put("name", "name");
+      map.put("description", "description");
+      map.put("created_at", "createdString");
+      map.put("created_by", "createdByIdString");
+      map.put("modified_at", "modifiedString");
+      map.put("modified_by", "modifiedByIdString");
+      map.put("is_archived", "archivedString");
+      map.put("tube_barcode", "tubeBarcode");
+      map.put("volume", "volumeString");
+      map.put("concentration", "concentrationString");
+      map.put("storage_location", "storageLocation");
+      map.put("prep_kit_name", "prepKitName");
+      map.put("prep_kit_description", "prepKitDescription");
+      map.put("status", "statusString");
+      map.put("state", "stateString");
+      map.put("type_name", "sampleType");
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleSample> csvToBean = new CsvToBean<GsleSample>();
+      List<GsleSample> defaultSamples = csvToBean.parse(strat, csvReader);
+      List<Sample> samples = Lists.newArrayList();
+      for (Sample defaultSample : defaultSamples) {
+         samples.add(defaultSample);
+         // System.out.println("*** " + defaultSample.getName() + " [" +
+         // defaultSample.getCreated() + "] [" + defaultSample.getModified()
+         // + "] " + defaultSample.getDescription() + " isArchived[" +
+         // defaultSample.getArchived() + "]");
+      }
+      samples = addAttributes(samples);
+      samples = addChildren(samples);
+      samples = addParents(samples);
+      System.out.println("---- Missing dates ----");
+      for (Sample foo : samples) {
+         if (foo.getModified() == null || foo.getCreated() == null) {
+            System.out.println("*** " + foo.getName() + " [" + foo.getCreated() + "] [" + foo.getModified() + "] " + foo.getDescription()
+                  + " isArchived[" + foo.getArchived() + "]");
+         }
+      }
+      return samples;
+   }
+
+   public void getDataBase() {
+
+      StringBuilder url = getBaseUrl("169186");
+
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         ClientResponse<String> response = request.get(String.class);
+
+         // System.out.println(response.getEntity());
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+
+         CSVReader reader = new CSVReader(new BufferedReader(br), '\t');
+         String[] nextLine;
+
+         while ((nextLine = reader.readNext()) != null) {
+
+            barcodeMap.put(nextLine[0], nextLine[1]);
+
+         }
+
+         replace1(barcodeMap);
+
+      }
+
+      catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+   }
+
+   public void replace1(Map<String, String> barcodeMap) {
+      Object test = "Agilent_90_CGGATTGC";
+
+      if (barcodeMap.containsKey(test)) {
+
+         System.out.println("HERE I WILL PRINT THE MAPPING OF AGILENT         " + barcodeMap.get(test));
+
+         String value = barcodeMap.get(test);
+
+         System.out.println("THE MAPPING OF VALUE SHOULD BE NULL     " + barcodeMap.get(value));
+
+         barcodeMap.put(value, barcodeMap.remove(test));
+         barcodeMap.remove(value);
+
+         System.out.println("HERE I WILL PRINT THE MAPPING OF AGILENT it should be null:::::   " + barcodeMap.get(test));
+
+         System.out.println("HERE IS THE MAPPING OF VALUE::::::::::::::       " + barcodeMap.get(value));
+
+         if (barcodeMap.containsKey(value)) {
+            System.out.println("SUCCCCCEEEEEEESSSSSS");
+         }
+
+      }
+   }
+
+   public void replace2(Map<String, String> barcodeMap) {
+      Object test = "Agilent_90_CGGATTGC";
+
+      if (barcodeMap.containsKey(test)) {
+
+         System.out.println("HERE I WILL PRINT THE MAPPING OF AGILENT         " + barcodeMap.get(test));
+
+         String value = barcodeMap.get(test);
+
+         System.out.println("THE MAPPING OF VALUE SHOULD BE NULL     " + barcodeMap.get(value));
+
+         barcodeMap.remove(test);
+         barcodeMap.put(value, null);
+
+         System.out.println("HERE I WILL PRINT THE MAPPING OF AGILENT it should be null:::::   " + barcodeMap.get(test));
+
+         System.out.println("HERE IS THE MAPPING OF VALUE::::::::::::::       " + barcodeMap.get(value));
+
+         if (barcodeMap.containsKey(value)) {
+            System.out.println("SUCCCCCEEEEEEESSSSSS");
+         }
+
+      }
+   }
+
+   @Override
+   public Sample getSample(Integer id) {
+
+      // log.error("Inside getSample with id [{}]", id);
+      try {
+         ClientRequest request = new ClientRequest("http://" + url + "/SQLApi?key=" + key + ";id=74399;header=1;bind=" + id);
+         // + ";id=15888;header=1;bind=" + id);
+         request.accept("text/plain");
+         // log.error("The uri is [{}].", request.getUri());
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+
+         // log.error("** getSample: \n{}", response.getEntity());
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+
+         List<Sample> samples = getSamples(br);
+         if (samples.size() == 1) {
+            return samples.get(0);
+         }
+      } catch (Exception e) {
+         System.out.println(e);
+      }
+      return null;
+   }
+
+   @Override
+   public List<SampleProject> getSampleProjects() {
+      List<Sample> samples = getSamples();
+      Map<String, SampleProject> projectMap = Maps.newHashMap();
+      for (Sample sample : samples) {
+         SampleProject project = projectMap.get(sample.getProject());
+         if (project == null) {
+            project = new DefaultSampleProject();
+            project.setName(sample.getProject());
+            project.setCount(1);
+            project.setEarliest(sample.getCreated());
+            project.setLatest(sample.getModified());
+            if (sample.getArchived()) {
+               project.setArchivedCount(1);
+            }
+            projectMap.put(sample.getProject(), project);
+         } else {
+            project.setCount(project.getCount() + 1);
+            if (sample.getArchived()) {
+               project.setArchivedCount(project.getArchivedCount() + 1);
+            }
+            if (sample.getCreated() != null && project.getEarliest() != null && sample.getCreated().before(project.getEarliest())) {
+               project.setEarliest(sample.getCreated());
+            }
+            if (sample.getModified() != null && project.getLatest() != null && sample.getModified().after(project.getLatest())) {
+               project.setLatest(sample.getModified());
+            }
+         }
+      }
+
+      List<SampleProject> result = Lists.newArrayList(projectMap.values());
+      return result;
+   }
+
+   @Override
+   public List<Type> getTypes() {
+      List<Sample> samples = getSamples();
+      Map<String, Type> typeMap = Maps.newHashMap();
+      for (Sample sample : samples) {
+         if (!StringUtils.isBlank(sample.getSampleType())) {
+            Type type = typeMap.get(sample.getSampleType());
+            if (type == null) {
+               type = new DefaultType();
+               type.setName(sample.getSampleType());
+               type.setCount(1);
+               type.setEarliest(sample.getCreated());
+               type.setLatest(sample.getModified());
+               if (sample.getArchived()) {
+                  type.setArchivedCount(1);
+               }
+               typeMap.put(sample.getSampleType(), type);
+            } else {
+               type.setCount(type.getCount() + 1);
+               if (sample.getArchived()) {
+                  type.setArchivedCount(type.getArchivedCount() + 1);
+               }
+               if (sample.getCreated() != null && type.getEarliest() != null && sample.getCreated().before(type.getEarliest())) {
+                  type.setEarliest(sample.getCreated());
+               }
+               if (sample.getModified() != null && type.getLatest() != null && sample.getModified().after(type.getLatest())) {
+                  type.setLatest(sample.getModified());
+               }
+            }
+         }
+      }
+
+      List<Type> result = Lists.newArrayList(typeMap.values());
+      return result;
+   }
+
+   @Override
+   public List<AttributeName> getAttributeNames() {
+      List<Sample> samples = getSamples();
+      Map<String, AttributeName> attributeNameMap = Maps.newHashMap();
+      for (Sample sample : samples) {
+         if (sample.getAttributes() != null) {
+            for (Attribute attribute : sample.getAttributes()) {
+               AttributeName attributeName = attributeNameMap.get(attribute.getName());
+               if (attributeName == null) {
+                  attributeName = new DefaultAttributeName();
+                  attributeName.setName(attribute.getName());
+                  attributeName.setCount(1);
+                  attributeName.setEarliest(sample.getCreated());
+                  attributeName.setLatest(sample.getModified());
+                  if (sample.getArchived()) {
+                     attributeName.setArchivedCount(1);
+                  }
+                  attributeNameMap.put(attribute.getName(), attributeName);
+               } else {
+                  attributeName.setCount(attributeName.getCount() + 1);
+                  if (sample.getArchived()) {
+                     attributeName.setArchivedCount(attributeName.getArchivedCount() + 1);
+                  }
+                  if (sample.getCreated() != null && attributeName.getEarliest() != null
+                        && sample.getCreated().before(attributeName.getEarliest())) {
+                     attributeName.setEarliest(sample.getCreated());
+                  }
+                  if (sample.getModified() != null && attributeName.getLatest() != null
+                        && sample.getModified().after(attributeName.getLatest())) {
+                     attributeName.setLatest(sample.getModified());
+                  }
+               }
+            }
+         }
+      }
+
+      List<AttributeName> result = Lists.newArrayList(attributeNameMap.values());
+      return result;
+   }
+
+   StringBuilder getBaseUrl(String sqlApiQueryId) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("http://");
+      sb.append(url);
+      sb.append("/SQLApi?key=");
+      sb.append(key);
+      sb.append(";id=");
+      sb.append(sqlApiQueryId);
+      sb.append(";header=1");
+      return sb;
+   }
+
+   String getArchivedSqlString(Boolean archived) {
+      if (archived == null) {
+         return ";bind=0;bind=1";
+      }
+      if (archived) {
+         return ";bind=1;bind=1";
+      } else {
+         return ";bind=0;bind=0";
+      }
+   }
+
+   String getDateSqlString(DateTime date) {
+      try {
+         return ";bind=" + URLEncoder.encode(GsleSample.dateTimeFormatter.print(date), "UTF8");
+      } catch (UnsupportedEncodingException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   String getSetSqlString(Set<String> set, String postscript) {
+      StringBuilder sb = new StringBuilder();
+      for (String item : set) {
+         try {
+            sb.append(URLEncoder.encode(item, "UTF8"));
+         } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+         }
+         if (postscript != null) {
+            sb.append(postscript);
+         }
+         sb.append('|');
+      }
+      sb.setLength(sb.length() - 1);
+      return ";bind=" + sb.toString();
+   }
+
+   @Override
+   public List<User> getUsers() {
+      List<User> result = Lists.newArrayList();
+
+      StringBuilder url = getBaseUrl("74432");
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         result = getUsers(br);
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   @Override
+   public User getUser(Integer id) {
+      User result = null;
+
+      StringBuilder url = getBaseUrl("74433");
+      url.append(";bind=");
+      url.append(id);
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         List<User> users = getUsers(br);
+         if (users.size() == 1) {
+            result = users.get(0);
+         }
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   List<User> getUsers(Reader reader) {
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleUser> strat = new HeaderColumnNameTranslateMappingStrategy<GsleUser>();
+      strat.setType(GsleUser.class);
+      Map<String, String> map = Maps.newHashMap();
+      map.put("user_id", "idString");
+      map.put("title", "title");
+      map.put("firstname", "firstname");
+      map.put("lastname", "lastname");
+      map.put("institution", "institution");
+      map.put("phone", "phone");
+      map.put("email", "email");
+      map.put("active", "archivedString");
+      map.put("lab_comment", "comment");
+      map.put("created_at", "createdString");
+      map.put("created_by", "createdByIdString");
+      map.put("modified_at", "modifiedString");
+      map.put("modified_by", "modifiedByIdString");
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleUser> csvToBean = new CsvToBean<GsleUser>();
+      List<GsleUser> defaultUsers = csvToBean.parse(strat, csvReader);
+      List<User> samples = Lists.newArrayList();
+      for (User defaultUser : defaultUsers) {
+         samples.add(defaultUser);
+      }
+
+      return samples;
+   }
+
+   @Override
+   public List<ChangeLog> getChangeLogs() {
+      List<ChangeLog> result = Lists.newArrayList();
+
+      StringBuilder url = getBaseUrl("76371");
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         result = getChangeLogs(br);
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   List<ChangeLog> getChangeLogs(Reader reader) {
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleChange> strat = new HeaderColumnNameTranslateMappingStrategy<GsleChange>();
+      strat.setType(GsleChange.class);
+      Map<String, String> map = Maps.newHashMap();
+      map.put("template_id", "sampleIdString");
+      map.put("cmnt", "comment");
+      map.put("notes", "action");
+      map.put("created_by", "createdByIdString");
+      map.put("created_at", "createdString");
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleChange> csvToBean = new CsvToBean<GsleChange>();
+      List<GsleChange> defaultUsers = csvToBean.parse(strat, csvReader);
+      List<Change> changes = Lists.newArrayList();
+      for (Change defaultUser : defaultUsers) {
+         changes.add(defaultUser);
+      }
+
+      return getChangeLogs(changes);
+   }
+
+   List<ChangeLog> getChangeLogs(List<Change> changes) {
+      Map<Integer, ChangeLog> changeLogMap = Maps.newHashMap();
+
+      for (Change change : changes) {
+         if (changeLogMap.containsKey(((GsleChange) change).getSampleId())) {
+            changeLogMap.get(((GsleChange) change).getSampleId()).getChanges().add(change);
+         } else {
+            ChangeLog changeLog = new DefaultChangeLog();
+            changeLog.setSampleId(((GsleChange) change).getSampleId());
+            Set<Change> changeSet = Sets.newHashSet();
+            changeSet.add(change);
+            changeLog.setChanges(changeSet);
+            changeLogMap.put(((GsleChange) change).getSampleId(), changeLog);
+         }
+      }
+      return new ArrayList<ChangeLog>(changeLogMap.values());
+   }
+
+   @Override
+   public ChangeLog getChangeLog(Integer id) {
+      ChangeLog result = null;
+
+      StringBuilder url = getBaseUrl("76372");
+      url.append(";bind=");
+      url.append(id);
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         List<ChangeLog> changeLogs = getChangeLogs(br);
+         if (changeLogs.size() == 1) {
+            result = changeLogs.get(0);
+         }
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
 
    @Override
    public List<InstrumentModel> getInstrumentModels() {
-           List<InstrumentModel> result = Lists.newArrayList();
+      List<InstrumentModel> result = Lists.newArrayList();
 
-           // TODO: Create query and update mapping
-           StringBuilder url = getBaseUrl("74418");
-           try {
-                   ClientRequest request = new ClientRequest(url.toString());
-                   request.accept("text/plain");
-                   ClientResponse<String> response = request.get(String.class);
+      // TODO: Create query and update mapping
+      StringBuilder url = getBaseUrl("74418");
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
 
-                   if (response.getStatus() != 200) {
-                           throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-                   }
-                   BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-                                   .getBytes(UTF8)), UTF8));
-                   result = getInstrumentModels(br);
-           } catch (Exception e) {
-                   System.out.println(e);
-                   e.printStackTrace(System.out);
-           }
-           return result;
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         result = getInstrumentModels(br);
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
    }
 
    List<InstrumentModel> getInstrumentModels(Reader reader) {
-           CSVReader csvReader = new CSVReader(reader, '\t');
-           HeaderColumnNameTranslateMappingStrategy<GsleInstrumentModel> strat = new HeaderColumnNameTranslateMappingStrategy<GsleInstrumentModel>();
-           strat.setType(GsleInstrumentModel.class);
-           Map<String, String> map = Maps.newHashMap();
-           map.put("model_id", "idString");
-           map.put("name", "name");
-//           map.put("vendor", "vendor");
-           map.put("created_at", "createdString");
-           map.put("created_by", "createdByIdString");
-           map.put("modified_at", "modifiedString");
-           map.put("modified_by", "modifiedByIdString");
-           strat.setColumnMapping(map);
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleInstrumentModel> strat = new HeaderColumnNameTranslateMappingStrategy<GsleInstrumentModel>();
+      strat.setType(GsleInstrumentModel.class);
+      Map<String, String> map = Maps.newHashMap();
+      map.put("model_id", "idString");
+      map.put("name", "name");
+      // map.put("vendor", "vendor");
+      map.put("created_at", "createdString");
+      map.put("created_by", "createdByIdString");
+      map.put("modified_at", "modifiedString");
+      map.put("modified_by", "modifiedByIdString");
+      strat.setColumnMapping(map);
 
-           CsvToBean<GsleInstrumentModel> csvToBean = new CsvToBean<GsleInstrumentModel>();
-           List<GsleInstrumentModel> defaultUsers = csvToBean.parse(strat, csvReader);
-           List<InstrumentModel> samples = Lists.newArrayList();
-           for (InstrumentModel defaultUser : defaultUsers) {
-                   samples.add(defaultUser);
-           }
+      CsvToBean<GsleInstrumentModel> csvToBean = new CsvToBean<GsleInstrumentModel>();
+      List<GsleInstrumentModel> defaultUsers = csvToBean.parse(strat, csvReader);
+      List<InstrumentModel> samples = Lists.newArrayList();
+      for (InstrumentModel defaultUser : defaultUsers) {
+         samples.add(defaultUser);
+      }
 
-           return samples;
+      return samples;
    }
 
    @Override
@@ -777,23 +853,22 @@ public class GsleClient implements Lims {
       url.append(";bind=");
       url.append(id);
       try {
-              ClientRequest request = new ClientRequest(url.toString());
-              request.accept("text/plain");
-              ClientResponse<String> response = request.get(String.class);
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
 
-              if (response.getStatus() != 200) {
-                      throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-              }
-              BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-                              .getBytes(UTF8)), UTF8));
-              List<InstrumentModel> instrumentModels = getInstrumentModels(br);
-              if(instrumentModels.size() == 1) {
-                 result = instrumentModels.get(0);
-              }
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         List<InstrumentModel> instrumentModels = getInstrumentModels(br);
+         if (instrumentModels.size() == 1) {
+            result = instrumentModels.get(0);
+         }
 
       } catch (Exception e) {
-              System.out.println(e);
-              e.printStackTrace(System.out);
+         System.out.println(e);
+         e.printStackTrace(System.out);
       }
       return result;
    }
@@ -807,23 +882,22 @@ public class GsleClient implements Lims {
       url.append(";bind=");
       url.append(instrumentModelId);
       try {
-              ClientRequest request = new ClientRequest(url.toString());
-              request.accept("text/plain");
-              ClientResponse<String> response = request.get(String.class);
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
 
-              if (response.getStatus() != 200) {
-                      throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-              }
-              BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-                              .getBytes(UTF8)), UTF8));
-              result = getInstruments(br);
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         result = getInstruments(br);
       } catch (Exception e) {
-              System.out.println(e);
-              e.printStackTrace(System.out);
+         System.out.println(e);
+         e.printStackTrace(System.out);
       }
       return result;
    }
-   
+
    List<Instrument> getInstruments(Reader reader) {
       CSVReader csvReader = new CSVReader(reader, '\t');
       HeaderColumnNameTranslateMappingStrategy<GsleInstrument> strat = new HeaderColumnNameTranslateMappingStrategy<GsleInstrument>();
@@ -838,11 +912,11 @@ public class GsleClient implements Lims {
       List<GsleInstrument> defaultInstruments = csvToBean.parse(strat, csvReader);
       List<Instrument> samples = Lists.newArrayList();
       for (Instrument defaultUser : defaultInstruments) {
-              samples.add(defaultUser);
+         samples.add(defaultUser);
       }
 
       return samples;
-}
+   }
 
    @Override
    public Instrument getInstrument(Integer instrumentModelId, Integer instrumentId) {
@@ -854,29 +928,24 @@ public class GsleClient implements Lims {
       url.append(";bind=");
       url.append(instrumentId);
       try {
-              ClientRequest request = new ClientRequest(url.toString());
-              request.accept("text/plain");
-              ClientResponse<String> response = request.get(String.class);
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
 
-              if (response.getStatus() != 200) {
-                      throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-              }
-              BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity()
-                              .getBytes(UTF8)), UTF8));
-              List<Instrument> instruments = getInstruments(br);
-              if(instruments.size() == 1) {
-                 result = instruments.get(0);
-              }
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         List<Instrument> instruments = getInstruments(br);
+         if (instruments.size() == 1) {
+            result = instruments.get(0);
+         }
 
       } catch (Exception e) {
-              System.out.println(e);
-              e.printStackTrace(System.out);
+         System.out.println(e);
+         e.printStackTrace(System.out);
       }
       return result;
    }
-   
-   
-   
-   
-   
+
 }
