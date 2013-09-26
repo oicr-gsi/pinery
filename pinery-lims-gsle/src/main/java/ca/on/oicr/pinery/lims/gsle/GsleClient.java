@@ -45,12 +45,14 @@ import ca.on.oicr.pinery.lims.GsleSampleChildren;
 import ca.on.oicr.pinery.lims.GsleSampleParents;
 import ca.on.oicr.pinery.lims.GsleUser;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 public class GsleClient implements Lims {
 
+   // Constructing new map
    private Map<String, String> barcodeMap = Maps.newHashMap();
 
    private static final Logger log = LoggerFactory.getLogger(GsleClient.class);
@@ -74,41 +76,11 @@ public class GsleClient implements Lims {
       return null;
    }
 
-   // @Override
-   // public List<Sample> getSamples() {
-   // // log.error("Inside getSamples");
-   // try {
-   // ClientRequest request = new ClientRequest("http://" + url +
-   // "/SQLApi?key=" + key + ";id=15887;header=1");
-   // // log.error("The uri is [{}].", request.getUri());
-   // request.accept("text/plain");
-   // ClientResponse<String> response = request.get(String.class);
-   //
-   // if (response.getStatus() != 200) {
-   // throw new RuntimeException("Failed : HTTP error code : " +
-   // response.getStatus());
-   // }
-   // // log.error("** getSample: \n{}", response.getEntity());
-   // BufferedReader br = new BufferedReader(new InputStreamReader(new
-   // ByteArrayInputStream(response.getEntity()
-   // .getBytes(UTF8)), UTF8));
-   // return getSamples(br);
-   //
-   // } catch (Exception e) {
-   // System.out.println(e);
-   // e.printStackTrace(System.out);
-   // }
-   // return null;
-   // }
-
    private List<Sample> getSamples() {
       return getSamples(null, null, null, null, null);
    }
 
    private Map<Integer, Set<Attribute>> getAttributes() {
-
-      getDataBase();
-      // replace1();
 
       Map<Integer, Set<Attribute>> result = Maps.newHashMap();
 
@@ -128,7 +100,36 @@ public class GsleClient implements Lims {
          System.out.println(e);
          e.printStackTrace(System.out);
       }
+
       return result;
+   }
+
+   public void getBarcode() {
+
+      StringBuilder url = getBaseUrl("169186");
+
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+
+         CSVReader reader = new CSVReader(new BufferedReader(br), '\t');
+         String[] nextLine;
+
+         while ((nextLine = reader.readNext()) != null) {
+            barcodeMap.put(nextLine[0], nextLine[1]);
+         }
+      }
+
+      catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
    }
 
    private Map<Integer, Set<Attribute>> getAttributes(Reader reader) {
@@ -149,7 +150,8 @@ public class GsleClient implements Lims {
          if (!result.containsKey(attribute.getId())) {
             result.put(attribute.getId(), Sets.<Attribute> newHashSet());
          }
-         result.get(attribute.getId()).add(attribute);
+         // Calling barcodeFilter method
+         result.get(attribute.getId()).add(barcodeFilter(attribute));
       }
       return result;
    }
@@ -340,12 +342,16 @@ public class GsleClient implements Lims {
       List<Sample> samples = Lists.newArrayList();
       for (Sample defaultSample : defaultSamples) {
          samples.add(defaultSample);
+
          // System.out.println("*** " + defaultSample.getName() + " [" +
          // defaultSample.getCreated() + "] [" + defaultSample.getModified()
          // + "] " + defaultSample.getDescription() + " isArchived[" +
          // defaultSample.getArchived() + "]");
       }
+
+      getBarcode(); // Populating map
       samples = addAttributes(samples);
+      barcodeMap.clear(); // Clearing map
       samples = addChildren(samples);
       samples = addParents(samples);
       System.out.println("---- Missing dates ----");
@@ -356,91 +362,6 @@ public class GsleClient implements Lims {
          }
       }
       return samples;
-   }
-
-   public void getDataBase() {
-
-      StringBuilder url = getBaseUrl("169186");
-
-      try {
-         ClientRequest request = new ClientRequest(url.toString());
-         ClientResponse<String> response = request.get(String.class);
-
-         // System.out.println(response.getEntity());
-
-         if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-         }
-
-         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
-
-         CSVReader reader = new CSVReader(new BufferedReader(br), '\t');
-         String[] nextLine;
-
-         while ((nextLine = reader.readNext()) != null) {
-
-            barcodeMap.put(nextLine[0], nextLine[1]);
-
-         }
-
-         replace1(barcodeMap);
-
-      }
-
-      catch (Exception e) {
-         System.out.println(e);
-         e.printStackTrace(System.out);
-      }
-   }
-
-   public void replace1(Map<String, String> barcodeMap) {
-      Object test = "Agilent_90_CGGATTGC";
-
-      if (barcodeMap.containsKey(test)) {
-
-         System.out.println("HERE I WILL PRINT THE MAPPING OF AGILENT         " + barcodeMap.get(test));
-
-         String value = barcodeMap.get(test);
-
-         System.out.println("THE MAPPING OF VALUE SHOULD BE NULL     " + barcodeMap.get(value));
-
-         barcodeMap.put(value, barcodeMap.remove(test));
-         barcodeMap.remove(value);
-
-         System.out.println("HERE I WILL PRINT THE MAPPING OF AGILENT it should be null:::::   " + barcodeMap.get(test));
-
-         System.out.println("HERE IS THE MAPPING OF VALUE::::::::::::::       " + barcodeMap.get(value));
-
-         if (barcodeMap.containsKey(value)) {
-            System.out.println("SUCCCCCEEEEEEESSSSSS");
-         }
-
-      }
-   }
-
-   public void replace2(Map<String, String> barcodeMap) {
-      Object test = "Agilent_90_CGGATTGC";
-
-      if (barcodeMap.containsKey(test)) {
-
-         System.out.println("HERE I WILL PRINT THE MAPPING OF AGILENT         " + barcodeMap.get(test));
-
-         String value = barcodeMap.get(test);
-
-         System.out.println("THE MAPPING OF VALUE SHOULD BE NULL     " + barcodeMap.get(value));
-
-         barcodeMap.remove(test);
-         barcodeMap.put(value, null);
-
-         System.out.println("HERE I WILL PRINT THE MAPPING OF AGILENT it should be null:::::   " + barcodeMap.get(test));
-
-         System.out.println("HERE IS THE MAPPING OF VALUE::::::::::::::       " + barcodeMap.get(value));
-
-         if (barcodeMap.containsKey(value)) {
-            System.out.println("SUCCCCCEEEEEEESSSSSS");
-         }
-
-      }
    }
 
    @Override
@@ -948,4 +869,28 @@ public class GsleClient implements Lims {
       return result;
    }
 
+   @VisibleForTesting
+   void setBarcodeMap(Map<String, String> map) {
+
+      this.barcodeMap = map;
+
+   }
+
+   public Attribute barcodeFilter(Attribute attr) {
+
+      if (attr.getName().equals("Barcode")) {
+         String name = attr.getValue();
+
+         if (barcodeMap.size() == 0) {
+            getBarcode();
+         }
+
+         String barcode = (String) barcodeMap.get(name);
+
+         if (barcode != null) {
+            attr.setValue(barcode);
+         }
+      }
+      return attr;
+   }
 }
