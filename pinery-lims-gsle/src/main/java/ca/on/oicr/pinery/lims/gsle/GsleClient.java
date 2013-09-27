@@ -106,7 +106,7 @@ public class GsleClient implements Lims {
 
    public void getBarcode() {
 
-      StringBuilder url = getBaseUrl("169186");
+      StringBuilder url = getBaseUrl("174948");
 
       try {
          ClientRequest request = new ClientRequest(url.toString());
