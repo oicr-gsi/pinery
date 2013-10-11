@@ -28,6 +28,7 @@ import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Lims;
+import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
@@ -600,6 +601,14 @@ public class GsleClient implements Lims {
       return result;
    }
 
+   //
+   // List<Order> getOrders(Reader reader) {
+   // CSVReader csvReader = new CSVReader(reader, '\t');
+   //
+   // return null;
+   //
+   // }
+
    List<User> getUsers(Reader reader) {
       CSVReader csvReader = new CSVReader(reader, '\t');
       HeaderColumnNameTranslateMappingStrategy<GsleUser> strat = new HeaderColumnNameTranslateMappingStrategy<GsleUser>();
@@ -892,5 +901,17 @@ public class GsleClient implements Lims {
          }
       }
       return attr;
+   }
+
+   @Override
+   public List<Order> getOrders() {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public Order getOrder(Integer id) {
+      // TODO Auto-generated method stub
+      return null;
    }
 }

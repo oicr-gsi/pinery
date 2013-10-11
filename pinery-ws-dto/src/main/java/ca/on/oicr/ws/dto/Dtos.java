@@ -14,6 +14,8 @@ import ca.on.oicr.pinery.api.Change;
 import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
+import ca.on.oicr.pinery.api.Order;
+import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.PreparationKit;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
@@ -71,15 +73,19 @@ public final class Dtos {
       if (from.getSampleType() != null) {
          dto.setSampleType(from.getSampleType());
       }
+      // ///////////////////////////////////////////////////////
       if (from.getAttributes() != null && !from.getAttributes().isEmpty()) {
          dto.setAttributes(asDto(from.getAttributes()));
       }
+      // //////////////////////////////////////////////////////////
+
       if (from.getSampleType() != null && !from.getSampleType().equals("")) {
          dto.setSampleType(from.getSampleType());
       }
       return dto;
    }
 
+   // ////////////////////////////////////////////////////////////////////////
    public static Set<AttributeDto> asDto(Set<Attribute> from) {
       Set<AttributeDto> dtoSet = Sets.newHashSet();
       for (Attribute attribute : from) {
@@ -88,6 +94,7 @@ public final class Dtos {
       return dtoSet;
    }
 
+   // ////////////////////////////////////////////////////////////////////////
    public static AttributeDto asDto(Attribute from) {
       AttributeDto dto = new AttributeDto();
       // if(from.getId() != null) {
@@ -201,6 +208,61 @@ public final class Dtos {
       return dto;
    }
 
+   public static OrderDto asDto(Order from) {
+      OrderDto dto = new OrderDto();
+
+      if (!StringUtils.isBlank(from.getProject())) {
+         dto.setProject(from.getProject());
+      }
+      if (!StringUtils.isBlank(from.getStatus())) {
+         dto.setStatus(from.getStatus());
+      }
+      if (!StringUtils.isBlank(from.getPlatform())) {
+         dto.setPlatform(from.getPlatform());
+      }
+      // if (!StringUtils.isBlank(from.getCreatedByUrl())) {
+      // dto.setCreatedByUrl(from.getCreatedByUrl());
+      // }
+      if (from.getCreatedDate() != null) {
+         dto.setCreatedDate(dateTimeFormatter.print(from.getCreatedDate().getTime()));
+      }
+      // if (!StringUtils.isBlank(from.getModifiedByUrl())) {
+      // dto.setModifiedByUrl(from.getModifiedByUrl());
+      // }
+      if (from.getModifiedDate() != null) {
+         dto.setModifiedDate(dateTimeFormatter.print(from.getModifiedDate().getTime()));
+      }
+      if (from.getId() != null) {
+         dto.setId(from.getId());
+      }
+      // if (!StringUtils.isBlank(from.getUrl())) {
+      // dto.setUrl(from.getUrl());
+      // }
+      if (from.getSamples() != null && !from.getSamples().isEmpty()) {
+         dto.setSamples(asDto1(from.getSamples()));
+      }
+      return dto;
+   }
+
+   public static Set<OrderDtoSample> asDto1(Set<OrderSample> from) {
+
+      Set<OrderDtoSample> dtoSet = Sets.newHashSet();
+      for (OrderSample orderSample : from) {
+         dtoSet.add(asDto(orderSample));
+      }
+      return dtoSet;
+   }
+
+   public static OrderDtoSample asDto(OrderSample from) {
+      OrderDtoSample dto = new OrderDtoSample();
+
+      if (from.getBarcode() != null) {
+         dto.setBarcode(from.getBarcode());
+      }
+
+      return dto;
+   }
+
    public static UserDto asDto(User from) {
       UserDto dto = new UserDto();
       dto.setId(from.getId());
@@ -252,7 +314,7 @@ public final class Dtos {
       }
       return dto;
    }
-   
+
    public static InstrumentDto asDto(Instrument from) {
       InstrumentDto dto = new InstrumentDto();
       dto.setId(from.getId());
