@@ -16,6 +16,7 @@ import org.jboss.resteasy.spi.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.service.OrderService;
@@ -24,7 +25,17 @@ import ca.on.oicr.ws.dto.OrderDto;
 
 import com.google.common.collect.Lists;
 
+@Component
+@Path("/")
 public class OrderResource {
+
+   private static final Logger log = LoggerFactory.getLogger(OrderResource.class);
+
+   @Context
+   private UriInfo uriInfo;
+
+   @Autowired
+   private OrderService orderService;
 
    void setUriInfo(UriInfo uriInfo) {
       this.uriInfo = uriInfo;
@@ -34,16 +45,8 @@ public class OrderResource {
       this.orderService = orderService;
    }
 
-   private static final Logger log = LoggerFactory.getLogger(UserResource.class);
-
-   @Context
-   private UriInfo uriInfo;
-
-   @Autowired
-   private OrderService orderService;
-
    @GET
-   @Produces({ "appliaction/json" })
+   @Produces({ "application/json" })
    @Path("/orders")
    public List<OrderDto> getOrders() {
       List<Order> orders = orderService.getOrder();
@@ -58,15 +61,14 @@ public class OrderResource {
          addOrders(order, dto);
          result.add(dto);
       }
-
       return result;
-
    }
 
    @GET
    @Produces({ "application/json" })
-   @Path("/user/{id}")
+   @Path("/order/{id}")
    public OrderDto getOrder(@PathParam("id") Integer id) {
+
       Order order = orderService.getOrder(id);
       OrderDto dto = Dtos.asDto(order);
       final URI uri = uriInfo.getAbsolutePathBuilder().build();

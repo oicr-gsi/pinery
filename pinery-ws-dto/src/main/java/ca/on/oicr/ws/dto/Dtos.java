@@ -208,8 +208,12 @@ public final class Dtos {
       return dto;
    }
 
+   // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   // ////////////////////////////////////////////////////////////////////////////////////////////////////////////
    public static OrderDto asDto(Order from) {
+
       OrderDto dto = new OrderDto();
+      dto.setId(from.getId());
 
       if (!StringUtils.isBlank(from.getProject())) {
          dto.setProject(from.getProject());
@@ -220,24 +224,12 @@ public final class Dtos {
       if (!StringUtils.isBlank(from.getPlatform())) {
          dto.setPlatform(from.getPlatform());
       }
-      // if (!StringUtils.isBlank(from.getCreatedByUrl())) {
-      // dto.setCreatedByUrl(from.getCreatedByUrl());
-      // }
       if (from.getCreatedDate() != null) {
          dto.setCreatedDate(dateTimeFormatter.print(from.getCreatedDate().getTime()));
       }
-      // if (!StringUtils.isBlank(from.getModifiedByUrl())) {
-      // dto.setModifiedByUrl(from.getModifiedByUrl());
-      // }
       if (from.getModifiedDate() != null) {
          dto.setModifiedDate(dateTimeFormatter.print(from.getModifiedDate().getTime()));
       }
-      if (from.getId() != null) {
-         dto.setId(from.getId());
-      }
-      // if (!StringUtils.isBlank(from.getUrl())) {
-      // dto.setUrl(from.getUrl());
-      // }
       if (from.getSamples() != null && !from.getSamples().isEmpty()) {
          dto.setSamples(asDto1(from.getSamples()));
       }
@@ -255,7 +247,11 @@ public final class Dtos {
 
    public static OrderDtoSample asDto(OrderSample from) {
       OrderDtoSample dto = new OrderDtoSample();
-
+      dto.setId(from.getId());
+      // OrderDtoSample dto = (OrderDtoSample) Dtos.asDto((Sample) from);
+      if (from.getAttributes() != null && !from.getAttributes().isEmpty()) {
+         dto.setAttributes(asDto(from.getAttributes()));
+      }
       if (from.getBarcode() != null) {
          dto.setBarcode(from.getBarcode());
       }

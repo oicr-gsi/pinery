@@ -9,6 +9,16 @@ import ca.on.oicr.pinery.api.OrderSample;
 //Implementation of Order interface
 public class DefaultOrder implements Order {
 
+   @Override
+   public String toString() {
+      return "DefaultOrder [status=" + status + ", project=" + project + ", platform=" + platform + ", sample=" + sample + ", createdDate="
+            + createdDate + ", modifiedDate=" + modifiedDate + ", id=" + id + ", createdById=" + createdById + ", modifiedById="
+            + modifiedById + ", getStatus()=" + getStatus() + ", getProject()=" + getProject() + ", getPlatform()=" + getPlatform()
+            + ", getSamples()=" + getSamples() + ", getCreatedDate()=" + getCreatedDate() + ", getModifiedDate()=" + getModifiedDate()
+            + ", getId()=" + getId() + ", getCreatedById()=" + getCreatedById() + ", getModifiedById()=" + getModifiedById()
+            + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+   }
+
    private String status;
    private String project;
    private String platform;
@@ -16,8 +26,8 @@ public class DefaultOrder implements Order {
    private Date createdDate;
    private Date modifiedDate;
    private Integer id;
-   private String createdById;
-   private String modifiedById;
+   private Integer createdById;
+   private Integer modifiedById;
 
    @Override
    public String getStatus() {
@@ -90,22 +100,22 @@ public class DefaultOrder implements Order {
    }
 
    @Override
-   public String getCreatedById() {
+   public Integer getCreatedById() {
       return createdById;
    }
 
    @Override
-   public void setCreatedById(String createdById) {
+   public void setCreatedById(Integer createdById) {
       this.createdById = createdById;
    }
 
    @Override
-   public String getModifiedById() {
+   public Integer getModifiedById() {
       return modifiedById;
    }
 
    @Override
-   public void setModifiedById(String modifiedById) {
+   public void setModifiedById(Integer modifiedById) {
       this.modifiedById = modifiedById;
    }
 }

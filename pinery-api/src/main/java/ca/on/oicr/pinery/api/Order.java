@@ -33,11 +33,12 @@ public interface Order {
 
    public void setId(Integer id);
 
-   public String getCreatedById();
+   public Integer getCreatedById();
 
-   public void setCreatedById(String createdById);
+   public void setCreatedById(Integer createdById);
 
-   public String getModifiedById();
+   public Integer getModifiedById();
 
-   public void setModifiedById(String createdById);
+   public void setModifiedById(Integer modifiedById);
+
 }

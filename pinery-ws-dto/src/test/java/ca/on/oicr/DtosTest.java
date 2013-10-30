@@ -9,10 +9,13 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
+import ca.on.oicr.pinery.lims.DefaultAttribute;
 import ca.on.oicr.pinery.lims.DefaultOrder;
 import ca.on.oicr.pinery.lims.DefaultOrderSample;
+import ca.on.oicr.ws.dto.AttributeDto;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.OrderDto;
 import ca.on.oicr.ws.dto.OrderDtoSample;
@@ -44,17 +47,8 @@ public class DtosTest {
       assertThat(output.getPlatform(), is("Illumina HiSeq 2000"));
    }
 
-   // @Test
-   // public void testOrder4() throws Exception {
-   // Order input = new DefaultOrder();
-   // input.setCreatedByUrl("https://pinery.hpc.oicr.on.ca:8443/pinery/user/37");
-   // OrderDto output = Dtos.asDto(input);
-   // assertThat(output.getCreatedByUrl(),
-   // is("https://pinery.hpc.oicr.on.ca:8443/pinery/user/37"));
-   // }
-
    @Test
-   public void testOrder5() throws Exception {
+   public void testOrder4() throws Exception {
       Order input = new DefaultOrder();
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
       Date date = new Date();
@@ -63,17 +57,8 @@ public class DtosTest {
       assertThat(output.getCreatedDate(), is(sf.format(date)));
    }
 
-   // @Test
-   // public void testOrder6() throws Exception {
-   // Order input = new DefaultOrder();
-   // input.setModifiedByUrl("https://pinery.hpc.oicr.on.ca:8443/pinery/user/37");
-   // OrderDto output = Dtos.asDto(input);
-   // assertThat(output.getModifiedByUrl(),
-   // is("https://pinery.hpc.oicr.on.ca:8443/pinery/user/37"));
-   // }
-
    @Test
-   public void testOrder7() throws Exception {
+   public void testOrder6() throws Exception {
       Order input = new DefaultOrder();
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
       Date date = new Date();
@@ -83,24 +68,15 @@ public class DtosTest {
    }
 
    @Test
-   public void testOrder8() throws Exception {
+   public void testOrder7() throws Exception {
       Order input = new DefaultOrder();
       input.setId(22);
       OrderDto output = Dtos.asDto(input);
       assertThat(output.getId(), is(22));
    }
 
-   // @Test
-   // public void testOrder9() throws Exception {
-   // Order input = new DefaultOrder();
-   // input.setUrl("https://pinery.hpc.oicr.on.ca:8443/pinery/order/22");
-   // OrderDto output = Dtos.asDto(input);
-   // assertThat(output.getUrl(),
-   // is("https://pinery.hpc.oicr.on.ca:8443/pinery/order/22"));
-   // }
-
    @Test
-   public void testOrder10() throws Exception {
+   public void testOrder9() throws Exception {
       Order input = new DefaultOrder();
       Set<OrderSample> samples = Sets.newHashSet();
       OrderSample orderSample = new DefaultOrderSample();
@@ -112,7 +88,7 @@ public class DtosTest {
    }
 
    @Test
-   public void testOrder11() throws Exception {
+   public void testOrder10() throws Exception {
       Order input = new DefaultOrder();
       Set<OrderSample> samples = Sets.newHashSet();
       OrderSample orderSample = new DefaultOrderSample();
@@ -124,12 +100,43 @@ public class DtosTest {
    }
 
    @Test
-   public void testOrderSample_too_OrderDtoSample() throws Exception {
+   public void testOrderSample_too_OrderDtoSample11() throws Exception {
       OrderSample orderSample = new DefaultOrderSample();
       orderSample.setBarcode("ABC");
       OrderDtoSample orderDtoSample = Dtos.asDto(orderSample);
       assertThat(orderDtoSample.getBarcode(), is(orderSample.getBarcode()));
+   }
 
+   @Test
+   public void testOrderSample_too_OrderDtoSample12() throws Exception {
+      boolean status;
+      OrderSample orderSample = new DefaultOrderSample();
+      Attribute attribute = new DefaultAttribute();
+      Set<Attribute> attributes = Sets.newHashSet();
+      attribute.setName("read length");
+      attributes.add(attribute);
+      orderSample.setAttributes(attributes);
+      OrderDtoSample orderDtoSample = Dtos.asDto(orderSample);
+      orderDtoSample.getAttributes();
+      status = attributeContainsName(orderDtoSample.getAttributes(), attribute.getName());
+
+      assertThat(status, is(true));
+   }
+
+   @Test
+   public void testOrderSample_too_OrderDtoSample13() throws Exception {
+      boolean status;
+      OrderSample orderSample = new DefaultOrderSample();
+      Attribute attribute = new DefaultAttribute();
+      Set<Attribute> attributes = Sets.newHashSet();
+      attribute.setValue("2x101");
+      attributes.add(attribute);
+      orderSample.setAttributes(attributes);
+      OrderDtoSample orderDtoSample = Dtos.asDto(orderSample);
+      orderDtoSample.getAttributes();
+      status = attributeContainsValue(orderDtoSample.getAttributes(), attribute.getValue());
+
+      assertThat(status, is(true));
    }
 
    @Test
@@ -140,5 +147,25 @@ public class DtosTest {
       input.add(orderSample);
       Set<OrderDtoSample> output = Dtos.asDto1(input);
       assertThat(output.toArray().length, is(1));
+   }
+
+   public boolean attributeContainsName(Set<AttributeDto> attributeDto, String attributeName) {
+
+      for (AttributeDto dto : attributeDto) {
+         if (dto.getName().equals(attributeName)) {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   public boolean attributeContainsValue(Set<AttributeDto> attributeDto, String attributeValue) {
+
+      for (AttributeDto dto : attributeDto) {
+         if (dto.getValue().equals(attributeValue)) {
+            return true;
+         }
+      }
+      return false;
    }
 }

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -11,12 +12,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.commons.lang.StringUtils;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.CsvToBean;
@@ -29,18 +33,23 @@ import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Order;
+import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
+import ca.on.oicr.pinery.lims.DefaultAttribute;
 import ca.on.oicr.pinery.lims.DefaultAttributeName;
 import ca.on.oicr.pinery.lims.DefaultChangeLog;
+import ca.on.oicr.pinery.lims.DefaultOrderSample;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.GsleAttribute;
 import ca.on.oicr.pinery.lims.GsleChange;
 import ca.on.oicr.pinery.lims.GsleInstrument;
 import ca.on.oicr.pinery.lims.GsleInstrumentModel;
+import ca.on.oicr.pinery.lims.GsleOrder;
+import ca.on.oicr.pinery.lims.GsleOrderSample;
 import ca.on.oicr.pinery.lims.GsleSample;
 import ca.on.oicr.pinery.lims.GsleSampleChildren;
 import ca.on.oicr.pinery.lims.GsleSampleParents;
@@ -601,14 +610,364 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   //
-   // List<Order> getOrders(Reader reader) {
-   // CSVReader csvReader = new CSVReader(reader, '\t');
-   //
-   // return null;
-   //
-   // }
+   /*
+    * ///////////////////////////////////////////////////////////////////////////
+    * GOING TO DELETE
+    * 
+    * //////////////////////////////////////////////////////////////////////////
+    */
+   public Set<OrderSample> populateOrder() {
 
+      String mockCsv2 = "id\t" + "barcode\n" + "45\t" + "CTGCTGTG";
+      StringReader mockCsvReader2 = new StringReader(mockCsv2);
+      List<OrderSample> sample = getOrderSample(mockCsvReader2);
+
+      String mockCsv3 = "name\t" + "value\n" + "read length\t" + "2x101";
+      StringReader mockCsv3Reader = new StringReader(mockCsv3);
+      List<Attribute> attribute = getAttribute(mockCsv3Reader);
+      Set<Attribute> orderSampleAttribute = Sets.newHashSet(attribute);
+
+      OrderSample orderSampleDefault = new DefaultOrderSample();
+      orderSampleDefault.setAttributes(orderSampleAttribute);
+      sample.add(orderSampleDefault);
+      Set<OrderSample> sampleSet = Sets.newHashSet(sample);
+
+      return sampleSet;
+   }
+
+   List<Attribute> getAttribute(Reader reader) {
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleAttribute> strat = new HeaderColumnNameTranslateMappingStrategy<GsleAttribute>();
+      strat.setType(GsleAttribute.class);
+      Map<String, String> map = Maps.newHashMap();
+      map.put("name", "name");
+      map.put("value", "value");
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleAttribute> csvToBean = new CsvToBean<GsleAttribute>();
+      List<GsleAttribute> defaultAttribute = csvToBean.parse(strat, csvReader);
+      List<Attribute> attributeList = Lists.newArrayList();
+      for (Attribute attribute : defaultAttribute) {
+         attributeList.add(attribute);
+      }
+      return attributeList;
+
+   }
+
+   List<OrderSample> getOrderSample(Reader reader) {
+
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleOrderSample> strat = new HeaderColumnNameTranslateMappingStrategy<GsleOrderSample>();
+      strat.setType(GsleOrderSample.class);
+
+      Map<String, String> map = Maps.newHashMap();
+      map.put("barcode", "barcode");
+      map.put("id", "idString");
+
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleOrderSample> csvToBean = new CsvToBean<GsleOrderSample>();
+
+      List<GsleOrderSample> defaultOrder = csvToBean.parse(strat, csvReader);
+
+      List<OrderSample> samples = Lists.newArrayList();
+
+      for (GsleOrderSample order : defaultOrder) {
+         samples.add((OrderSample) order);
+      }
+
+      return samples;
+   }
+
+   /*
+    * ///////////////////////////////////////////////////////////////////////////
+    * GOING TO DELETE
+    * 
+    * //////////////////////////////////////////////////////////////////////////
+    */
+
+   List<Order> getOrders(Reader reader) throws SAXException, JAXBException {
+
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleOrder> strat = new HeaderColumnNameTranslateMappingStrategy<GsleOrder>();
+      strat.setType(GsleOrder.class);
+      Map<String, String> map = Maps.newHashMap();
+
+      map.put("id", "idString");
+      map.put("created_by", "createdByIdString");
+      map.put("created_at", "createdDateString");
+      map.put("modified_by", "modifiedByIdString");
+      map.put("modified_at", "modifiedDateString");
+      map.put("status", "status");
+      map.put("project", "project");
+      map.put("platform", "platform");
+
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleOrder> csvToBean = new CsvToBean<GsleOrder>();
+      List<GsleOrder> gsleOrder = csvToBean.parse(strat, csvReader);
+
+      List<Order> orders = Lists.newArrayList();
+      for (Order defaultOrder : gsleOrder) {
+         orders.add(defaultOrder);
+      }
+
+      List<Temporary> getTemporaryList = getTemporary();
+      Map<Integer, Set<Attribute>> attributeOrderMap = attributeOrderMap(getTemporaryList);
+      Map<Integer, Set<OrderSample>> sampleOrderMap = sampleOrderMap(getTemporaryList);
+
+      Set<OrderSample> temporaryOrderSampleSet = Sets.newHashSet();
+      java.util.ListIterator<Order> it = orders.listIterator();
+      List<Order> finalOrder = Lists.newArrayList();
+
+      while (it.hasNext()) {
+         Order order = (Order) it.next();
+         if (sampleOrderMap.containsKey((order.getId()))) {
+            Set<OrderSample> samples = sampleOrderMap.get(order.getId());
+            for (OrderSample orderSample : samples) {
+               Set<Attribute> attributes = attributeOrderMap.get(order.getId());
+               orderSample.setAttributes(attributes);
+               temporaryOrderSampleSet.add(orderSample);
+               for (OrderSample newOrderSample : temporaryOrderSampleSet) {
+                  for (Order orderList : orders) {
+                     Set<OrderSample> orderSampleSet = Sets.newHashSet(newOrderSample);
+                     orderList.setSample(orderSampleSet);
+                     finalOrder.add(orderList);
+                     orderSampleSet.clear();
+                  }
+               }
+            }
+         }
+      }
+
+      // ///////////////////////////////////////////////////////////////////////////////
+      // ///////////////////////////////////////////////////////////////////////////////
+      // ///////////////////////////////////////////////////////////////////////////////
+      // ////////////////////////////////////////////////////////////////////
+
+      // for (Order order : orders) {
+      // if (sampleOrderMap.containsKey((order.getId()))) {
+      // Set<OrderSample> samples = sampleOrderMap.get(order.getId());
+      //
+      // for (OrderSample orderSample : samples) {
+      // Set<Attribute> attributes = attributeOrderMap.get(orderSample.getId());
+      // temporaryOrderSampleSet.add((OrderSample) attributes);
+      //
+      // order.setSample(samples);
+      // orders.add(order);
+      //
+      // }
+      // }
+      // }
+
+      return finalOrder;
+   }
+
+   public List<Temporary> createMap(Reader reader) {
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<Temporary> strat = new HeaderColumnNameTranslateMappingStrategy<Temporary>();
+      strat.setType(Temporary.class);
+      Map<String, String> map = Maps.newHashMap();
+
+      map.put("sample_id", "idSampleString");
+      map.put("order_id", "idOrderString");
+      map.put("barcode", "barcode");
+      map.put("name", "name");
+      map.put("value", "value");
+
+      strat.setColumnMapping(map);
+
+      CsvToBean<Temporary> csvToBean = new CsvToBean<Temporary>();
+      List<Temporary> gsleTemp = csvToBean.parse(strat, csvReader);
+
+      List<Temporary> temp = Lists.newArrayList();
+      for (Temporary temporary : gsleTemp) {
+         temp.add(temporary);
+      }
+
+      return temp;
+
+   }
+
+   public Map<Integer, Set<Attribute>> attributeOrderMap(List<Temporary> temp) {
+
+      Map<Integer, Set<Attribute>> attMap = Maps.newHashMap();
+
+      for (Temporary list : temp) {
+
+         if (attMap.containsKey(list.getOrderId())) {
+            Attribute attribute = new DefaultAttribute();
+            attribute.setId(list.getOrderId());
+            attribute.setName(list.getName());
+            attribute.setValue(list.getValue());
+
+            attMap.get(list.getOrderId()).add(attribute);
+
+         } else {
+            Attribute attribute = new DefaultAttribute();
+            Set<Attribute> attributeSet = Sets.newHashSet();
+
+            attribute.setId(list.getOrderId());
+            attribute.setName(list.getName());
+            attribute.setValue(list.getValue());
+            attributeSet.add(attribute);
+
+            attMap.put(list.getOrderId(), attributeSet);
+
+         }
+      }
+
+      return attMap;
+
+   }
+
+   public Map<Integer, Set<OrderSample>> sampleOrderMap(List<Temporary> temp) {
+
+      Map<Integer, Set<OrderSample>> attMap = Maps.newHashMap();
+
+      for (Temporary list : temp) {
+
+         if (attMap.containsKey(list.getOrderId())) {
+
+            OrderSample orderSample = new DefaultOrderSample();
+            orderSample.setBarcode(list.getBarcode());
+            orderSample.setId(list.getSampleId());
+
+            attMap.get(list.getOrderId()).add(orderSample);
+
+         } else {
+
+            OrderSample orderSample = new DefaultOrderSample();
+            Set<OrderSample> orderSampleSet = Sets.newHashSet();
+
+            orderSample.setBarcode(list.getBarcode());
+            orderSample.setId(list.getSampleId());
+            orderSampleSet.add(orderSample);
+            attMap.put(list.getOrderId(), orderSampleSet);
+
+         }
+      }
+
+      return attMap;
+   }
+
+   public List<Temporary> getTemporary() {
+      List<Temporary> result = Lists.newArrayList();
+
+      StringBuilder url = getBaseUrl("184520");
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         result = createMap(br);
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+
+      return result;
+   }
+
+   public Temporary getTemporary(Integer id) {
+      Temporary result = null;
+
+      StringBuilder url = getBaseUrl("184521");
+      url.append(";bind=");
+      url.append(id);
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         List<Temporary> temporary = createMap(br);
+         if (temporary.size() == 1) {
+            result = temporary.get(0);
+         }
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   /*
+    * ///////////////////////////////////////////////////////////////////////////
+    * MERGE
+    * 
+    * //////////////////////////////////////////////////////////////////////////
+    */
+
+   @Override
+   public List<Order> getOrders() {
+      getTemporary();
+
+      List<Order> result = Lists.newArrayList();
+
+      StringBuilder url = getBaseUrl("182404");
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         result = getOrders(br);
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   @Override
+   public Order getOrder(Integer id) {
+
+      // getTemporary();
+
+      Order result = null;
+
+      StringBuilder url = getBaseUrl("182405");
+      url.append(";bind=");
+      url.append(id);
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         List<Order> orders = getOrders(br);
+         if (orders.size() == 1) {
+            result = orders.get(0);
+         }
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    List<User> getUsers(Reader reader) {
       CSVReader csvReader = new CSVReader(reader, '\t');
       HeaderColumnNameTranslateMappingStrategy<GsleUser> strat = new HeaderColumnNameTranslateMappingStrategy<GsleUser>();
@@ -901,17 +1260,5 @@ public class GsleClient implements Lims {
          }
       }
       return attr;
-   }
-
-   @Override
-   public List<Order> getOrders() {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   @Override
-   public Order getOrder(Integer id) {
-      // TODO Auto-generated method stub
-      return null;
    }
 }
