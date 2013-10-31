@@ -712,33 +712,35 @@ public class GsleClient implements Lims {
          orders.add(defaultOrder);
       }
 
-      List<Temporary> getTemporaryList = getTemporary();
-      Map<Integer, Set<Attribute>> attributeOrderMap = attributeOrderMap(getTemporaryList);
-      Map<Integer, Set<OrderSample>> sampleOrderMap = sampleOrderMap(getTemporaryList);
+      // List<Temporary> getTemporaryList = getTemporary();
+      // Map<Integer, Set<Attribute>> attributeOrderMap =
+      // attributeOrderMap(getTemporaryList);
+      // Map<Integer, Set<OrderSample>> sampleOrderMap =
+      // sampleOrderMap(getTemporaryList);
+      //
+      // java.util.ListIterator<Order> it = orders.listIterator();
+      // List<Order> finalOrder = Lists.newArrayList();
 
-      Set<OrderSample> temporaryOrderSampleSet = Sets.newHashSet();
-      java.util.ListIterator<Order> it = orders.listIterator();
-      List<Order> finalOrder = Lists.newArrayList();
-
-      while (it.hasNext()) {
-         Order order = (Order) it.next();
-         if (sampleOrderMap.containsKey((order.getId()))) {
-            Set<OrderSample> samples = sampleOrderMap.get(order.getId());
-            for (OrderSample orderSample : samples) {
-               Set<Attribute> attributes = attributeOrderMap.get(order.getId());
-               orderSample.setAttributes(attributes);
-               temporaryOrderSampleSet.add(orderSample);
-               for (OrderSample newOrderSample : temporaryOrderSampleSet) {
-                  for (Order orderList : orders) {
-                     Set<OrderSample> orderSampleSet = Sets.newHashSet(newOrderSample);
-                     orderList.setSample(orderSampleSet);
-                     finalOrder.add(orderList);
-                     orderSampleSet.clear();
-                  }
-               }
-            }
-         }
-      }
+      // while (it.hasNext()) {
+      // Order order = (Order) it.next();
+      // if (sampleOrderMap.containsKey((order.getId()))) {
+      // System.out.println(order.getId());
+      // Set<OrderSample> samples = sampleOrderMap.get(order.getId());
+      // for (OrderSample orderSample : samples) {
+      // Set<Attribute> attributes = attributeOrderMap.get(order.getId());
+      // orderSample.setAttributes(attributes);
+      // temporaryOrderSampleSet.add(orderSample);
+      // for (OrderSample newOrderSample : temporaryOrderSampleSet) {
+      // for (Order orderList : orders) {
+      // Set<OrderSample> orderSampleSet = Sets.newHashSet(newOrderSample);
+      // orderList.setSample(orderSampleSet);
+      // finalOrder.add(orderList);
+      // orderSampleSet.clear();
+      // }
+      // }
+      // }
+      // }
+      // }
 
       // ///////////////////////////////////////////////////////////////////////////////
       // ///////////////////////////////////////////////////////////////////////////////
@@ -748,17 +750,43 @@ public class GsleClient implements Lims {
       // for (Order order : orders) {
       // if (sampleOrderMap.containsKey((order.getId()))) {
       // Set<OrderSample> samples = sampleOrderMap.get(order.getId());
-      //
       // for (OrderSample orderSample : samples) {
-      // Set<Attribute> attributes = attributeOrderMap.get(orderSample.getId());
-      // temporaryOrderSampleSet.add((OrderSample) attributes);
-      //
-      // order.setSample(samples);
-      // orders.add(order);
-      //
+      // Set<OrderSample> temporaryOrderSampleSet = Sets.newHashSet();
+      // order.setSample(temporaryOrderSampleSet);
+      // Set<Attribute> attributes = attributeOrderMap.get(order.getId());
+      // orderSample.setAttributes(attributes);
+      // temporaryOrderSampleSet.add(orderSample);
+      // finalOrder.add(order);
+      // temporaryOrderSampleSet.clear();
+      // System.out.println(finalOrder);
+      // System.out.println();
+      // System.out.println();
+      // System.out.println();
       // }
       // }
       // }
+
+      List<Temporary> getTemporaryList = getTemporary();
+
+      Map<Integer, Set<Attribute>> attributeOrderMap = attributeOrderMap(getTemporaryList);
+      Map<Integer, Set<OrderSample>> sampleOrderMap = sampleOrderMap(getTemporaryList);
+      Set<OrderSample> temporaryOrderSampleSet = Sets.newHashSet();
+      // java.util.ListIterator<Order> it = orders.listIterator();
+      List<Order> finalOrder = Lists.newArrayList();
+
+      for (Order order : orders) {
+         if (sampleOrderMap.containsKey(order.getId())) {
+            Set<OrderSample> samples = sampleOrderMap.get(order.getId());
+            for (OrderSample orderSample : samples) {
+               Set<Attribute> attributes = attributeOrderMap.get(order.getId());
+               temporaryOrderSampleSet = Sets.newHashSet();
+               orderSample.setAttributes(attributes);
+               temporaryOrderSampleSet.add(orderSample);
+               order.setSample(temporaryOrderSampleSet);
+               finalOrder.add(order);
+            }
+         }
+      }
 
       return finalOrder;
    }
@@ -936,9 +964,11 @@ public class GsleClient implements Lims {
 
    @Override
    public Order getOrder(Integer id) {
-
-      // getTemporary();
-
+      // /////////////////////////////////////////////////////////////////////////////////////////////
+      // ////////////////////////////////////////////////////////////////////////////////////////////
+      // getTemporary(id);
+      // /////////////////////////////////////////////////////////////////////////////////////////////
+      // ////////////////////////////////////////////////////////////////////////////////////////////
       Order result = null;
 
       StringBuilder url = getBaseUrl("182405");
