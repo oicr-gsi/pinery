@@ -159,4 +159,94 @@ public class GsleClientTest {
 
       assertThat(attMap.get(temp.getOrderId()).size(), is(2));
    }
+
+   @Test
+   public void test_sample_order_map_with_one_order() throws Exception {
+      GsleClient sut = new GsleClient();
+      Map<Integer, Set<OrderSample>> map = sut.sampleOrderMap(get_temporary_list_test_input_one());
+
+      assertThat("Number of orders in map", map.size(), is(1));
+   }
+
+   @Test
+   public void test_sample_order_map_with_two_orders() throws Exception {
+      GsleClient sut = new GsleClient();
+      Map<Integer, Set<OrderSample>> map = sut.sampleOrderMap(get_temporary_list_test_input_two());
+
+      assertThat("Number of orders in map", map.size(), is(2));
+   }
+
+   @Test
+   public void test_attribute_order_map_with_five_attributes() throws Exception {
+      GsleClient sut = new GsleClient();
+      Map<Integer, Set<Attribute>> map = sut.attributeOrderMap(get_temporary_list_test_input_one());
+
+      assertThat("Number of samples in map", map.size(), is(2));
+      assertThat("Number of attributes in sample 13312", map.get(13312).size(), is(2));
+      assertThat("Number of attributes in sample 13315", map.get(13315).size(), is(3));
+   }
+
+   /**
+    * A single order containing two samples. One sample with two attributes and
+    * another sample with three attributes.
+    */
+   private List<Temporary> get_temporary_list_test_input_one() {
+      List<Temporary> temporaries = Lists.newArrayList();
+      Temporary t0 = new Temporary();
+      t0.setOrderId(1047);
+      t0.setSampleId(13312);
+      t0.setName("Lib. Frag. Size (mean, bp)");
+      t0.setValue("252");
+
+      Temporary t1 = new Temporary();
+      t1.setOrderId(1047);
+      t1.setSampleId(13312);
+      t1.setName("Read Length");
+      t1.setValue("75x35");
+
+      Temporary t2 = new Temporary();
+      t2.setOrderId(1047);
+      t2.setSampleId(13315);
+      t2.setName("Lib. Frag. Size (mean, bp)");
+      t2.setValue("246");
+
+      Temporary t3 = new Temporary();
+      t3.setOrderId(1047);
+      t3.setSampleId(13315);
+      t3.setName("Read Length");
+      t3.setValue("75x35");
+
+      Temporary t4 = new Temporary();
+      t4.setOrderId(1047);
+      t4.setSampleId(13315);
+      t4.setName("Reference");
+      t4.setValue("Human hg19");
+
+      temporaries.add(t0);
+      temporaries.add(t1);
+      temporaries.add(t2);
+      temporaries.add(t3);
+      temporaries.add(t4);
+      return temporaries;
+   }
+
+   /** Two orders. */
+   private List<Temporary> get_temporary_list_test_input_two() {
+      List<Temporary> temporaries = Lists.newArrayList();
+      Temporary t0 = new Temporary();
+      t0.setOrderId(2222);
+      t0.setSampleId(22111);
+      t0.setName("Lib. Frag. Size (mean, bp)");
+      t0.setValue("252");
+
+      Temporary t1 = new Temporary();
+      t1.setOrderId(3333);
+      t1.setSampleId(33111);
+      t1.setName("Read Length");
+      t1.setValue("75x35");
+
+      temporaries.add(t0);
+      temporaries.add(t1);
+      return temporaries;
+   }
 }
