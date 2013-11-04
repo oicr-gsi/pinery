@@ -12,6 +12,7 @@ public class Temporary {
    private String barcode;
    private String name;
    private String value;
+   private String sampleUrl;
 
    public Integer getOrderId() {
       return orderId;
@@ -63,6 +64,14 @@ public class Temporary {
       if (idSampleString != null) {
          setSampleId(Integer.parseInt(idSampleString));
       }
+   }
+
+   public String getSampleUrl() {
+      return sampleUrl;
+   }
+
+   public void setSampleUrl(String sampleUrl) {
+      this.sampleUrl = sampleUrl;
    }
 
 }

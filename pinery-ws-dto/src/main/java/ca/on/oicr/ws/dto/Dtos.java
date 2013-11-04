@@ -233,10 +233,12 @@ public final class Dtos {
       if (from.getAttributes() != null && !from.getAttributes().isEmpty()) {
          dto.setAttributes(asDto(from.getAttributes()));
       }
-      if (from.getBarcode() != null) {
+      if (!StringUtils.isBlank(from.getBarcode())) {
          dto.setBarcode(from.getBarcode());
       }
-
+      if (!StringUtils.isBlank(from.getUrl())) {
+         dto.setUrl(from.getUrl());
+      }
       return dto;
    }
 

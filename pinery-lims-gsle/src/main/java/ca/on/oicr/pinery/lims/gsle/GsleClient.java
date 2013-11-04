@@ -5,7 +5,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -50,7 +49,6 @@ import ca.on.oicr.pinery.lims.GsleChange;
 import ca.on.oicr.pinery.lims.GsleInstrument;
 import ca.on.oicr.pinery.lims.GsleInstrumentModel;
 import ca.on.oicr.pinery.lims.GsleOrder;
-import ca.on.oicr.pinery.lims.GsleOrderSample;
 import ca.on.oicr.pinery.lims.GsleSample;
 import ca.on.oicr.pinery.lims.GsleSampleChildren;
 import ca.on.oicr.pinery.lims.GsleSampleParents;
@@ -611,82 +609,6 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   /*
-    * ///////////////////////////////////////////////////////////////////////////
-    * GOING TO DELETE
-    * 
-    * //////////////////////////////////////////////////////////////////////////
-    */
-   public Set<OrderSample> populateOrder() {
-
-      String mockCsv2 = "id\t" + "barcode\n" + "45\t" + "CTGCTGTG";
-      StringReader mockCsvReader2 = new StringReader(mockCsv2);
-      List<OrderSample> sample = getOrderSample(mockCsvReader2);
-
-      String mockCsv3 = "name\t" + "value\n" + "read length\t" + "2x101";
-      StringReader mockCsv3Reader = new StringReader(mockCsv3);
-      List<Attribute> attribute = getAttribute(mockCsv3Reader);
-      Set<Attribute> orderSampleAttribute = Sets.newHashSet(attribute);
-
-      OrderSample orderSampleDefault = new DefaultOrderSample();
-      orderSampleDefault.setAttributes(orderSampleAttribute);
-      sample.add(orderSampleDefault);
-      Set<OrderSample> sampleSet = Sets.newHashSet(sample);
-
-      return sampleSet;
-   }
-
-   List<Attribute> getAttribute(Reader reader) {
-      CSVReader csvReader = new CSVReader(reader, '\t');
-      HeaderColumnNameTranslateMappingStrategy<GsleAttribute> strat = new HeaderColumnNameTranslateMappingStrategy<GsleAttribute>();
-      strat.setType(GsleAttribute.class);
-      Map<String, String> map = Maps.newHashMap();
-      map.put("name", "name");
-      map.put("value", "value");
-      strat.setColumnMapping(map);
-
-      CsvToBean<GsleAttribute> csvToBean = new CsvToBean<GsleAttribute>();
-      List<GsleAttribute> defaultAttribute = csvToBean.parse(strat, csvReader);
-      List<Attribute> attributeList = Lists.newArrayList();
-      for (Attribute attribute : defaultAttribute) {
-         attributeList.add(attribute);
-      }
-      return attributeList;
-
-   }
-
-   List<OrderSample> getOrderSample(Reader reader) {
-
-      CSVReader csvReader = new CSVReader(reader, '\t');
-      HeaderColumnNameTranslateMappingStrategy<GsleOrderSample> strat = new HeaderColumnNameTranslateMappingStrategy<GsleOrderSample>();
-      strat.setType(GsleOrderSample.class);
-
-      Map<String, String> map = Maps.newHashMap();
-      map.put("barcode", "barcode");
-      map.put("id", "idString");
-
-      strat.setColumnMapping(map);
-
-      CsvToBean<GsleOrderSample> csvToBean = new CsvToBean<GsleOrderSample>();
-
-      List<GsleOrderSample> defaultOrder = csvToBean.parse(strat, csvReader);
-
-      List<OrderSample> samples = Lists.newArrayList();
-
-      for (GsleOrderSample order : defaultOrder) {
-         samples.add((OrderSample) order);
-      }
-
-      return samples;
-   }
-
-   /*
-    * ///////////////////////////////////////////////////////////////////////////
-    * GOING TO DELETE
-    * 
-    * //////////////////////////////////////////////////////////////////////////
-    */
-
    List<Order> getOrders(Reader reader) throws SAXException, JAXBException {
 
       CSVReader csvReader = new CSVReader(reader, '\t');
@@ -713,65 +635,10 @@ public class GsleClient implements Lims {
          orders.add(defaultOrder);
       }
 
-      // List<Temporary> getTemporaryList = getTemporary();
-      // Map<Integer, Set<Attribute>> attributeOrderMap =
-      // attributeOrderMap(getTemporaryList);
-      // Map<Integer, Set<OrderSample>> sampleOrderMap =
-      // sampleOrderMap(getTemporaryList);
-      //
-      // java.util.ListIterator<Order> it = orders.listIterator();
-      // List<Order> finalOrder = Lists.newArrayList();
-
-      // while (it.hasNext()) {
-      // Order order = (Order) it.next();
-      // if (sampleOrderMap.containsKey((order.getId()))) {
-      // System.out.println(order.getId());
-      // Set<OrderSample> samples = sampleOrderMap.get(order.getId());
-      // for (OrderSample orderSample : samples) {
-      // Set<Attribute> attributes = attributeOrderMap.get(order.getId());
-      // orderSample.setAttributes(attributes);
-      // temporaryOrderSampleSet.add(orderSample);
-      // for (OrderSample newOrderSample : temporaryOrderSampleSet) {
-      // for (Order orderList : orders) {
-      // Set<OrderSample> orderSampleSet = Sets.newHashSet(newOrderSample);
-      // orderList.setSample(orderSampleSet);
-      // finalOrder.add(orderList);
-      // orderSampleSet.clear();
-      // }
-      // }
-      // }
-      // }
-      // }
-
-      // ///////////////////////////////////////////////////////////////////////////////
-      // ///////////////////////////////////////////////////////////////////////////////
-      // ///////////////////////////////////////////////////////////////////////////////
-      // ////////////////////////////////////////////////////////////////////
-
-      // for (Order order : orders) {
-      // if (sampleOrderMap.containsKey((order.getId()))) {
-      // Set<OrderSample> samples = sampleOrderMap.get(order.getId());
-      // for (OrderSample orderSample : samples) {
-      // Set<OrderSample> temporaryOrderSampleSet = Sets.newHashSet();
-      // order.setSample(temporaryOrderSampleSet);
-      // Set<Attribute> attributes = attributeOrderMap.get(order.getId());
-      // orderSample.setAttributes(attributes);
-      // temporaryOrderSampleSet.add(orderSample);
-      // finalOrder.add(order);
-      // temporaryOrderSampleSet.clear();
-      // System.out.println(finalOrder);
-      // System.out.println();
-      // System.out.println();
-      // System.out.println();
-      // }
-      // }
-      // }
-
       List<Temporary> getTemporaryList = getTemporary();
       Map<Integer, Set<Attribute>> attributeOrderMap = attributeOrderMap(getTemporaryList);
       Map<Integer, Set<OrderSample>> sampleOrderMap = sampleOrderMap(getTemporaryList);
       Set<OrderSample> temporaryOrderSampleSet = Sets.newHashSet();
-      // java.util.ListIterator<Order> it = orders.listIterator();
       List<Order> finalOrder = Lists.newArrayList();
 
       for (Order order : orders) {
@@ -852,6 +719,7 @@ public class GsleClient implements Lims {
       map.put("barcode", "barcode");
       map.put("name", "name");
       map.put("value", "value");
+      map.put("sample_url", "sampleUrl");
 
       strat.setColumnMapping(map);
 
@@ -937,6 +805,7 @@ public class GsleClient implements Lims {
             OrderSample orderSample = new DefaultOrderSample();
             orderSample.setBarcode(list.getBarcode());
             orderSample.setId(list.getSampleId());
+            orderSample.setUrl(list.getSampleUrl());
 
             attMap.get(list.getOrderId()).add(orderSample);
 
@@ -949,6 +818,7 @@ public class GsleClient implements Lims {
             orderSample.setId(list.getSampleId());
             orderSampleSet.add(orderSample);
             attMap.put(list.getOrderId(), orderSampleSet);
+            orderSample.setUrl(list.getSampleUrl());
          }
       }
 
@@ -964,6 +834,7 @@ public class GsleClient implements Lims {
          OrderSample orderSample = new DefaultOrderSample();
          orderSample.setBarcode(temp.getBarcode());
          orderSample.setId(temp.getSampleId());
+         orderSample.setUrl(temp.getSampleUrl());
          attMap.get(temp.getOrderId()).add(orderSample);
 
       } else {
@@ -973,6 +844,7 @@ public class GsleClient implements Lims {
 
          orderSample.setBarcode(temp.getBarcode());
          orderSample.setId(temp.getSampleId());
+         orderSample.setUrl(temp.getSampleUrl());
          orderSampleSet.add(orderSample);
          attMap.put(temp.getOrderId(), orderSampleSet);
 
@@ -1029,16 +901,8 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   /*
-    * ///////////////////////////////////////////////////////////////////////////
-    * MERGE
-    * 
-    * //////////////////////////////////////////////////////////////////////////
-    */
-
    @Override
    public List<Order> getOrders() {
-      // getTemporary();
 
       List<Order> result = Lists.newArrayList();
 
@@ -1092,9 +956,6 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    List<User> getUsers(Reader reader) {
       CSVReader csvReader = new CSVReader(reader, '\t');
       HeaderColumnNameTranslateMappingStrategy<GsleUser> strat = new HeaderColumnNameTranslateMappingStrategy<GsleUser>();

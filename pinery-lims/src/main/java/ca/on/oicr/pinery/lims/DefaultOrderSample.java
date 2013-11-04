@@ -39,6 +39,7 @@ public class DefaultOrderSample extends DefaultSample implements OrderSample {
    }
 
    private String barcode;
+   private String url;
 
    @Override
    public String getBarcode() {
@@ -49,4 +50,15 @@ public class DefaultOrderSample extends DefaultSample implements OrderSample {
    public void setBarcode(String barcode) {
       this.barcode = barcode;
    }
+
+   @Override
+   public String getUrl() {
+      return url;
+   }
+
+   @Override
+   public void setUrl(String url) {
+      this.url = url;
+   }
+
 }
