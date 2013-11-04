@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.lims.gsle;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
@@ -767,7 +768,6 @@ public class GsleClient implements Lims {
       // }
 
       List<Temporary> getTemporaryList = getTemporary();
-
       Map<Integer, Set<Attribute>> attributeOrderMap = attributeOrderMap(getTemporaryList);
       Map<Integer, Set<OrderSample>> sampleOrderMap = sampleOrderMap(getTemporaryList);
       Set<OrderSample> temporaryOrderSampleSet = Sets.newHashSet();
@@ -777,21 +777,71 @@ public class GsleClient implements Lims {
       for (Order order : orders) {
          if (sampleOrderMap.containsKey(order.getId())) {
             Set<OrderSample> samples = sampleOrderMap.get(order.getId());
+            temporaryOrderSampleSet = Sets.newHashSet();
+            Set<Attribute> attributes = attributeOrderMap.get(order.getId());
             for (OrderSample orderSample : samples) {
-               Set<Attribute> attributes = attributeOrderMap.get(order.getId());
-               temporaryOrderSampleSet = Sets.newHashSet();
                orderSample.setAttributes(attributes);
                temporaryOrderSampleSet.add(orderSample);
                order.setSample(temporaryOrderSampleSet);
-               finalOrder.add(order);
             }
+            finalOrder.add(order);
          }
       }
 
       return finalOrder;
    }
 
-   public List<Temporary> createMap(Reader reader) {
+   List<Order> getOrders(Reader reader, Integer id) throws SAXException, JAXBException {
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleOrder> strat = new HeaderColumnNameTranslateMappingStrategy<GsleOrder>();
+      strat.setType(GsleOrder.class);
+      Map<String, String> map = Maps.newHashMap();
+
+      map.put("id", "idString");
+      map.put("created_by", "createdByIdString");
+      map.put("created_at", "createdDateString");
+      map.put("modified_by", "modifiedByIdString");
+      map.put("modified_at", "modifiedDateString");
+      map.put("status", "status");
+      map.put("project", "project");
+      map.put("platform", "platform");
+
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleOrder> csvToBean = new CsvToBean<GsleOrder>();
+      List<GsleOrder> gsleOrder = csvToBean.parse(strat, csvReader);
+
+      List<Order> orders = Lists.newArrayList();
+      for (Order defaultOrder : gsleOrder) {
+         orders.add(defaultOrder);
+      }
+
+      List<Temporary> getTemporary = getTemporary(id);
+      Map<Integer, Set<Attribute>> attributeOrderMap = attributeOrderMap(getTemporary);
+      Map<Integer, Set<OrderSample>> sampleOrderMap = sampleOrderMap(getTemporary);
+      Set<OrderSample> temporaryOrderSampleSet = Sets.newHashSet();
+      // java.util.ListIterator<Order> it = orders.listIterator();
+      List<Order> finalOrder = Lists.newArrayList();
+      for (Order order : orders) {
+         if (sampleOrderMap.containsKey(order.getId())) {
+            Set<OrderSample> samples = sampleOrderMap.get(order.getId());
+            temporaryOrderSampleSet = Sets.newHashSet();
+            Set<Attribute> attributes = attributeOrderMap.get(order.getId());
+            for (OrderSample orderSample : samples) {
+               orderSample.setAttributes(attributes);
+               temporaryOrderSampleSet.add(orderSample);
+               order.setSample(temporaryOrderSampleSet);
+            }
+            finalOrder.add(order);
+
+         }
+      }
+
+      return finalOrder;
+   }
+
+   public List<Temporary> createMap(Reader reader) throws IOException {
+
       CSVReader csvReader = new CSVReader(reader, '\t');
       HeaderColumnNameTranslateMappingStrategy<Temporary> strat = new HeaderColumnNameTranslateMappingStrategy<Temporary>();
       strat.setType(Temporary.class);
@@ -846,7 +896,34 @@ public class GsleClient implements Lims {
       }
 
       return attMap;
+   }
 
+   public Map<Integer, Set<Attribute>> attributeOrderMap(Temporary temp) {
+
+      Map<Integer, Set<Attribute>> attMap = Maps.newHashMap();
+
+      if (attMap.containsKey(temp.getOrderId())) {
+         Attribute attribute = new DefaultAttribute();
+         attribute.setId(temp.getOrderId());
+         attribute.setName(temp.getName());
+         attribute.setValue(temp.getValue());
+
+         attMap.get(temp.getOrderId()).add(attribute);
+
+      } else {
+         Attribute attribute = new DefaultAttribute();
+         Set<Attribute> attributeSet = Sets.newHashSet();
+
+         attribute.setId(temp.getOrderId());
+         attribute.setName(temp.getName());
+         attribute.setValue(temp.getValue());
+         attributeSet.add(attribute);
+
+         attMap.put(temp.getOrderId(), attributeSet);
+
+      }
+
+      return attMap;
    }
 
    public Map<Integer, Set<OrderSample>> sampleOrderMap(List<Temporary> temp) {
@@ -872,8 +949,33 @@ public class GsleClient implements Lims {
             orderSample.setId(list.getSampleId());
             orderSampleSet.add(orderSample);
             attMap.put(list.getOrderId(), orderSampleSet);
-
          }
+      }
+
+      return attMap;
+   }
+
+   public Map<Integer, Set<OrderSample>> sampleOrderMap(Temporary temp) {
+
+      Map<Integer, Set<OrderSample>> attMap = Maps.newHashMap();
+
+      if (attMap.containsKey(temp.getOrderId())) {
+
+         OrderSample orderSample = new DefaultOrderSample();
+         orderSample.setBarcode(temp.getBarcode());
+         orderSample.setId(temp.getSampleId());
+         attMap.get(temp.getOrderId()).add(orderSample);
+
+      } else {
+
+         OrderSample orderSample = new DefaultOrderSample();
+         Set<OrderSample> orderSampleSet = Sets.newHashSet();
+
+         orderSample.setBarcode(temp.getBarcode());
+         orderSample.setId(temp.getSampleId());
+         orderSampleSet.add(orderSample);
+         attMap.put(temp.getOrderId(), orderSampleSet);
+
       }
 
       return attMap;
@@ -903,9 +1005,8 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   public Temporary getTemporary(Integer id) {
-      Temporary result = null;
-
+   public List<Temporary> getTemporary(Integer id) {
+      List<Temporary> result = null;
       StringBuilder url = getBaseUrl("184521");
       url.append(";bind=");
       url.append(id);
@@ -919,9 +1020,7 @@ public class GsleClient implements Lims {
          }
          BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
          List<Temporary> temporary = createMap(br);
-         if (temporary.size() == 1) {
-            result = temporary.get(0);
-         }
+         result = temporary;
 
       } catch (Exception e) {
          System.out.println(e);
@@ -939,7 +1038,7 @@ public class GsleClient implements Lims {
 
    @Override
    public List<Order> getOrders() {
-      getTemporary();
+      // getTemporary();
 
       List<Order> result = Lists.newArrayList();
 
@@ -952,6 +1051,7 @@ public class GsleClient implements Lims {
          if (response.getStatus() != 200) {
             throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
          }
+
          BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
          result = getOrders(br);
 
@@ -964,11 +1064,7 @@ public class GsleClient implements Lims {
 
    @Override
    public Order getOrder(Integer id) {
-      // /////////////////////////////////////////////////////////////////////////////////////////////
-      // ////////////////////////////////////////////////////////////////////////////////////////////
-      // getTemporary(id);
-      // /////////////////////////////////////////////////////////////////////////////////////////////
-      // ////////////////////////////////////////////////////////////////////////////////////////////
+
       Order result = null;
 
       StringBuilder url = getBaseUrl("182405");
@@ -982,8 +1078,9 @@ public class GsleClient implements Lims {
          if (response.getStatus() != 200) {
             throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
          }
+
          BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
-         List<Order> orders = getOrders(br);
+         List<Order> orders = getOrders(br, id);
          if (orders.size() == 1) {
             result = orders.get(0);
          }

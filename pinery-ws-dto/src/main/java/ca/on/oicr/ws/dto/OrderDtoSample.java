@@ -1,6 +1,5 @@
 package ca.on.oicr.ws.dto;
 
-//Inheriting fields from SampleDto and adding new fields 
 public class OrderDtoSample extends SampleDto {
 
    @Override

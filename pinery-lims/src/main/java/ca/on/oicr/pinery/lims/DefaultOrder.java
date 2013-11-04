@@ -6,7 +6,6 @@ import java.util.Set;
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
 
-//Implementation of Order interface
 public class DefaultOrder implements Order {
 
    @Override

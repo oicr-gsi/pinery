@@ -73,19 +73,15 @@ public final class Dtos {
       if (from.getSampleType() != null) {
          dto.setSampleType(from.getSampleType());
       }
-      // ///////////////////////////////////////////////////////
       if (from.getAttributes() != null && !from.getAttributes().isEmpty()) {
          dto.setAttributes(asDto(from.getAttributes()));
       }
-      // //////////////////////////////////////////////////////////
-
       if (from.getSampleType() != null && !from.getSampleType().equals("")) {
          dto.setSampleType(from.getSampleType());
       }
       return dto;
    }
 
-   // ////////////////////////////////////////////////////////////////////////
    public static Set<AttributeDto> asDto(Set<Attribute> from) {
       Set<AttributeDto> dtoSet = Sets.newHashSet();
       for (Attribute attribute : from) {
@@ -94,11 +90,8 @@ public final class Dtos {
       return dtoSet;
    }
 
-   // ////////////////////////////////////////////////////////////////////////
    public static AttributeDto asDto(Attribute from) {
       AttributeDto dto = new AttributeDto();
-      // if(from.getId() != null) {
-      // }
       if (from.getName() != null) {
          dto.setName(from.getName());
       }
@@ -134,9 +127,6 @@ public final class Dtos {
       SampleProjectDto dto = new SampleProjectDto();
       dto.setName(from.getName());
       dto.setCount(from.getCount());
-      // if(from.getArchivedCount() != null) {
-      // dto.setArchivedCount(from.getArchivedCount());
-      // }
       if (from.getEarliest() != null) {
          dto.setEarliest(dateTimeFormatter.print(from.getEarliest().getTime()));
       }
@@ -150,9 +140,6 @@ public final class Dtos {
       TypeDto dto = new TypeDto();
       dto.setName(from.getName());
       dto.setCount(from.getCount());
-      // if(from.getArchivedCount() != null) {
-      // dto.setArchivedCount(from.getArchivedCount());
-      // }
       if (from.getEarliest() != null) {
          dto.setEarliest(dateTimeFormatter.print(from.getEarliest().getTime()));
       }
@@ -166,9 +153,6 @@ public final class Dtos {
       AttributeNameDto dto = new AttributeNameDto();
       dto.setName(from.getName());
       dto.setCount(from.getCount());
-      // if(from.getArchivedCount() != null) {
-      // dto.setArchivedCount(from.getArchivedCount());
-      // }
       if (from.getEarliest() != null) {
          dto.setEarliest(dateTimeFormatter.print(from.getEarliest().getTime()));
       }
@@ -208,8 +192,6 @@ public final class Dtos {
       return dto;
    }
 
-   // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   // ////////////////////////////////////////////////////////////////////////////////////////////////////////////
    public static OrderDto asDto(Order from) {
 
       OrderDto dto = new OrderDto();
@@ -248,7 +230,6 @@ public final class Dtos {
    public static OrderDtoSample asDto(OrderSample from) {
       OrderDtoSample dto = new OrderDtoSample();
       dto.setId(from.getId());
-      // OrderDtoSample dto = (OrderDtoSample) Dtos.asDto((Sample) from);
       if (from.getAttributes() != null && !from.getAttributes().isEmpty()) {
          dto.setAttributes(asDto(from.getAttributes()));
       }
