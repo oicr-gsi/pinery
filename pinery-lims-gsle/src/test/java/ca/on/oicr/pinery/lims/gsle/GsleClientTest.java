@@ -98,36 +98,36 @@ public class GsleClientTest {
 
    }
 
-   @Test
-   public void attributeOrderMap() throws Exception {
-
-      Temporary temp = new Temporary();
-      temp.setOrderId(42);
-      temp.setName("a");
-      temp.setValue("b");
-
-      Temporary temp1 = new Temporary();
-      temp1.setOrderId(36);
-      temp1.setName("c");
-      temp1.setValue("d");
-
-      Temporary temp2 = new Temporary();
-      temp2.setOrderId(42);
-      temp2.setName("e");
-      temp2.setValue("f");
-
-      List<Temporary> sampleList = Lists.newArrayList();
-      sampleList.add(temp);
-      sampleList.add(temp1);
-      sampleList.add(temp2);
-
-      Map<Integer, Set<Attribute>> attMap = Maps.newHashMap();
-
-      GsleClient gsleClient = new GsleClient();
-      attMap = gsleClient.attributeOrderMap(sampleList);
-
-      assertThat(attMap.get(temp.getOrderId()).size(), is(2));
-   }
+   // @Test
+   // public void attributeOrderMap() throws Exception {
+   //
+   // Temporary temp = new Temporary();
+   // temp.setOrderId(42);
+   // temp.setName("a");
+   // temp.setValue("b");
+   //
+   // Temporary temp1 = new Temporary();
+   // temp1.setOrderId(36);
+   // temp1.setName("c");
+   // temp1.setValue("d");
+   //
+   // Temporary temp2 = new Temporary();
+   // temp2.setOrderId(42);
+   // temp2.setName("e");
+   // temp2.setValue("f");
+   //
+   // List<Temporary> sampleList = Lists.newArrayList();
+   // sampleList.add(temp);
+   // sampleList.add(temp1);
+   // sampleList.add(temp2);
+   //
+   // Map<Integer, Set<Attribute>> attMap = Maps.newHashMap();
+   //
+   // GsleClient gsleClient = new GsleClient();
+   // attMap = gsleClient.attributeOrderMap(sampleList);
+   //
+   // assertThat(attMap.get(temp.getOrderId()).size(), is(2));
+   // }
 
    @Test
    public void sampleOrderMap() throws Exception {

@@ -741,13 +741,13 @@ public class GsleClient implements Lims {
 
       for (Temporary list : temp) {
 
-         if (attMap.containsKey(list.getOrderId())) {
+         if (attMap.containsKey(list.getSampleId())) {
             Attribute attribute = new DefaultAttribute();
             attribute.setId(list.getOrderId());
             attribute.setName(list.getName());
             attribute.setValue(list.getValue());
 
-            attMap.get(list.getOrderId()).add(attribute);
+            attMap.get(list.getSampleId()).add(attribute);
 
          } else {
             Attribute attribute = new DefaultAttribute();
@@ -758,7 +758,7 @@ public class GsleClient implements Lims {
             attribute.setValue(list.getValue());
             attributeSet.add(attribute);
 
-            attMap.put(list.getOrderId(), attributeSet);
+            attMap.put(list.getSampleId(), attributeSet);
 
          }
       }
@@ -770,13 +770,13 @@ public class GsleClient implements Lims {
 
       Map<Integer, Set<Attribute>> attMap = Maps.newHashMap();
 
-      if (attMap.containsKey(temp.getOrderId())) {
+      if (attMap.containsKey(temp.getSampleId())) {
          Attribute attribute = new DefaultAttribute();
          attribute.setId(temp.getOrderId());
          attribute.setName(temp.getName());
          attribute.setValue(temp.getValue());
 
-         attMap.get(temp.getOrderId()).add(attribute);
+         attMap.get(temp.getSampleId()).add(attribute);
 
       } else {
          Attribute attribute = new DefaultAttribute();
@@ -787,7 +787,7 @@ public class GsleClient implements Lims {
          attribute.setValue(temp.getValue());
          attributeSet.add(attribute);
 
-         attMap.put(temp.getOrderId(), attributeSet);
+         attMap.put(temp.getSampleId(), attributeSet);
 
       }
 
