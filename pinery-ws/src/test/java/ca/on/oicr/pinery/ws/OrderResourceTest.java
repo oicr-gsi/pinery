@@ -69,6 +69,11 @@ public class OrderResourceTest {
       when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
       when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
 
+      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
@@ -93,6 +98,11 @@ public class OrderResourceTest {
       when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
       when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
 
+      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
@@ -106,7 +116,6 @@ public class OrderResourceTest {
    @Test
    public void test_Resource_4() throws Exception {
 
-      Order order = new DefaultOrder();
       UriInfo uriInfoMock = mock(UriInfo.class);
       UriBuilder uriBuilderMock = mock(UriBuilder.class);
       when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
@@ -115,6 +124,11 @@ public class OrderResourceTest {
 
       when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
       when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
+
+      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
 
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
@@ -140,6 +154,11 @@ public class OrderResourceTest {
       when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
       when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
 
+      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
@@ -162,6 +181,11 @@ public class OrderResourceTest {
       when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
       when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
 
+      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
@@ -183,6 +207,11 @@ public class OrderResourceTest {
 
       when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
       when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
+
+      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
 
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
@@ -207,12 +236,16 @@ public class OrderResourceTest {
       when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
       when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
 
+      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
       orderResource.setOrderService(orderService);
       orderResource.setUriInfo(uriInfoMock);
-      OrderDto orderDto = orderResource.getOrder(1);
 
       AttributeDto attributeDto = new AttributeDto();
       Set<AttributeDto> attributeDtoSet = Sets.newHashSet();
@@ -238,12 +271,16 @@ public class OrderResourceTest {
       when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
       when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
 
+      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
       orderResource.setOrderService(orderService);
       orderResource.setUriInfo(uriInfoMock);
-      OrderDto orderDto = orderResource.getOrder(1);
 
       AttributeDto attributeDto = new AttributeDto();
       Set<AttributeDto> attributeDtoSet = Sets.newHashSet();
@@ -269,6 +306,11 @@ public class OrderResourceTest {
       when(uriInfoMock.getBaseUriBuilder().build()).thenReturn(new URI("http://test/order"));
       when(uriInfoMock.getBaseUriBuilder().path("order").build()).thenReturn(new URI("http://test/order"));
 
+      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder()).thenReturn(getListOrder());
       OrderResource orderResource = new OrderResource();
@@ -292,6 +334,11 @@ public class OrderResourceTest {
       when(uriInfoMock.getBaseUriBuilder().build()).thenReturn(new URI("http://test/order"));
       when(uriInfoMock.getBaseUriBuilder().path("order").build()).thenReturn(new URI("http://test/order"));
 
+      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample"));
+
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder()).thenReturn(getListOrder());
       OrderResource orderResource = new OrderResource();
@@ -310,7 +357,7 @@ public class OrderResourceTest {
       orderDto.setPlatform("Illumina HiSeq 2000");
       orderDto.setProject("HALT");
       orderDto.setStatus("Complete");
-      orderDto.setUrl("http://test/order/2");
+      orderDto.setUrl("http://test/sample/2");
 
       listOrderDto.add(orderDto);
 
