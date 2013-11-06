@@ -6,8 +6,4 @@ public interface OrderSample extends Sample {
 
    public void setBarcode(String barcode);
 
-   public String getUrl();
-
-   public void setUrl(String url);
-
 }

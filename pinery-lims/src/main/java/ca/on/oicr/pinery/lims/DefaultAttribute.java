@@ -5,13 +5,6 @@ import ca.on.oicr.pinery.api.Attribute;
 public class DefaultAttribute implements Attribute {
 
    @Override
-   public String toString() {
-      return "DefaultAttribute [id=" + id + ", name=" + name + ", value=" + value + ", hashCode()=" + hashCode() + ", getId()=" + getId()
-            + ", getName()=" + getName() + ", getValue()=" + getValue() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
-            + "]";
-   }
-
-   @Override
    public int hashCode() {
       final int prime = 31;
       int result = 1;
@@ -37,6 +30,13 @@ public class DefaultAttribute implements Attribute {
          if (other.value != null) return false;
       } else if (!value.equals(other.value)) return false;
       return true;
+   }
+
+   @Override
+   public String toString() {
+      return "DefaultAttribute [id=" + id + ", name=" + name + ", value=" + value + ", getId()=" + getId() + ", getName()=" + getName()
+            + ", getValue()=" + getValue() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
+            + super.toString() + "]";
    }
 
    private Integer id;

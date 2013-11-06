@@ -99,14 +99,14 @@ public class OrderResource {
          Set<OrderSample> tempSet = Sets.newHashSet();
          tempSet = order.getSamples();
 
-         Set<OrderDtoSample> tempDtoSet = Sets.newHashSet();
-         tempDtoSet = dto.getSamples();
-
-         for (OrderDtoSample orderDtoSample : tempDtoSet) {
-            for (OrderSample orderSample : tempSet) {
-               orderDtoSample.setUrl(baseUriSample + orderSample.getId().toString());
+         if (dto.getSamples() != null) {
+            for (OrderDtoSample orderDtoSample : dto.getSamples()) {
+               for (OrderSample orderSample : tempSet) {
+                  orderDtoSample.setUrl(baseUriSample + orderSample.getId().toString());
+               }
             }
          }
+
       }
 
    }
