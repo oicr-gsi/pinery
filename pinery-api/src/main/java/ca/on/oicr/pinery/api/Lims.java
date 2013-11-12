@@ -29,6 +29,10 @@ public interface Lims {
 
    public Order getOrder(Integer id);
 
+   public List<Run> getRuns();
+
+   public Run getRun(Integer id);
+
    public List<Type> getTypes();
 
    public List<AttributeName> getAttributeNames();

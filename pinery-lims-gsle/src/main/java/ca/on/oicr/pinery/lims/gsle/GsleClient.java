@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +35,9 @@ import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
+import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunPosition;
+import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
@@ -42,6 +46,8 @@ import ca.on.oicr.pinery.lims.DefaultAttribute;
 import ca.on.oicr.pinery.lims.DefaultAttributeName;
 import ca.on.oicr.pinery.lims.DefaultChangeLog;
 import ca.on.oicr.pinery.lims.DefaultOrderSample;
+import ca.on.oicr.pinery.lims.DefaultRunPosition;
+import ca.on.oicr.pinery.lims.DefaultRunSample;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.GsleAttribute;
@@ -49,6 +55,7 @@ import ca.on.oicr.pinery.lims.GsleChange;
 import ca.on.oicr.pinery.lims.GsleInstrument;
 import ca.on.oicr.pinery.lims.GsleInstrumentModel;
 import ca.on.oicr.pinery.lims.GsleOrder;
+import ca.on.oicr.pinery.lims.GsleRun;
 import ca.on.oicr.pinery.lims.GsleSample;
 import ca.on.oicr.pinery.lims.GsleSampleChildren;
 import ca.on.oicr.pinery.lims.GsleSampleParents;
@@ -58,6 +65,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Table;
 
 public class GsleClient implements Lims {
 
@@ -635,7 +643,7 @@ public class GsleClient implements Lims {
          orders.add(defaultOrder);
       }
 
-      List<Temporary> getTemporary = getTemporary();
+      List<TemporaryOrder> getTemporary = getTemporaryOrder();
       Map<Integer, Set<Attribute>> attributeOrderMap = attributeOrderMap(getTemporary);
       Map<Integer, Set<OrderSample>> sampleOrderMap = sampleOrderMap(getTemporary);
 
@@ -680,7 +688,7 @@ public class GsleClient implements Lims {
          orders.add(defaultOrder);
       }
 
-      List<Temporary> getTemporary = getTemporary(id);
+      List<TemporaryOrder> getTemporary = getTemporaryOrder(id);
       Map<Integer, Set<Attribute>> attributeOrderMap = attributeOrderMap(getTemporary);
       Map<Integer, Set<OrderSample>> sampleOrderMap = sampleOrderMap(getTemporary);
 
@@ -694,17 +702,16 @@ public class GsleClient implements Lims {
                }
             }
             order.setSample(samples);
-
          }
       }
       return orders;
    }
 
-   public List<Temporary> createMap(Reader reader) throws IOException {
+   public List<TemporaryOrder> createMap(Reader reader) throws IOException {
 
       CSVReader csvReader = new CSVReader(reader, '\t');
-      HeaderColumnNameTranslateMappingStrategy<Temporary> strat = new HeaderColumnNameTranslateMappingStrategy<Temporary>();
-      strat.setType(Temporary.class);
+      HeaderColumnNameTranslateMappingStrategy<TemporaryOrder> strat = new HeaderColumnNameTranslateMappingStrategy<TemporaryOrder>();
+      strat.setType(TemporaryOrder.class);
       Map<String, String> map = Maps.newHashMap();
 
       map.put("sample_id", "idSampleString");
@@ -716,11 +723,11 @@ public class GsleClient implements Lims {
 
       strat.setColumnMapping(map);
 
-      CsvToBean<Temporary> csvToBean = new CsvToBean<Temporary>();
-      List<Temporary> gsleTemp = csvToBean.parse(strat, csvReader);
+      CsvToBean<TemporaryOrder> csvToBean = new CsvToBean<TemporaryOrder>();
+      List<TemporaryOrder> gsleTemp = csvToBean.parse(strat, csvReader);
 
-      List<Temporary> temp = Lists.newArrayList();
-      for (Temporary temporary : gsleTemp) {
+      List<TemporaryOrder> temp = Lists.newArrayList();
+      for (TemporaryOrder temporary : gsleTemp) {
          temp.add(temporary);
       }
 
@@ -728,11 +735,11 @@ public class GsleClient implements Lims {
 
    }
 
-   public Map<Integer, Set<Attribute>> attributeOrderMap(List<Temporary> temp) {
+   public Map<Integer, Set<Attribute>> attributeOrderMap(List<TemporaryOrder> temp) {
 
       Map<Integer, Set<Attribute>> attMap = Maps.newHashMap();
 
-      for (Temporary list : temp) {
+      for (TemporaryOrder list : temp) {
 
          if (attMap.containsKey(list.getSampleId())) {
             Attribute attribute = new DefaultAttribute();
@@ -758,10 +765,10 @@ public class GsleClient implements Lims {
       return attMap;
    }
 
-   public Map<Integer, Set<OrderSample>> sampleOrderMap(List<Temporary> temp) {
+   public Map<Integer, Set<OrderSample>> sampleOrderMap(List<TemporaryOrder> temp) {
       Map<Integer, Set<OrderSample>> attMap = Maps.newHashMap();
 
-      for (Temporary list : temp) {
+      for (TemporaryOrder list : temp) {
 
          if (attMap.containsKey(list.getOrderId())) {
 
@@ -786,8 +793,8 @@ public class GsleClient implements Lims {
       return attMap;
    }
 
-   public List<Temporary> getTemporary() {
-      List<Temporary> result = Lists.newArrayList();
+   public List<TemporaryOrder> getTemporaryOrder() {
+      List<TemporaryOrder> result = Lists.newArrayList();
 
       StringBuilder url = getBaseUrl("184520");
       try {
@@ -810,8 +817,8 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   public List<Temporary> getTemporary(Integer id) {
-      List<Temporary> result = null;
+   public List<TemporaryOrder> getTemporaryOrder(Integer id) {
+      List<TemporaryOrder> result = null;
       StringBuilder url = getBaseUrl("184521");
       url.append(";bind=");
       url.append(id);
@@ -824,7 +831,7 @@ public class GsleClient implements Lims {
             throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
          }
          BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
-         List<Temporary> temporary = createMap(br);
+         List<TemporaryOrder> temporary = createMap(br);
          result = temporary;
 
       } catch (Exception e) {
@@ -888,6 +895,333 @@ public class GsleClient implements Lims {
       }
       return result;
    }
+
+   // ///////////////////////////////////////////////////////////////////////////////////////////
+   // /////////////////////////////////////////////////////////////////////////////////////////////
+   // ///////////////////////////////////////////////////////////////////////////////////////////
+   // ////////////////////////////////////////////////////////////////////////////////////////////
+   // ///////////////////////////////////////////////////////////////////////////////////////////
+   // //////////////////////////////////////////////////////////////////////////////////////////////
+   // ///////////////////////////////////////////////////////////////////////////////////////////
+   // /////////////////////////////////////////////////////////////////////////////////////////////
+   // ///////////////////////////////////////////////////////////////////////////////////////////
+   // //////////////////////////////////////////////////////////////////////////////////////////
+
+   List<Run> getRuns(Reader reader) throws SAXException, JAXBException {
+
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleRun> strat = new HeaderColumnNameTranslateMappingStrategy<GsleRun>();
+      strat.setType(GsleRun.class);
+      Map<String, String> map = Maps.newHashMap();
+
+      System.out.println("i am about to start parsing ");
+
+      map.put("state", "state");
+      map.put("name", "name");
+      map.put("barcode", "barcode");
+      map.put("instrument_name", "instrumentName");
+      map.put("created_by", "createdByIdString");
+      map.put("created_at", "createdDateString");
+      map.put("id", "idString");
+
+      Iterator<Map.Entry<String, String>> entries = map.entrySet().iterator();
+      while (entries.hasNext()) {
+         Map.Entry<String, String> entry = entries.next();
+         String key = entry.getKey();
+         String value = entry.getValue();
+
+         System.out.println("this is the key " + key);
+         System.out.println("this is the value " + value);
+         // ...
+      }
+
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleRun> csvToBean = new CsvToBean<GsleRun>();
+      List<GsleRun> gsleRun = csvToBean.parse(strat, csvReader);
+
+      List<Run> runs = Lists.newArrayList();
+      for (Run defaultRun : gsleRun) {
+         System.out.println("this is the defaultRun " + defaultRun);
+         runs.add(defaultRun);
+      }
+
+      // List<TemporaryRun> getTemporary = getTemporaryRun();
+      // Map<Integer, Set<RunSample>> positionRunMap =
+      // positionRunMap(getTemporary);
+      // Map<Integer, Set<RunPosition>> samplePositionMap =
+      // samplePositionMap(getTemporary);
+      //
+      // for (Run run : runs) {
+      // if (samplePositionMap.containsKey(run.getId())) {
+      // Set<RunPosition> positions = samplePositionMap.get(run.getId());
+      // for (RunPosition runPosition : positions) {
+      // Set<RunSample> runSample = runPosition.getRunSample();
+      // for (RunSample sample : runSample) {
+      // if (positionRunMap.containsKey(sample.getId())) {
+      // Set<RunSample> rs = positionRunMap.get(sample.getId());
+      // runPosition.setRunSample(rs);
+      // }
+      // }
+      // }
+      // run.setSample(positions);
+      //
+      // }
+      // }
+      return runs;
+   }
+
+   List<Run> getRuns(Reader reader, Integer id) throws SAXException, JAXBException {
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<GsleRun> strat = new HeaderColumnNameTranslateMappingStrategy<GsleRun>();
+      strat.setType(GsleRun.class);
+      Map<String, String> map = Maps.newHashMap();
+
+      map.put("state", "state");
+      map.put("name", "name");
+      map.put("barcode", "barcode");
+      map.put("instrument_name", "instrumentName");
+      map.put("created_by", "createdByIdString");
+      map.put("created_at", "createdDateString");
+      map.put("id", "idString");
+
+      strat.setColumnMapping(map);
+
+      CsvToBean<GsleRun> csvToBean = new CsvToBean<GsleRun>();
+      List<GsleRun> gsleRun = csvToBean.parse(strat, csvReader);
+
+      List<Run> runs = Lists.newArrayList();
+      for (Run defaultRun : gsleRun) {
+         runs.add(defaultRun);
+      }
+
+      List<TemporaryRun> getTemporary = getTemporaryRun(id);
+      Map<Integer, Set<RunSample>> positionRunMap = positionRunMap(getTemporary);
+      Map<Integer, Set<RunPosition>> samplePositionMap = samplePositionMap(getTemporary);
+
+      for (Run run : runs) {
+         if (samplePositionMap.containsKey(run.getId())) {
+            Set<RunPosition> runPosition = samplePositionMap.get(run.getId());
+            for (RunPosition position : runPosition) {
+               if (positionRunMap.containsKey(run.getId())) {
+                  Set<RunSample> runSample = positionRunMap.get(run.getId());
+                  position.setRunSample(runSample);
+               }
+            }
+            run.setSample(runPosition);
+         }
+      }
+      return runs;
+   }
+
+   // //////////////////////////////////////////////////////////////////////////////////////////
+   // /////////////////////////////////////////////////////////////////////////////////////
+   // ///////////////////////////////////////////////////////////////////////////////////
+   // ////////////////////////////////////////////////////////////////////////////////////
+
+   public List<TemporaryRun> createMapRun(Reader reader) throws IOException {
+
+      CSVReader csvReader = new CSVReader(reader, '\t');
+      HeaderColumnNameTranslateMappingStrategy<TemporaryRun> strat = new HeaderColumnNameTranslateMappingStrategy<TemporaryRun>();
+      strat.setType(TemporaryRun.class);
+      Map<String, String> map = Maps.newHashMap();
+
+      map.put("sample_id", "idSampleString");
+      map.put("run_id", "idRunString");
+      map.put("position", "position");
+      map.put("barcode", "barcode");
+      map.put("sample_url", "sampleUrl");
+
+      strat.setColumnMapping(map);
+
+      CsvToBean<TemporaryRun> csvToBean = new CsvToBean<TemporaryRun>();
+      List<TemporaryRun> gsleTemp = csvToBean.parse(strat, csvReader);
+
+      List<TemporaryRun> temp = Lists.newArrayList();
+      for (TemporaryRun temporary : gsleTemp) {
+         temp.add(temporary);
+      }
+
+      return temp;
+
+   }
+
+   public Table<Integer, Integer, Set<TemporarySample>> positionMapGenerator(List<TemporaryRun> positions) {
+      return null;
+   }
+
+   public Map<Integer, Set<RunSample>> positionRunMap(List<TemporaryRun> temp) {
+
+      Map<Integer, Set<RunSample>> attMap = Maps.newHashMap();
+
+      for (TemporaryRun list : temp) {
+
+         if (attMap.containsKey(list.getRunId())) {
+            RunSample runSample = new DefaultRunSample();
+            runSample.setId(list.getSampleId());
+            runSample.setBarcode(list.getBarcode());
+            runSample.setUrl(list.getSampleUrl());
+
+            attMap.get(list.getRunId()).add(runSample);
+
+         } else {
+            RunSample runSample = new DefaultRunSample();
+            Set<RunSample> runSampleSet = Sets.newHashSet();
+
+            runSample.setId(list.getSampleId());
+            runSample.setBarcode(list.getBarcode());
+            runSample.setUrl(list.getSampleUrl());
+            runSampleSet.add(runSample);
+
+            attMap.put(list.getRunId(), runSampleSet);
+         }
+      }
+
+      return attMap;
+   }
+
+   public Map<Integer, Set<RunPosition>> samplePositionMap(List<TemporaryRun> temp) {
+      Map<Integer, Set<RunPosition>> attMap = Maps.newHashMap();
+
+      for (TemporaryRun list : temp) {
+
+         if (attMap.containsKey(list.getRunId())) {
+
+            RunPosition runPosition = new DefaultRunPosition();
+            runPosition.setPosition(list.getPosition());
+            attMap.get(list.getRunId()).add(runPosition);
+
+         } else {
+
+            RunPosition runPosition = new DefaultRunPosition();
+            Set<RunPosition> runPositionSet = Sets.newHashSet();
+
+            runPosition.setPosition(list.getPosition());
+            runPositionSet.add(runPosition);
+            attMap.put(list.getRunId(), runPositionSet);
+         }
+      }
+      return attMap;
+   }
+
+   public List<TemporaryRun> getTemporaryRun() {
+      List<TemporaryRun> result = Lists.newArrayList();
+
+      StringBuilder url = getBaseUrl("184520");
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         result = createMapRun(br);
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+
+      return result;
+   }
+
+   public List<TemporaryRun> getTemporaryRun(Integer id) {
+      List<TemporaryRun> result = null;
+      StringBuilder url = getBaseUrl("184688");
+      url.append(";bind=");
+      url.append(id);
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         List<TemporaryRun> temporary = createMapRun(br);
+         result = temporary;
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   // /////////////////////////////////////////////////////////////////////////////////////
+   // //////////////////////////////////////////////////////////////////////////////////////
+   // ///////////////////////////////////////////////////////////////////////////////////
+
+   @Override
+   public List<Run> getRuns() {
+
+      List<Run> result = Lists.newArrayList();
+
+      StringBuilder url = getBaseUrl("184685");
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         // System.out.println("this is the br " + br.readLine());
+         result = getRuns(br);
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   @Override
+   public Run getRun(Integer id) {
+
+      Run result = null;
+
+      StringBuilder url = getBaseUrl("184686");
+      url.append(";bind=");
+      url.append(id);
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         List<Run> runs = getRuns(br, id);
+         if (runs.size() == 1) {
+            result = runs.get(0);
+         }
+
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   // //////////////////////////////////////////////////////////////////////////////////////////////
+   // /////////////////////////////////////////////////////////////////////////////////////////////
+   // ///////////////////////////////////////////////////////////////////////////////////////////
+   // //////////////////////////////////////////////////////////////////////////////////////////////
+   // ////////////////////////////////////////////////////////////////////////////////////////////
+   // ///////////////////////////////////////////////////////////////////////////////////////////////
+   // ////////////////////////////////////////////////////////////////////////////////////////////
+   // /////////////////////////////////////////////////////////////////////////////////////////////
+   // ////////////////////////////////////////////////////////////////////////////////////////////
+   // ////////////////////////////////////////////////////////////////////////////////////////////
 
    List<User> getUsers(Reader reader) {
       CSVReader csvReader = new CSVReader(reader, '\t');

@@ -1,32 +1,26 @@
-package ca.on.oicr.ws.dto;
+package ca.on.oicr.pinery.lims;
 
+import java.util.Date;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunPosition;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
-@XmlRootElement(name = "run")
-@JsonAutoDetect
-@JsonSerialize(include = Inclusion.NON_NULL)
-public class RunDto {
+public class DefaultRun implements Run {
 
    @Override
    public int hashCode() {
       final int prime = 31;
       int result = 1;
       result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
+      result = prime * result + ((createdById == null) ? 0 : createdById.hashCode());
       result = prime * result + ((createdByUrl == null) ? 0 : createdByUrl.hashCode());
       result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
       result = prime * result + ((id == null) ? 0 : id.hashCode());
       result = prime * result + ((instrumentName == null) ? 0 : instrumentName.hashCode());
       result = prime * result + ((name == null) ? 0 : name.hashCode());
-      result = prime * result + ((positions == null) ? 0 : positions.hashCode());
+      result = prime * result + ((sample == null) ? 0 : sample.hashCode());
       result = prime * result + ((state == null) ? 0 : state.hashCode());
-      result = prime * result + ((url == null) ? 0 : url.hashCode());
       return result;
    }
 
@@ -35,10 +29,13 @@ public class RunDto {
       if (this == obj) return true;
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
-      RunDto other = (RunDto) obj;
+      DefaultRun other = (DefaultRun) obj;
       if (barcode == null) {
          if (other.barcode != null) return false;
       } else if (!barcode.equals(other.barcode)) return false;
+      if (createdById == null) {
+         if (other.createdById != null) return false;
+      } else if (!createdById.equals(other.createdById)) return false;
       if (createdByUrl == null) {
          if (other.createdByUrl != null) return false;
       } else if (!createdByUrl.equals(other.createdByUrl)) return false;
@@ -54,25 +51,22 @@ public class RunDto {
       if (name == null) {
          if (other.name != null) return false;
       } else if (!name.equals(other.name)) return false;
-      if (positions == null) {
-         if (other.positions != null) return false;
-      } else if (!positions.equals(other.positions)) return false;
+      if (sample == null) {
+         if (other.sample != null) return false;
+      } else if (!sample.equals(other.sample)) return false;
       if (state == null) {
          if (other.state != null) return false;
       } else if (!state.equals(other.state)) return false;
-      if (url == null) {
-         if (other.url != null) return false;
-      } else if (!url.equals(other.url)) return false;
       return true;
    }
 
    @Override
    public String toString() {
-      return "RunDto [state=" + state + ", name=" + name + ", barcode=" + barcode + ", instrumentName=" + instrumentName + ", positions="
-            + positions + ", createdByUrl=" + createdByUrl + ", createdDate=" + createdDate + ", id=" + id + ", url=" + url
+      return "DefaultRun [state=" + state + ", name=" + name + ", barcode=" + barcode + ", instrumentName=" + instrumentName + ", sample="
+            + sample + ", createdByUrl=" + createdByUrl + ", createdDate=" + createdDate + ", id=" + id + ", createdById=" + createdById
             + ", getState()=" + getState() + ", getName()=" + getName() + ", getBarcode()=" + getBarcode() + ", getInstrumentName()="
-            + getInstrumentName() + ", getPositions()=" + getPositions() + ", getCreatedByUrl()=" + getCreatedByUrl()
-            + ", getCreatedDate()=" + getCreatedDate() + ", getId()=" + getId() + ", getUrl()=" + getUrl() + ", getClass()=" + getClass()
+            + getInstrumentName() + ", getSamples()=" + getSamples() + ", getCreatedByUrl()=" + getCreatedByUrl() + ", getCreatedDate()="
+            + getCreatedDate() + ", getId()=" + getId() + ", getCreatedById()=" + getCreatedById() + ", getClass()=" + getClass()
             + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
    }
 
@@ -80,84 +74,103 @@ public class RunDto {
    private String name;
    private String barcode;
    private String instrumentName;
-   private Set<RunDtoPosition> positions;
+   private Set<RunPosition> sample;
    private String createdByUrl;
-   private String createdDate;
+   private Date createdDate;
    private Integer id;
-   private String url;
+   private Integer createdById;
 
+   @Override
    public String getState() {
       return state;
    }
 
+   @Override
    public void setState(String state) {
       this.state = state;
    }
 
+   @Override
    public String getName() {
       return name;
    }
 
+   @Override
    public void setName(String name) {
       this.name = name;
+
    }
 
+   @Override
    public String getBarcode() {
       return barcode;
    }
 
+   @Override
    public void setBarcode(String barcode) {
       this.barcode = barcode;
+
    }
 
+   @Override
    public String getInstrumentName() {
       return instrumentName;
    }
 
+   @Override
    public void setInstrumentName(String instrumentName) {
       this.instrumentName = instrumentName;
+
    }
 
-   public Set<RunDtoPosition> getPositions() {
-      return positions;
+   @Override
+   public Set<RunPosition> getSamples() {
+      return sample;
    }
 
-   public void setPositions(Set<RunDtoPosition> positions) {
-      this.positions = positions;
+   @Override
+   public void setSample(Set<RunPosition> sample) {
+      this.sample = sample;
    }
 
-   @XmlElement(name = "created_by_url")
+   @Override
    public String getCreatedByUrl() {
       return createdByUrl;
    }
 
+   @Override
    public void setCreatedByUrl(String createdByUrl) {
       this.createdByUrl = createdByUrl;
    }
 
-   @XmlElement(name = "created_date")
-   public String getCreatedDate() {
+   @Override
+   public Date getCreatedDate() {
       return createdDate;
    }
 
-   public void setCreatedDate(String createdDate) {
+   @Override
+   public void setCreatedDate(Date createdDate) {
       this.createdDate = createdDate;
+
    }
 
+   @Override
    public Integer getId() {
       return id;
    }
 
+   @Override
    public void setId(Integer id) {
       this.id = id;
    }
 
-   public String getUrl() {
-      return url;
+   @Override
+   public Integer getCreatedById() {
+      return createdById;
    }
 
-   public void setUrl(String url) {
-      this.url = url;
+   @Override
+   public void setCreatedById(Integer createdById) {
+      this.createdById = createdById;
    }
-
 }

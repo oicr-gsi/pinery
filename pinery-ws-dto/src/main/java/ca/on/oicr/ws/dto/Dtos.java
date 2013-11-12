@@ -17,6 +17,9 @@ import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.PreparationKit;
+import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunPosition;
+import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Status;
@@ -242,6 +245,83 @@ public final class Dtos {
       return dto;
    }
 
+   // ////////////////////////////////////////////////////////////////////////////////////////////////////
+   // //////////////////////////////////////////////////////////////////////////////////////////////////
+   // //////////////////////////////////////////////////////////////////////////////////////////
+   // ////////////////////////////////////////////////////////////////////////////////////////////
+   // //////////////////////////////////////////////////////////////////////////////////////////
+   public static RunDto asDto(Run from) {
+
+      RunDto dto = new RunDto();
+      dto.setId(from.getId());
+
+      if (!StringUtils.isBlank(from.getState())) {
+         dto.setState(from.getState());
+      }
+      if (!StringUtils.isBlank(from.getName())) {
+         dto.setName(from.getName());
+      }
+      if (!StringUtils.isBlank(from.getBarcode())) {
+         dto.setBarcode(from.getBarcode());
+      }
+      if (!StringUtils.isBlank(from.getInstrumentName())) {
+         dto.setInstrumentName(from.getInstrumentName());
+      }
+      if (from.getCreatedDate() != null) {
+         dto.setCreatedDate(dateTimeFormatter.print(from.getCreatedDate().getTime()));
+      }
+      if (from.getSamples() != null && !from.getSamples().isEmpty()) {
+         dto.setPositions(asDto2(from.getSamples()));
+      }
+      return dto;
+   }
+
+   public static Set<RunDtoPosition> asDto2(Set<RunPosition> from) {
+
+      Set<RunDtoPosition> dtoSet = Sets.newHashSet();
+      for (RunPosition runSample : from) {
+         dtoSet.add(asDto(runSample));
+      }
+      return dtoSet;
+   }
+
+   public static RunDtoPosition asDto(RunPosition from) {
+      RunDtoPosition dto = new RunDtoPosition();
+
+      if (from.getPosition() != null) {
+         dto.setPosition(from.getPosition());
+      }
+      if (from.getRunSample() != null && !from.getRunSample().isEmpty()) {
+         dto.setRunSample(asDto3(from.getRunSample()));
+      }
+      return dto;
+   }
+
+   public static Set<RunDtoSample> asDto3(Set<RunSample> from) {
+      Set<RunDtoSample> dtoSet = Sets.newHashSet();
+      for (RunSample runSample : from) {
+         dtoSet.add(asDto3(runSample));
+      }
+      return dtoSet;
+   }
+
+   public static RunDtoSample asDto3(RunSample from) {
+      RunDtoSample dto = new RunDtoSample();
+      dto.setId(from.getId());
+      if (!StringUtils.isBlank(from.getBarcode())) {
+         dto.setBarcode(from.getBarcode());
+      }
+      if (!StringUtils.isBlank(from.getUrl())) {
+         dto.setUrl(from.getUrl());
+      }
+      return dto;
+   }
+
+   // ///////////////////////////////////////////////////////////////////////////////////////////////////////
+   // ////////////////////////////////////////////////////////////////////////////////////////////////////
+   // /////////////////////////////////////////////////////////////////////////////////////////////////////
+   // ////////////////////////////////////////////////////////////////////////////////////////////////
+   // //////////////////////////////////////////////////////////////////////////////////////////////////////
    public static UserDto asDto(User from) {
       UserDto dto = new UserDto();
       dto.setId(from.getId());

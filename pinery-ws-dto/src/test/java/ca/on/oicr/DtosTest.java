@@ -12,13 +12,22 @@ import org.junit.Test;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
+import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunPosition;
+import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.lims.DefaultAttribute;
 import ca.on.oicr.pinery.lims.DefaultOrder;
 import ca.on.oicr.pinery.lims.DefaultOrderSample;
+import ca.on.oicr.pinery.lims.DefaultRun;
+import ca.on.oicr.pinery.lims.DefaultRunPosition;
+import ca.on.oicr.pinery.lims.DefaultRunSample;
 import ca.on.oicr.ws.dto.AttributeDto;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.OrderDto;
 import ca.on.oicr.ws.dto.OrderDtoSample;
+import ca.on.oicr.ws.dto.RunDto;
+import ca.on.oicr.ws.dto.RunDtoPosition;
+import ca.on.oicr.ws.dto.RunDtoSample;
 
 import com.google.common.collect.Sets;
 
@@ -168,4 +177,163 @@ public class DtosTest {
       }
       return false;
    }
+
+   @Test
+   public void testOrderRun1() throws Exception {
+      Run input = new DefaultRun();
+      input.setState("Complete");
+      RunDto output = Dtos.asDto(input);
+      assertThat(output.getState(), is("Complete"));
+   }
+
+   @Test
+   public void testOrderRun2() throws Exception {
+      Run input = new DefaultRun();
+      input.setName("130906_SN804_0130_AC2D8JACXX");
+      RunDto output = Dtos.asDto(input);
+      assertThat(output.getName(), is("130906_SN804_0130_AC2D8JACXX"));
+   }
+
+   @Test
+   public void testOrderRun3() throws Exception {
+      Run input = new DefaultRun();
+      input.setBarcode("C2D8J");
+      RunDto output = Dtos.asDto(input);
+      assertThat(output.getBarcode(), is("C2D8J"));
+   }
+
+   @Test
+   public void testOrderRun4() throws Exception {
+      Run input = new DefaultRun();
+      input.setInstrumentName("h804");
+      RunDto output = Dtos.asDto(input);
+      assertThat(output.getInstrumentName(), is("h804"));
+   }
+
+   @Test
+   public void testRun5() throws Exception {
+      Run input = new DefaultRun();
+      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+      Date date = new Date();
+      input.setCreatedDate(date);
+      RunDto output = Dtos.asDto(input);
+      assertThat(output.getCreatedDate(), is(sf.format(date)));
+   }
+
+   @Test
+   public void testRun6() throws Exception {
+      Run input = new DefaultRun();
+      input.setId(22);
+      RunDto output = Dtos.asDto(input);
+      assertThat(output.getId(), is(22));
+   }
+
+   @Test
+   public void testRun7() throws Exception {
+      Run input = new DefaultRun();
+      Set<RunPosition> sample = Sets.newHashSet();
+      RunPosition runPosition = new DefaultRunPosition();
+      runPosition.setPosition(23);
+      sample.add(runPosition);
+      input.setSample(sample);
+      RunDto output = Dtos.asDto(input);
+      assertThat(output.getPositions().iterator().next().getPosition(), is(23));
+   }
+
+   @Test
+   public void testRunPosition_too_RunDtoPosition_8() throws Exception {
+      RunPosition runPosition = new DefaultRunPosition();
+      runPosition.setPosition(1);
+      RunDtoPosition runDtoPosition = Dtos.asDto(runPosition);
+      assertThat(runDtoPosition.getPosition(), is(runPosition.getPosition()));
+   }
+
+   @Test
+   public void testSetRunPosition_too_RunDtoPosition_9() throws Exception {
+      Set<RunPosition> input = Sets.newHashSet();
+      RunPosition runPosition = new DefaultRunPosition();
+      runPosition.setPosition(12);
+      input.add(runPosition);
+      Set<RunDtoPosition> output = Dtos.asDto2(input);
+      assertThat(output.toArray().length, is(1));
+   }
+
+   @Test
+   public void testRunPosition_too_RunDtoPosition_10() throws Exception {
+      boolean status;
+      RunPosition runPosition = new DefaultRunPosition();
+      RunSample runSample = new DefaultRunSample();
+      Set<RunSample> runSamples = Sets.newHashSet();
+      runSample.setBarcode("C2D8J");
+      runSamples.add(runSample);
+      runPosition.setRunSample(runSamples);
+      RunDtoPosition runDtoPosition = Dtos.asDto(runPosition);
+      runDtoPosition.getRunSample();
+      status = RunSampleContainsBarcode(runDtoPosition.getRunSample(), runSample.getBarcode());
+
+      assertThat(status, is(true));
+   }
+
+   @Test
+   public void testRunPosition_too_RunDtoPsotion_11() throws Exception {
+      boolean status;
+      RunPosition runPosition = new DefaultRunPosition();
+      RunSample runSample = new DefaultRunSample();
+      Set<RunSample> runSamples = Sets.newHashSet();
+      runSample.setUrl("https://pinery.res.oicr.on.ca:8443/pinery/sample/45");
+      runSamples.add(runSample);
+      runPosition.setRunSample(runSamples);
+      RunDtoPosition runDtoPosition = Dtos.asDto(runPosition);
+      runDtoPosition.getRunSample();
+      status = RunSampleContainsUrl(runDtoPosition.getRunSample(), runSample.getUrl());
+
+      assertThat(status, is(true));
+   }
+
+   @Test
+   public void testRunPosition_too_RunDtoPsotion_12() throws Exception {
+      boolean status;
+      RunPosition runPosition = new DefaultRunPosition();
+      RunSample runSample = new DefaultRunSample();
+      Set<RunSample> runSamples = Sets.newHashSet();
+      runSample.setId(12);
+      runSamples.add(runSample);
+      runPosition.setRunSample(runSamples);
+      RunDtoPosition runDtoPosition = Dtos.asDto(runPosition);
+      runDtoPosition.getRunSample();
+      status = RunSampleContainsId(runDtoPosition.getRunSample(), runSample.getId());
+
+      assertThat(status, is(true));
+   }
+
+   public boolean RunSampleContainsBarcode(Set<RunDtoSample> runDtoSample, String runSampleBarcode) {
+
+      for (RunDtoSample dto : runDtoSample) {
+         if (dto.getBarcode().equals(runSampleBarcode)) {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   public boolean RunSampleContainsUrl(Set<RunDtoSample> runDtoSample, String runSampleUrl) {
+
+      for (RunDtoSample dto : runDtoSample) {
+         if (dto.getUrl().equals(runSampleUrl)) {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   public boolean RunSampleContainsId(Set<RunDtoSample> runDtoSample, Integer runSampleId) {
+
+      for (RunDtoSample dto : runDtoSample) {
+         if (dto.getId() == (runSampleId)) {
+            return true;
+         }
+      }
+      return false;
+   }
+
 }

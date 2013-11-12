@@ -101,22 +101,22 @@ public class GsleClientTest {
    @Test
    public void sampleOrderMap() throws Exception {
 
-      Temporary temp = new Temporary();
+      TemporaryOrder temp = new TemporaryOrder();
       temp.setBarcode("ATCGCCGGA");
       temp.setOrderId(45);
       temp.setSampleId(45);
 
-      Temporary temp1 = new Temporary();
+      TemporaryOrder temp1 = new TemporaryOrder();
       temp1.setBarcode("CCCCCAAATTGG");
       temp1.setOrderId(37);
       temp1.setSampleId(37);
 
-      Temporary temp2 = new Temporary();
+      TemporaryOrder temp2 = new TemporaryOrder();
       temp2.setOrderId(45);
       temp2.setBarcode("GGGGGGGGCGGA");
       temp2.setSampleId(45);
 
-      List<Temporary> sampleList = Lists.newArrayList();
+      List<TemporaryOrder> sampleList = Lists.newArrayList();
       sampleList.add(temp);
       sampleList.add(temp1);
       sampleList.add(temp2);
@@ -159,33 +159,33 @@ public class GsleClientTest {
     * A single order containing two samples. One sample with two attributes and
     * another sample with three attributes.
     */
-   private List<Temporary> get_temporary_list_test_input_one() {
-      List<Temporary> temporaries = Lists.newArrayList();
-      Temporary t0 = new Temporary();
+   private List<TemporaryOrder> get_temporary_list_test_input_one() {
+      List<TemporaryOrder> temporaries = Lists.newArrayList();
+      TemporaryOrder t0 = new TemporaryOrder();
       t0.setOrderId(1047);
       t0.setSampleId(13312);
       t0.setName("Lib. Frag. Size (mean, bp)");
       t0.setValue("252");
 
-      Temporary t1 = new Temporary();
+      TemporaryOrder t1 = new TemporaryOrder();
       t1.setOrderId(1047);
       t1.setSampleId(13312);
       t1.setName("Read Length");
       t1.setValue("75x35");
 
-      Temporary t2 = new Temporary();
+      TemporaryOrder t2 = new TemporaryOrder();
       t2.setOrderId(1047);
       t2.setSampleId(13315);
       t2.setName("Lib. Frag. Size (mean, bp)");
       t2.setValue("246");
 
-      Temporary t3 = new Temporary();
+      TemporaryOrder t3 = new TemporaryOrder();
       t3.setOrderId(1047);
       t3.setSampleId(13315);
       t3.setName("Read Length");
       t3.setValue("75x35");
 
-      Temporary t4 = new Temporary();
+      TemporaryOrder t4 = new TemporaryOrder();
       t4.setOrderId(1047);
       t4.setSampleId(13315);
       t4.setName("Reference");
@@ -200,15 +200,15 @@ public class GsleClientTest {
    }
 
    /** Two orders. */
-   private List<Temporary> get_temporary_list_test_input_two() {
-      List<Temporary> temporaries = Lists.newArrayList();
-      Temporary t0 = new Temporary();
+   private List<TemporaryOrder> get_temporary_list_test_input_two() {
+      List<TemporaryOrder> temporaries = Lists.newArrayList();
+      TemporaryOrder t0 = new TemporaryOrder();
       t0.setOrderId(2222);
       t0.setSampleId(22111);
       t0.setName("Lib. Frag. Size (mean, bp)");
       t0.setValue("252");
 
-      Temporary t1 = new Temporary();
+      TemporaryOrder t1 = new TemporaryOrder();
       t1.setOrderId(3333);
       t1.setSampleId(33111);
       t1.setName("Read Length");

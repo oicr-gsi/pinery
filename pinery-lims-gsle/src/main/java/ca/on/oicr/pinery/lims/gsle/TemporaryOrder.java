@@ -1,6 +1,6 @@
 package ca.on.oicr.pinery.lims.gsle;
 
-public class Temporary {
+public class TemporaryOrder {
 
    @Override
    public String toString() {
