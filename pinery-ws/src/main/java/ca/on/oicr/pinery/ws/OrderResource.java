@@ -2,7 +2,6 @@ package ca.on.oicr.pinery.ws;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -20,14 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ca.on.oicr.pinery.api.Order;
-import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.service.OrderService;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.OrderDto;
 import ca.on.oicr.ws.dto.OrderDtoSample;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 @Component
 @Path("/")
@@ -62,6 +59,7 @@ public class OrderResource {
       for (Order order : orders) {
          OrderDto dto = Dtos.asDto(order);
          dto.setUrl(baseUri + "/" + dto.getId().toString());
+         addSampleUrl(dto);
          addOrders(order, dto);
          result.add(dto);
       }
@@ -77,14 +75,25 @@ public class OrderResource {
       OrderDto dto = Dtos.asDto(order);
       final URI uri = uriInfo.getAbsolutePathBuilder().build();
       dto.setUrl(uri.toString());
+      addSampleUrl(dto);
       addOrders(order, dto);
+      return dto;
+   }
+
+   private OrderDto addSampleUrl(OrderDto dto) {
+      final URI baseUriSample = uriInfo.getBaseUriBuilder().path("sample/").build();
+
+      for (OrderDtoSample orderDtoSample : dto.getSamples()) {
+         orderDtoSample.setUrl(baseUriSample + orderDtoSample.getId().toString());
+      }
       return dto;
    }
 
    private void addOrders(Order order, OrderDto dto) {
 
       final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
-      final URI baseUriSample = uriInfo.getBaseUriBuilder().path("sample/").build();
+      // final URI baseUriSample =
+      // uriInfo.getBaseUriBuilder().path("sample/").build();
 
       if (order.getCreatedById() != null) {
          dto.setCreatedByUrl(baseUri + order.getCreatedById().toString());
@@ -93,21 +102,21 @@ public class OrderResource {
       if (order.getModifiedById() != null) {
          dto.setModifiedByUrl(baseUri + order.getModifiedById().toString());
       }
-
-      if (order.getCreatedById() != null) {
-
-         Set<OrderSample> tempSet = Sets.newHashSet();
-         tempSet = order.getSamples();
-
-         if (dto.getSamples() != null) {
-            for (OrderDtoSample orderDtoSample : dto.getSamples()) {
-               for (OrderSample orderSample : tempSet) {
-                  orderDtoSample.setUrl(baseUriSample + orderSample.getId().toString());
-               }
-            }
-         }
-
-      }
+      //
+      // if (order.getCreatedById() != null) {
+      //
+      // Set<OrderSample> tempSet = Sets.newHashSet();
+      // tempSet = order.getSamples();
+      //
+      // if (dto.getSamples() != null) {
+      // for (OrderDtoSample orderDtoSample : dto.getSamples()) {
+      // for (OrderSample orderSample : tempSet) {
+      // orderDtoSample.setUrl(baseUriSample + orderSample.getId().toString());
+      // }
+      // }
+      // }
+      //
+      // }
 
    }
 }

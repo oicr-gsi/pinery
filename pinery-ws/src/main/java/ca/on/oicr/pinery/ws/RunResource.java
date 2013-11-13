@@ -89,7 +89,6 @@ public class RunResource {
          }
       }
       return dto;
-
    }
 
    private void addUser(Run run, RunDto dto) {
