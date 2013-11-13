@@ -8,7 +8,6 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,6 +61,7 @@ import ca.on.oicr.pinery.lims.GsleSampleParents;
 import ca.on.oicr.pinery.lims.GsleUser;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -896,17 +896,6 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   // ///////////////////////////////////////////////////////////////////////////////////////////
-   // /////////////////////////////////////////////////////////////////////////////////////////////
-   // ///////////////////////////////////////////////////////////////////////////////////////////
-   // ////////////////////////////////////////////////////////////////////////////////////////////
-   // ///////////////////////////////////////////////////////////////////////////////////////////
-   // //////////////////////////////////////////////////////////////////////////////////////////////
-   // ///////////////////////////////////////////////////////////////////////////////////////////
-   // /////////////////////////////////////////////////////////////////////////////////////////////
-   // ///////////////////////////////////////////////////////////////////////////////////////////
-   // //////////////////////////////////////////////////////////////////////////////////////////
-
    List<Run> getRuns(Reader reader) throws SAXException, JAXBException {
 
       CSVReader csvReader = new CSVReader(reader, '\t');
@@ -924,17 +913,6 @@ public class GsleClient implements Lims {
       map.put("created_at", "createdDateString");
       map.put("id", "idString");
 
-      Iterator<Map.Entry<String, String>> entries = map.entrySet().iterator();
-      while (entries.hasNext()) {
-         Map.Entry<String, String> entry = entries.next();
-         String key = entry.getKey();
-         String value = entry.getValue();
-
-         System.out.println("this is the key " + key);
-         System.out.println("this is the value " + value);
-         // ...
-      }
-
       strat.setColumnMapping(map);
 
       CsvToBean<GsleRun> csvToBean = new CsvToBean<GsleRun>();
@@ -942,32 +920,9 @@ public class GsleClient implements Lims {
 
       List<Run> runs = Lists.newArrayList();
       for (Run defaultRun : gsleRun) {
-         System.out.println("this is the defaultRun " + defaultRun);
          runs.add(defaultRun);
       }
 
-      // List<TemporaryRun> getTemporary = getTemporaryRun();
-      // Map<Integer, Set<RunSample>> positionRunMap =
-      // positionRunMap(getTemporary);
-      // Map<Integer, Set<RunPosition>> samplePositionMap =
-      // samplePositionMap(getTemporary);
-      //
-      // for (Run run : runs) {
-      // if (samplePositionMap.containsKey(run.getId())) {
-      // Set<RunPosition> positions = samplePositionMap.get(run.getId());
-      // for (RunPosition runPosition : positions) {
-      // Set<RunSample> runSample = runPosition.getRunSample();
-      // for (RunSample sample : runSample) {
-      // if (positionRunMap.containsKey(sample.getId())) {
-      // Set<RunSample> rs = positionRunMap.get(sample.getId());
-      // runPosition.setRunSample(rs);
-      // }
-      // }
-      // }
-      // run.setSample(positions);
-      //
-      // }
-      // }
       return runs;
    }
 
@@ -996,28 +951,24 @@ public class GsleClient implements Lims {
       }
 
       List<TemporaryRun> getTemporary = getTemporaryRun(id);
-      Map<Integer, Set<RunSample>> positionRunMap = positionRunMap(getTemporary);
-      Map<Integer, Set<RunPosition>> samplePositionMap = samplePositionMap(getTemporary);
+      Table<Integer, Integer, Set<RunSample>> table = positionMapGenerator(getTemporary);
 
       for (Run run : runs) {
-         if (samplePositionMap.containsKey(run.getId())) {
-            Set<RunPosition> runPosition = samplePositionMap.get(run.getId());
-            for (RunPosition position : runPosition) {
-               if (positionRunMap.containsKey(run.getId())) {
-                  Set<RunSample> runSample = positionRunMap.get(run.getId());
-                  position.setRunSample(runSample);
-               }
+         if (table.containsRow(run.getId())) {
+            Map<Integer, Set<RunSample>> tableMap = table.row(run.getId());
+            Set<RunPosition> runPositionSet = Sets.newHashSet();
+            run.setSample(runPositionSet);
+            for (Map.Entry<Integer, Set<RunSample>> entry : tableMap.entrySet()) {
+               RunPosition runPosition = new DefaultRunPosition();
+               runPosition.setPosition(entry.getKey());
+               runPosition.setRunSample(entry.getValue());
+               runPositionSet.add(runPosition);
             }
-            run.setSample(runPosition);
          }
       }
+
       return runs;
    }
-
-   // //////////////////////////////////////////////////////////////////////////////////////////
-   // /////////////////////////////////////////////////////////////////////////////////////
-   // ///////////////////////////////////////////////////////////////////////////////////
-   // ////////////////////////////////////////////////////////////////////////////////////
 
    public List<TemporaryRun> createMapRun(Reader reader) throws IOException {
 
@@ -1046,8 +997,32 @@ public class GsleClient implements Lims {
 
    }
 
-   public Table<Integer, Integer, Set<TemporarySample>> positionMapGenerator(List<TemporaryRun> positions) {
-      return null;
+   public Table<Integer, Integer, Set<RunSample>> positionMapGenerator(List<TemporaryRun> positions) {
+      Table<Integer, Integer, Set<RunSample>> table = HashBasedTable.create();
+
+      for (TemporaryRun temp : positions) {
+         if (table.containsRow(temp.getRunId())) {
+            RunSample runSample = new DefaultRunSample();
+            runSample.setBarcode(temp.getBarcode());
+            runSample.setId(temp.getSampleId());
+            if (table.containsColumn(temp.getPosition())) {
+               table.get(temp.getRunId(), temp.getPosition()).add(runSample);
+            } else {
+               Set<RunSample> runSampleSet = Sets.newHashSet();
+               runSampleSet.add(runSample);
+               table.put(temp.getRunId(), temp.getPosition(), runSampleSet);
+            }
+
+         } else {
+            RunSample runSample = new DefaultRunSample();
+            Set<RunSample> runSampleSet = Sets.newHashSet();
+            runSample.setBarcode(temp.getBarcode());
+            runSample.setId(temp.getSampleId());
+            runSampleSet.add(runSample);
+            table.put(temp.getRunId(), temp.getPosition(), runSampleSet);
+         }
+      }
+      return table;
    }
 
    public Map<Integer, Set<RunSample>> positionRunMap(List<TemporaryRun> temp) {
@@ -1152,10 +1127,6 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   // /////////////////////////////////////////////////////////////////////////////////////
-   // //////////////////////////////////////////////////////////////////////////////////////
-   // ///////////////////////////////////////////////////////////////////////////////////
-
    @Override
    public List<Run> getRuns() {
 
@@ -1184,7 +1155,6 @@ public class GsleClient implements Lims {
 
    @Override
    public Run getRun(Integer id) {
-
       Run result = null;
 
       StringBuilder url = getBaseUrl("184686");

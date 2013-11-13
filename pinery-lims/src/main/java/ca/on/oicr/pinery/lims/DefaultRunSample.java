@@ -26,21 +26,8 @@ public class DefaultRunSample extends DefaultSample implements RunSample {
 
    @Override
    public String toString() {
-      return "DefaultRunSample [barcode=" + barcode + ", url=" + url + ", name=" + name + ", description=" + description + ", id=" + id
-            + ", parents=" + parents + ", children=" + children + ", sampleType=" + sampleType + ", tissueType=" + tissueType
-            + ", project=" + project + ", attributes=" + attributes + ", archived=" + archived + ", created=" + created + ", createdById="
-            + createdById + ", modified=" + modified + ", modifiedById=" + modifiedById + ", tubeBarcode=" + tubeBarcode + ", volume="
-            + volume + ", concentration=" + concentration + ", storageLocation=" + storageLocation + ", preparationKit=" + preparationKit
-            + ", status=" + status + ", getBarcode()=" + getBarcode() + ", hashCode()=" + hashCode() + ", getOrCreateStatus()="
-            + getOrCreateStatus() + ", getStatus()=" + getStatus() + ", getPreparationKit()=" + getPreparationKit()
-            + ", getOrCreatePreparationKit()=" + getOrCreatePreparationKit() + ", getUrl()=" + getUrl() + ", getName()=" + getName()
-            + ", getDescription()=" + getDescription() + ", getId()=" + getId() + ", getSampleType()=" + getSampleType()
-            + ", getTissueType()=" + getTissueType() + ", getProject()=" + getProject() + ", getAttributes()=" + getAttributes()
-            + ", getArchived()=" + getArchived() + ", getCreated()=" + getCreated() + ", getModified()=" + getModified()
-            + ", getTubeBarcode()=" + getTubeBarcode() + ", getStorageLocation()=" + getStorageLocation() + ", getVolume()=" + getVolume()
-            + ", getConcentration()=" + getConcentration() + ", getParents()=" + getParents() + ", getChildren()=" + getChildren()
-            + ", getCreatedById()=" + getCreatedById() + ", getModifiedById()=" + getModifiedById() + ", getClass()=" + getClass()
-            + ", toString()=" + super.toString() + "]";
+      return "DefaultRunSample [barcode=" + barcode + ", url=" + url + ", id=" + id + ", getBarcode()=" + getBarcode() + ", getUrl()="
+            + getUrl() + ", getId()=" + getId() + "]";
    }
 
    private String barcode;

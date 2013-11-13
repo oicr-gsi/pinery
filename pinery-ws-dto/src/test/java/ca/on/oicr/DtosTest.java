@@ -268,8 +268,8 @@ public class DtosTest {
       runSamples.add(runSample);
       runPosition.setRunSample(runSamples);
       RunDtoPosition runDtoPosition = Dtos.asDto(runPosition);
-      runDtoPosition.getRunSample();
-      status = RunSampleContainsBarcode(runDtoPosition.getRunSample(), runSample.getBarcode());
+      runDtoPosition.getRunSamples();
+      status = RunSampleContainsBarcode(runDtoPosition.getRunSamples(), runSample.getBarcode());
 
       assertThat(status, is(true));
    }
@@ -284,8 +284,8 @@ public class DtosTest {
       runSamples.add(runSample);
       runPosition.setRunSample(runSamples);
       RunDtoPosition runDtoPosition = Dtos.asDto(runPosition);
-      runDtoPosition.getRunSample();
-      status = RunSampleContainsUrl(runDtoPosition.getRunSample(), runSample.getUrl());
+      runDtoPosition.getRunSamples();
+      status = RunSampleContainsUrl(runDtoPosition.getRunSamples(), runSample.getUrl());
 
       assertThat(status, is(true));
    }
@@ -300,8 +300,8 @@ public class DtosTest {
       runSamples.add(runSample);
       runPosition.setRunSample(runSamples);
       RunDtoPosition runDtoPosition = Dtos.asDto(runPosition);
-      runDtoPosition.getRunSample();
-      status = RunSampleContainsId(runDtoPosition.getRunSample(), runSample.getId());
+      runDtoPosition.getRunSamples();
+      status = RunSampleContainsId(runDtoPosition.getRunSamples(), runSample.getId());
 
       assertThat(status, is(true));
    }

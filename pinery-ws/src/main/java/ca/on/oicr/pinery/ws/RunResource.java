@@ -2,7 +2,6 @@ package ca.on.oicr.pinery.ws;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -20,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ca.on.oicr.pinery.api.Run;
-import ca.on.oicr.pinery.api.RunPosition;
-import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.service.RunService;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.RunDto;
@@ -29,7 +26,6 @@ import ca.on.oicr.ws.dto.RunDtoPosition;
 import ca.on.oicr.ws.dto.RunDtoSample;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 @Component
 @Path("/")
@@ -62,11 +58,9 @@ public class RunResource {
       List<RunDto> result = Lists.newArrayList();
       final URI baseUri = uriInfo.getBaseUriBuilder().path("run").build();
       for (Run run : runs) {
-         System.out.println("this is the run RunResource " + run);
          RunDto dto = Dtos.asDto(run);
-         // System.out.println("this is the dto " + dto);
          dto.setUrl(baseUri + "/" + dto.getId().toString());
-         addRuns(run, dto);
+         addUser(run, dto);
          result.add(dto);
       }
       return result;
@@ -81,47 +75,29 @@ public class RunResource {
       RunDto dto = Dtos.asDto(run);
       final URI uri = uriInfo.getAbsolutePathBuilder().build();
       dto.setUrl(uri.toString());
-      addRuns(run, dto);
+      addUser(run, dto);
+      addSampleUrl(dto);
       return dto;
    }
 
-   private void addRuns(Run run, RunDto dto) {
+   private RunDto addSampleUrl(RunDto dto) {
+      final URI baseUriSample = uriInfo.getBaseUriBuilder().path("sample/").build();
+
+      for (RunDtoPosition runDtoPosition : dto.getPositions()) {
+         for (RunDtoSample runDtoSample : runDtoPosition.getRunSamples()) {
+            runDtoSample.setUrl(baseUriSample + runDtoSample.getId().toString());
+         }
+      }
+      return dto;
+
+   }
+
+   private void addUser(Run run, RunDto dto) {
 
       final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
-      final URI baseUriSample = uriInfo.getBaseUriBuilder().path("sample/").build();
 
       if (run.getCreatedById() != null) {
          dto.setCreatedByUrl(baseUri + run.getCreatedById().toString());
       }
-
-      if (run.getCreatedById() != null) {
-
-         Set<RunPosition> tempSet = Sets.newHashSet();
-         tempSet = run.getSamples();
-
-         if (dto.getPositions() != null) {
-            for (RunDtoPosition runDtoPosition : dto.getPositions()) {
-               Set<RunDtoSample> runDtoSample = Sets.newHashSet();
-               runDtoSample = runDtoPosition.getRunSample();
-               for (RunDtoSample sample : runDtoSample) {
-                  for (RunPosition tempPosition : tempSet) {
-                     Set<RunSample> tempRunSample = Sets.newHashSet();
-                     tempRunSample = tempPosition.getRunSample();
-                     for (RunSample runSample : tempRunSample) {
-                        sample.setUrl(baseUriSample + runSample.getId().toString());
-                     }
-                  }
-
-               }
-
-            }
-         }
-      }
-
-      // if (run.getCreatedById() != null) {
-      // RunSample runSample = new DefaultRunSample();
-      // runSample.setUrl(baseUriSample + runSample.getId().toString());
-      // }
-
    }
 }

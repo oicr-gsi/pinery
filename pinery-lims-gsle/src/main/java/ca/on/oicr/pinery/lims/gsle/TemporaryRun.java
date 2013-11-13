@@ -1,6 +1,15 @@
 package ca.on.oicr.pinery.lims.gsle;
 
+
 public class TemporaryRun {
+
+   @Override
+   public String toString() {
+      return "TemporaryRun [runId=" + runId + ", position=" + position + ", sampleId=" + sampleId + ", sampleUrl=" + sampleUrl
+            + ", barcode=" + barcode + ", getRunId()=" + getRunId() + ", getPosition()=" + getPosition() + ", getSampleId()="
+            + getSampleId() + ", getSampleUrl()=" + getSampleUrl() + ", getBarcode()=" + getBarcode() + ", getClass()=" + getClass()
+            + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+   }
 
    private Integer runId;
    private Integer position;
@@ -59,5 +68,4 @@ public class TemporaryRun {
          setSampleId(Integer.parseInt(idSampleString));
       }
    }
-
 }

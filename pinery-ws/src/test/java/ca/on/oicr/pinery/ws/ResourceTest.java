@@ -614,8 +614,8 @@ public class ResourceTest {
       RunDtoPosition runDtoPosition = new RunDtoPosition();
       runDtoSample.setBarcode("C2D8J");
       runDtoSampleSet.add(runDtoSample);
-      runDtoPosition.setRunSample(runDtoSampleSet);
-      status = runContainsBarcode(runDtoPosition.getRunSample(), runDtoSample.getBarcode());
+      runDtoPosition.setRunSamples(runDtoSampleSet);
+      status = runContainsBarcode(runDtoPosition.getRunSamples(), runDtoSample.getBarcode());
 
       assertThat(status, is(true));
    }
@@ -649,8 +649,8 @@ public class ResourceTest {
       RunDtoPosition runDtoPosition = new RunDtoPosition();
       runDtoSample.setUrl("https://pinery.res.oicr.on.ca:8443/pinery/sample/45");
       runDtoSampleSet.add(runDtoSample);
-      runDtoPosition.setRunSample(runDtoSampleSet);
-      status = runContainsUrl(runDtoPosition.getRunSample(), runDtoSample.getUrl());
+      runDtoPosition.setRunSamples(runDtoSampleSet);
+      status = runContainsUrl(runDtoPosition.getRunSamples(), runDtoSample.getUrl());
 
       assertThat(status, is(true));
    }
@@ -684,8 +684,8 @@ public class ResourceTest {
       RunDtoPosition runDtoPosition = new RunDtoPosition();
       runDtoSample.setId(12);
       runDtoSampleSet.add(runDtoSample);
-      runDtoPosition.setRunSample(runDtoSampleSet);
-      status = runContainsId(runDtoPosition.getRunSample(), runDtoSample.getId());
+      runDtoPosition.setRunSamples(runDtoSampleSet);
+      status = runContainsId(runDtoPosition.getRunSamples(), runDtoSample.getId());
 
       assertThat(status, is(true));
    }

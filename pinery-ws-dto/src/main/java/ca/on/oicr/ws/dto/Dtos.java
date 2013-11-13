@@ -292,7 +292,7 @@ public final class Dtos {
          dto.setPosition(from.getPosition());
       }
       if (from.getRunSample() != null && !from.getRunSample().isEmpty()) {
-         dto.setRunSample(asDto3(from.getRunSample()));
+         dto.setRunSamples(asDto3(from.getRunSample()));
       }
       return dto;
    }
