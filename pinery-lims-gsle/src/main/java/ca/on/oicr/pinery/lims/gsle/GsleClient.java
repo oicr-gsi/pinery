@@ -896,14 +896,60 @@ public class GsleClient implements Lims {
       return result;
    }
 
+   // List<Run> getRuns(Reader reader) throws SAXException, JAXBException {
+   //
+   // CSVReader csvReader = new CSVReader(reader, '\t');
+   // HeaderColumnNameTranslateMappingStrategy<GsleRun> strat = new
+   // HeaderColumnNameTranslateMappingStrategy<GsleRun>();
+   // strat.setType(GsleRun.class);
+   // Map<String, String> map = Maps.newHashMap();
+   //
+   // map.put("state", "state");
+   // map.put("name", "name");
+   // map.put("barcode", "barcode");
+   // map.put("instrument_name", "instrumentName");
+   // map.put("created_by", "createdByIdString");
+   // map.put("created_at", "createdDateString");
+   // map.put("id", "idString");
+   //
+   // strat.setColumnMapping(map);
+   //
+   // CsvToBean<GsleRun> csvToBean = new CsvToBean<GsleRun>();
+   // List<GsleRun> gsleRun = csvToBean.parse(strat, csvReader);
+   //
+   // List<Run> runs = Lists.newArrayList();
+   // for (Run defaultRun : gsleRun) {
+   // runs.add(defaultRun);
+   // }
+   //
+   // List<TemporaryRun> getTemporary = getTemporaryRun();
+   // Table<Integer, Integer, Set<RunSample>> table =
+   // positionMapGenerator(getTemporary);
+   //
+   // System.out.println(runs);
+   // for (Run run : runs) {
+   // if (table.containsRow(run.getId())) {
+   // Map<Integer, Set<RunSample>> tableMap = table.row(run.getId());
+   // Set<RunPosition> runPositionSet = Sets.newHashSet();
+   // run.setSample(runPositionSet);
+   // for (Map.Entry<Integer, Set<RunSample>> entry : tableMap.entrySet()) {
+   // RunPosition runPosition = new DefaultRunPosition();
+   // runPosition.setPosition(entry.getKey());
+   // runPosition.setRunSample(entry.getValue());
+   // runPositionSet.add(runPosition);
+   // }
+   // }
+   // }
+   //
+   // return runs;
+   // }
+
    List<Run> getRuns(Reader reader) throws SAXException, JAXBException {
 
       CSVReader csvReader = new CSVReader(reader, '\t');
       HeaderColumnNameTranslateMappingStrategy<GsleRun> strat = new HeaderColumnNameTranslateMappingStrategy<GsleRun>();
       strat.setType(GsleRun.class);
       Map<String, String> map = Maps.newHashMap();
-
-      System.out.println("i am about to start parsing ");
 
       map.put("state", "state");
       map.put("name", "name");
@@ -996,7 +1042,7 @@ public class GsleClient implements Lims {
 
       map.put("sample_id", "idSampleString");
       map.put("run_id", "idRunString");
-      map.put("position", "position");
+      map.put("position", "positionString");
       map.put("barcode", "barcode");
       map.put("sample_url", "sampleUrl");
 
@@ -1018,23 +1064,14 @@ public class GsleClient implements Lims {
       Table<Integer, Integer, Set<RunSample>> table = HashBasedTable.create();
 
       for (TemporaryRun temp : positions) {
-         if (table.containsRow(temp.getRunId())) {
-            RunSample runSample = new DefaultRunSample();
-            runSample.setBarcode(temp.getBarcode());
-            runSample.setId(temp.getSampleId());
-            if (table.containsColumn(temp.getPosition())) {
-               table.get(temp.getRunId(), temp.getPosition()).add(runSample);
-            } else {
-               Set<RunSample> runSampleSet = Sets.newHashSet();
-               runSampleSet.add(runSample);
-               table.put(temp.getRunId(), temp.getPosition(), runSampleSet);
-            }
+         RunSample runSample = new DefaultRunSample();
+         runSample.setBarcode(temp.getBarcode());
+         runSample.setId(temp.getSampleId());
+         if (table.contains(temp.getRunId(), temp.getPosition())) {
 
+            table.get(temp.getRunId(), temp.getPosition()).add(runSample);
          } else {
-            RunSample runSample = new DefaultRunSample();
             Set<RunSample> runSampleSet = Sets.newHashSet();
-            runSample.setBarcode(temp.getBarcode());
-            runSample.setId(temp.getSampleId());
             runSampleSet.add(runSample);
             table.put(temp.getRunId(), temp.getPosition(), runSampleSet);
          }
@@ -1099,7 +1136,7 @@ public class GsleClient implements Lims {
    public List<TemporaryRun> getTemporaryRun() {
       List<TemporaryRun> result = Lists.newArrayList();
 
-      StringBuilder url = getBaseUrl("184520");
+      StringBuilder url = getBaseUrl("184687");
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");

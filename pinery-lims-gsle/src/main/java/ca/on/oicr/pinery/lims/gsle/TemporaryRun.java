@@ -1,6 +1,5 @@
 package ca.on.oicr.pinery.lims.gsle;
 
-
 public class TemporaryRun {
 
    @Override
@@ -66,6 +65,12 @@ public class TemporaryRun {
    public void setIdSampleString(String idSampleString) {
       if (idSampleString != null) {
          setSampleId(Integer.parseInt(idSampleString));
+      }
+   }
+
+   public void setPositionString(String positionString) {
+      if (positionString != null) {
+         setPosition(Integer.parseInt(positionString));
       }
    }
 }
