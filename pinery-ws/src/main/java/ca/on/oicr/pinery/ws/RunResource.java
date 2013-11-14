@@ -77,12 +77,12 @@ public class RunResource {
       dto.setUrl(uri.toString());
       addUser(run, dto);
       addSampleUrl(dto);
+
       return dto;
    }
 
    private RunDto addSampleUrl(RunDto dto) {
       final URI baseUriSample = uriInfo.getBaseUriBuilder().path("sample/").build();
-
       for (RunDtoPosition runDtoPosition : dto.getPositions()) {
          for (RunDtoSample runDtoSample : runDtoPosition.getRunSamples()) {
             runDtoSample.setUrl(baseUriSample + runDtoSample.getId().toString());

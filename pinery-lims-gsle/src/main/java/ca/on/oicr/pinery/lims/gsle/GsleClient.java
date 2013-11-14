@@ -923,6 +923,23 @@ public class GsleClient implements Lims {
          runs.add(defaultRun);
       }
 
+      List<TemporaryRun> getTemporary = getTemporaryRun();
+      Table<Integer, Integer, Set<RunSample>> table = positionMapGenerator(getTemporary);
+
+      for (Run run : runs) {
+         if (table.containsRow(run.getId())) {
+            Map<Integer, Set<RunSample>> tableMap = table.row(run.getId());
+            Set<RunPosition> runPositionSet = Sets.newHashSet();
+            run.setSample(runPositionSet);
+            for (Map.Entry<Integer, Set<RunSample>> entry : tableMap.entrySet()) {
+               RunPosition runPosition = new DefaultRunPosition();
+               runPosition.setPosition(entry.getKey());
+               runPosition.setRunSample(entry.getValue());
+               runPositionSet.add(runPosition);
+            }
+         }
+      }
+
       return runs;
    }
 

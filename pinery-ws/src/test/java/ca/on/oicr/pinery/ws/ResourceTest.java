@@ -19,9 +19,15 @@ import javax.ws.rs.core.UriInfo;
 import org.junit.Test;
 
 import ca.on.oicr.pinery.api.Order;
+import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunPosition;
+import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.lims.DefaultOrder;
+import ca.on.oicr.pinery.lims.DefaultOrderSample;
 import ca.on.oicr.pinery.lims.DefaultRun;
+import ca.on.oicr.pinery.lims.DefaultRunPosition;
+import ca.on.oicr.pinery.lims.DefaultRunSample;
 import ca.on.oicr.pinery.service.OrderService;
 import ca.on.oicr.pinery.service.RunService;
 import ca.on.oicr.ws.dto.AttributeDto;
@@ -357,6 +363,10 @@ public class ResourceTest {
       Date date = new Date();
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
+      Set<OrderDtoSample> orderDtoSampleSet = Sets.newHashSet();
+      OrderDtoSample orderDtoSampleObj = new OrderDtoSample();
+      orderDtoSampleSet.add(orderDtoSampleObj);
+
       orderDto.setCreatedDate(sf.format(date));
       orderDto.setId(2);
       orderDto.setModifiedDate(sf.format(date));
@@ -364,6 +374,12 @@ public class ResourceTest {
       orderDto.setProject("HALT");
       orderDto.setStatus("Complete");
       orderDto.setUrl("http://test/sample/2");
+
+      for (OrderDtoSample orderDtoSample : orderDtoSampleSet) {
+         orderDtoSample.setId(2);
+      }
+
+      orderDto.setSamples(orderDtoSampleSet);
 
       listOrderDto.add(orderDto);
 
@@ -374,13 +390,20 @@ public class ResourceTest {
       Order order = new DefaultOrder();
       Date date = new Date();
 
+      Set<OrderSample> orderSampleSet = Sets.newHashSet();
+      OrderSample orderSampleObj = new DefaultOrderSample();
+      orderSampleSet.add(orderSampleObj);
+
       order.setCreatedDate(date);
       order.setId(2);
       order.setModifiedDate(date);
       order.setPlatform("Illumina HiSeq 2000");
       order.setProject("HALT");
       order.setStatus("Complete");
-
+      for (OrderSample orderSample : orderSampleSet) {
+         orderSample.setId(45);
+      }
+      order.setSample(orderSampleSet);
       return order;
    }
 
@@ -409,12 +432,21 @@ public class ResourceTest {
       List<Order> list = Lists.newArrayList();
       Date date = new Date();
 
+      Set<OrderSample> orderSampleSet = Sets.newHashSet();
+      OrderSample orderSampleObj = new DefaultOrderSample();
+      orderSampleSet.add(orderSampleObj);
+
       order.setCreatedDate(date);
       order.setId(2);
       order.setModifiedDate(date);
       order.setPlatform("Illumina HiSeq 2000");
       order.setProject("HALT");
       order.setStatus("Complete");
+
+      for (OrderSample orderSample : orderSampleSet) {
+         orderSample.setId(2);
+      }
+      order.setSample(orderSampleSet);
 
       list.add(order);
 
@@ -768,13 +800,30 @@ public class ResourceTest {
    private Run getRun() {
       Run run = new DefaultRun();
       Date date = new Date();
-
       run.setCreatedDate(date);
       run.setId(2);
       run.setBarcode("C2D8J");
       run.setName("130906_SN203_0196_AC2D4DACXX");
       run.setState("Complete");
 
+      RunPosition runPosition = new DefaultRunPosition();
+      Set<RunPosition> positions = Sets.newHashSet();
+      positions.add(runPosition);
+
+      RunSample sampleObj = new DefaultRunSample();
+      Set<RunSample> runSample = Sets.newHashSet();
+      runSample.add(sampleObj);
+
+      for (RunPosition position : positions) {
+         position.setPosition(54);
+         for (RunSample sample : runSample) {
+            sample.setBarcode("ABC");
+            sample.setId(45);
+         }
+         position.setRunSample(runSample);
+      }
+
+      run.setSample(positions);
       return run;
    }
 
