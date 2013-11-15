@@ -792,6 +792,25 @@ public class ResourceTest {
       runDto.setState("Complete");
       runDto.setUrl("http://test/run/2");
 
+      RunDtoPosition runPosition = new RunDtoPosition();
+      Set<RunDtoPosition> positions = Sets.newHashSet();
+      positions.add(runPosition);
+
+      RunDtoSample sampleObj = new RunDtoSample();
+      Set<RunDtoSample> runSample = Sets.newHashSet();
+      runSample.add(sampleObj);
+
+      for (RunDtoPosition position : positions) {
+         position.setPosition(54);
+         for (RunDtoSample sample : runSample) {
+            sample.setBarcode("ABC");
+            sample.setId(45);
+         }
+         position.setRunSamples(runSample);
+      }
+
+      runDto.setPositions(positions);
+
       listRunDto.add(runDto);
 
       assertThat(originalListRunDto, containsInAnyOrder(listRunDto.toArray()));
@@ -868,6 +887,25 @@ public class ResourceTest {
       run.setBarcode("C2D8J");
       run.setInstrumentName("h804");
       run.setState("Complete");
+
+      RunPosition runPosition = new DefaultRunPosition();
+      Set<RunPosition> positions = Sets.newHashSet();
+      positions.add(runPosition);
+
+      RunSample sampleObj = new DefaultRunSample();
+      Set<RunSample> runSample = Sets.newHashSet();
+      runSample.add(sampleObj);
+
+      for (RunPosition position : positions) {
+         position.setPosition(54);
+         for (RunSample sample : runSample) {
+            sample.setBarcode("ABC");
+            sample.setId(45);
+         }
+         position.setRunSample(runSample);
+      }
+
+      run.setSample(positions);
 
       list.add(run);
 

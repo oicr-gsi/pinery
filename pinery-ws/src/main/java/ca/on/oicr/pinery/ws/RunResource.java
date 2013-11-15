@@ -61,6 +61,7 @@ public class RunResource {
          RunDto dto = Dtos.asDto(run);
          dto.setUrl(baseUri + "/" + dto.getId().toString());
          addUser(run, dto);
+         addSampleUrl(dto);
          result.add(dto);
       }
       return result;
@@ -83,9 +84,12 @@ public class RunResource {
 
    private RunDto addSampleUrl(RunDto dto) {
       final URI baseUriSample = uriInfo.getBaseUriBuilder().path("sample/").build();
-      for (RunDtoPosition runDtoPosition : dto.getPositions()) {
-         for (RunDtoSample runDtoSample : runDtoPosition.getRunSamples()) {
-            runDtoSample.setUrl(baseUriSample + runDtoSample.getId().toString());
+
+      if (dto.getPositions() != null) {
+         for (RunDtoPosition runDtoPosition : dto.getPositions()) {
+            for (RunDtoSample runDtoSample : runDtoPosition.getRunSamples()) {
+               runDtoSample.setUrl(baseUriSample + runDtoSample.getId().toString());
+            }
          }
       }
       return dto;
