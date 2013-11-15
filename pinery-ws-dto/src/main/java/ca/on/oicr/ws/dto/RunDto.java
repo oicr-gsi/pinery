@@ -70,10 +70,10 @@ public class RunDto {
    public String toString() {
       return "RunDto [state=" + state + ", name=" + name + ", barcode=" + barcode + ", instrumentName=" + instrumentName + ", positions="
             + positions + ", createdByUrl=" + createdByUrl + ", createdDate=" + createdDate + ", id=" + id + ", url=" + url
-            + ", getState()=" + getState() + ", getName()=" + getName() + ", getBarcode()=" + getBarcode() + ", getInstrumentName()="
-            + getInstrumentName() + ", getPositions()=" + getPositions() + ", getCreatedByUrl()=" + getCreatedByUrl()
-            + ", getCreatedDate()=" + getCreatedDate() + ", getId()=" + getId() + ", getUrl()=" + getUrl() + ", getClass()=" + getClass()
-            + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+            + ", hashCode()=" + hashCode() + ", getState()=" + getState() + ", getName()=" + getName() + ", getBarcode()=" + getBarcode()
+            + ", getInstrumentName()=" + getInstrumentName() + ", getPositions()=" + getPositions() + ", getCreatedByUrl()="
+            + getCreatedByUrl() + ", getCreatedDate()=" + getCreatedDate() + ", getId()=" + getId() + ", getUrl()=" + getUrl()
+            + ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
    }
 
    private String state;

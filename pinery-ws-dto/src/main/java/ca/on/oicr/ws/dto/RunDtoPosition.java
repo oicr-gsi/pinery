@@ -7,7 +7,7 @@ public class RunDtoPosition {
    @Override
    public String toString() {
       return "RunDtoPosition [runSample=" + runSample + ", position=" + position + ", hashCode()=" + hashCode() + ", getPosition()="
-            + getPosition() + ", getRunSample()=" + getRunSamples() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+            + getPosition() + ", getRunSamples()=" + getRunSamples() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
             + "]";
    }
 
