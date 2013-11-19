@@ -7,7 +7,7 @@ public class RunDtoPosition {
    @Override
    public String toString() {
       return "RunDtoPosition [runSample=" + runSample + ", position=" + position + ", hashCode()=" + hashCode() + ", getPosition()="
-            + getPosition() + ", getRunSamples()=" + getRunSamples() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+            + getPosition() + ", getRunSamples()=" + getSamples() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
             + "]";
    }
 
@@ -46,11 +46,11 @@ public class RunDtoPosition {
       this.position = position;
    }
 
-   public Set<RunDtoSample> getRunSamples() {
+   public Set<RunDtoSample> getSamples() {
       return runSample;
    }
 
-   public void setRunSamples(Set<RunDtoSample> runSample) {
+   public void setSamples(Set<RunDtoSample> runSample) {
       this.runSample = runSample;
    }
 

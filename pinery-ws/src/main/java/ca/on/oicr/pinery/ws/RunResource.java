@@ -87,7 +87,7 @@ public class RunResource {
 
       if (dto.getPositions() != null) {
          for (RunDtoPosition runDtoPosition : dto.getPositions()) {
-            for (RunDtoSample runDtoSample : runDtoPosition.getRunSamples()) {
+            for (RunDtoSample runDtoSample : runDtoPosition.getSamples()) {
                runDtoSample.setUrl(baseUriSample + runDtoSample.getId().toString());
             }
          }

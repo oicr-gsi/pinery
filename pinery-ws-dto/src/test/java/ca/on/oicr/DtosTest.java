@@ -123,6 +123,7 @@ public class DtosTest {
       Attribute attribute = new DefaultAttribute();
       Set<Attribute> attributes = Sets.newHashSet();
       attribute.setName("read length");
+      attribute.setValue("2x101");
       attributes.add(attribute);
       orderSample.setAttributes(attributes);
       OrderDtoSample orderDtoSample = Dtos.asDto(orderSample);
@@ -207,7 +208,7 @@ public class DtosTest {
       Run input = new DefaultRun();
       input.setInstrumentName("h804");
       RunDto output = Dtos.asDto(input);
-      assertThat(output.getInstrumentName(), is("h804"));
+      assertThat(output.getInstrument_name(), is("h804"));
    }
 
    @Test
@@ -268,8 +269,8 @@ public class DtosTest {
       runSamples.add(runSample);
       runPosition.setRunSample(runSamples);
       RunDtoPosition runDtoPosition = Dtos.asDto(runPosition);
-      runDtoPosition.getRunSamples();
-      status = RunSampleContainsBarcode(runDtoPosition.getRunSamples(), runSample.getBarcode());
+      runDtoPosition.getSamples();
+      status = RunSampleContainsBarcode(runDtoPosition.getSamples(), runSample.getBarcode());
 
       assertThat(status, is(true));
    }
@@ -284,8 +285,8 @@ public class DtosTest {
       runSamples.add(runSample);
       runPosition.setRunSample(runSamples);
       RunDtoPosition runDtoPosition = Dtos.asDto(runPosition);
-      runDtoPosition.getRunSamples();
-      status = RunSampleContainsUrl(runDtoPosition.getRunSamples(), runSample.getUrl());
+      runDtoPosition.getSamples();
+      status = RunSampleContainsUrl(runDtoPosition.getSamples(), runSample.getUrl());
 
       assertThat(status, is(true));
    }
@@ -300,8 +301,8 @@ public class DtosTest {
       runSamples.add(runSample);
       runPosition.setRunSample(runSamples);
       RunDtoPosition runDtoPosition = Dtos.asDto(runPosition);
-      runDtoPosition.getRunSamples();
-      status = RunSampleContainsId(runDtoPosition.getRunSamples(), runSample.getId());
+      runDtoPosition.getSamples();
+      status = RunSampleContainsId(runDtoPosition.getSamples(), runSample.getId());
 
       assertThat(status, is(true));
    }

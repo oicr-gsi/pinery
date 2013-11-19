@@ -644,22 +644,23 @@ public class GsleClient implements Lims {
       }
 
       List<TemporaryOrder> getTemporary = getTemporaryOrder();
-      Map<Integer, Set<Attribute>> attributeOrderMap = attributeOrderMap(getTemporary);
+      Map<String, Set<Attribute>> attributeOrderMap = attributeOrderMap(getTemporary);
       Map<Integer, Set<OrderSample>> sampleOrderMap = sampleOrderMap(getTemporary);
 
       for (Order order : orders) {
          if (sampleOrderMap.containsKey(order.getId())) {
             Set<OrderSample> samples = sampleOrderMap.get(order.getId());
             for (OrderSample orderSample : samples) {
-               if (attributeOrderMap.containsKey(orderSample.getId())) {
-                  Set<Attribute> attributes = attributeOrderMap.get(orderSample.getId());
+               if (attributeOrderMap.containsKey(order.getId() + "_" + orderSample.getId())) {
+                  Set<Attribute> attributes = attributeOrderMap.get(order.getId() + "_" + orderSample.getId());
                   orderSample.setAttributes(attributes);
+
                }
             }
             order.setSample(samples);
-
          }
       }
+
       return orders;
    }
 
@@ -689,15 +690,15 @@ public class GsleClient implements Lims {
       }
 
       List<TemporaryOrder> getTemporary = getTemporaryOrder(id);
-      Map<Integer, Set<Attribute>> attributeOrderMap = attributeOrderMap(getTemporary);
+      Map<String, Set<Attribute>> attributeOrderMap = attributeOrderMap(getTemporary);
       Map<Integer, Set<OrderSample>> sampleOrderMap = sampleOrderMap(getTemporary);
 
       for (Order order : orders) {
          if (sampleOrderMap.containsKey(order.getId())) {
             Set<OrderSample> samples = sampleOrderMap.get(order.getId());
             for (OrderSample orderSample : samples) {
-               if (attributeOrderMap.containsKey(orderSample.getId())) {
-                  Set<Attribute> attributes = attributeOrderMap.get(orderSample.getId());
+               if (attributeOrderMap.containsKey(order.getId() + "_" + orderSample.getId())) {
+                  Set<Attribute> attributes = attributeOrderMap.get(order.getId() + "_" + orderSample.getId());
                   orderSample.setAttributes(attributes);
                }
             }
@@ -735,21 +736,23 @@ public class GsleClient implements Lims {
 
    }
 
-   public Map<Integer, Set<Attribute>> attributeOrderMap(List<TemporaryOrder> temp) {
+   public Map<String, Set<Attribute>> attributeOrderMap(List<TemporaryOrder> temp) {
 
-      Map<Integer, Set<Attribute>> attMap = Maps.newHashMap();
+      Map<String, Set<Attribute>> attMap = Maps.newHashMap();
 
       for (TemporaryOrder list : temp) {
 
-         if (attMap.containsKey(list.getSampleId())) {
+         if (attMap.containsKey(list.getOrderId() + "_" + list.getSampleId())) {
+
             Attribute attribute = new DefaultAttribute();
             attribute.setId(list.getOrderId());
             attribute.setName(list.getName());
             attribute.setValue(list.getValue());
 
-            attMap.get(list.getSampleId()).add(attribute);
+            attMap.get(list.getOrderId() + "_" + list.getSampleId()).add(attribute);
 
          } else {
+
             Attribute attribute = new DefaultAttribute();
             Set<Attribute> attributeSet = Sets.newHashSet();
 
@@ -758,7 +761,7 @@ public class GsleClient implements Lims {
             attribute.setValue(list.getValue());
             attributeSet.add(attribute);
 
-            attMap.put(list.getSampleId(), attributeSet);
+            attMap.put(list.getOrderId() + "_" + list.getSampleId(), attributeSet);
          }
       }
 

@@ -88,19 +88,24 @@ public final class Dtos {
    public static Set<AttributeDto> asDto(Set<Attribute> from) {
       Set<AttributeDto> dtoSet = Sets.newHashSet();
       for (Attribute attribute : from) {
-         dtoSet.add(asDto(attribute));
+         if (!StringUtils.isBlank(attribute.getValue())) {
+            dtoSet.add(asDto(attribute));
+         }
       }
       return dtoSet;
    }
 
    public static AttributeDto asDto(Attribute from) {
       AttributeDto dto = new AttributeDto();
-      if (from.getName() != null) {
-         dto.setName(from.getName());
-      }
+
       if (from.getValue() != null) {
          dto.setValue(from.getValue());
       }
+
+      if (from.getName() != null) {
+         dto.setName(from.getName());
+      }
+
       return dto;
    }
 
@@ -265,7 +270,7 @@ public final class Dtos {
          dto.setBarcode(from.getBarcode());
       }
       if (!StringUtils.isBlank(from.getInstrumentName())) {
-         dto.setInstrumentName(from.getInstrumentName());
+         dto.setInstrument_name(from.getInstrumentName());
       }
       if (from.getCreatedDate() != null) {
          dto.setCreatedDate(dateTimeFormatter.print(from.getCreatedDate().getTime()));
@@ -292,7 +297,7 @@ public final class Dtos {
          dto.setPosition(from.getPosition());
       }
       if (from.getRunSample() != null && !from.getRunSample().isEmpty()) {
-         dto.setRunSamples(asDto3(from.getRunSample()));
+         dto.setSamples(asDto3(from.getRunSample()));
       }
       return dto;
    }

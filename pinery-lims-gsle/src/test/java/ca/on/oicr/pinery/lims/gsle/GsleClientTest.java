@@ -150,11 +150,11 @@ public class GsleClientTest {
    @Test
    public void test_attribute_order_map_with_five_attributes() throws Exception {
       GsleClient sut = new GsleClient();
-      Map<Integer, Set<Attribute>> map = sut.attributeOrderMap(get_temporary_list_test_input_one());
+      Map<String, Set<Attribute>> map = sut.attributeOrderMap(get_temporary_list_test_input_one());
 
       assertThat("Number of samples in map", map.size(), is(2));
-      assertThat("Number of attributes in sample 13312", map.get(13312).size(), is(2));
-      assertThat("Number of attributes in sample 13315", map.get(13315).size(), is(3));
+      assertThat("Number of attributes in sample 13312", map.get(1047 + "_" + 13312).size(), is(2));
+      assertThat("Number of attributes in sample 13315", map.get(1047 + "_" + 13315).size(), is(3));
    }
 
    /**
@@ -220,13 +220,6 @@ public class GsleClientTest {
       temporaries.add(t1);
       return temporaries;
    }
-
-   // /////////////////////////////////////////////////////////////////////////////////////////
-   // /////////////////////////////////////////////////////////////////////////////////////////
-   // /////////////////////////////////////////////////////////////////////////////////////////
-   // /////////////////////////////////////////////////////////////////////////////////////////
-   // ////////////////////////////////////////////////////////////////////////////////////////
-   // /////////////////////////////////////////////////////////////////////////////////////////
 
    @Test
    public void test_sample_Run_map_with_one_Run() throws Exception {

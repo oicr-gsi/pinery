@@ -647,8 +647,8 @@ public class ResourceTest {
       RunDtoPosition runDtoPosition = new RunDtoPosition();
       runDtoSample.setBarcode("C2D8J");
       runDtoSampleSet.add(runDtoSample);
-      runDtoPosition.setRunSamples(runDtoSampleSet);
-      status = runContainsBarcode(runDtoPosition.getRunSamples(), runDtoSample.getBarcode());
+      runDtoPosition.setSamples(runDtoSampleSet);
+      status = runContainsBarcode(runDtoPosition.getSamples(), runDtoSample.getBarcode());
 
       assertThat(status, is(true));
    }
@@ -682,8 +682,8 @@ public class ResourceTest {
       RunDtoPosition runDtoPosition = new RunDtoPosition();
       runDtoSample.setUrl("https://pinery.res.oicr.on.ca:8443/pinery/sample/45");
       runDtoSampleSet.add(runDtoSample);
-      runDtoPosition.setRunSamples(runDtoSampleSet);
-      status = runContainsUrl(runDtoPosition.getRunSamples(), runDtoSample.getUrl());
+      runDtoPosition.setSamples(runDtoSampleSet);
+      status = runContainsUrl(runDtoPosition.getSamples(), runDtoSample.getUrl());
 
       assertThat(status, is(true));
    }
@@ -717,8 +717,8 @@ public class ResourceTest {
       RunDtoPosition runDtoPosition = new RunDtoPosition();
       runDtoSample.setId(12);
       runDtoSampleSet.add(runDtoSample);
-      runDtoPosition.setRunSamples(runDtoSampleSet);
-      status = runContainsId(runDtoPosition.getRunSamples(), runDtoSample.getId());
+      runDtoPosition.setSamples(runDtoSampleSet);
+      status = runContainsId(runDtoPosition.getSamples(), runDtoSample.getId());
 
       assertThat(status, is(true));
    }
@@ -789,7 +789,7 @@ public class ResourceTest {
       runDto.setId(2);
       runDto.setName("130906_SN804_0130_AC2D8JACXX");
       runDto.setBarcode("C2D8J");
-      runDto.setInstrumentName("h804");
+      runDto.setInstrument_name("h804");
       runDto.setState("Complete");
       runDto.setUrl("http://test/run//2");
 
@@ -808,7 +808,7 @@ public class ResourceTest {
             sample.setId(45);
             sample.setUrl("http://test/run/45");
          }
-         position.setRunSamples(runSample);
+         position.setSamples(runSample);
       }
 
       runDto.setPositions(positions);

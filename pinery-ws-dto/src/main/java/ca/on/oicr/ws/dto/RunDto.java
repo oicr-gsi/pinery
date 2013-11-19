@@ -9,7 +9,7 @@ import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-@XmlRootElement(name = "run")
+@XmlRootElement(name = "sequencer_run")
 @JsonAutoDetect
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class RunDto {
@@ -71,7 +71,7 @@ public class RunDto {
       return "RunDto [state=" + state + ", name=" + name + ", barcode=" + barcode + ", instrumentName=" + instrumentName + ", positions="
             + positions + ", createdByUrl=" + createdByUrl + ", createdDate=" + createdDate + ", id=" + id + ", url=" + url
             + ", hashCode()=" + hashCode() + ", getState()=" + getState() + ", getName()=" + getName() + ", getBarcode()=" + getBarcode()
-            + ", getInstrumentName()=" + getInstrumentName() + ", getPositions()=" + getPositions() + ", getCreatedByUrl()="
+            + ", getInstrumentName()=" + getInstrument_name() + ", getPositions()=" + getPositions() + ", getCreatedByUrl()="
             + getCreatedByUrl() + ", getCreatedDate()=" + getCreatedDate() + ", getId()=" + getId() + ", getUrl()=" + getUrl()
             + ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
    }
@@ -110,11 +110,11 @@ public class RunDto {
       this.barcode = barcode;
    }
 
-   public String getInstrumentName() {
+   public String getInstrument_name() {
       return instrumentName;
    }
 
-   public void setInstrumentName(String instrumentName) {
+   public void setInstrument_name(String instrumentName) {
       this.instrumentName = instrumentName;
    }
 
