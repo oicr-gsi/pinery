@@ -899,54 +899,6 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   // List<Run> getRuns(Reader reader) throws SAXException, JAXBException {
-   //
-   // CSVReader csvReader = new CSVReader(reader, '\t');
-   // HeaderColumnNameTranslateMappingStrategy<GsleRun> strat = new
-   // HeaderColumnNameTranslateMappingStrategy<GsleRun>();
-   // strat.setType(GsleRun.class);
-   // Map<String, String> map = Maps.newHashMap();
-   //
-   // map.put("state", "state");
-   // map.put("name", "name");
-   // map.put("barcode", "barcode");
-   // map.put("instrument_name", "instrumentName");
-   // map.put("created_by", "createdByIdString");
-   // map.put("created_at", "createdDateString");
-   // map.put("id", "idString");
-   //
-   // strat.setColumnMapping(map);
-   //
-   // CsvToBean<GsleRun> csvToBean = new CsvToBean<GsleRun>();
-   // List<GsleRun> gsleRun = csvToBean.parse(strat, csvReader);
-   //
-   // List<Run> runs = Lists.newArrayList();
-   // for (Run defaultRun : gsleRun) {
-   // runs.add(defaultRun);
-   // }
-   //
-   // List<TemporaryRun> getTemporary = getTemporaryRun();
-   // Table<Integer, Integer, Set<RunSample>> table =
-   // positionMapGenerator(getTemporary);
-   //
-   // System.out.println(runs);
-   // for (Run run : runs) {
-   // if (table.containsRow(run.getId())) {
-   // Map<Integer, Set<RunSample>> tableMap = table.row(run.getId());
-   // Set<RunPosition> runPositionSet = Sets.newHashSet();
-   // run.setSample(runPositionSet);
-   // for (Map.Entry<Integer, Set<RunSample>> entry : tableMap.entrySet()) {
-   // RunPosition runPosition = new DefaultRunPosition();
-   // runPosition.setPosition(entry.getKey());
-   // runPosition.setRunSample(entry.getValue());
-   // runPositionSet.add(runPosition);
-   // }
-   // }
-   // }
-   //
-   // return runs;
-   // }
-
    List<Run> getRuns(Reader reader) throws SAXException, JAXBException {
 
       CSVReader csvReader = new CSVReader(reader, '\t');
@@ -1200,7 +1152,6 @@ public class GsleClient implements Lims {
          }
 
          BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
-         // System.out.println("this is the br " + br.readLine());
          result = getRuns(br);
 
       } catch (Exception e) {
@@ -1238,17 +1189,6 @@ public class GsleClient implements Lims {
       }
       return result;
    }
-
-   // //////////////////////////////////////////////////////////////////////////////////////////////
-   // /////////////////////////////////////////////////////////////////////////////////////////////
-   // ///////////////////////////////////////////////////////////////////////////////////////////
-   // //////////////////////////////////////////////////////////////////////////////////////////////
-   // ////////////////////////////////////////////////////////////////////////////////////////////
-   // ///////////////////////////////////////////////////////////////////////////////////////////////
-   // ////////////////////////////////////////////////////////////////////////////////////////////
-   // /////////////////////////////////////////////////////////////////////////////////////////////
-   // ////////////////////////////////////////////////////////////////////////////////////////////
-   // ////////////////////////////////////////////////////////////////////////////////////////////
 
    List<User> getUsers(Reader reader) {
       CSVReader csvReader = new CSVReader(reader, '\t');
@@ -1445,7 +1385,30 @@ public class GsleClient implements Lims {
    }
 
    @Override
-   public List<Instrument> getInstruments(Integer instrumentModelId) {
+   public List<Instrument> getInstruments(/* Integer instrumentModelId */) {
+      List<Instrument> result = Lists.newArrayList();
+
+      // TODO: Create query and update mapping
+      StringBuilder url = getBaseUrl("197456");
+      try {
+         ClientRequest request = new ClientRequest(url.toString());
+         request.accept("text/plain");
+         ClientResponse<String> response = request.get(String.class);
+
+         if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+         }
+         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+         result = getInstruments(br);
+      } catch (Exception e) {
+         System.out.println(e);
+         e.printStackTrace(System.out);
+      }
+      return result;
+   }
+
+   @Override
+   public List<Instrument> getInstrumentModelInsrument(Integer instrumentModelId) {
       List<Instrument> result = Lists.newArrayList();
 
       // TODO: Create query and update mapping
@@ -1477,6 +1440,7 @@ public class GsleClient implements Lims {
       map.put("instr_id", "idString");
       map.put("name", "name");
       map.put("created_at", "createdString");
+      map.put("model_id", "instrumentModel");
       strat.setColumnMapping(map);
 
       CsvToBean<GsleInstrument> csvToBean = new CsvToBean<GsleInstrument>();
@@ -1490,12 +1454,10 @@ public class GsleClient implements Lims {
    }
 
    @Override
-   public Instrument getInstrument(Integer instrumentModelId, Integer instrumentId) {
+   public Instrument getInstrument(Integer instrumentId) {
       Instrument result = null;
 
-      StringBuilder url = getBaseUrl("118008");
-      url.append(";bind=");
-      url.append(instrumentModelId);
+      StringBuilder url = getBaseUrl("197031");
       url.append(";bind=");
       url.append(instrumentId);
       try {

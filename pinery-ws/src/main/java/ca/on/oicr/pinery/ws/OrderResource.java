@@ -92,8 +92,6 @@ public class OrderResource {
    private void addOrders(Order order, OrderDto dto) {
 
       final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
-      // final URI baseUriSample =
-      // uriInfo.getBaseUriBuilder().path("sample/").build();
 
       if (order.getCreatedById() != null) {
          dto.setCreatedByUrl(baseUri + order.getCreatedById().toString());
@@ -102,21 +100,5 @@ public class OrderResource {
       if (order.getModifiedById() != null) {
          dto.setModifiedByUrl(baseUri + order.getModifiedById().toString());
       }
-      //
-      // if (order.getCreatedById() != null) {
-      //
-      // Set<OrderSample> tempSet = Sets.newHashSet();
-      // tempSet = order.getSamples();
-      //
-      // if (dto.getSamples() != null) {
-      // for (OrderDtoSample orderDtoSample : dto.getSamples()) {
-      // for (OrderSample orderSample : tempSet) {
-      // orderDtoSample.setUrl(baseUriSample + orderSample.getId().toString());
-      // }
-      // }
-      // }
-      //
-      // }
-
    }
 }

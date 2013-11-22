@@ -11,7 +11,10 @@ public interface InstrumentService {
 
    public InstrumentModel getInstrumentModel(Integer id);
 
-   public List<Instrument> getInstruments(Integer instrumentModelId);
+   public List<Instrument> getInstruments();
 
-   public Instrument getInstrument(Integer instrumentModelId, Integer instrumentId);
+   public Instrument getInstrument(Integer instrumentId);
+
+   public List<Instrument> getInstrumentModelInstrument(Integer id);
+
 }

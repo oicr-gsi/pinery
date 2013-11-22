@@ -9,6 +9,7 @@ public class DefaultInstrument implements Instrument {
    private Integer id;
    private String name;
    private Date created;
+   private String instrumentModel;
 
    public Integer getId() {
       return id;
@@ -32,5 +33,13 @@ public class DefaultInstrument implements Instrument {
 
    public void setCreated(Date created) {
       this.created = created;
+   }
+
+   public String getInstrumentModel() {
+      return instrumentModel;
+   }
+
+   public void setInstrumentModel(String instrumentModel) {
+      this.instrumentModel = instrumentModel;
    }
 }

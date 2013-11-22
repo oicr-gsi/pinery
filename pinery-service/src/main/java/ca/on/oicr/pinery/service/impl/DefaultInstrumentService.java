@@ -27,12 +27,17 @@ public class DefaultInstrumentService implements InstrumentService {
    }
 
    @Override
-   public List<Instrument> getInstruments(Integer instrumentModelId) {
-      return lims.getInstruments(instrumentModelId);
+   public List<Instrument> getInstruments() {
+      return lims.getInstruments();
    }
 
    @Override
-   public Instrument getInstrument(Integer instrumentModelId, Integer instrumentId) {
-      return lims.getInstrument(instrumentModelId, instrumentId);
+   public Instrument getInstrument(Integer instrumentId) {
+      return lims.getInstrument(instrumentId);
+   }
+
+   @Override
+   public List<Instrument> getInstrumentModelInstrument(Integer id) {
+      return lims.getInstrumentModelInsrument(id);
    }
 }

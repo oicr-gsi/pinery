@@ -388,6 +388,10 @@ public final class Dtos {
       if (from.getCreated() != null) {
          dto.setCreatedDate(dateTimeFormatter.print(from.getCreated().getTime()));
       }
+
+      if (from.getInstrumentModel() != null) {
+         dto.setInstrumentModel(from.getInstrumentModel());
+      }
       return dto;
    }
 }
