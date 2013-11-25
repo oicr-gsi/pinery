@@ -708,6 +708,51 @@ public class GsleClient implements Lims {
       return orders;
    }
 
+   // public void run(Reader readerSample, Reader orderSample) throws
+   // IOException, SAXException, JAXBException {
+   // final ExecutorService executor = Executors.newFixedThreadPool(2);
+   // List<TemporaryOrder> samples = createMap(readerSample);
+   // List<Order> orders = getOrdersExecutor(orderSample);
+   //
+   // for(Order order : orders)
+   // {
+   // order.get
+   // }
+   //
+   //
+   //
+   //
+   // }
+
+   // List<Order> getOrdersExecutor(Reader reader) throws SAXException,
+   // JAXBException {
+   // CSVReader csvReader = new CSVReader(reader, '\t');
+   // HeaderColumnNameTranslateMappingStrategy<GsleOrder> strat = new
+   // HeaderColumnNameTranslateMappingStrategy<GsleOrder>();
+   // strat.setType(GsleOrder.class);
+   // Map<String, String> map = Maps.newHashMap();
+   //
+   // map.put("id", "idString");
+   // map.put("created_by", "createdByIdString");
+   // map.put("created_at", "createdDateString");
+   // map.put("modified_by", "modifiedByIdString");
+   // map.put("modified_at", "modifiedDateString");
+   // map.put("status", "status");
+   // map.put("project", "project");
+   // map.put("platform", "platform");
+   //
+   // strat.setColumnMapping(map);
+   //
+   // CsvToBean<GsleOrder> csvToBean = new CsvToBean<GsleOrder>();
+   // List<GsleOrder> gsleOrder = csvToBean.parse(strat, csvReader);
+   //
+   // List<Order> orders = Lists.newArrayList();
+   // for (Order defaultOrder : gsleOrder) {
+   // orders.add(defaultOrder);
+   // }
+   // return orders;
+   // }
+
    public List<TemporaryOrder> createMap(Reader reader) throws IOException {
 
       CSVReader csvReader = new CSVReader(reader, '\t');
@@ -837,6 +882,10 @@ public class GsleClient implements Lims {
          List<TemporaryOrder> temporary = createMap(br);
          result = temporary;
 
+         // ////////////////////////
+         // /////////////////////////
+         // run(br);
+
       } catch (Exception e) {
          System.out.println(e);
          e.printStackTrace(System.out);
@@ -861,6 +910,10 @@ public class GsleClient implements Lims {
 
          BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
          result = getOrders(br);
+
+         // ////////////////////////
+         // /////////////////////////
+         // run(br);
 
       } catch (Exception e) {
          System.out.println(e);
@@ -909,10 +962,10 @@ public class GsleClient implements Lims {
       map.put("state", "state");
       map.put("name", "name");
       map.put("barcode", "barcode");
-      map.put("instrument_name", "instrumentName");
       map.put("created_by", "createdByIdString");
       map.put("created_at", "createdDateString");
       map.put("id", "idString");
+      map.put("instr_id", "instrumentIdString");
 
       strat.setColumnMapping(map);
 
@@ -953,10 +1006,10 @@ public class GsleClient implements Lims {
       map.put("state", "state");
       map.put("name", "name");
       map.put("barcode", "barcode");
-      map.put("instrument_name", "instrumentName");
       map.put("created_by", "createdByIdString");
       map.put("created_at", "createdDateString");
       map.put("id", "idString");
+      map.put("instr_id", "instrumentIdString");
 
       strat.setColumnMapping(map);
 

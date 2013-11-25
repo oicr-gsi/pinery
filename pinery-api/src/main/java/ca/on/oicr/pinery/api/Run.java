@@ -17,10 +17,6 @@ public interface Run {
 
    public void setBarcode(String barcode);
 
-   public String getInstrumentName();
-
-   public void setInstrumentName(String instrumentName);
-
    public Set<RunPosition> getSamples();
 
    public void setSample(Set<RunPosition> samples);
@@ -40,4 +36,8 @@ public interface Run {
    public Integer getCreatedById();
 
    public void setCreatedById(Integer createdById);
+
+   public Integer getInstrumentId();
+
+   public void setInstrumentId(Integer instrumentId);
 }

@@ -470,6 +470,8 @@ public class ResourceTest {
       when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
       when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
       when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
 
       RunService runService = mock(RunService.class);
       when(runService.getRun(1)).thenReturn(getRun());
@@ -497,6 +499,8 @@ public class ResourceTest {
       when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
       when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
       when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
 
       RunService runService = mock(RunService.class);
       when(runService.getRun(1)).thenReturn(getRun());
@@ -526,6 +530,8 @@ public class ResourceTest {
       when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
       when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
       when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
 
       RunService runService = mock(RunService.class);
       when(runService.getRun(1)).thenReturn(getRun());
@@ -553,6 +559,8 @@ public class ResourceTest {
       when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
       when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
       when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
 
       RunService runService = mock(RunService.class);
       when(runService.getRun(1)).thenReturn(getRun());
@@ -580,6 +588,8 @@ public class ResourceTest {
       when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
       when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
       when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
 
       RunService runService = mock(RunService.class);
       when(runService.getRun(1)).thenReturn(getRun());
@@ -607,6 +617,8 @@ public class ResourceTest {
       when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
       when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
       when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
 
       RunService runService = mock(RunService.class);
       when(runService.getRun(1)).thenReturn(getRun());
@@ -742,6 +754,8 @@ public class ResourceTest {
       when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
       when(uriInfoMock.getBaseUriBuilder().path("run")).thenReturn(uriBuilderMock);
       when(uriInfoMock.getBaseUriBuilder().path("run").build()).thenReturn(new URI("http://test/run/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
 
       RunService runService = mock(RunService.class);
       when(runService.getRun()).thenReturn(getListRun());
@@ -789,7 +803,6 @@ public class ResourceTest {
       runDto.setId(2);
       runDto.setName("130906_SN804_0130_AC2D8JACXX");
       runDto.setBarcode("C2D8J");
-      runDto.setInstrument_name("h804");
       runDto.setState("Complete");
       runDto.setUrl("http://test/run//2");
 
@@ -887,7 +900,6 @@ public class ResourceTest {
       run.setId(2);
       run.setName("130906_SN804_0130_AC2D8JACXX");
       run.setBarcode("C2D8J");
-      run.setInstrumentName("h804");
       run.setState("Complete");
 
       RunPosition runPosition = new DefaultRunPosition();

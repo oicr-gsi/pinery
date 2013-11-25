@@ -38,4 +38,9 @@ public class GsleRun extends DefaultRun {
       }
    }
 
+   public void setInstrumentIdString(String instrumentIdString) {
+      if (instrumentIdString != null && !instrumentIdString.equals("")) {
+         setInstrumentId((Integer.parseInt(instrumentIdString)));
+      }
+   }
 }

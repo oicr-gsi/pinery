@@ -23,6 +23,7 @@ public class RunDto {
       result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
       result = prime * result + ((id == null) ? 0 : id.hashCode());
       result = prime * result + ((instrumentName == null) ? 0 : instrumentName.hashCode());
+      result = prime * result + ((instrumentUrl == null) ? 0 : instrumentUrl.hashCode());
       result = prime * result + ((name == null) ? 0 : name.hashCode());
       result = prime * result + ((positions == null) ? 0 : positions.hashCode());
       result = prime * result + ((state == null) ? 0 : state.hashCode());
@@ -51,6 +52,9 @@ public class RunDto {
       if (instrumentName == null) {
          if (other.instrumentName != null) return false;
       } else if (!instrumentName.equals(other.instrumentName)) return false;
+      if (instrumentUrl == null) {
+         if (other.instrumentUrl != null) return false;
+      } else if (!instrumentUrl.equals(other.instrumentUrl)) return false;
       if (name == null) {
          if (other.name != null) return false;
       } else if (!name.equals(other.name)) return false;
@@ -70,10 +74,10 @@ public class RunDto {
    public String toString() {
       return "RunDto [state=" + state + ", name=" + name + ", barcode=" + barcode + ", instrumentName=" + instrumentName + ", positions="
             + positions + ", createdByUrl=" + createdByUrl + ", createdDate=" + createdDate + ", id=" + id + ", url=" + url
-            + ", hashCode()=" + hashCode() + ", getState()=" + getState() + ", getName()=" + getName() + ", getBarcode()=" + getBarcode()
-            + ", getInstrumentName()=" + getInstrument_name() + ", getPositions()=" + getPositions() + ", getCreatedByUrl()="
-            + getCreatedByUrl() + ", getCreatedDate()=" + getCreatedDate() + ", getId()=" + getId() + ", getUrl()=" + getUrl()
-            + ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
+            + ", instrumentUrl=" + instrumentUrl + ", hashCode()=" + hashCode() + ", getState()=" + getState() + ", getName()=" + getName()
+            + ", getBarcode()=" + getBarcode() + ", getPositions()=" + getPositions() + ", getCreatedByUrl()=" + getCreatedByUrl()
+            + ", getCreatedDate()=" + getCreatedDate() + ", getId()=" + getId() + ", getUrl()=" + getUrl() + ", getInstrument_Url()="
+            + getInstrument_Url() + ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
    }
 
    private String state;
@@ -85,6 +89,7 @@ public class RunDto {
    private String createdDate;
    private Integer id;
    private String url;
+   private String instrumentUrl;
 
    public String getState() {
       return state;
@@ -108,14 +113,6 @@ public class RunDto {
 
    public void setBarcode(String barcode) {
       this.barcode = barcode;
-   }
-
-   public String getInstrument_name() {
-      return instrumentName;
-   }
-
-   public void setInstrument_name(String instrumentName) {
-      this.instrumentName = instrumentName;
    }
 
    public Set<RunDtoPosition> getPositions() {
@@ -158,6 +155,14 @@ public class RunDto {
 
    public void setUrl(String url) {
       this.url = url;
+   }
+
+   public String getInstrument_Url() {
+      return instrumentUrl;
+   }
+
+   public void setInstrument_Url(String instrumentUrl) {
+      this.instrumentUrl = instrumentUrl;
    }
 
 }

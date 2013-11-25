@@ -17,7 +17,7 @@ public class DefaultRun implements Run {
       result = prime * result + ((createdByUrl == null) ? 0 : createdByUrl.hashCode());
       result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
       result = prime * result + ((id == null) ? 0 : id.hashCode());
-      result = prime * result + ((instrumentName == null) ? 0 : instrumentName.hashCode());
+      result = prime * result + ((instrumentId == null) ? 0 : instrumentId.hashCode());
       result = prime * result + ((name == null) ? 0 : name.hashCode());
       result = prime * result + ((sample == null) ? 0 : sample.hashCode());
       result = prime * result + ((state == null) ? 0 : state.hashCode());
@@ -45,9 +45,9 @@ public class DefaultRun implements Run {
       if (id == null) {
          if (other.id != null) return false;
       } else if (!id.equals(other.id)) return false;
-      if (instrumentName == null) {
-         if (other.instrumentName != null) return false;
-      } else if (!instrumentName.equals(other.instrumentName)) return false;
+      if (instrumentId == null) {
+         if (other.instrumentId != null) return false;
+      } else if (!instrumentId.equals(other.instrumentId)) return false;
       if (name == null) {
          if (other.name != null) return false;
       } else if (!name.equals(other.name)) return false;
@@ -62,23 +62,23 @@ public class DefaultRun implements Run {
 
    @Override
    public String toString() {
-      return "DefaultRun [state=" + state + ", name=" + name + ", barcode=" + barcode + ", instrumentName=" + instrumentName + ", sample="
-            + sample + ", createdByUrl=" + createdByUrl + ", createdDate=" + createdDate + ", id=" + id + ", createdById=" + createdById
-            + ", getState()=" + getState() + ", getName()=" + getName() + ", getBarcode()=" + getBarcode() + ", getInstrumentName()="
-            + getInstrumentName() + ", getSamples()=" + getSamples() + ", getCreatedByUrl()=" + getCreatedByUrl() + ", getCreatedDate()="
-            + getCreatedDate() + ", getId()=" + getId() + ", getCreatedById()=" + getCreatedById() + ", getClass()=" + getClass()
-            + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+      return "DefaultRun [state=" + state + ", name=" + name + ", barcode=" + barcode + ", sample=" + sample + ", createdByUrl="
+            + createdByUrl + ", createdDate=" + createdDate + ", id=" + id + ", createdById=" + createdById + ", instrumentId="
+            + instrumentId + ", hashCode()=" + hashCode() + ", getState()=" + getState() + ", getName()=" + getName() + ", getBarcode()="
+            + getBarcode() + ", getSamples()=" + getSamples() + ", getCreatedByUrl()=" + getCreatedByUrl() + ", getCreatedDate()="
+            + getCreatedDate() + ", getId()=" + getId() + ", getCreatedById()=" + getCreatedById() + ", getInstrumentId()="
+            + getInstrumentId() + ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
    }
 
    private String state;
    private String name;
    private String barcode;
-   private String instrumentName;
    private Set<RunPosition> sample;
    private String createdByUrl;
    private Date createdDate;
    private Integer id;
    private Integer createdById;
+   private Integer instrumentId;
 
    @Override
    public String getState() {
@@ -109,17 +109,6 @@ public class DefaultRun implements Run {
    @Override
    public void setBarcode(String barcode) {
       this.barcode = barcode;
-
-   }
-
-   @Override
-   public String getInstrumentName() {
-      return instrumentName;
-   }
-
-   @Override
-   public void setInstrumentName(String instrumentName) {
-      this.instrumentName = instrumentName;
 
    }
 
@@ -172,5 +161,15 @@ public class DefaultRun implements Run {
    @Override
    public void setCreatedById(Integer createdById) {
       this.createdById = createdById;
+   }
+
+   @Override
+   public Integer getInstrumentId() {
+      return instrumentId;
+   }
+
+   @Override
+   public void setInstrumentId(Integer instrumentId) {
+      this.instrumentId = instrumentId;
    }
 }

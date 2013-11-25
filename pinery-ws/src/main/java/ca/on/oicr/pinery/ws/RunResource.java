@@ -98,9 +98,14 @@ public class RunResource {
    private void addUser(Run run, RunDto dto) {
 
       final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
+      final URI baseUriInstrument = uriInfo.getBaseUriBuilder().path("instrument/").build();
 
       if (run.getCreatedById() != null) {
          dto.setCreatedByUrl(baseUri + run.getCreatedById().toString());
+      }
+
+      if (run.getInstrumentId() != null) {
+         dto.setInstrument_Url(((baseUriInstrument + run.getInstrumentId().toString())));
       }
    }
 }

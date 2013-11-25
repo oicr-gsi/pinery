@@ -204,14 +204,6 @@ public class DtosTest {
    }
 
    @Test
-   public void testOrderRun4() throws Exception {
-      Run input = new DefaultRun();
-      input.setInstrumentName("h804");
-      RunDto output = Dtos.asDto(input);
-      assertThat(output.getInstrument_name(), is("h804"));
-   }
-
-   @Test
    public void testRun5() throws Exception {
       Run input = new DefaultRun();
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
