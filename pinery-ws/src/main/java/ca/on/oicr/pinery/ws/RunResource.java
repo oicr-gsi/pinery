@@ -56,7 +56,7 @@ public class RunResource {
          throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
       }
       List<RunDto> result = Lists.newArrayList();
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("run").build();
+      final URI baseUri = uriInfo.getBaseUriBuilder().path("sequencerrun").build();
       for (Run run : runs) {
          RunDto dto = Dtos.asDto(run);
          dto.setUrl(baseUri + "/" + dto.getId().toString());

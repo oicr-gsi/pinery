@@ -752,8 +752,8 @@ public class ResourceTest {
       when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
       when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
       when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("run")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("run").build()).thenReturn(new URI("http://test/run/1"));
+      when(uriInfoMock.getBaseUriBuilder().path("sequenncerrunrun")).thenReturn(uriBuilderMock);
+      when(uriInfoMock.getBaseUriBuilder().path("sequenncerrunrun").build()).thenReturn(new URI("http://test/sequenncerrunrun/1"));
       when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
       when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
 

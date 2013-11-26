@@ -83,8 +83,10 @@ public class OrderResource {
    private OrderDto addSampleUrl(OrderDto dto) {
       final URI baseUriSample = uriInfo.getBaseUriBuilder().path("sample/").build();
 
-      for (OrderDtoSample orderDtoSample : dto.getSamples()) {
-         orderDtoSample.setUrl(baseUriSample + orderDtoSample.getId().toString());
+      if (dto != null && dto.getSamples() != null) {
+         for (OrderDtoSample orderDtoSample : dto.getSamples()) {
+            orderDtoSample.setUrl(baseUriSample + orderDtoSample.getId().toString());
+         }
       }
       return dto;
    }
@@ -100,5 +102,6 @@ public class OrderResource {
       if (order.getModifiedById() != null) {
          dto.setModifiedByUrl(baseUri + order.getModifiedById().toString());
       }
+
    }
 }
