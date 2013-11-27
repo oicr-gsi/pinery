@@ -24,6 +24,30 @@
     <bean id="gsleClient" class="ca.on.oicr.pinery.lims.gsle.GsleClient">
         <property name="key" value="${gsle.key}" />
         <property name="url" value="${gsle.url}" />
+         <property name="attributes" value="${gsle.attributes}" />
+         <property name="barcode" value="${gsle.barcode}" />
+          <property name="children" value="${gsle.children}" />
+           <property name="parents" value="${gsle.parents}" />
+           <property name="samples" value="${gsle.samples}" />
+           <property name="usersList" value="${gsle.usersList}" />
+            <property name="userSingle" value="${gsle.userSingle}" />
+             <property name="temporaryOrderList" value="${gsle.temporaryOrdersList}" />
+             <property name="temporaryOrderSingle" value="${gsle.temporaryOrderSingle}" />
+             <property name="ordersList" value="${gsle.ordersList}" />
+             <property name="orderSingle" value="${gsle.orderSingle}" />
+             <property name="temporaryRunsList" value="${gsle.temporaryRunsList}" />
+              <property name="temporaryRunSingle" value="${gsle.temporaryRunSingle}" />
+              <property name="runsList" value="${gsle.runsList}" />
+              <property name="runSingle" value="${gsle.runSingle}" />
+              <property name="changeLogsList" value="${gsle.changeLogsList}" />
+              <property name="changeLogSingle" value="${gsle.changeLogSingle}" />
+               <property name="instrumentModelsList" value="${gsle.instrumentModelsList}" />
+                <property name="instrumentModelSingle" value="${gsle.instrumentModelSingle}" />
+                <property name="instrumentsList" value="${gsle.instrumentsList}" />
+                <property name="instrumentModelInstrumentList" value="${gsle.instrumentModelInstrumentList}" />
+                <property name="instrumentSingle" value="${gsle.instrumentSingle}" />
+               
+        
     </bean>
 
     <context:component-scan base-package="ca.on.oicr.pinery">

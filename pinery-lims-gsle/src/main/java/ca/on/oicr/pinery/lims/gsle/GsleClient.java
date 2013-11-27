@@ -78,6 +78,116 @@ public class GsleClient implements Lims {
 
    private String key;
    private String url;
+   private String attributes;
+   private String barcode;
+   private String children;
+   private String parents;
+   private String samples;
+   private String usersList;
+   private String userSingle;
+   private String temporaryOrderList;
+   private String temporaryOrderSingle;
+   private String ordersList;
+   private String orderSingle;
+   private String temporaryRunsList;
+   private String temporaryRunSingle;
+   private String runsList;
+   private String runSingle;
+   private String changeLogsList;
+   private String changeLogSingle;
+   private String instrumentModelsList;
+   private String instrumentModelSingle;
+   private String instrumentsList;
+   private String instrumentModelInstrumentList;
+   private String instrumentSingle;
+
+   public void setInstrumentSingle(String instrumentSingle) {
+      this.instrumentSingle = instrumentSingle;
+   }
+
+   public void setInstrumentModelInstrumentList(String instrumentModelInstrumentList) {
+      this.instrumentModelInstrumentList = instrumentModelInstrumentList;
+   }
+
+   public void setInstrumentsList(String instrumentsList) {
+      this.instrumentsList = instrumentsList;
+   }
+
+   public void setInstrumentModelSingle(String instrumentModelSingle) {
+      this.instrumentModelSingle = instrumentModelSingle;
+   }
+
+   public void setInstrumentModelsList(String instrumentModelsList) {
+      this.instrumentModelsList = instrumentModelsList;
+   }
+
+   public void setChangeLogSingle(String changeLogSingle) {
+      this.changeLogSingle = changeLogSingle;
+   }
+
+   public void setChangeLogsList(String changeLogsList) {
+      this.changeLogsList = changeLogsList;
+   }
+
+   public void setRunSingle(String runSingle) {
+      this.runSingle = runSingle;
+   }
+
+   public void setRunsList(String runsList) {
+      this.runsList = runsList;
+   }
+
+   public void setTemporaryRunSingle(String temporaryRunSingle) {
+      this.temporaryRunSingle = temporaryRunSingle;
+   }
+
+   public void setTemporaryRunsList(String temporaryRunsList) {
+      this.temporaryRunsList = temporaryRunsList;
+   }
+
+   public void setOrderSingle(String orderSingle) {
+      this.orderSingle = orderSingle;
+   }
+
+   public void setOrdersList(String ordersList) {
+      this.ordersList = ordersList;
+   }
+
+   public void setTemporaryOrderSingle(String temporaryOrderSingle) {
+      this.temporaryOrderSingle = temporaryOrderSingle;
+   }
+
+   public void setTemporaryOrderList(String temporaryOrderList) {
+      this.temporaryOrderList = temporaryOrderList;
+   }
+
+   public void setUserSingle(String userSingle) {
+      this.userSingle = userSingle;
+   }
+
+   public void setUsersList(String userList) {
+      this.usersList = userList;
+   }
+
+   public void setSamples(String samples) {
+      this.samples = samples;
+   }
+
+   public void setParents(String parents) {
+      this.parents = parents;
+   }
+
+   public void setChildren(String children) {
+      this.children = children;
+   }
+
+   public void setBarcode(String barcode) {
+      this.barcode = barcode;
+   }
+
+   public void setAttributes(String attributes) {
+      this.attributes = attributes;
+   }
 
    public void setKey(String key) {
       this.key = key;
@@ -101,7 +211,7 @@ public class GsleClient implements Lims {
 
       Map<Integer, Set<Attribute>> result = Maps.newHashMap();
 
-      StringBuilder url = getBaseUrl("74401");
+      StringBuilder url = getBaseUrl(attributes);
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");
@@ -123,8 +233,7 @@ public class GsleClient implements Lims {
 
    public void getBarcode() {
 
-      // StringBuilder url = getBaseUrl("174948");
-      StringBuilder url = getBaseUrl("169186");
+      StringBuilder url = getBaseUrl(barcode);
 
       try {
          ClientRequest request = new ClientRequest(url.toString());
@@ -177,7 +286,7 @@ public class GsleClient implements Lims {
    private Map<Integer, Set<Integer>> getChildren() {
       Map<Integer, Set<Integer>> result = Maps.newHashMap();
 
-      StringBuilder url = getBaseUrl("74419");
+      StringBuilder url = getBaseUrl(children);
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");
@@ -221,7 +330,7 @@ public class GsleClient implements Lims {
    private Map<Integer, Set<Integer>> getParents() {
       Map<Integer, Set<Integer>> result = Maps.newHashMap();
 
-      StringBuilder url = getBaseUrl("74419");
+      StringBuilder url = getBaseUrl(parents);
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");
@@ -295,7 +404,8 @@ public class GsleClient implements Lims {
          after = DateTime.now().withYear(2005);
       }
       // log.error("Inside getSamples");
-      StringBuilder sb = getBaseUrl("74209");
+
+      StringBuilder sb = getBaseUrl(samples);
       sb.append(getArchivedSqlString(archived));
       // sb.append(";bind=OVCA_%|ACC_%");
       if (projects != null && !projects.isEmpty()) {
@@ -572,7 +682,8 @@ public class GsleClient implements Lims {
    public List<User> getUsers() {
       List<User> result = Lists.newArrayList();
 
-      StringBuilder url = getBaseUrl("74432");
+      StringBuilder url = getBaseUrl(usersList);
+
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");
@@ -594,7 +705,7 @@ public class GsleClient implements Lims {
    public User getUser(Integer id) {
       User result = null;
 
-      StringBuilder url = getBaseUrl("74433");
+      StringBuilder url = getBaseUrl(userSingle);
       url.append(";bind=");
       url.append(id);
       try {
@@ -800,8 +911,7 @@ public class GsleClient implements Lims {
    public List<TemporaryOrder> getTemporaryOrder() {
       List<TemporaryOrder> result = Lists.newArrayList();
 
-      // StringBuilder url = getBaseUrl("184520");
-      StringBuilder url = getBaseUrl("170187");
+      StringBuilder url = getBaseUrl(temporaryOrderList);
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");
@@ -824,8 +934,9 @@ public class GsleClient implements Lims {
 
    public List<TemporaryOrder> getTemporaryOrder(Integer id) {
       List<TemporaryOrder> result = null;
-      StringBuilder url = getBaseUrl("170186");
-      // StringBuilder url = getBaseUrl("184521");
+
+      StringBuilder url = getBaseUrl(temporaryOrderSingle);
+
       url.append(";bind=");
       url.append(id);
       try {
@@ -852,8 +963,7 @@ public class GsleClient implements Lims {
 
       List<Order> result = Lists.newArrayList();
 
-      // StringBuilder url = getBaseUrl("182404");
-      StringBuilder url = getBaseUrl("170185");
+      StringBuilder url = getBaseUrl(ordersList);
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");
@@ -878,8 +988,7 @@ public class GsleClient implements Lims {
 
       Order result = null;
 
-      // StringBuilder url = getBaseUrl("182405");
-      StringBuilder url = getBaseUrl("170184");
+      StringBuilder url = getBaseUrl(orderSingle);
       url.append(";bind=");
       url.append(id);
       try {
@@ -1098,8 +1207,7 @@ public class GsleClient implements Lims {
    public List<TemporaryRun> getTemporaryRun() {
       List<TemporaryRun> result = Lists.newArrayList();
 
-      // StringBuilder url = getBaseUrl("184687");
-      StringBuilder url = getBaseUrl("170189");
+      StringBuilder url = getBaseUrl(temporaryRunsList);
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");
@@ -1122,8 +1230,8 @@ public class GsleClient implements Lims {
 
    public List<TemporaryRun> getTemporaryRun(Integer id) {
       List<TemporaryRun> result = null;
-      // StringBuilder url = getBaseUrl("184688");
-      StringBuilder url = getBaseUrl("170188");
+
+      StringBuilder url = getBaseUrl(temporaryRunSingle);
       url.append(";bind=");
       url.append(id);
       try {
@@ -1150,8 +1258,7 @@ public class GsleClient implements Lims {
 
       List<Run> result = Lists.newArrayList();
 
-      // StringBuilder url = getBaseUrl("184685");
-      StringBuilder url = getBaseUrl("170191");
+      StringBuilder url = getBaseUrl(runsList);
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");
@@ -1175,8 +1282,7 @@ public class GsleClient implements Lims {
    public Run getRun(Integer id) {
       Run result = null;
 
-      // StringBuilder url = getBaseUrl("184686");
-      StringBuilder url = getBaseUrl("170190");
+      StringBuilder url = getBaseUrl(runSingle);
       url.append(";bind=");
       url.append(id);
       try {
@@ -1235,7 +1341,7 @@ public class GsleClient implements Lims {
    public List<ChangeLog> getChangeLogs() {
       List<ChangeLog> result = Lists.newArrayList();
 
-      StringBuilder url = getBaseUrl("76371");
+      StringBuilder url = getBaseUrl(changeLogsList);
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");
@@ -1297,7 +1403,7 @@ public class GsleClient implements Lims {
    public ChangeLog getChangeLog(Integer id) {
       ChangeLog result = null;
 
-      StringBuilder url = getBaseUrl("76372");
+      StringBuilder url = getBaseUrl(changeLogSingle);
       url.append(";bind=");
       url.append(id);
       try {
@@ -1324,8 +1430,7 @@ public class GsleClient implements Lims {
    public List<InstrumentModel> getInstrumentModels() {
       List<InstrumentModel> result = Lists.newArrayList();
 
-      // TODO: Create query and update mapping
-      StringBuilder url = getBaseUrl("74418");
+      StringBuilder url = getBaseUrl(instrumentModelsList);
 
       try {
          ClientRequest request = new ClientRequest(url.toString());
@@ -1372,7 +1477,8 @@ public class GsleClient implements Lims {
    public InstrumentModel getInstrumentModel(Integer id) {
       InstrumentModel result = null;
 
-      StringBuilder url = getBaseUrl("117701");
+      StringBuilder url = getBaseUrl(instrumentModelSingle);
+
       url.append(";bind=");
       url.append(id);
       try {
@@ -1400,9 +1506,7 @@ public class GsleClient implements Lims {
    public List<Instrument> getInstruments(/* Integer instrumentModelId */) {
       List<Instrument> result = Lists.newArrayList();
 
-      // TODO: Create query and update mapping
-      // StringBuilder url = getBaseUrl("197456");
-      StringBuilder url = getBaseUrl("170183");
+      StringBuilder url = getBaseUrl(instrumentsList);
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");
@@ -1424,8 +1528,7 @@ public class GsleClient implements Lims {
    public List<Instrument> getInstrumentModelInsrument(Integer instrumentModelId) {
       List<Instrument> result = Lists.newArrayList();
 
-      // TODO: Create query and update mapping
-      StringBuilder url = getBaseUrl("117755");
+      StringBuilder url = getBaseUrl(instrumentModelInstrumentList);
       url.append(";bind=");
       url.append(instrumentModelId);
       try {
@@ -1470,8 +1573,8 @@ public class GsleClient implements Lims {
    public Instrument getInstrument(Integer instrumentId) {
       Instrument result = null;
 
-      // StringBuilder url = getBaseUrl("197031");
-      StringBuilder url = getBaseUrl("170182");
+      StringBuilder url = getBaseUrl(instrumentSingle);
+
       url.append(";bind=");
       url.append(instrumentId);
       try {
