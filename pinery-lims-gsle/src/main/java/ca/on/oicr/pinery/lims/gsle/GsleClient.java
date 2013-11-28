@@ -100,6 +100,11 @@ public class GsleClient implements Lims {
    private String instrumentsList;
    private String instrumentModelInstrumentList;
    private String instrumentSingle;
+   private String sampleIdSingle;
+
+   public void setSampleIdSingle(String sampleIdSingle) {
+      this.sampleIdSingle = sampleIdSingle;
+   }
 
    public void setInstrumentSingle(String instrumentSingle) {
       this.instrumentSingle = instrumentSingle;
@@ -497,8 +502,12 @@ public class GsleClient implements Lims {
 
       // log.error("Inside getSample with id [{}]", id);
       try {
-         ClientRequest request = new ClientRequest("http://" + url + "/SQLApi?key=" + key + ";id=74399;header=1;bind=" + id);
-         // + ";id=15888;header=1;bind=" + id);
+
+         StringBuilder url = getBaseUrl(sampleIdSingle);
+         url.append(";bind=");
+         url.append(id);
+         ClientRequest request = new ClientRequest(url.toString());
+
          request.accept("text/plain");
          // log.error("The uri is [{}].", request.getUri());
          ClientResponse<String> response = request.get(String.class);

@@ -46,6 +46,7 @@
                 <property name="instrumentsList" value="${gsle.instrumentsList}" />
                 <property name="instrumentModelInstrumentList" value="${gsle.instrumentModelInstrumentList}" />
                 <property name="instrumentSingle" value="${gsle.instrumentSingle}" />
+                 <property name="sampleIdSingle" value="${gsle.sampleIdSingle}" />
                
         
     </bean>

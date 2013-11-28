@@ -15,6 +15,7 @@ SELECT ga.NAME
 	,ga.bases
 FROM ga_primer ga
 
+-- TODO Not yet implemented into GsleClient
 -- Name: /pinery/in.../{mid}/instrument/{id}
 -- Description: LIMS API instrument query
 -- Application Properties: 
@@ -282,7 +283,7 @@ WHERE gt.template_id = gtcl.template_id
 
 -- Name: /pinery/sample/{id}
 -- Description: LIMS API samples query
--- Application Properties:
+-- Application Properties: sampleIdSingle
 
 SELECT ga.template_id
 	,ga.NAME
@@ -309,6 +310,7 @@ INNER JOIN STATUS s ON ga.status_id = s.status_id
 INNER JOIN ga_template_state gts ON s.STATE = gts.template_state_id
 WHERE ga.template_id = ?
 
+-- TODO Not yet implemented in GsleClient
 -- Name: /pinery/sample/{id}/changelog
 -- Description: LIMS API samples query
 -- Application Properties: 
