@@ -447,6 +447,7 @@ public class GsleClient implements Lims {
    }
 
    List<Sample> getSamples(Reader reader) {
+
       CSVReader csvReader = new CSVReader(reader, '\t');
       HeaderColumnNameTranslateMappingStrategy<GsleSample> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSample>();
       strat.setType(GsleSample.class);
@@ -500,12 +501,15 @@ public class GsleClient implements Lims {
    @Override
    public Sample getSample(Integer id) {
 
+      Sample result = null;
+
+      StringBuilder url = getBaseUrl(sampleIdSingle);
+      url.append(";bind=");
+      url.append(id);
+
       // log.error("Inside getSample with id [{}]", id);
       try {
 
-         StringBuilder url = getBaseUrl(sampleIdSingle);
-         url.append(";bind=");
-         url.append(id);
          ClientRequest request = new ClientRequest(url.toString());
 
          request.accept("text/plain");
@@ -516,17 +520,21 @@ public class GsleClient implements Lims {
             throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
          }
 
-         // log.error("** getSample: \n{}", response.getEntity());
          BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
 
          List<Sample> samples = getSamples(br);
+
          if (samples.size() == 1) {
-            return samples.get(0);
+            result = samples.get(0);
+
          }
+
       } catch (Exception e) {
          System.out.println(e);
       }
-      return null;
+
+      return result;
+
    }
 
    @Override

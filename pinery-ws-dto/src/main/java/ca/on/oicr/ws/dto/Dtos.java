@@ -39,6 +39,7 @@ public final class Dtos {
 
    public static SampleDto asDto(Sample from) {
       SampleDto dto = new SampleDto();
+
       dto.setId(from.getId());
 
       dto.setName(from.getName());

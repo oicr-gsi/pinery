@@ -44,12 +44,14 @@ public class GsleOrder extends DefaultOrder {
    }
 
    public void setCreatedByIdString(String createdByIdString) {
+
       if (createdByIdString != null && !createdByIdString.equals("")) {
          setCreatedById(Integer.parseInt(createdByIdString));
       }
    }
 
    public void setModifiedByIdString(String modifiedByIdString) {
+
       if (modifiedByIdString != null && !modifiedByIdString.equals("")) {
          setModifiedById(Integer.parseInt(modifiedByIdString));
       }
