@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -25,87 +26,28 @@ public class SampleDto {
    private String url;
    private String name;
    private String description;
+   @JsonProperty("tube_barcode")
    private String tubeBarcode;
    private Float volume;
    private Float concentration;
+   @JsonProperty("storage_location")
    private String storageLocation;
+   @JsonProperty("created_date")
    private String createdDate;
+   @JsonProperty("created_by_url")
    private String createdByUrl;
+   @JsonProperty("modified_date")
    private String modifiedDate;
+   @JsonProperty("modified_by_url")
    private String modifiedByUrl;
    private Integer id;
    private Boolean archived;
+   @JsonProperty("preparation_kit")
    private PreparationKitDto preparationKit;
 
-   @Override
-   public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((archived == null) ? 0 : archived.hashCode());
-      result = prime * result + ((concentration == null) ? 0 : concentration.hashCode());
-      result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
-      result = prime * result + ((description == null) ? 0 : description.hashCode());
-      result = prime * result + ((id == null) ? 0 : id.hashCode());
-      result = prime * result + ((modifiedDate == null) ? 0 : modifiedDate.hashCode());
-      result = prime * result + ((name == null) ? 0 : name.hashCode());
-      result = prime * result + ((projectName == null) ? 0 : projectName.hashCode());
-      result = prime * result + ((sampleType == null) ? 0 : sampleType.hashCode());
-      result = prime * result + ((status == null) ? 0 : status.hashCode());
-      result = prime * result + ((storageLocation == null) ? 0 : storageLocation.hashCode());
-      result = prime * result + ((tubeBarcode == null) ? 0 : tubeBarcode.hashCode());
-      result = prime * result + ((volume == null) ? 0 : volume.hashCode());
-      return result;
-   }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null) return false;
-      if (getClass() != obj.getClass()) return false;
-      SampleDto other = (SampleDto) obj;
-      if (archived == null) {
-         if (other.archived != null) return false;
-      } else if (!archived.equals(other.archived)) return false;
-      if (concentration == null) {
-         if (other.concentration != null) return false;
-      } else if (!concentration.equals(other.concentration)) return false;
-      if (createdDate == null) {
-         if (other.createdDate != null) return false;
-      } else if (!createdDate.equals(other.createdDate)) return false;
-      if (description == null) {
-         if (other.description != null) return false;
-      } else if (!description.equals(other.description)) return false;
-      if (id == null) {
-         if (other.id != null) return false;
-      } else if (!id.equals(other.id)) return false;
-      if (modifiedDate == null) {
-         if (other.modifiedDate != null) return false;
-      } else if (!modifiedDate.equals(other.modifiedDate)) return false;
-      if (name == null) {
-         if (other.name != null) return false;
-      } else if (!name.equals(other.name)) return false;
-      if (projectName == null) {
-         if (other.projectName != null) return false;
-      } else if (!projectName.equals(other.projectName)) return false;
-      if (sampleType == null) {
-         if (other.sampleType != null) return false;
-      } else if (!sampleType.equals(other.sampleType)) return false;
-      if (status == null) {
-         if (other.status != null) return false;
-      } else if (!status.equals(other.status)) return false;
-      if (storageLocation == null) {
-         if (other.storageLocation != null) return false;
-      } else if (!storageLocation.equals(other.storageLocation)) return false;
-      if (tubeBarcode == null) {
-         if (other.tubeBarcode != null) return false;
-      } else if (!tubeBarcode.equals(other.tubeBarcode)) return false;
-      if (volume == null) {
-         if (other.volume != null) return false;
-      } else if (!volume.equals(other.volume)) return false;
-      return true;
-   }
-
+   @JsonProperty("project_name")
    private String projectName;
+   @JsonProperty("sample_type")
    private String sampleType;
    private Set<AttributeDto> attributes;
    private StatusDto status;
@@ -281,4 +223,71 @@ public class SampleDto {
       this.modifiedByUrl = modifiedByUrl;
    }
 
+   @Override
+   public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((archived == null) ? 0 : archived.hashCode());
+      result = prime * result + ((concentration == null) ? 0 : concentration.hashCode());
+      result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
+      result = prime * result + ((description == null) ? 0 : description.hashCode());
+      result = prime * result + ((id == null) ? 0 : id.hashCode());
+      result = prime * result + ((modifiedDate == null) ? 0 : modifiedDate.hashCode());
+      result = prime * result + ((name == null) ? 0 : name.hashCode());
+      result = prime * result + ((projectName == null) ? 0 : projectName.hashCode());
+      result = prime * result + ((sampleType == null) ? 0 : sampleType.hashCode());
+      result = prime * result + ((status == null) ? 0 : status.hashCode());
+      result = prime * result + ((storageLocation == null) ? 0 : storageLocation.hashCode());
+      result = prime * result + ((tubeBarcode == null) ? 0 : tubeBarcode.hashCode());
+      result = prime * result + ((volume == null) ? 0 : volume.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
+      SampleDto other = (SampleDto) obj;
+      if (archived == null) {
+         if (other.archived != null) return false;
+      } else if (!archived.equals(other.archived)) return false;
+      if (concentration == null) {
+         if (other.concentration != null) return false;
+      } else if (!concentration.equals(other.concentration)) return false;
+      if (createdDate == null) {
+         if (other.createdDate != null) return false;
+      } else if (!createdDate.equals(other.createdDate)) return false;
+      if (description == null) {
+         if (other.description != null) return false;
+      } else if (!description.equals(other.description)) return false;
+      if (id == null) {
+         if (other.id != null) return false;
+      } else if (!id.equals(other.id)) return false;
+      if (modifiedDate == null) {
+         if (other.modifiedDate != null) return false;
+      } else if (!modifiedDate.equals(other.modifiedDate)) return false;
+      if (name == null) {
+         if (other.name != null) return false;
+      } else if (!name.equals(other.name)) return false;
+      if (projectName == null) {
+         if (other.projectName != null) return false;
+      } else if (!projectName.equals(other.projectName)) return false;
+      if (sampleType == null) {
+         if (other.sampleType != null) return false;
+      } else if (!sampleType.equals(other.sampleType)) return false;
+      if (status == null) {
+         if (other.status != null) return false;
+      } else if (!status.equals(other.status)) return false;
+      if (storageLocation == null) {
+         if (other.storageLocation != null) return false;
+      } else if (!storageLocation.equals(other.storageLocation)) return false;
+      if (tubeBarcode == null) {
+         if (other.tubeBarcode != null) return false;
+      } else if (!tubeBarcode.equals(other.tubeBarcode)) return false;
+      if (volume == null) {
+         if (other.volume != null) return false;
+      } else if (!volume.equals(other.volume)) return false;
+      return true;
+   }
 }
