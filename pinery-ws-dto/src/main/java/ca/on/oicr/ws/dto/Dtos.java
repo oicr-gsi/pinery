@@ -43,7 +43,9 @@ public final class Dtos {
       dto.setId(from.getId());
 
       dto.setName(from.getName());
-      dto.setDescription(from.getDescription());
+      if (!StringUtils.isBlank(from.getDescription())) {
+         dto.setDescription(from.getDescription());
+      }
       if (from.getArchived() != null) {
          dto.setArchived(from.getArchived());
       }
