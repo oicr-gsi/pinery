@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -14,8 +15,10 @@ public class InstrumentDto {
 
    private String url;
    private String name;
+   @JsonProperty("created_date")
    private String createdDate;
    private Integer id;
+   @JsonProperty("instrument_model")
    private String instrumentModel;
 
    public String getUrl() {
@@ -34,7 +37,7 @@ public class InstrumentDto {
       this.name = name;
    }
 
-   @XmlElement(name="created_date")
+   @XmlElement(name = "created_date")
    public String getCreatedDate() {
       return createdDate;
    }
@@ -51,7 +54,7 @@ public class InstrumentDto {
       this.id = id;
    }
 
-   @XmlElement(name="instrument_model")
+   @XmlElement(name = "instrument_model")
    public String getInstrumentModel() {
       return instrumentModel;
    }

@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -14,10 +15,15 @@ public class InstrumentModelDto {
 
    private String url;
    private String name;
+   @JsonProperty("created_date")
    private String createdDate;
+   @JsonProperty("created_by_url")
    private String createdByUrl;
+   @JsonProperty("modified_date")
    private String modifiedDate;
+   @JsonProperty("modified_by_url")
    private String modifiedByUrl;
+   @JsonProperty("instrument_url")
    private String instrumentsUrl;
    private Integer id;
 
@@ -37,7 +43,7 @@ public class InstrumentModelDto {
       this.name = name;
    }
 
-   @XmlElement(name="created_date")
+   @XmlElement(name = "created_date")
    public String getCreatedDate() {
       return createdDate;
    }
@@ -46,7 +52,7 @@ public class InstrumentModelDto {
       this.createdDate = createdDate;
    }
 
-   @XmlElement(name="created_by_url")
+   @XmlElement(name = "created_by_url")
    public String getCreatedByUrl() {
       return createdByUrl;
    }
@@ -55,7 +61,7 @@ public class InstrumentModelDto {
       this.createdByUrl = createdByUrl;
    }
 
-   @XmlElement(name="modified_date")
+   @XmlElement(name = "modified_date")
    public String getModifiedDate() {
       return modifiedDate;
    }
@@ -64,7 +70,7 @@ public class InstrumentModelDto {
       this.modifiedDate = modifiedDate;
    }
 
-   @XmlElement(name="modified_by_url")
+   @XmlElement(name = "modified_by_url")
    public String getModifiedByUrl() {
       return modifiedByUrl;
    }
@@ -81,7 +87,7 @@ public class InstrumentModelDto {
       this.id = id;
    }
 
-   @XmlElement(name="instruments_url")
+   @XmlElement(name = "instruments_url")
    public String getInstrumentsUrl() {
       return instrumentsUrl;
    }

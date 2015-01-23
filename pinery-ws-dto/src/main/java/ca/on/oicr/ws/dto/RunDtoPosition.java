@@ -2,13 +2,14 @@ package ca.on.oicr.ws.dto;
 
 import java.util.Set;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class RunDtoPosition {
 
    @Override
    public String toString() {
       return "RunDtoPosition [runSample=" + runSample + ", position=" + position + ", hashCode()=" + hashCode() + ", getPosition()="
-            + getPosition() + ", getRunSamples()=" + getSamples() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
-            + "]";
+            + getPosition() + ", getRunSamples()=" + getSamples() + ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
    }
 
    @Override
@@ -35,6 +36,7 @@ public class RunDtoPosition {
       return true;
    }
 
+   @JsonProperty("run_sample")
    private Set<RunDtoSample> runSample;
    private Integer position;
 

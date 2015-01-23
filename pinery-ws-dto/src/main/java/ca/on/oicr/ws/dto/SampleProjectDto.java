@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -14,6 +15,7 @@ public class SampleProjectDto {
 
    private String name;
    private Integer count;
+   @JsonProperty("archived_count")
    private Integer archivedCount;
    private String earliest;
    private String latest;

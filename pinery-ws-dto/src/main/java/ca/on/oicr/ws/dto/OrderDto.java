@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -85,9 +86,13 @@ public class OrderDto {
    private String project;
    private String platform;
    private Set<OrderDtoSample> samples;
+   @JsonProperty("created_by_url")
    private String createdByUrl;
+   @JsonProperty("created_date")
    private String createdDate;
+   @JsonProperty("modified_by_url")
    private String modifiedByUrl;
+   @JsonProperty("modified_date")
    private String modifiedDate;
    private Integer id;
    private String url;

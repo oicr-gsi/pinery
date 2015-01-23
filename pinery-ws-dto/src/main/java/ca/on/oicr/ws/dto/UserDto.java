@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -83,9 +84,13 @@ public class UserDto {
    private String phone;
    private String email;
    private String comment;
+   @JsonProperty("created_date")
    private String createdDate;
+   @JsonProperty("created_by_url")
    private String createdByUrl;
+   @JsonProperty("modified_date")
    private String modifiedDate;
+   @JsonProperty("modified_by_url")
    private String modifiedByUrl;
    private Integer id;
    private Boolean archived;
