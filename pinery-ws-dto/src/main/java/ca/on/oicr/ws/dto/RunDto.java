@@ -77,7 +77,7 @@ public class RunDto {
             + ", instrumentUrl=" + instrumentUrl + ", hashCode()=" + hashCode() + ", getState()=" + getState() + ", getName()=" + getName()
             + ", getBarcode()=" + getBarcode() + ", getPositions()=" + getPositions() + ", getCreatedByUrl()=" + getCreatedByUrl()
             + ", getCreatedDate()=" + getCreatedDate() + ", getId()=" + getId() + ", getUrl()=" + getUrl() + ", getInstrument_Url()="
-            + getInstrument_Url() + ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
+            + getInstrumentUrl() + ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
    }
 
    private String state;
@@ -86,6 +86,7 @@ public class RunDto {
    @JsonProperty("instrument_name")
    private String instrumentName;
    private Set<RunDtoPosition> positions;
+
    @JsonProperty("created_by_url")
    private String createdByUrl;
    @JsonProperty("created_date")
@@ -159,11 +160,19 @@ public class RunDto {
       this.url = url;
    }
 
-   public String getInstrument_Url() {
+   public String getInstrumentName() {
+      return instrumentName;
+   }
+
+   public void setInstrumentName(String instrumentName) {
+      this.instrumentName = instrumentName;
+   }
+
+   public String getInstrumentUrl() {
       return instrumentUrl;
    }
 
-   public void setInstrument_Url(String instrumentUrl) {
+   public void setInstrumentUrl(String instrumentUrl) {
       this.instrumentUrl = instrumentUrl;
    }
 
