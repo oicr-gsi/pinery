@@ -15,14 +15,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class SampleDto {
 
-   @Override
-   public String toString() {
-      return "SampleDto [name=" + name + ", description=" + description + ", tubeBarcode=" + tubeBarcode + ", volume=" + volume
-            + ", concentration=" + concentration + ", storageLocation=" + storageLocation + ", createdDate=" + createdDate
-            + ", modifiedDate=" + modifiedDate + ", id=" + id + ", archived=" + archived + ", projectName=" + projectName + ", sampleType="
-            + sampleType + ", status=" + status + "]";
-   }
-
    private String url;
    private String name;
    private String description;
@@ -289,5 +281,13 @@ public class SampleDto {
          if (other.volume != null) return false;
       } else if (!volume.equals(other.volume)) return false;
       return true;
+   }
+
+   @Override
+   public String toString() {
+      return "SampleDto [name=" + name + ", description=" + description + ", tubeBarcode=" + tubeBarcode + ", volume=" + volume
+            + ", concentration=" + concentration + ", storageLocation=" + storageLocation + ", createdDate=" + createdDate
+            + ", modifiedDate=" + modifiedDate + ", id=" + id + ", archived=" + archived + ", projectName=" + projectName + ", sampleType="
+            + sampleType + ", status=" + status + "]";
    }
 }

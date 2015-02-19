@@ -1,6 +1,22 @@
 package ca.on.oicr.ws.dto;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+@JsonAutoDetect
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class RunDtoSample extends SampleDto {
+
+   private String barcode;
+
+   public String getBarcode() {
+      return barcode;
+   }
+
+   public void setBarcode(String barcode) {
+      this.barcode = barcode;
+   }
 
    @Override
    public String toString() {
@@ -33,15 +49,5 @@ public class RunDtoSample extends SampleDto {
          if (other.barcode != null) return false;
       } else if (!barcode.equals(other.barcode)) return false;
       return true;
-   }
-
-   private String barcode;
-
-   public String getBarcode() {
-      return barcode;
-   }
-
-   public void setBarcode(String barcode) {
-      this.barcode = barcode;
    }
 }

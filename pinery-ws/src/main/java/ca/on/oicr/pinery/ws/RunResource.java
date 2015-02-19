@@ -105,7 +105,7 @@ public class RunResource {
       }
 
       if (run.getInstrumentId() != null) {
-         dto.setInstrument_Url(((baseUriInstrument + run.getInstrumentId().toString())));
+         dto.setInstrumentUrl(((baseUriInstrument + run.getInstrumentId().toString())));
       }
    }
 }

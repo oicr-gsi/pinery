@@ -1,14 +1,10 @@
 package ca.on.oicr.ws.dto;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-@XmlRootElement(name = "instrument")
 @JsonAutoDetect
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class InstrumentDto {
@@ -37,7 +33,6 @@ public class InstrumentDto {
       this.name = name;
    }
 
-   @XmlElement(name = "created_date")
    public String getCreatedDate() {
       return createdDate;
    }
@@ -54,7 +49,6 @@ public class InstrumentDto {
       this.id = id;
    }
 
-   @XmlElement(name = "instrument_model")
    public String getInstrumentModel() {
       return instrumentModel;
    }

@@ -2,9 +2,32 @@ package ca.on.oicr.ws.dto;
 
 import java.util.Set;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
+@JsonAutoDetect
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class RunDtoPosition {
+
+   private Set<RunDtoSample> runSample;
+   private Integer position;
+
+   public Integer getPosition() {
+      return position;
+   }
+
+   public void setPosition(Integer position) {
+      this.position = position;
+   }
+
+   public Set<RunDtoSample> getSamples() {
+      return runSample;
+   }
+
+   public void setSamples(Set<RunDtoSample> runSample) {
+      this.runSample = runSample;
+   }
 
    @Override
    public String toString() {
@@ -34,26 +57,6 @@ public class RunDtoPosition {
          if (other.runSample != null) return false;
       } else if (!runSample.equals(other.runSample)) return false;
       return true;
-   }
-
-   @JsonProperty("run_sample")
-   private Set<RunDtoSample> runSample;
-   private Integer position;
-
-   public Integer getPosition() {
-      return position;
-   }
-
-   public void setPosition(Integer position) {
-      this.position = position;
-   }
-
-   public Set<RunDtoSample> getSamples() {
-      return runSample;
-   }
-
-   public void setSamples(Set<RunDtoSample> runSample) {
-      this.runSample = runSample;
    }
 
 }
