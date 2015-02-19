@@ -205,65 +205,52 @@ WHERE os.sample_id = ocd.object_id
 -- Description: LIMS API position query
 -- Application Properties: temporaryRunSingle
 
-SELECT *
-FROM (
-	SELECT DISTINCT girt.run_id
-		,girt.position
-		,girt.template_id AS sample_id
-	FROM ga_instrument_run_template girt
-	LEFT JOIN ga_template gt ON (girt.template_id = gt.template_id)
-	LEFT JOIN ga_template_parents gtp ON (gt.template_id = gtp.template_id)
-	WHERE (
-			SELECT count(*)
-			FROM ga_template_parents gtp
-			WHERE gtp.template_id = girt.template_id
-			) <= 1
-	
-	UNION
-	
-	SELECT DISTINCT girt.run_id
-		,girt.position
-		,gtp.parent_id AS sample_id
-	FROM ga_instrument_run_template girt
-	LEFT JOIN ga_template gt ON (girt.template_id = gt.template_id)
-	LEFT JOIN ga_template_parents gtp ON (gt.template_id = gtp.template_id)
-	WHERE (
-			SELECT count(*)
-			FROM ga_template_parents gtp
-			WHERE gtp.template_id = girt.template_id
-			) > 1
-	) AS FOO
-WHERE run_id = ?
+SELECT girt.run_id
+	,girt.position
+	,girt.template_id AS sample_id
+	,CASE 
+		WHEN ga1.bases IS NULL
+			THEN ga.bases
+		ELSE ga1.bases
+		END AS barcode
+FROM ga_instrument_run_template girt
+LEFT JOIN ga_template_parents gtp ON (girt.template_id = gtp.template_id)
+LEFT JOIN custom_data_view cdv ON (
+		cdv.template_id = gtp.parent_id
+		AND cdv.display_label LIKE 'Barcode'
+		)
+LEFT JOIN ga_primer ga ON (cdv.value LIKE ga.NAME)
+LEFT JOIN custom_data_view cdv1 ON (
+		cdv1.template_id = girt.template_id
+		AND cdv1.display_label LIKE 'Barcode'
+		)
+LEFT JOIN ga_primer ga1 ON (cdv1.value LIKE ga1.NAME)
+WHERE girt.run_id = ?
 
 -- Name: /pinery/positions
 -- Description: LIMS API positions query
 -- Application Properties: temporaryRunsList
 
-SELECT DISTINCT girt.run_id
+SELECT girt.run_id
 	,girt.position
 	,girt.template_id AS sample_id
+	,CASE 
+		WHEN ga1.bases IS NULL
+			THEN ga.bases
+		ELSE ga1.bases
+		END AS barcode
 FROM ga_instrument_run_template girt
-LEFT JOIN ga_template gt ON (girt.template_id = gt.template_id)
-LEFT JOIN ga_template_parents gtp ON (gt.template_id = gtp.template_id)
-WHERE (
-		SELECT count(*)
-		FROM ga_template_parents gtp
-		WHERE gtp.template_id = girt.template_id
-		) <= 1
-
-UNION
-
-SELECT DISTINCT girt.run_id
-	,girt.position
-	,gtp.parent_id AS sample_id
-FROM ga_instrument_run_template girt
-LEFT JOIN ga_template gt ON (girt.template_id = gt.template_id)
-LEFT JOIN ga_template_parents gtp ON (gt.template_id = gtp.template_id)
-WHERE (
-		SELECT count(*)
-		FROM ga_template_parents gtp
-		WHERE gtp.template_id = girt.template_id
-		) > 1
+LEFT JOIN ga_template_parents gtp ON (girt.template_id = gtp.template_id)
+LEFT JOIN custom_data_view cdv ON (
+		cdv.template_id = gtp.parent_id
+		AND cdv.display_label LIKE 'Barcode'
+		)
+LEFT JOIN ga_primer ga ON (cdv.value LIKE ga.NAME)
+LEFT JOIN custom_data_view cdv1 ON (
+		cdv1.template_id = girt.template_id
+		AND cdv1.display_label LIKE 'Barcode'
+		)
+LEFT JOIN ga_primer ga1 ON (cdv1.value LIKE ga1.NAME)
 
 -- Name: /pinery/sample/changelogs
 -- Description: LIMS API samples query
