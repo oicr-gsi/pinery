@@ -5,6 +5,7 @@ import ca.on.oicr.pinery.api.OrderSample;
 public class DefaultOrderSample extends DefaultSample implements OrderSample {
 
    protected String barcode;
+   protected String barcodeTwo;
 
    @Override
    public String getBarcode() {
@@ -14,6 +15,16 @@ public class DefaultOrderSample extends DefaultSample implements OrderSample {
    @Override
    public void setBarcode(String barcode) {
       this.barcode = barcode;
+   }
+
+   @Override
+   public String getBarcodeTwo() {
+      return barcodeTwo;
+   }
+
+   @Override
+   public void setBarcodeTwo(String barcodeTwo) {
+      this.barcodeTwo = barcodeTwo;
    }
 
    @Override

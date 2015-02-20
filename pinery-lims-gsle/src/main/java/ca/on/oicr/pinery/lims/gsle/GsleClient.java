@@ -907,6 +907,7 @@ public class GsleClient implements Lims {
 
             OrderSample orderSample = new DefaultOrderSample();
             orderSample.setBarcode(list.getBarcode());
+            orderSample.setBarcodeTwo(list.getBarcodeTwo());
             orderSample.setId(list.getSampleId());
             orderSample.setUrl(list.getSampleUrl());
             attMap.get(list.getOrderId()).add(orderSample);
@@ -917,6 +918,7 @@ public class GsleClient implements Lims {
             Set<OrderSample> orderSampleSet = Sets.newHashSet();
 
             orderSample.setBarcode(list.getBarcode());
+            orderSample.setBarcodeTwo(list.getBarcodeTwo());
             orderSample.setId(list.getSampleId());
             orderSample.setUrl(list.getSampleUrl());
             orderSampleSet.add(orderSample);
