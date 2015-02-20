@@ -17,6 +17,10 @@ public interface Run {
 
    public void setBarcode(String barcode);
 
+   public String getBarcodeTwo();
+
+   public void setBarcodeTwo(String barcodeTwo);
+
    public Set<RunPosition> getSamples();
 
    public void setSample(Set<RunPosition> samples);

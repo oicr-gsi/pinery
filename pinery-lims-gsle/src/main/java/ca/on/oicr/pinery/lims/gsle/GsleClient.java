@@ -847,6 +847,7 @@ public class GsleClient implements Lims {
       map.put("sample_id", "idSampleString");
       map.put("order_id", "idOrderString");
       map.put("barcode", "barcode");
+      map.put("barcode_two", "barcodeTwo");
       map.put("name", "name");
       map.put("value", "value");
       map.put("sample_url", "sampleUrl");
@@ -1130,6 +1131,7 @@ public class GsleClient implements Lims {
       map.put("run_id", "idRunString");
       map.put("position", "positionString");
       map.put("barcode", "barcode");
+      map.put("barcode_two", "barcodeTwo");
       map.put("sample_url", "sampleUrl");
 
       strat.setColumnMapping(map);
@@ -1154,6 +1156,7 @@ public class GsleClient implements Lims {
       for (TemporaryRun temp : positions) {
          RunSample runSample = new DefaultRunSample();
          runSample.setBarcode(temp.getBarcode());
+         runSample.setBarcodeTwo(temp.getBarcodeTwo());
          runSample.setId(temp.getSampleId());
          if (table.contains(temp.getRunId(), temp.getPosition())) {
 
@@ -1177,6 +1180,7 @@ public class GsleClient implements Lims {
             RunSample runSample = new DefaultRunSample();
             runSample.setId(list.getSampleId());
             runSample.setBarcode(list.getBarcode());
+            runSample.setBarcodeTwo(list.getBarcodeTwo());
             runSample.setUrl(list.getSampleUrl());
 
             attMap.get(list.getRunId()).add(runSample);
@@ -1187,6 +1191,7 @@ public class GsleClient implements Lims {
 
             runSample.setId(list.getSampleId());
             runSample.setBarcode(list.getBarcode());
+            runSample.setBarcodeTwo(list.getBarcodeTwo());
             runSample.setUrl(list.getSampleUrl());
             runSampleSet.add(runSample);
 
@@ -1624,14 +1629,14 @@ public class GsleClient implements Lims {
 
    public Attribute barcodeFilter(Attribute attr) {
 
-      if (attr.getName().equals("Barcode")) {
+      if (attr.getName().equals("Barcode") || attr.getName().equals("Barcode Two")) {
          String name = attr.getValue();
 
          if (barcodeMap.size() == 0) {
             getBarcode();
          }
 
-         String barcode = (String) barcodeMap.get(name);
+         String barcode = barcodeMap.get(name);
 
          if (barcode != null) {
             attr.setValue(barcode);

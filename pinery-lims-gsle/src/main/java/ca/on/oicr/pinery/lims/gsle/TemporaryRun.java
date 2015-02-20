@@ -1,21 +1,13 @@
 package ca.on.oicr.pinery.lims.gsle;
 
-
 public class TemporaryRun {
-
-   @Override
-   public String toString() {
-      return "TemporaryRun [runId=" + runId + ", position=" + position + ", sampleId=" + sampleId + ", sampleUrl=" + sampleUrl
-            + ", barcode=" + barcode + ", getRunId()=" + getRunId() + ", getPosition()=" + getPosition() + ", getSampleId()="
-            + getSampleId() + ", getSampleUrl()=" + getSampleUrl() + ", getBarcode()=" + getBarcode() + ", getClass()=" + getClass()
-            + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
-   }
 
    private Integer runId;
    private Integer position;
    private Integer sampleId;
    private String sampleUrl;
    private String barcode;
+   private String barcodeTwo;
 
    public Integer getRunId() {
       return runId;
@@ -78,4 +70,19 @@ public class TemporaryRun {
          }
       }
    }
+
+   public String getBarcodeTwo() {
+      return barcodeTwo;
+   }
+
+   public void setBarcodeTwo(String barcodeTwo) {
+      this.barcodeTwo = barcodeTwo;
+   }
+
+   @Override
+   public String toString() {
+      return "TemporaryRun [runId=" + runId + ", position=" + position + ", sampleId=" + sampleId + ", sampleUrl=" + sampleUrl
+            + ", barcode=" + barcode + ", barcodeTwo=" + barcodeTwo + "]";
+   }
+
 }

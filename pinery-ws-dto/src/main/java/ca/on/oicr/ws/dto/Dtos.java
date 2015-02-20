@@ -311,6 +311,9 @@ public final class Dtos {
       if (!StringUtils.isBlank(from.getBarcode())) {
          dto.setBarcode(from.getBarcode());
       }
+      if (!StringUtils.isBlank(from.getBarcodeTwo())) {
+         dto.setBarcodeTwo(from.getBarcodeTwo());
+      }
       if (!StringUtils.isBlank(from.getUrl())) {
          dto.setUrl(from.getUrl());
       }

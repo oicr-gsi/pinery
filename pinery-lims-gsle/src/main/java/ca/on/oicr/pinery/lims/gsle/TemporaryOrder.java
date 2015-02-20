@@ -2,14 +2,10 @@ package ca.on.oicr.pinery.lims.gsle;
 
 public class TemporaryOrder {
 
-   @Override
-   public String toString() {
-      return "Temporary [id=" + orderId + ", name=" + name + ", value=" + value + "]";
-   }
-
    private Integer orderId;
    private Integer sampleId;
    private String barcode;
+   private String barcodeTwo;
    private String name;
    private String value;
    private String sampleUrl;
@@ -72,6 +68,20 @@ public class TemporaryOrder {
 
    public void setSampleUrl(String sampleUrl) {
       this.sampleUrl = sampleUrl;
+   }
+
+   public String getBarcodeTwo() {
+      return barcodeTwo;
+   }
+
+   public void setBarcodeTwo(String barcodeTwo) {
+      this.barcodeTwo = barcodeTwo;
+   }
+
+   @Override
+   public String toString() {
+      return "TemporaryOrder [orderId=" + orderId + ", sampleId=" + sampleId + ", barcode=" + barcode + ", barcodeTwo=" + barcodeTwo
+            + ", name=" + name + ", value=" + value + ", sampleUrl=" + sampleUrl + "]";
    }
 
 }

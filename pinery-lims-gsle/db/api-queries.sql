@@ -148,7 +148,16 @@ WHERE oo.status_id = s.status_id
 
 SELECT os.order_id
 	,os.template_id AS sample_id
-	,ga.bases AS barcode
+	,CASE 
+		WHEN ga1.bases IS NULL
+			THEN ga.bases
+		ELSE ga1.bases
+		END AS barcode
+	,CASE 
+		WHEN ga3.bases IS NULL
+			THEN ga2.bases
+		ELSE ga3.bases
+		END AS barcode_two
 	,ooff.display_label AS NAME
 	,CASE obf.field_type
 		WHEN 'Select One'
@@ -165,6 +174,23 @@ LEFT JOIN custom_data_view cdv ON (
 		AND cdv.display_label LIKE 'Barcode'
 		)
 LEFT JOIN ga_primer ga ON (cdv.value LIKE ga.NAME)
+LEFT JOIN ga_template_parents gtp ON (os.template_id = gtp.template_id)
+LEFT JOIN custom_data_view cdv1 ON (
+		cdv1.template_id = gtp.parent_id
+		AND cdv1.display_label LIKE 'Barcode'
+		)
+LEFT JOIN ga_primer ga1 ON (cdv1.value LIKE ga1.NAME)
+
+LEFT JOIN custom_data_view cdv2 ON (
+		cdv2.template_id = os.template_id
+		AND cdv2.display_label LIKE 'Barcode Two'
+		)
+LEFT JOIN ga_primer ga2 ON (cdv2.value LIKE ga2.NAME)
+LEFT JOIN custom_data_view cdv3 ON (
+		cdv3.template_id = gtp.parent_id
+		AND cdv3.display_label LIKE 'Barcode Two'
+		)
+LEFT JOIN ga_primer ga3 ON (cdv3.value LIKE ga3.NAME)
 WHERE os.sample_id = ocd.object_id
 	AND ocd.form_field_id = ooff.form_field_id
 	AND ocd.data = obsc.choice_id
@@ -178,7 +204,16 @@ WHERE os.sample_id = ocd.object_id
 
 SELECT os.order_id
 	,os.template_id AS sample_id
-	,ga.bases AS barcode
+	,CASE 
+		WHEN ga1.bases IS NULL
+			THEN ga.bases
+		ELSE ga1.bases
+		END AS barcode
+	,CASE 
+		WHEN ga3.bases IS NULL
+			THEN ga2.bases
+		ELSE ga3.bases
+		END AS barcode_two
 	,ooff.display_label AS NAME
 	,CASE obf.field_type
 		WHEN 'Select One'
@@ -195,6 +230,23 @@ LEFT JOIN custom_data_view cdv ON (
 		AND cdv.display_label LIKE 'Barcode'
 		)
 LEFT JOIN ga_primer ga ON (cdv.value LIKE ga.NAME)
+LEFT JOIN ga_template_parents gtp ON (os.template_id = gtp.template_id)
+LEFT JOIN custom_data_view cdv1 ON (
+		cdv1.template_id = gtp.parent_id
+		AND cdv1.display_label LIKE 'Barcode'
+		)
+LEFT JOIN ga_primer ga1 ON (cdv1.value LIKE ga1.NAME)
+
+LEFT JOIN custom_data_view cdv2 ON (
+		cdv2.template_id = os.template_id
+		AND cdv2.display_label LIKE 'Barcode Two'
+		)
+LEFT JOIN ga_primer ga2 ON (cdv2.value LIKE ga2.NAME)
+LEFT JOIN custom_data_view cdv3 ON (
+		cdv3.template_id = gtp.parent_id
+		AND cdv3.display_label LIKE 'Barcode Two'
+		)
+LEFT JOIN ga_primer ga3 ON (cdv3.value LIKE ga3.NAME)
 WHERE os.sample_id = ocd.object_id
 	AND ocd.form_field_id = ooff.form_field_id
 	AND ocd.data = obsc.choice_id
@@ -213,7 +265,14 @@ SELECT girt.run_id
 			THEN ga.bases
 		ELSE ga1.bases
 		END AS barcode
+	,CASE 
+		WHEN ga3.bases IS NULL
+			THEN ga2.bases
+		ELSE ga3.bases
+		END AS barcode_two
 FROM ga_instrument_run_template girt
+--
+-- Match barcode in current template or in parent.
 LEFT JOIN ga_template_parents gtp ON (girt.template_id = gtp.template_id)
 LEFT JOIN custom_data_view cdv ON (
 		cdv.template_id = gtp.parent_id
@@ -225,6 +284,18 @@ LEFT JOIN custom_data_view cdv1 ON (
 		AND cdv1.display_label LIKE 'Barcode'
 		)
 LEFT JOIN ga_primer ga1 ON (cdv1.value LIKE ga1.NAME)
+--
+-- Match second barcode in current template or in parent. 
+LEFT JOIN custom_data_view cdv2 ON (
+		cdv2.template_id = gtp.parent_id
+		AND cdv2.display_label LIKE 'Barcode Two'
+		)
+LEFT JOIN ga_primer ga2 ON (cdv2.value LIKE ga2.NAME)
+LEFT JOIN custom_data_view cdv3 ON (
+		cdv3.template_id = girt.template_id
+		AND cdv3.display_label LIKE 'Barcode Two'
+		)
+LEFT JOIN ga_primer ga3 ON (cdv3.value LIKE ga3.NAME)
 WHERE girt.run_id = ?
 
 -- Name: /pinery/positions
@@ -239,7 +310,14 @@ SELECT girt.run_id
 			THEN ga.bases
 		ELSE ga1.bases
 		END AS barcode
+	,CASE 
+		WHEN ga3.bases IS NULL
+			THEN ga2.bases
+		ELSE ga3.bases
+		END AS barcode_two
 FROM ga_instrument_run_template girt
+--
+-- Match barcode in current template or in parent.
 LEFT JOIN ga_template_parents gtp ON (girt.template_id = gtp.template_id)
 LEFT JOIN custom_data_view cdv ON (
 		cdv.template_id = gtp.parent_id
@@ -251,6 +329,18 @@ LEFT JOIN custom_data_view cdv1 ON (
 		AND cdv1.display_label LIKE 'Barcode'
 		)
 LEFT JOIN ga_primer ga1 ON (cdv1.value LIKE ga1.NAME)
+--
+-- Match second barcode in current template or in parent. 
+LEFT JOIN custom_data_view cdv2 ON (
+		cdv2.template_id = gtp.parent_id
+		AND cdv2.display_label LIKE 'Barcode Two'
+		)
+LEFT JOIN ga_primer ga2 ON (cdv2.value LIKE ga2.NAME)
+LEFT JOIN custom_data_view cdv3 ON (
+		cdv3.template_id = girt.template_id
+		AND cdv3.display_label LIKE 'Barcode Two'
+		)
+LEFT JOIN ga_primer ga3 ON (cdv3.value LIKE ga3.NAME)
 
 -- Name: /pinery/sample/changelogs
 -- Description: LIMS API samples query

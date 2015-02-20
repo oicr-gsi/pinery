@@ -6,4 +6,8 @@ public interface RunSample extends Sample {
 
    public void setBarcode(String barcode);
 
+   public String getBarcodeTwo();
+
+   public void setBarcodeTwo(String barcodeTwo);
+
 }
