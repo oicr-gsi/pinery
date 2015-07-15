@@ -50,6 +50,8 @@ public class SampleClientTest {
 		assertEquals(KNOWN_SAMPLE_CREATE_DATE, sample.getCreatedDate());
 	}
 	
+	// TODO: test SampleClient.filteredList method
+	
 	@AfterClass
 	public static void cleanUp() {
 		CLIENT.close();
