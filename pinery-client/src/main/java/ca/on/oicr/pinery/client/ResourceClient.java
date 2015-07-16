@@ -28,7 +28,7 @@ public abstract class ResourceClient<T> {
 	 * @param arrayClass resource array class
 	 * @param mainClient the PineryClient, which will make the actual requests
 	 */
-	protected ResourceClient(Class<T> resourceClass, Class<T[]> arrayClass, PineryClient mainClient) {
+	public ResourceClient(Class<T> resourceClass, Class<T[]> arrayClass, PineryClient mainClient) {
 		if (resourceClass == null) throw new IllegalArgumentException("Resource class cannot be null");
 		if (arrayClass == null) throw new IllegalArgumentException("Array class cannot be null");
 		if (mainClient == null) throw new IllegalArgumentException("PineryClient cannot be null");

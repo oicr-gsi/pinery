@@ -8,11 +8,9 @@ import ca.on.oicr.ws.dto.SampleDto;
 
 public class SampleClient extends ResourceClient<SampleDto> {
 	
-	// TODO: investigate why DTOs don't implement ca.on.oicr.pinery.api interfaces (Could return Samples rather than SampleDtos)
-	
 	private static final String resourceDir = "sample/";
 	
-	protected SampleClient(PineryClient mainClient) {
+	public SampleClient(PineryClient mainClient) {
 		super(SampleDto.class, SampleDto[].class, mainClient);
 	}
 	
@@ -45,8 +43,8 @@ public class SampleClient extends ResourceClient<SampleDto> {
 	
 	/**
 	 * Encapsulates parameters for all samples GET request. All 'with{param}' methods return this 
-	 * to allow chaining. Subsequent calls to append the same parameter will overwrite the previous 
-	 * setting.
+	 * to allow chaining calls. Subsequent calls to append the same parameter will overwrite the 
+	 * previous setting.
 	 * 
 	 * @author dcooke
 	 *
@@ -76,17 +74,24 @@ public class SampleClient extends ResourceClient<SampleDto> {
 		}
 		
 		/**
-		 * Set the projects to find samples for. Will return all samples that match of the projects 
+		 * Set the projects to find samples of. Will return all samples that match any of the projects 
 		 * (one OR another)
 		 * 
 		 * @param projects the project names to match
-		 * @return the same AllSamplesFilter for chaining
+		 * @return the same AllSamplesFilter for chaining calls
 		 */
 		public SamplesFilter withProjects(List<String> projects) {
 			this.projects = projects;
 			return this;
 		}
 		
+		/**
+		 * Set the sample types to find samples of. Will return all samples that match any of the types 
+		 * (one OR another)
+		 * 
+		 * @param types the types to match
+		 * @return the same AllSamplesFilter for chaining calls
+		 */
 		public SamplesFilter withTypes(List<String> types) {
 			this.types = types;
 			return this;

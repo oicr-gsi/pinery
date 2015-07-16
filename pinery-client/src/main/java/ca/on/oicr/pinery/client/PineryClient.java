@@ -59,11 +59,110 @@ public class PineryClient {
 		checkIfOpen();
 		return new SampleClient(this);
 	}
-	
+
+	/**
+	 * Creates a SampleProjectClient to be used for retrieving SampleProject resources. This constructs a new SampleProjectClient every 
+	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * 
+	 * @return a new SampleProjectClient
+	 */
+	public SampleProjectClient getSampleProject() {
+		checkIfOpen();
+		return new SampleProjectClient(this);
+	}
+
+	/**
+	 * Creates a SampleTypeClient to be used for retrieving SampleType resources. This constructs a new SampleTypeClient every 
+	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * 
+	 * @return a new SampleTypeClient
+	 */
+	public SampleTypeClient getSampleType() {
+		checkIfOpen();
+		return new SampleTypeClient(this);
+	}
+
+	/**
+	 * Creates a SequencerRunClient to be used for retrieving SequencerRun resources. This constructs a new SequencerRunClient every 
+	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * 
+	 * @return a new SequencerRunClient
+	 */
+	public SequencerRunClient getSequencerRun() {
+		checkIfOpen();
+		return new SequencerRunClient(this);
+	}
+
+	/**
+	 * Creates a UserClient to be used for retrieving User resources. This constructs a new UserClient every 
+	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * 
+	 * @return a new UserClient
+	 */
+	public UserClient getUser() {
+		checkIfOpen();
+		return new UserClient(this);
+	}
+
+	/**
+	 * Creates a AttributeNameClient to be used for retrieving AttributeName resources. This constructs a new AttributeNameClient every 
+	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * 
+	 * @return a new AttributeNameClient
+	 */
+	public AttributeNameClient getAttributeName() {
+		checkIfOpen();
+		return new AttributeNameClient(this);
+	}
+
+	/**
+	 * Creates a ChangeLogClient to be used for retrieving ChangeLog resources. This constructs a new ChangeLogClient every 
+	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * 
+	 * @return a new ChangeLogClient
+	 */
+	public ChangeLogClient getChangeLog() {
+		checkIfOpen();
+		return new ChangeLogClient(this);
+	}
+
+	/**
+	 * Creates a InstrumentClient to be used for retrieving Instrument resources. This constructs a new InstrumentClient every 
+	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * 
+	 * @return a new InstrumentClient
+	 */
+	public InstrumentClient getInstrument() {
+		checkIfOpen();
+		return new InstrumentClient(this);
+	}
+
+	/**
+	 * Creates a InstrumentModelClient to be used for retrieving InstrumentModel resources. This constructs a new InstrumentModelClient every 
+	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * 
+	 * @return a new InstrumentModelClient
+	 */
+	public InstrumentModelClient getInstrumentModel() {
+		checkIfOpen();
+		return new InstrumentModelClient(this);
+	}
+
+	/**
+	 * Creates a OrderClient to be used for retrieving Order resources. This constructs a new OrderClient every 
+	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * 
+	 * @return a new OrderClient
+	 */
+	public OrderClient getOrder() {
+		checkIfOpen();
+		return new OrderClient(this);
+	}
+
 	public boolean isOpen() {
 		return open;
 	}
-	
+
 	public boolean isClosed() {
 		return !open;
 	}
