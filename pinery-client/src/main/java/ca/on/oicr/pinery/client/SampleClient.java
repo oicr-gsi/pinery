@@ -2,6 +2,8 @@ package ca.on.oicr.pinery.client;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import ca.on.oicr.ws.dto.SampleDto;
 
 public class SampleClient extends ResourceClient<SampleDto> {
@@ -37,38 +39,39 @@ public class SampleClient extends ResourceClient<SampleDto> {
 	 * @param filter contains criteria to match
 	 * @return a list of all samples that meet the criteria specified by the filter
 	 */
-	public List<SampleDto> filteredList(AllSamplesFilter filter) {
+	public List<SampleDto> allFiltered(SamplesFilter filter) {
 		return getResourceList(filter.buildUrl("samples"));
 	}
 	
 	/**
 	 * Encapsulates parameters for all samples GET request. All 'with{param}' methods return this 
-	 * to allow chaining.
+	 * to allow chaining. Subsequent calls to append the same parameter will overwrite the previous 
+	 * setting.
 	 * 
 	 * @author dcooke
 	 *
 	 */
-	public static class AllSamplesFilter {
+	public static class SamplesFilter {
 		private Boolean archived = null;
 		private String beforeDate = null;
 		private String afterDate = null;
 		private List<String> projects = null;
 		private List<String> types = null;
 		
-		public AllSamplesFilter() {}
+		public SamplesFilter() {}
 		
-		public AllSamplesFilter withArchived(Boolean archived) {
+		public SamplesFilter withArchived(Boolean archived) {
 			this.archived = archived;
 			return this;
 		}
 		
-		public AllSamplesFilter withDateBefore(String beforeDate) { // TODO: take date parameter instead
-			this.beforeDate = beforeDate;
+		public SamplesFilter withDateBefore(DateTime before) {
+			this.beforeDate = before.toString();
 			return this;
 		}
 		
-		public AllSamplesFilter withDateAfter(String afterDate) { // TODO: take date parameter instead
-			this.afterDate = afterDate;
+		public SamplesFilter withDateAfter(DateTime after) {
+			this.afterDate = after.toString();
 			return this;
 		}
 		
@@ -79,13 +82,13 @@ public class SampleClient extends ResourceClient<SampleDto> {
 		 * @param projects the project names to match
 		 * @return the same AllSamplesFilter for chaining
 		 */
-		public AllSamplesFilter withProjects(List<String> projects) {
+		public SamplesFilter withProjects(List<String> projects) {
 			this.projects = projects;
 			return this;
 		}
 		
-		public AllSamplesFilter withTypes(List<String> types) {
-			this.projects = types;
+		public SamplesFilter withTypes(List<String> types) {
+			this.types = types;
 			return this;
 		}
 		
@@ -113,8 +116,8 @@ public class SampleClient extends ResourceClient<SampleDto> {
 				}
 			}
 			if (types != null && !types.isEmpty()) {
-				for (String project : types) {
-					sb.append("types=").append(project).append("&");
+				for (String type : types) {
+					sb.append("types=").append(type).append("&");
 				}
 			}
 			
