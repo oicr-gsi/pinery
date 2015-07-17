@@ -2,21 +2,23 @@ package ca.on.oicr.pinery.client;
 
 import java.util.List;
 
-public class InstrumentClient extends ResourceClient<InstrumentClient> {
+import ca.on.oicr.ws.dto.InstrumentDto;
+
+public class InstrumentClient extends ResourceClient<InstrumentDto> {
 
 	public InstrumentClient(PineryClient mainClient) {
-		super(InstrumentClient.class, InstrumentClient[].class, mainClient);
+		super(InstrumentDto.class, InstrumentDto[].class, mainClient);
 	}
 	
-	public List<InstrumentClient> all() {
+	public List<InstrumentDto> all() {
 		return getResourceList("instruments");
 	}
 	
-	public List<InstrumentClient> byModel(int instrumentModelId) {
+	public List<InstrumentDto> byModel(int instrumentModelId) {
 		return getResourceList("instrumentmodel/"+instrumentModelId+"/instruments");
 	}
 	
-	public InstrumentClient byId(int instrumentId) {
+	public InstrumentDto byId(int instrumentId) {
 		return getResource("instrument/"+instrumentId);
 	}
 

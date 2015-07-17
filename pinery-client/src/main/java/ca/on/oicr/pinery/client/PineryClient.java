@@ -11,6 +11,18 @@ public class PineryClient {
 	private final Client client;
 	private boolean open = false;
 	
+	// Individual resource clients lazily-loaded upon first request requested 
+	private SampleClient samples;
+	private SampleProjectClient sampleProjects;
+	private SampleTypeClient sampleTypes;
+	private SequencerRunClient sequencerRuns;
+	private UserClient users;
+	private AttributeNameClient attributeNames;
+	private ChangeLogClient changeLogs;
+	private InstrumentClient instruments;
+	private InstrumentModelClient instrumentModels;
+	private OrderClient orders;
+	
 	/**
 	 * Creates a new PineryClient to communicate with the Pinery web service at the specified URL. Note that 
 	 * the client is considered "open" upon creation, and the close() method should be called when it is no 
@@ -19,8 +31,7 @@ public class PineryClient {
 	 * @param baseUrl
 	 */
 	public PineryClient(String baseUrl) {
-		this.pineryBaseUrl = baseUrl;
-		if (!pineryBaseUrl.endsWith("/")) baseUrl += "/";
+		this.pineryBaseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
 		this.client = ClientBuilder.newBuilder().build();
 		this.open = true;
 	}
@@ -50,113 +61,113 @@ public class PineryClient {
 	}
 	
 	/**
-	 * Creates a SampleClient to be used for retrieving Sample resources. This constructs a new SampleClient every 
-	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * Returns a SampleClient to be used for retrieving Sample resources from this Pinery client.
 	 * 
-	 * @return a new SampleClient
+	 * @return SampleClient
 	 */
 	public SampleClient getSample() {
 		checkIfOpen();
-		return new SampleClient(this);
+		if (samples == null) samples = new SampleClient(this);
+		return samples;
 	}
 
 	/**
-	 * Creates a SampleProjectClient to be used for retrieving SampleProject resources. This constructs a new SampleProjectClient every 
-	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * Returns a SampleProjectClient to be used for retrieving SampleProject resources from this Pinery client.
 	 * 
-	 * @return a new SampleProjectClient
+	 * @return SampleProjectClient
 	 */
 	public SampleProjectClient getSampleProject() {
 		checkIfOpen();
-		return new SampleProjectClient(this);
+		if (sampleProjects == null) sampleProjects = new SampleProjectClient(this);
+		return sampleProjects;
 	}
 
 	/**
-	 * Creates a SampleTypeClient to be used for retrieving SampleType resources. This constructs a new SampleTypeClient every 
-	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * Returns a SampleTypeClient to be used for retrieving SampleType resources from this Pinery client.
 	 * 
-	 * @return a new SampleTypeClient
+	 * @return SampleTypeClient
 	 */
 	public SampleTypeClient getSampleType() {
 		checkIfOpen();
-		return new SampleTypeClient(this);
+		if (sampleTypes == null) sampleTypes = new SampleTypeClient(this);
+		return sampleTypes;
 	}
 
 	/**
-	 * Creates a SequencerRunClient to be used for retrieving SequencerRun resources. This constructs a new SequencerRunClient every 
-	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * Returns a SequencerRunClient to be used for retrieving SequencerRun resources from this Pinery client.
 	 * 
-	 * @return a new SequencerRunClient
+	 * @return SequencerRunClient
 	 */
 	public SequencerRunClient getSequencerRun() {
 		checkIfOpen();
-		return new SequencerRunClient(this);
+		if (sequencerRuns == null) sequencerRuns = new SequencerRunClient(this);
+		return sequencerRuns;
 	}
 
 	/**
-	 * Creates a UserClient to be used for retrieving User resources. This constructs a new UserClient every 
-	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * Returns a UserClient to be used for retrieving User resources from this Pinery client.
 	 * 
-	 * @return a new UserClient
+	 * @return UserClient
 	 */
 	public UserClient getUser() {
 		checkIfOpen();
-		return new UserClient(this);
+		if (users == null) users = new UserClient(this);
+		return users;
 	}
 
 	/**
-	 * Creates a AttributeNameClient to be used for retrieving AttributeName resources. This constructs a new AttributeNameClient every 
-	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * Returns a AttributeNameClient to be used for retrieving AttributeName resources from this Pinery client.
 	 * 
-	 * @return a new AttributeNameClient
+	 * @return AttributeNameClient
 	 */
 	public AttributeNameClient getAttributeName() {
 		checkIfOpen();
-		return new AttributeNameClient(this);
+		if (attributeNames == null) attributeNames = new AttributeNameClient(this);
+		return attributeNames;
 	}
 
 	/**
-	 * Creates a ChangeLogClient to be used for retrieving ChangeLog resources. This constructs a new ChangeLogClient every 
-	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * Returns a ChangeLogClient to be used for retrieving ChangeLog resources from this Pinery client.
 	 * 
-	 * @return a new ChangeLogClient
+	 * @return ChangeLogClient
 	 */
 	public ChangeLogClient getChangeLog() {
 		checkIfOpen();
-		return new ChangeLogClient(this);
+		if (changeLogs == null) changeLogs = new ChangeLogClient(this);
+		return changeLogs;
 	}
 
 	/**
-	 * Creates a InstrumentClient to be used for retrieving Instrument resources. This constructs a new InstrumentClient every 
-	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * Returns a InstrumentClient to be used for retrieving Instrument resources from this Pinery client.
 	 * 
-	 * @return a new InstrumentClient
+	 * @return InstrumentClient
 	 */
 	public InstrumentClient getInstrument() {
 		checkIfOpen();
-		return new InstrumentClient(this);
+		if (instruments == null) instruments = new InstrumentClient(this);
+		return instruments;
 	}
 
 	/**
-	 * Creates a InstrumentModelClient to be used for retrieving InstrumentModel resources. This constructs a new InstrumentModelClient every 
-	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * Returns a InstrumentModelClient to be used for retrieving InstrumentModel resources from this Pinery client.
 	 * 
-	 * @return a new InstrumentModelClient
+	 * @return InstrumentModelClient
 	 */
 	public InstrumentModelClient getInstrumentModel() {
 		checkIfOpen();
-		return new InstrumentModelClient(this);
+		if (instrumentModels == null) instrumentModels = new InstrumentModelClient(this);
+		return instrumentModels;
 	}
 
 	/**
-	 * Creates a OrderClient to be used for retrieving Order resources. This constructs a new OrderClient every 
-	 * time, so if it will be used for multiple GET requests, it's best to keep a reference to it.
+	 * Returns a OrderClient to be used for retrieving Order resources from this Pinery client.
 	 * 
-	 * @return a new OrderClient
+	 * @return OrderClient
 	 */
 	public OrderClient getOrder() {
 		checkIfOpen();
-		return new OrderClient(this);
+		if (orders == null) orders = new OrderClient(this);
+		return orders;
 	}
 
 	public boolean isOpen() {

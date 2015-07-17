@@ -15,7 +15,8 @@ import ca.on.oicr.ws.dto.SampleDto;
 
 public class SampleClientTest {
 	
-	private static final String PINERY_URL = "http://localhost:8888/pinery-ws/";
+	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
+	private static PineryClient pinery;
 	
 	private static final Integer KNOWN_SAMPLE_ID = 22;
 	private static final String KNOWN_SAMPLE_NAME = "C-M";
@@ -23,21 +24,26 @@ public class SampleClientTest {
 	private static final boolean KNOWN_SAMPLE_ARCHIVED = false;
 	private static final String KNOWN_SAMPLE_TYPE = "Default";
 	
-	private static PineryClient CLIENT;
-	
 	public SampleClientTest() {
-		CLIENT = new PineryClient(PINERY_URL);
+		String urlArg = System.getProperty("pinery-url");
+		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
+	}
+	
+	@AfterClass
+	public static void cleanUp() {
+		pinery.close();
 	}
 	
 	@Test
 	public void getAll() {
-		List<SampleDto> samples = CLIENT.getSample().all();
+		List<SampleDto> samples = pinery.getSample().all();
+		assertTrue(samples.size() > 1);
 		assertKnownSampleInList(samples);
 	}
 	
 	@Test
 	public void getById() {
-		SampleDto sample = CLIENT.getSample().byId(KNOWN_SAMPLE_ID);
+		SampleDto sample = pinery.getSample().byId(KNOWN_SAMPLE_ID);
 		assertIsKnownSample(sample);
 	}
 	
@@ -47,7 +53,7 @@ public class SampleClientTest {
 		before = before.plusHours(1);
 		DateTime after = before.minusHours(2);
 		
-		List<SampleDto> samples = CLIENT.getSample().allFiltered(
+		List<SampleDto> samples = pinery.getSample().allFiltered(
 				new SamplesFilter()
 					.withDateBefore(before)
 					.withDateAfter(after)
@@ -59,7 +65,7 @@ public class SampleClientTest {
 	
 	@Test
 	public void getAllFilteredByArchivedAndType() {
-		List<SampleDto> samples = CLIENT.getSample().allFiltered(
+		List<SampleDto> samples = pinery.getSample().allFiltered(
 				new SamplesFilter()
 					.withArchived(KNOWN_SAMPLE_ARCHIVED)
 					.withTypes(Arrays.asList(KNOWN_SAMPLE_TYPE, "mRNA"))
@@ -86,8 +92,4 @@ public class SampleClientTest {
 		assertTrue(sampleFound);
 	}
 	
-	@AfterClass
-	public static void cleanUp() {
-		CLIENT.close();
-	}
 }
