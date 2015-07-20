@@ -11,6 +11,10 @@ public class AttributeNameClient extends ResourceClient<AttributeNameDto> {
 		super(AttributeNameDto.class, AttributeNameDto[].class, mainClient);
 	}
 	
+	/**
+	 * @return a list of all attribute names in the database
+	 * @throws HttpResponseException on any HTTP Status other than 200 OK.
+	 */
 	public List<AttributeNameDto> all() throws HttpResponseException {
 		return getResourceList("sample/attributenames");
 	}

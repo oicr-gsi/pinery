@@ -1,19 +1,27 @@
 package ca.on.oicr.pinery.client;
 
+import java.io.Closeable;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-public class PineryClient {
+/**
+ * This is the main class used for retrieving data from the Pinery webservice. It contains "child" clients for each 
+ * available resource type.
+ * 
+ * @author dcooke
+ */
+public class PineryClient implements Closeable {
 	
 	private final String pineryBaseUrl;
 	private final Client client;
 	private boolean open = false;
 	
-	// Individual resource clients lazily-loaded upon first request requested 
+	// Individual resource clients lazily-loaded upon first resource of type requested 
 	private SampleClient samples;
-	private SampleProjectClient sampleProjects;
+	private ProjectClient projects;
 	private SampleTypeClient sampleTypes;
 	private SequencerRunClient sequencerRuns;
 	private UserClient users;
@@ -61,9 +69,7 @@ public class PineryClient {
 	}
 	
 	/**
-	 * Returns a SampleClient to be used for retrieving Sample resources from this Pinery client.
-	 * 
-	 * @return SampleClient
+	 * @return a SampleClient to be used for retrieving Sample resources from this Pinery client
 	 */
 	public SampleClient getSample() {
 		checkIfOpen();
@@ -72,20 +78,16 @@ public class PineryClient {
 	}
 
 	/**
-	 * Returns a SampleProjectClient to be used for retrieving SampleProject resources from this Pinery client.
-	 * 
-	 * @return SampleProjectClient
+	 * @return a ProjectClient to be used for retrieving Project resources from this Pinery client.
 	 */
-	public SampleProjectClient getSampleProject() {
+	public ProjectClient getSampleProject() {
 		checkIfOpen();
-		if (sampleProjects == null) sampleProjects = new SampleProjectClient(this);
-		return sampleProjects;
+		if (projects == null) projects = new ProjectClient(this);
+		return projects;
 	}
 
 	/**
-	 * Returns a SampleTypeClient to be used for retrieving SampleType resources from this Pinery client.
-	 * 
-	 * @return SampleTypeClient
+	 * @return a SampleTypeClient to be used for retrieving SampleType resources from this Pinery client.
 	 */
 	public SampleTypeClient getSampleType() {
 		checkIfOpen();
@@ -94,9 +96,7 @@ public class PineryClient {
 	}
 
 	/**
-	 * Returns a SequencerRunClient to be used for retrieving SequencerRun resources from this Pinery client.
-	 * 
-	 * @return SequencerRunClient
+	 * @return a SequencerRunClient to be used for retrieving SequencerRun resources from this Pinery client.
 	 */
 	public SequencerRunClient getSequencerRun() {
 		checkIfOpen();
@@ -105,9 +105,7 @@ public class PineryClient {
 	}
 
 	/**
-	 * Returns a UserClient to be used for retrieving User resources from this Pinery client.
-	 * 
-	 * @return UserClient
+	 * @return a UserClient to be used for retrieving User resources from this Pinery client.
 	 */
 	public UserClient getUser() {
 		checkIfOpen();
@@ -116,9 +114,7 @@ public class PineryClient {
 	}
 
 	/**
-	 * Returns a AttributeNameClient to be used for retrieving AttributeName resources from this Pinery client.
-	 * 
-	 * @return AttributeNameClient
+	 * @return an AttributeNameClient to be used for retrieving AttributeName resources from this Pinery client.
 	 */
 	public AttributeNameClient getAttributeName() {
 		checkIfOpen();
@@ -127,9 +123,7 @@ public class PineryClient {
 	}
 
 	/**
-	 * Returns a ChangeLogClient to be used for retrieving ChangeLog resources from this Pinery client.
-	 * 
-	 * @return ChangeLogClient
+	 * @return a ChangeLogClient to be used for retrieving ChangeLog resources from this Pinery client.
 	 */
 	public ChangeLogClient getChangeLog() {
 		checkIfOpen();
@@ -138,9 +132,7 @@ public class PineryClient {
 	}
 
 	/**
-	 * Returns a InstrumentClient to be used for retrieving Instrument resources from this Pinery client.
-	 * 
-	 * @return InstrumentClient
+	 * @return an InstrumentClient to be used for retrieving Instrument resources from this Pinery client.
 	 */
 	public InstrumentClient getInstrument() {
 		checkIfOpen();
@@ -149,9 +141,7 @@ public class PineryClient {
 	}
 
 	/**
-	 * Returns a InstrumentModelClient to be used for retrieving InstrumentModel resources from this Pinery client.
-	 * 
-	 * @return InstrumentModelClient
+	 * @return an InstrumentModelClient to be used for retrieving InstrumentModel resources from this Pinery client.
 	 */
 	public InstrumentModelClient getInstrumentModel() {
 		checkIfOpen();
@@ -160,9 +150,7 @@ public class PineryClient {
 	}
 
 	/**
-	 * Returns a OrderClient to be used for retrieving Order resources from this Pinery client.
-	 * 
-	 * @return OrderClient
+	 * @return an OrderClient to be used for retrieving Order resources from this Pinery client.
 	 */
 	public OrderClient getOrder() {
 		checkIfOpen();
@@ -186,10 +174,22 @@ public class PineryClient {
 	 * Closes the client instance, and its contained resources. Attempts to use a closed PineryClient will result in 
 	 * an IllegalStateException being thrown. Subsequent calls to this method have no effect, and are ignored.
 	 */
+	@Override
 	public void close() {
 		if (open && client != null) {
 			open = false;
 			client.close();
+			
+			samples = null;
+			projects = null;
+			sampleTypes = null;
+			sequencerRuns = null;
+			users = null;
+			attributeNames = null;
+			changeLogs = null;
+			instruments = null;
+			instrumentModels = null;
+			orders = null;
 		}
 	}
 	
