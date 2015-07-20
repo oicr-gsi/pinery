@@ -43,8 +43,9 @@ public abstract class ResourceClient<T> {
 	 * 
 	 * @param resourceUrl the resource URL, relative to the base Pinery URL
 	 * @return the requested resource
+	 * @throws HttpResponseException on any HTTP Status other than 200 OK
 	 */
-	protected T getResource(String resourceUrl) { // TODO: exceptions
+	protected T getResource(String resourceUrl) throws HttpResponseException {
 		Response response = mainClient.callPinery(resourceUrl);
 		T resource = response.readEntity(resourceClass);
 		response.close();
@@ -56,8 +57,9 @@ public abstract class ResourceClient<T> {
 	 * 
 	 * @param resourceUrl the resource URL, relative to the base Pinery URL
 	 * @return the requested resources
+	 * @throws HttpResponseException on any HTTP Status other than 200 OK
 	 */
-	protected List<T> getResourceList(String resourceUrl) { // TODO: exceptions
+	protected List<T> getResourceList(String resourceUrl) throws HttpResponseException {
 		Response response = mainClient.callPinery(resourceUrl);
 		
 		T[] entities = response.readEntity(arrayClass);

@@ -10,11 +10,11 @@ public class SequencerRunClient extends ResourceClient<RunDto> {
 		super(RunDto.class, RunDto[].class, mainClient);
 	}
 	
-	public List<RunDto> all() {
+	public List<RunDto> all() throws HttpResponseException {
 		return getResourceList("sequencerruns");
 	}
 	
-	public RunDto byId(int runId) {
+	public RunDto byId(int runId) throws HttpResponseException {
 		return getResource("sequencerrun/"+runId);
 	}
 

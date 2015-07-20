@@ -10,7 +10,7 @@ public class SampleProjectClient extends ResourceClient<SampleProjectDto> {
 		super(SampleProjectDto.class, SampleProjectDto[].class, mainClient);
 	}
 	
-	public List<SampleProjectDto> all() {
+	public List<SampleProjectDto> all() throws HttpResponseException {
 		return getResourceList("sample/projects");
 	}
 	

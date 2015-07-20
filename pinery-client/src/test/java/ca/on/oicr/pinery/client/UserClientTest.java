@@ -29,13 +29,13 @@ public class UserClientTest {
 	}
 	
 	@Test
-	public void getById() {
+	public void getById() throws HttpResponseException {
 		UserDto user = pinery.getUser().byId(KNOWN_USER_ID);
 		assertIsKnownUser(user);
 	}
 	
 	@Test
-	public void getAll() {
+	public void getAll() throws HttpResponseException {
 		List<UserDto> users = pinery.getUser().all();
 		assertTrue(users.size() > 1);
 		boolean userFound = false;

@@ -28,13 +28,13 @@ public class InstrumentModelClientTest {
 	}
 	
 	@Test
-	public void getById() {
+	public void getById() throws HttpResponseException {
 		InstrumentModelDto model = pinery.getInstrumentModel().byId(KNOWN_MODEL_ID);
 		assertIsKnownInstrumentModel(model);
 	}
 	
 	@Test
-	public void getAll() {
+	public void getAll() throws HttpResponseException {
 		List<InstrumentModelDto> models = pinery.getInstrumentModel().all();
 		assertTrue(models.size() > 1);
 		boolean modelFound = false;

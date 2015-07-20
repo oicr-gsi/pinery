@@ -29,7 +29,7 @@ public class SampleTypeClientTest {
 	}
 	
 	@Test
-	public void getAll() {
+	public void getAll() throws HttpResponseException {
 		List<TypeDto> types = pinery.getSampleType().all();
 		assertTrue(types.size() > 1);
 		boolean typeFound = false;

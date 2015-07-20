@@ -35,14 +35,14 @@ public class ChangeLogClientTest {
 	}
 	
 	@Test
-	public void getAll() {
+	public void getAll() throws HttpResponseException {
 		List<ChangeLogDto> logs = pinery.getChangeLog().all();
 		assertTrue(logs.size() > 1);
 		assertKnownChangeLogInList(logs);
 	}
 	
 	@Test
-	public void getForSample() {
+	public void getForSample() throws HttpResponseException {
 		ChangeLogDto log = pinery.getChangeLog().forSample(KNOWN_SAMPLE_ID);
 		assertIsKnownChangeLog(log);
 	}

@@ -35,13 +35,13 @@ public class OrderClientTest {
 	}
 	
 	@Test
-	public void getById() {
+	public void getById() throws HttpResponseException {
 		OrderDto order = pinery.getOrder().byId(KNOWN_ORDER_ID);
 		assertIsKnownOrder(order);
 	}
 	
 	@Test
-	public void getAll() {
+	public void getAll() throws HttpResponseException {
 		List<OrderDto> orders = pinery.getOrder().all();
 		assertTrue(orders.size() > 1);
 		boolean orderFound = false;

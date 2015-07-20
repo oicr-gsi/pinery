@@ -29,7 +29,7 @@ public class SampleProjectClientTest {
 	}
 	
 	@Test
-	public void getAll() {
+	public void getAll() throws HttpResponseException {
 		List<SampleProjectDto> projects = pinery.getSampleProject().all();
 		assertTrue(projects.size() > 1);
 		

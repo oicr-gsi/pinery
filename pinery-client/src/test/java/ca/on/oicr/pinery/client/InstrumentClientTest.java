@@ -29,19 +29,19 @@ public class InstrumentClientTest {
 	}
 	
 	@Test
-	public void getById() {
+	public void getById() throws HttpResponseException {
 		InstrumentDto instrument = pinery.getInstrument().byId(KNOWN_INSTRUMENT_ID);
 		assertIsKnownInstrument(instrument);
 	}
 	
 	@Test
-	public void getByModel() {
+	public void getByModel() throws HttpResponseException {
 		List<InstrumentDto> instruments = pinery.getInstrument().byModel(KNOWN_INSTRUMENT_MODEL_ID);
 		assertKnownInstrumentInList(instruments);
 	}
 	
 	@Test
-	public void getAll() {
+	public void getAll() throws HttpResponseException {
 		List<InstrumentDto> instruments = pinery.getInstrument().all();
 		assertTrue(instruments.size() > 1);
 		assertKnownInstrumentInList(instruments);

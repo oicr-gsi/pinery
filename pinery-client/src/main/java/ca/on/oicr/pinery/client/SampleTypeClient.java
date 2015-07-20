@@ -10,7 +10,7 @@ public class SampleTypeClient extends ResourceClient<TypeDto> {
 		super(TypeDto.class, TypeDto[].class, mainClient);
 	}
 	
-	public List<TypeDto> all() {
+	public List<TypeDto> all() throws HttpResponseException {
 		return getResourceList("sample/types");
 	}
 	

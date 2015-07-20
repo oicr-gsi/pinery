@@ -28,7 +28,7 @@ public class AttributeNameClientTest {
 	}
 	
 	@Test
-	public void getAll() {
+	public void getAll() throws HttpResponseException {
 		List<AttributeNameDto> attributes = pinery.getAttributeName().all();
 		assertTrue(attributes.size() > 1);
 		boolean attributeFound = false;

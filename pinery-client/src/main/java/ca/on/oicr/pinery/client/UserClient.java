@@ -11,11 +11,11 @@ public class UserClient extends ResourceClient<UserDto> {
 		super(UserDto.class, UserDto[].class, mainClient);
 	}
 	
-	public List<UserDto> all() {
+	public List<UserDto> all() throws HttpResponseException {
 		return getResourceList("users");
 	}
 	
-	public UserDto byId(int id) {
+	public UserDto byId(int id) throws HttpResponseException {
 		return getResource("user/"+id);
 	}
 

@@ -11,7 +11,7 @@ public class AttributeNameClient extends ResourceClient<AttributeNameDto> {
 		super(AttributeNameDto.class, AttributeNameDto[].class, mainClient);
 	}
 	
-	public List<AttributeNameDto> all() {
+	public List<AttributeNameDto> all() throws HttpResponseException {
 		return getResourceList("sample/attributenames");
 	}
 

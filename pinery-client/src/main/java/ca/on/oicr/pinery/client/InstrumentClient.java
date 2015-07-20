@@ -10,15 +10,15 @@ public class InstrumentClient extends ResourceClient<InstrumentDto> {
 		super(InstrumentDto.class, InstrumentDto[].class, mainClient);
 	}
 	
-	public List<InstrumentDto> all() {
+	public List<InstrumentDto> all() throws HttpResponseException {
 		return getResourceList("instruments");
 	}
 	
-	public List<InstrumentDto> byModel(int instrumentModelId) {
+	public List<InstrumentDto> byModel(int instrumentModelId) throws HttpResponseException {
 		return getResourceList("instrumentmodel/"+instrumentModelId+"/instruments");
 	}
 	
-	public InstrumentDto byId(int instrumentId) {
+	public InstrumentDto byId(int instrumentId) throws HttpResponseException {
 		return getResource("instrument/"+instrumentId);
 	}
 

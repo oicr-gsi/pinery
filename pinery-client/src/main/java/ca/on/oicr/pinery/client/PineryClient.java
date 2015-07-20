@@ -43,8 +43,9 @@ public class PineryClient {
 	 * @param resourceUrl resource url relative to the Pinery base URL
 	 * @return Response object containing the requested resource data. This object should be closed after the data 
 	 * is extracted.
+	 * @throws HttpResponseException on any HTTP Status other than 200 OK
 	 */
-	protected Response callPinery(String resourceUrl) {
+	protected Response callPinery(String resourceUrl) throws HttpResponseException {
 		checkIfOpen();
 		
 		String requestUrl = pineryBaseUrl + resourceUrl;
@@ -55,8 +56,7 @@ public class PineryClient {
 		case 200:
 			return response;
 		default:
-			// TODO: More useful (checked) exceptions
-			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus() + " for URL " + requestUrl);
+			throw new HttpResponseException(requestUrl, response.getStatus());
 		}
 	}
 	

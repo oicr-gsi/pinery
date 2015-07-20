@@ -34,13 +34,13 @@ public class SequencerRunClientTest {
 	}
 	
 	@Test
-	public void getById() {
+	public void getById() throws HttpResponseException {
 		RunDto run = pinery.getSequencerRun().byId(KNOWN_RUN_ID);
 		assertIsKnownRun(run);
 	}
 	
 	@Test
-	public void getAll() {
+	public void getAll() throws HttpResponseException {
 		List<RunDto> runs = pinery.getSequencerRun().all();
 		assertTrue(runs.size() > 1);
 		boolean runFound = false;

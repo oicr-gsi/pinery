@@ -16,8 +16,9 @@ public class SampleClient extends ResourceClient<SampleDto> {
 	
 	/**
 	 * @return a list of all samples in the database
+	 * @throws HttpResponseException on any HTTP Status other than 200 OK.
 	 */
-	public List<SampleDto> all() {
+	public List<SampleDto> all() throws HttpResponseException {
 		return getResourceList("samples");
 	}
 	
@@ -26,8 +27,9 @@ public class SampleClient extends ResourceClient<SampleDto> {
 	 * 
 	 * @param sampleId ID of the sample to retrieve
 	 * @return the sample
+	 * @throws HttpResponseException on any HTTP Status other than 200 OK.
 	 */
-	public SampleDto byId(int sampleId) {
+	public SampleDto byId(int sampleId) throws HttpResponseException {
 		return getResource(resourceDir + sampleId);
 	}
 	
@@ -36,8 +38,9 @@ public class SampleClient extends ResourceClient<SampleDto> {
 	 * 
 	 * @param filter contains criteria to match
 	 * @return a list of all samples that meet the criteria specified by the filter
+	 * @throws HttpResponseException on any HTTP Status other than 200 OK.
 	 */
-	public List<SampleDto> allFiltered(SamplesFilter filter) {
+	public List<SampleDto> allFiltered(SamplesFilter filter) throws HttpResponseException {
 		return getResourceList(filter.buildUrl("samples"));
 	}
 	
@@ -98,7 +101,7 @@ public class SampleClient extends ResourceClient<SampleDto> {
 		}
 		
 		/**
-		 * Appends all parameters to the resource URL String
+		 * Appends all non-null parameters to the resource URL String
 		 * 
 		 * @param urlWithoutParams the resource URL to add parameters to
 		 * @return a String composed of the resource URL with all parameters appended

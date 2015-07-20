@@ -35,20 +35,20 @@ public class SampleClientTest {
 	}
 	
 	@Test
-	public void getAll() {
+	public void getAll() throws HttpResponseException {
 		List<SampleDto> samples = pinery.getSample().all();
 		assertTrue(samples.size() > 1);
 		assertKnownSampleInList(samples);
 	}
 	
 	@Test
-	public void getById() {
+	public void getById() throws HttpResponseException {
 		SampleDto sample = pinery.getSample().byId(KNOWN_SAMPLE_ID);
 		assertIsKnownSample(sample);
 	}
 	
 	@Test
-	public void getAllFilteredByTime() {
+	public void getAllFilteredByTime() throws HttpResponseException {
 		DateTime before = new DateTime(KNOWN_SAMPLE_CREATE_DATE);
 		before = before.plusHours(1);
 		DateTime after = before.minusHours(2);
@@ -64,7 +64,7 @@ public class SampleClientTest {
 	}
 	
 	@Test
-	public void getAllFilteredByArchivedAndType() {
+	public void getAllFilteredByArchivedAndType() throws HttpResponseException {
 		List<SampleDto> samples = pinery.getSample().allFiltered(
 				new SamplesFilter()
 					.withArchived(KNOWN_SAMPLE_ARCHIVED)

@@ -11,11 +11,11 @@ public class ChangeLogClient extends ResourceClient<ChangeLogDto> {
 		super(ChangeLogDto.class, ChangeLogDto[].class, mainClient);
 	}
 	
-	public List<ChangeLogDto> all() {
+	public List<ChangeLogDto> all() throws HttpResponseException {
 		return getResourceList("sample/changelogs");
 	}
 	
-	public ChangeLogDto forSample(int sampleId) {
+	public ChangeLogDto forSample(int sampleId) throws HttpResponseException {
 		return getResource("sample/"+sampleId+"/changelog");
 	}
 
