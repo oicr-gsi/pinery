@@ -37,11 +37,13 @@ After importing the client into your code, usage as as simple as creating a Pine
 
 ##Testing
 
+Tests are disabled by default to prevent a non-existant web-service from being called. To run the tests:
+
 ```
-mvn test -Dpinery-url="http://pinery.service.url:8888/pinery/"
+mvn test -DskipTests=false -Dpinery-url="http://pinery.service.url:8888/pinery/"
 ```
 
-Test data was pulled from [Staging LIMS](http://plims3.res.oicr.on.ca), so many tests are likely to fail if the webservice used is pointing at a different LIMS. If omitted, pinery-url defaults to http://localhost:8888/pinery-ws . See [Pinery Development](https://wiki.oicr.on.ca/display/SEQPROD/Pinery+Development) for information on running a local Pinery webservice.
+Unit tests test against data that was pulled from [OICR Staging LIMS](http://plims3.res.oicr.on.ca), so they are likely to fail if the webservice used is pointing at a different LIMS. If omitted, pinery-url defaults to "http://localhost:8888/pinery-ws/". See [Pinery Development](https://wiki.oicr.on.ca/display/SEQPROD/Pinery+Development) for information on running a local Pinery webservice.
 
 
 ##Support
