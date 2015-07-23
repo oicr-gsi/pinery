@@ -46,10 +46,15 @@ public abstract class ResourceClient<T> {
 	 * @throws HttpResponseException on any HTTP Status other than 200 OK
 	 */
 	protected T getResource(String resourceUrl) throws HttpResponseException {
-		Response response = mainClient.callPinery(resourceUrl);
-		T resource = response.readEntity(resourceClass);
-		response.close();
-		return resource;
+		Response response = null;
+		try {
+			response = mainClient.callPinery(resourceUrl);
+			T resource = response.readEntity(resourceClass);
+			return resource;
+		} 
+		finally {
+			if (response != null) response.close();
+		}
 	}
 	
 	/**
@@ -60,10 +65,16 @@ public abstract class ResourceClient<T> {
 	 * @throws HttpResponseException on any HTTP Status other than 200 OK
 	 */
 	protected List<T> getResourceList(String resourceUrl) throws HttpResponseException {
-		Response response = mainClient.callPinery(resourceUrl);
+		Response response = null;
 		
-		T[] entities = response.readEntity(arrayClass);
-		return Arrays.asList(entities);
+		try {
+			response = mainClient.callPinery(resourceUrl);
+			T[] entities = response.readEntity(arrayClass);
+			return Arrays.asList(entities);
+		}
+		finally {
+			response.close();
+		}
 	}
 	
 }

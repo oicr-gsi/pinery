@@ -1,11 +1,21 @@
 package ca.on.oicr.pinery.client;
 
 import java.io.Closeable;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+
+import org.jboss.resteasy.plugins.providers.jackson.ResteasyJacksonProvider;
 
 /**
  * This is the main class used for retrieving data from the Pinery webservice. It contains "child" clients for each 
@@ -36,12 +46,69 @@ public class PineryClient implements Closeable {
 	 * the client is considered "open" upon creation, and the close() method should be called when it is no 
 	 * longer needed.
 	 * 
-	 * @param baseUrl
+	 * @param baseUrl Pinery webservice URL
 	 */
 	public PineryClient(String baseUrl) {
+		this(baseUrl, false);
+	}
+	
+	/**
+	 * Creates a new PineryClient to communicate with the Pinery web service at the specified URL. Note that 
+	 * the client is considered "open" upon creation, and the close() method should be called when it is no 
+	 * longer needed.
+	 * 
+	 * @param baseUrl Pinery webservice URL
+	 * @param ignoreHttpsWarnings if true, certificate and hostname errors will be ignored
+	 */
+	public PineryClient(String baseUrl, boolean ignoreHttpsWarnings) {
 		this.pineryBaseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
-		this.client = ClientBuilder.newBuilder().build();
+		this.client = ignoreHttpsWarnings ? getInsecureClient() : getSecureClient();
+		// Register provider manually because it Was not registering automatically in dependent projects
+		this.client.register(ResteasyJacksonProvider.class);
 		this.open = true;
+	}
+	
+	private static Client getSecureClient() {
+		return ClientBuilder.newBuilder().build();
+	}
+	
+	private static Client getInsecureClient() {
+	    SSLContext sslcontext;
+		try {
+			sslcontext = SSLContext.getInstance("TLS");
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+		
+		X509TrustManager trustMgr = new X509TrustManager() {
+			@Override
+			public void checkClientTrusted(X509Certificate[] chain, String authType)
+					throws java.security.cert.CertificateException {}
+
+			@Override
+			public void checkServerTrusted(X509Certificate[] chain, String authType)
+					throws java.security.cert.CertificateException {}
+
+			@Override
+			public X509Certificate[] getAcceptedIssuers() {
+				return new X509Certificate[0];
+			}
+		};
+		
+		HostnameVerifier verifier = new HostnameVerifier() {
+			@Override
+			public boolean verify(String hostname, SSLSession session) {
+				return true;
+			}
+	    };
+		
+		try {
+			sslcontext.init(null, new TrustManager[] {trustMgr}, new java.security.SecureRandom());
+		} catch (KeyManagementException e) {
+			throw new RuntimeException(e);
+		}
+	    
+	    return ClientBuilder.newBuilder().sslContext(sslcontext).hostnameVerifier(verifier).build();
 	}
 	
 	/**
