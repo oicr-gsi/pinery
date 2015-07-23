@@ -73,7 +73,7 @@ public abstract class ResourceClient<T> {
 			return Arrays.asList(entities);
 		}
 		finally {
-			response.close();
+			if (response != null) response.close();
 		}
 	}
 	
