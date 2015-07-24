@@ -250,11 +250,12 @@ public class GsleClient implements Lims {
 
          BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
 
-         CSVReader reader = new CSVReader(new BufferedReader(br), '\t');
-         String[] nextLine;
-
-         while ((nextLine = reader.readNext()) != null) {
-            barcodeMap.put(nextLine[0], nextLine[1]);
+         try (CSVReader reader = new CSVReader(new BufferedReader(br), '\t')) {
+	         String[] nextLine;
+	
+	         while ((nextLine = reader.readNext()) != null) {
+	            barcodeMap.put(nextLine[0], nextLine[1]);
+	         }
          }
       }
 

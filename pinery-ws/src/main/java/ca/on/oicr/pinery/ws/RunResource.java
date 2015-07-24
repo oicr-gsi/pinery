@@ -13,8 +13,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.spi.NotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +29,7 @@ import com.google.common.collect.Lists;
 @Path("/")
 public class RunResource {
 
-   private static final Logger log = LoggerFactory.getLogger(RunResource.class);
+//   private static final Logger log = LoggerFactory.getLogger(RunResource.class);
 
    @Context
    private UriInfo uriInfo;
