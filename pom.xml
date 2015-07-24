@@ -58,6 +58,7 @@
       <module>pinery-ws</module>
       <module>pinery-lims</module>
       <module>pinery-lims-gsle</module>
+      <module>pinery-client</module>
    </modules>
 
    <licenses>
