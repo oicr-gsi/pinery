@@ -13,26 +13,21 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.spi.NotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.User;
 import ca.on.oicr.pinery.service.UserService;
 import ca.on.oicr.ws.dto.Dtos;
-import ca.on.oicr.ws.dto.SampleDto;
 import ca.on.oicr.ws.dto.UserDto;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 @Component
 @Path("/")
 public class UserResource {
 
-	private static final Logger log = LoggerFactory.getLogger(UserResource.class);
+//	private static final Logger log = LoggerFactory.getLogger(UserResource.class);
 
 	@Context
 	private UriInfo uriInfo;

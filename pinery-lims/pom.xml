@@ -26,4 +26,16 @@
             <artifactId>pinery-api</artifactId>
         </dependency>
     </dependencies>
+    
+    <build>
+    	<plugins>
+    		<plugin>
+    			<groupId>org.codehaus.mojo</groupId>
+    			<artifactId>findbugs-maven-plugin</artifactId>
+    			<configuration>
+   					<excludeFilterFile>src/main/resources/findbugs-exclude.xml</excludeFilterFile>
+    			</configuration>
+    		</plugin>
+    	</plugins>
+    </build>
 </project>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+	<!-- Ignore mutable field access in Default pojo classes -->
+	<Match>
+		<Package name="ca.on.oicr.pinery.lims" />
+		<Or>
+			<Bug pattern="EI_EXPOSE_REP" />
+			<Bug pattern="EI_EXPOSE_REP2" />
+		</Or>
+	</Match>
+</FindBugsFilter>
