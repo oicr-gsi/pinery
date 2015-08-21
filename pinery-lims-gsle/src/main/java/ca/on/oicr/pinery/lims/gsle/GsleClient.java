@@ -1084,50 +1084,6 @@ public class GsleClient implements Lims {
       return runs;
    }
 
-   List<Run> getRuns(Reader reader, Integer id) throws SAXException, JAXBException {
-      CSVReader csvReader = new CSVReader(reader, '\t');
-      HeaderColumnNameTranslateMappingStrategy<GsleRun> strat = new HeaderColumnNameTranslateMappingStrategy<GsleRun>();
-      strat.setType(GsleRun.class);
-      Map<String, String> map = Maps.newHashMap();
-
-      map.put("state", "state");
-      map.put("name", "name");
-      map.put("barcode", "barcode");
-      map.put("created_by", "createdByIdString");
-      map.put("created_at", "createdDateString");
-      map.put("id", "idString");
-      map.put("instr_id", "instrumentIdString");
-
-      strat.setColumnMapping(map);
-
-      CsvToBean<GsleRun> csvToBean = new CsvToBean<GsleRun>();
-      List<GsleRun> gsleRun = csvToBean.parse(strat, csvReader);
-
-      List<Run> runs = Lists.newArrayList();
-      for (Run defaultRun : gsleRun) {
-         runs.add(defaultRun);
-      }
-
-      List<TemporaryRun> getTemporary = getTemporaryRun(id);
-      Table<Integer, Integer, Set<RunSample>> table = positionMapGenerator(getTemporary);
-
-      for (Run run : runs) {
-         if (table.containsRow(run.getId())) {
-            Map<Integer, Set<RunSample>> tableMap = table.row(run.getId());
-            Set<RunPosition> runPositionSet = Sets.newHashSet();
-            run.setSample(runPositionSet);
-            for (Map.Entry<Integer, Set<RunSample>> entry : tableMap.entrySet()) {
-               RunPosition runPosition = new DefaultRunPosition();
-               runPosition.setPosition(entry.getKey());
-               runPosition.setRunSample(entry.getValue());
-               runPositionSet.add(runPosition);
-            }
-         }
-      }
-
-      return runs;
-   }
-
    public List<TemporaryRun> createMapRun(Reader reader) throws IOException {
 
       CSVReader csvReader = new CSVReader(reader, '\t');
@@ -1325,7 +1281,7 @@ public class GsleClient implements Lims {
          }
 
          BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
-         List<Run> runs = getRuns(br, id);
+         List<Run> runs = getRuns(br);
          if (runs.size() == 1) {
             result = runs.get(0);
          }
