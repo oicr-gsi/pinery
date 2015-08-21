@@ -1,6 +1,7 @@
 package ca.on.oicr.pinery.client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Set;
@@ -38,6 +39,12 @@ public class SequencerRunClientTest {
 		RunDto run = pinery.getSequencerRun().byId(KNOWN_RUN_ID);
 		assertIsKnownRun(run);
 	}
+  
+  @Test
+  public void getByName() throws HttpResponseException {
+    RunDto run = pinery.getSequencerRun().byName(KNOWN_RUN_NAME);
+    assertIsKnownRun(run);
+  }
 	
 	@Test
 	public void getAll() throws HttpResponseException {

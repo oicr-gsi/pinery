@@ -32,6 +32,7 @@
       <property name="temporaryRunSingle" value="${gsle.temporaryRunSingle}" />
       <property name="runsList" value="${gsle.runsList}" />
       <property name="runSingle" value="${gsle.runSingle}" />
+      <property name="runByName" value="${gsle.runByName}" />
       <property name="changeLogsList" value="${gsle.changeLogsList}" />
       <property name="changeLogSingle" value="${gsle.changeLogSingle}" />
       <property name="instrumentModelsList" value="${gsle.instrumentModelsList}" />

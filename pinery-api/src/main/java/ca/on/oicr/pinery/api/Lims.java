@@ -32,6 +32,8 @@ public interface Lims {
    public List<Run> getRuns();
 
    public Run getRun(Integer id);
+   
+   public Run getRun(String runName);
 
    public List<Type> getTypes();
 

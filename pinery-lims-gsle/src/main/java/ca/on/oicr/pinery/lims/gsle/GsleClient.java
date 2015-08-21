@@ -93,6 +93,7 @@ public class GsleClient implements Lims {
    private String temporaryRunSingle;
    private String runsList;
    private String runSingle;
+   private String runByName;
    private String changeLogsList;
    private String changeLogSingle;
    private String instrumentModelsList;
@@ -136,6 +137,10 @@ public class GsleClient implements Lims {
 
    public void setRunSingle(String runSingle) {
       this.runSingle = runSingle;
+   }
+   
+   public void setRunByName(String runByName) {
+     this.runByName = runByName;
    }
 
    public void setRunsList(String runsList) {
@@ -1059,7 +1064,7 @@ public class GsleClient implements Lims {
          runs.add(defaultRun);
       }
 
-      List<TemporaryRun> getTemporary = getTemporaryRun();
+      List<TemporaryRun> getTemporary = runs.size() == 1 ? getTemporaryRun(runs.get(0).getId()) : getTemporaryRun();
       Table<Integer, Integer, Set<RunSample>> table = positionMapGenerator(getTemporary);
 
       for (Run run : runs) {
@@ -1330,6 +1335,36 @@ public class GsleClient implements Lims {
          e.printStackTrace(System.out);
       }
       return result;
+   }
+   
+   @Override
+   public Run getRun(String runName) {
+     Run result = null;
+     
+     StringBuilder url = getBaseUrl(runByName);
+     url.append(";bind=");
+     url.append(runName);
+     
+     try {
+       ClientRequest request = new ClientRequest(url.toString());
+       request.accept("text/plain");
+       ClientResponse<String> response = request.get(String.class);
+
+       if (response.getStatus() != 200) {
+          throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+       }
+
+       BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+       List<Run> runs = getRuns(br);
+       if (runs.size() == 1) {
+          result = runs.get(0);
+       }
+
+    } catch (Exception e) {
+       System.out.println(e);
+       e.printStackTrace(System.out);
+    }
+    return result;
    }
 
    List<User> getUsers(Reader reader) {

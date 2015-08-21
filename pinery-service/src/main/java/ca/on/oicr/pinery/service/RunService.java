@@ -9,4 +9,7 @@ public interface RunService {
    public List<Run> getRun();
 
    public Run getRun(Integer id);
+   
+   public Run getRun(String runName);
+   
 }
