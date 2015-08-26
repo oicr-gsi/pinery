@@ -52,6 +52,7 @@
       <module>pinery-lims</module>
       <module>pinery-lims-gsle</module>
       <module>pinery-lims-flatfile</module>
+      <module>pinery-lims-miso</module>
       <module>pinery-client</module>
       <module>pinery-to-flatfile</module>
    </modules>
