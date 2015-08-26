@@ -1,5 +1,6 @@
 package ca.on.oicr.pinery.ws;
 
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -78,6 +81,26 @@ public class RunResource {
       addSampleUrl(dto);
 
       return dto;
+   }
+   
+   @GET
+   @Produces({ "application/json" })
+   @Path("/sequencerrun")
+   public RunDto getRunByName(@QueryParam("name") String runName) {
+     if (runName == null) {
+       throw new WebApplicationException(Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+           .entity("name parameter is required")
+           .build());
+     }
+     
+     Run run = runService.getRun(runName);
+     RunDto dto = Dtos.asDto(run);
+     final URI baseUri = uriInfo.getBaseUriBuilder().path("sequencerrun").build();
+     dto.setUrl(baseUri + "/" + dto.getId().toString());
+     addUser(run, dto);
+     addSampleUrl(dto);
+     
+     return dto;
    }
 
    private RunDto addSampleUrl(RunDto dto) {

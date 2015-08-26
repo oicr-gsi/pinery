@@ -25,4 +25,9 @@ public class DefaultRunService implements RunService {
       return lims.getRun(id);
    }
 
+  @Override
+  public Run getRun(String runName) {
+    return lims.getRun(runName);
+  }
+
 }

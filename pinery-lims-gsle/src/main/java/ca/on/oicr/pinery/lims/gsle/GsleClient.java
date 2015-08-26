@@ -93,6 +93,7 @@ public class GsleClient implements Lims {
    private String temporaryRunSingle;
    private String runsList;
    private String runSingle;
+   private String runByName;
    private String changeLogsList;
    private String changeLogSingle;
    private String instrumentModelsList;
@@ -136,6 +137,10 @@ public class GsleClient implements Lims {
 
    public void setRunSingle(String runSingle) {
       this.runSingle = runSingle;
+   }
+   
+   public void setRunByName(String runByName) {
+     this.runByName = runByName;
    }
 
    public void setRunsList(String runsList) {
@@ -1059,51 +1064,7 @@ public class GsleClient implements Lims {
          runs.add(defaultRun);
       }
 
-      List<TemporaryRun> getTemporary = getTemporaryRun();
-      Table<Integer, Integer, Set<RunSample>> table = positionMapGenerator(getTemporary);
-
-      for (Run run : runs) {
-         if (table.containsRow(run.getId())) {
-            Map<Integer, Set<RunSample>> tableMap = table.row(run.getId());
-            Set<RunPosition> runPositionSet = Sets.newHashSet();
-            run.setSample(runPositionSet);
-            for (Map.Entry<Integer, Set<RunSample>> entry : tableMap.entrySet()) {
-               RunPosition runPosition = new DefaultRunPosition();
-               runPosition.setPosition(entry.getKey());
-               runPosition.setRunSample(entry.getValue());
-               runPositionSet.add(runPosition);
-            }
-         }
-      }
-
-      return runs;
-   }
-
-   List<Run> getRuns(Reader reader, Integer id) throws SAXException, JAXBException {
-      CSVReader csvReader = new CSVReader(reader, '\t');
-      HeaderColumnNameTranslateMappingStrategy<GsleRun> strat = new HeaderColumnNameTranslateMappingStrategy<GsleRun>();
-      strat.setType(GsleRun.class);
-      Map<String, String> map = Maps.newHashMap();
-
-      map.put("state", "state");
-      map.put("name", "name");
-      map.put("barcode", "barcode");
-      map.put("created_by", "createdByIdString");
-      map.put("created_at", "createdDateString");
-      map.put("id", "idString");
-      map.put("instr_id", "instrumentIdString");
-
-      strat.setColumnMapping(map);
-
-      CsvToBean<GsleRun> csvToBean = new CsvToBean<GsleRun>();
-      List<GsleRun> gsleRun = csvToBean.parse(strat, csvReader);
-
-      List<Run> runs = Lists.newArrayList();
-      for (Run defaultRun : gsleRun) {
-         runs.add(defaultRun);
-      }
-
-      List<TemporaryRun> getTemporary = getTemporaryRun(id);
+      List<TemporaryRun> getTemporary = runs.size() == 1 ? getTemporaryRun(runs.get(0).getId()) : getTemporaryRun();
       Table<Integer, Integer, Set<RunSample>> table = positionMapGenerator(getTemporary);
 
       for (Run run : runs) {
@@ -1320,7 +1281,7 @@ public class GsleClient implements Lims {
          }
 
          BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
-         List<Run> runs = getRuns(br, id);
+         List<Run> runs = getRuns(br);
          if (runs.size() == 1) {
             result = runs.get(0);
          }
@@ -1330,6 +1291,36 @@ public class GsleClient implements Lims {
          e.printStackTrace(System.out);
       }
       return result;
+   }
+   
+   @Override
+   public Run getRun(String runName) {
+     Run result = null;
+     
+     StringBuilder url = getBaseUrl(runByName);
+     url.append(";bind=");
+     url.append(runName);
+     
+     try {
+       ClientRequest request = new ClientRequest(url.toString());
+       request.accept("text/plain");
+       ClientResponse<String> response = request.get(String.class);
+
+       if (response.getStatus() != 200) {
+          throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+       }
+
+       BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+       List<Run> runs = getRuns(br);
+       if (runs.size() == 1) {
+          result = runs.get(0);
+       }
+
+    } catch (Exception e) {
+       System.out.println(e);
+       e.printStackTrace(System.out);
+    }
+    return result;
    }
 
    List<User> getUsers(Reader reader) {

@@ -466,6 +466,23 @@ INNER JOIN ga_instrument_run_state girs ON (gir.STATE = girs.instrument_run_stat
 LEFT JOIN instrument i ON (gir.instrument_id = i.instr_id)
 WHERE gir.run_id = ?
 
+-- Name: /pinery/sequencerrun
+-- Description: LIMS API sequencerrun query
+-- Application Properties: runByName
+
+SELECT gir.run_id AS id
+	,gir.NAME
+	,gir.barcode
+	,i.instr_id
+	,i.NAME AS instrument_name
+	,girs.label AS STATE
+	,gir.created_by
+	,gir.created_at
+FROM ga_instrument_run gir
+INNER JOIN ga_instrument_run_state girs ON (gir.STATE = girs.instrument_run_state_id)
+LEFT JOIN instrument i ON (gir.instrument_id = i.instr_id)
+WHERE gir.NAME = ?
+
 -- Name: /pinery/sequencerruns
 -- Description: LIMS API sequencerruns query
 -- Application Properties: runsList

@@ -28,5 +28,16 @@ public class SequencerRunClient extends ResourceClient<RunDto> {
 	public RunDto byId(int runId) throws HttpResponseException {
 		return getResource("sequencerrun/"+runId);
 	}
+	
+	/**
+	 * Retrieves a single sequencer run by run name
+	 * 
+	 * @param runName
+	 * @return the sequencer run
+	 * @throws HttpResponseException on any HTTP Status other than 200 OK
+	 */
+	public RunDto byName(String runName) throws HttpResponseException {
+	  return getResource("sequencerrun?name="+runName);
+	}
 
 }
