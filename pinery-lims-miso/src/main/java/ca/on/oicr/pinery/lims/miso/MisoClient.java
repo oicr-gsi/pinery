@@ -1,4 +1,4 @@
-package miso;
+package ca.on.oicr.pinery.lims.miso;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
