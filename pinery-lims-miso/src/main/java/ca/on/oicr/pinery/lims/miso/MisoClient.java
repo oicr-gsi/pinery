@@ -23,8 +23,22 @@ import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
 import ca.on.oicr.pinery.lims.DefaultInstrument;
+import ca.on.oicr.pinery.lims.DefaultInstrumentModel;
 
 public class MisoClient implements Lims {
+  
+  private static final String queryAllInstruments = "SELECT sr.referenceId, sr.name, sr.platformId " + 
+      "FROM SequencerReference AS sr";
+  
+  private static final String queryInstrumentById = queryAllInstruments + " WHERE referenceId = ?";
+  
+  private static final String queryAllModels = "SELECT p.platformId, p.instrumentModel " +
+      "FROM Platform as p";
+  
+  private static final String queryModelById = queryAllModels + " WHERE platformId = ?";
+  
+  private final RowMapper<Instrument> instrumentMapper = new InstrumentMapper();
+  private final RowMapper<InstrumentModel> modelMapper = new InstrumentModelMapper();
   
   private JdbcTemplate template;
 
@@ -137,28 +151,25 @@ public class MisoClient implements Lims {
 
   @Override
   public List<InstrumentModel> getInstrumentModels() {
-    // TODO Auto-generated method stub
-    return null;
+    List<InstrumentModel> models = template.query(queryAllModels, modelMapper);
+    return models;
   }
 
   @Override
   public InstrumentModel getInstrumentModel(Integer id) {
-    // TODO Auto-generated method stub
-    return null;
+    List<InstrumentModel> models = template.query(queryModelById, new Object[]{id}, modelMapper);
+    return models.size() == 1 ? models.get(0) : null;
   }
 
   @Override
   public List<Instrument> getInstruments() {
-    // TODO Auto-generated method stub
-    return null;
+    List<Instrument> instruments = template.query(queryAllInstruments, instrumentMapper);
+    return instruments;
   }
 
   @Override
   public Instrument getInstrument(Integer instrumentId) {
-    final String query = "SELECT sr.referenceId, sr.name, sr.platformId " + 
-        "FROM SequencerReference AS sr " +
-        "WHERE referenceId = ?";
-    List<Instrument> instruments = template.query(query, new Object[]{instrumentId}, new InstrumentMapper()); // TODO: reuse rowmappers
+    List<Instrument> instruments = template.query(queryInstrumentById, new Object[]{instrumentId}, instrumentMapper);
     return instruments.size() == 1 ? instruments.get(0) : null;
   }
 
@@ -180,6 +191,21 @@ public class MisoClient implements Lims {
       // TODO: createdDate
       
       return ins;
+    }
+    
+  }
+  
+  private class InstrumentModelMapper implements RowMapper<InstrumentModel> {
+
+    @Override
+    public InstrumentModel mapRow(ResultSet rs, int rowNum) throws SQLException {
+      InstrumentModel m = new DefaultInstrumentModel();
+      
+      m.setId(rs.getInt("platformId"));
+      m.setName(rs.getString("instrumentModel"));
+      // TODO: created, createdById, modified, modifiedById
+      
+      return m;
     }
     
   }
