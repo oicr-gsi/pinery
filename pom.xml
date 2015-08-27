@@ -119,6 +119,11 @@
          </dependency>
          <dependency>
             <groupId>ca.on.oicr</groupId>
+            <artifactId>pinery-lims-miso</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>ca.on.oicr</groupId>
             <artifactId>pinery-client</artifactId>
             <version>${project.version}</version>
          </dependency>

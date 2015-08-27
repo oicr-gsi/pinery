@@ -155,10 +155,9 @@ public class MisoClient implements Lims {
 
   @Override
   public Instrument getInstrument(Integer instrumentId) {
-    final String query = "SELECT sr.referenceId, sr.name, p.instrumentModel " + 
+    final String query = "SELECT sr.referenceId, sr.name, sr.platformId " + 
         "FROM SequencerReference AS sr " +
-        "JOIN Platform AS p ON p.platformId = sr.platformId " +
-        "WHERE sr.referenceId = ?;";
+        "WHERE referenceId = ?";
     List<Instrument> instruments = template.query(query, new Object[]{instrumentId}, new InstrumentMapper()); // TODO: reuse rowmappers
     return instruments.size() == 1 ? instruments.get(0) : null;
   }
@@ -177,7 +176,7 @@ public class MisoClient implements Lims {
       
       ins.setId(rs.getInt("referenceId"));
       ins.setName(rs.getString("name"));
-      ins.setInstrumentModel("instrumentModel");
+      ins.setInstrumentModel(rs.getString("platformId"));
       // TODO: createdDate
       
       return ins;

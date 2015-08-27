@@ -6,6 +6,7 @@
     <version>2.0-SNAPSHOT</version>
   </parent>
   <artifactId>pinery-lims-miso</artifactId>
+  <name>pinery-miso</name>
   
   <dependencies>
     <dependency>
@@ -19,6 +20,10 @@
     <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-jdbc</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
     </dependency>
   </dependencies>
 </project>
