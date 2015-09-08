@@ -2,25 +2,16 @@ package ca.on.oicr.pinery.lims.miso;
 
 import ca.on.oicr.pinery.lims.DefaultOrderSample;
 
-public class MisoOrderSample extends DefaultOrderSample implements ChildObject {
+public class MisoOrderSample extends DefaultOrderSample {
   
-  private int orderId;
+  private Integer orderId;
 
-  public MisoOrderSample() {
-    
-  }
-
-  public int getOrderId() {
+  public Integer getOrderId() {
     return orderId;
   }
 
-  public void setOrderId(int orderId) {
+  public void setOrderId(Integer orderId) {
     this.orderId = orderId;
   }
-
-  @Override
-  public Integer getParentId() {
-    return getOrderId();
-  }
-
+  
 }

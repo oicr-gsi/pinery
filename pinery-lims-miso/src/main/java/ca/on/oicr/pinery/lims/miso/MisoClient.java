@@ -3,8 +3,10 @@ package ca.on.oicr.pinery.lims.miso;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.sql.DataSource;
@@ -22,14 +24,16 @@ import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.RunPosition;
+import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
 import ca.on.oicr.pinery.lims.DefaultInstrument;
 import ca.on.oicr.pinery.lims.DefaultInstrumentModel;
+import ca.on.oicr.pinery.lims.DefaultOrder;
+import ca.on.oicr.pinery.lims.DefaultRun;
 import ca.on.oicr.pinery.lims.DefaultUser;
-import ca.on.oicr.pinery.lims.miso.util.ChildMapper;
 
 public class MisoClient implements Lims {
   
@@ -69,7 +73,7 @@ public class MisoClient implements Lims {
   private static final String queryRunByName = queryAllRuns + " WHERE r.alias = ?";
   
   // RunPosition queries
-  private static final String queryAllRunPositions = "SELECT p.partitionId, p.partitionNumber, p.poolId, r_spc.Run_runId " +
+  private static final String queryAllRunPositions = "SELECT p.partitionNumber, p.pool_poolId, r_spc.Run_runId " +
       "FROM _Partition AS p " +
       "JOIN SequencerPartitionContainer_Partition AS spc_p ON spc_p.partitions_partitionId = p.partitionId " +
       "JOIN Run_SequencerPartitionContainer AS r_spc ON r_spc.containers_containerId = spc_p.container_containerId";
@@ -78,9 +82,10 @@ public class MisoClient implements Lims {
   
   private final RowMapper<Instrument> instrumentMapper = new InstrumentMapper();
   private final RowMapper<InstrumentModel> modelMapper = new InstrumentModelRowMapper();
-  private final RowMapper<MisoOrder> orderMapper = new OrderRowMapper();
+  private final RowMapper<Order> orderMapper = new OrderRowMapper();
   private final RowMapper<User> userMapper = new UserRowMapper();
-  private final RowMapper<MisoRun> runMapper = new RunRowMapper();
+  private final RowMapper<Run> runMapper = new RunRowMapper();
+  private final RowMapper<MisoRunPosition> runPositionMapper = new RunPositionRowMapper();
   
   private JdbcTemplate template;
 
@@ -102,7 +107,7 @@ public class MisoClient implements Lims {
 
   @Override
   public List<String> getProjects() {
-    // TODO Auto-generated method stub
+    // This isn't connected to any endpoint (Not implemented in GSLE)
     return null;
   }
 
@@ -142,15 +147,29 @@ public class MisoClient implements Lims {
 
   @Override
   public List<Order> getOrders() {
-    List<MisoOrder> orders = template.query(queryAllOrders, orderMapper);
-    ChildMapper<MisoOrder, MisoOrderSample> mapper = new ChildMapper<>(orders);
-    mapper.mapChildren(getOrderSamples());
-    return new ArrayList<Order>(orders);
+    List<Order> orders = template.query(queryAllOrders, orderMapper);
+    List<MisoOrderSample> samples = getOrderSamples();
+    Map<Integer, Order> map = new HashMap<>();
+    for (Order o : orders) {
+      map.put(o.getId(), o);
+    }
+    for (MisoOrderSample s : samples) {
+      Order o = map.get(s.getOrderId());
+      if (o != null) {
+        Set<OrderSample> os = o.getSamples();
+        if (os == null) {
+          os = new HashSet<OrderSample>();
+          o.setSample(os);
+        }
+        os.add(s);
+      }
+    }
+    return orders;
   }
 
   @Override
   public Order getOrder(Integer id) {
-    List<MisoOrder> orders = template.query(queryOrderById, new Object[]{id}, orderMapper);
+    List<Order> orders = template.query(queryOrderById, new Object[]{id}, orderMapper);
     if (orders.size() != 1) return null;
     Order order = orders.get(0);
     Set<OrderSample> os = new HashSet<>();
@@ -171,28 +190,40 @@ public class MisoClient implements Lims {
 
   @Override
   public List<Run> getRuns() {
-    List<MisoRun> runs = template.query(queryAllRuns, runMapper);
-    ChildMapper<MisoRun, MisoRunPosition> mapper = new ChildMapper<>(runs);
-    mapper.mapChildren(getRunPositions());
-    return new ArrayList<Run>(runs);
+    List<Run> runs = template.query(queryAllRuns, runMapper);
+    List<MisoRunPosition> positions = getRunPositions();
+    Map<Integer, Run> map = new HashMap<>();
+    for (Run r : runs) {
+      map.put(r.getId(), r);
+    }
+    for (MisoRunPosition p : positions) {
+      Run r = map.get(p.getRunId());
+      if (r != null) {
+        Set<RunPosition> rp = r.getSamples();
+        if (rp == null) {
+          rp = new HashSet<RunPosition>();
+          r.setSample(rp);
+        }
+        rp.add(p);
+      }
+    }
+    return runs;
   }
 
   @Override
   public Run getRun(Integer id) {
-    List<MisoRun> runs = template.query(queryRunById, new Object[]{id}, runMapper);
-    if (runs.size() != 1) return null;
-    MisoRun run = runs.get(0);
-    Set<RunPosition> rp = new HashSet<>();
-    rp.addAll(getRunPositions(id));
-    run.setSample(rp);
-    return run;
+    return getSingleRun(queryRunById, new Object[]{id});
   }
 
   @Override
   public Run getRun(String runName) {
-    List<MisoRun> runs = template.query(queryRunByName, new Object[]{runName}, runMapper);
+    return getSingleRun(queryRunByName, new Object[]{runName});
+  }
+  
+  private Run getSingleRun(String query, Object[] params) {
+    List<Run> runs = template.query(query, params, runMapper);
     if (runs.size() != 1) return null;
-    MisoRun run = runs.get(0);
+    Run run = runs.get(0);
     Set<RunPosition> rp = new HashSet<>();
     rp.addAll(getRunPositions(run.getId()));
     run.setSample(rp);
@@ -200,13 +231,34 @@ public class MisoClient implements Lims {
   }
   
   private List<MisoRunPosition> getRunPositions() {
-    // TODO
-    return new ArrayList<MisoRunPosition>();
+    List<MisoRunPosition> positions = template.query(queryAllRunPositions, runPositionMapper);
+    List<MisoRunSample> samples = getRunSamples();
+    return mapSamplesToPositions(positions, samples);
   }
   
   private List<MisoRunPosition> getRunPositions(Integer runId) {
-    // TODO
-    return new ArrayList<MisoRunPosition>();
+    List<MisoRunPosition> positions = template.query(queryRunPositionsByRunId, new Object[]{runId},runPositionMapper);
+    List<MisoRunSample> samples = getRunSamples(runId);
+    return mapSamplesToPositions(positions, samples);
+  }
+  
+  private List<MisoRunPosition> mapSamplesToPositions(List<MisoRunPosition> positions, List<MisoRunSample> samples) {
+    Map<Integer, MisoRunPosition> map = new HashMap<>();
+    for (MisoRunPosition p : positions) {
+      map.put(p.getPoolId(), p);
+    }
+    for (MisoRunSample s : samples) {
+      MisoRunPosition p = map.get(s.getPositionId());
+      if (p != null) {
+        Set<RunSample> rs = p.getRunSample();
+        if (rs == null) {
+          rs = new HashSet<RunSample>();
+          p.setRunSample(rs);
+        }
+        rs.add(s);
+      }
+    }
+    return positions;
   }
   
   private List<MisoRunSample> getRunSamples() {
@@ -301,11 +353,11 @@ public class MisoClient implements Lims {
     
   }
   
-  private static class OrderRowMapper implements RowMapper<MisoOrder> {
+  private static class OrderRowMapper implements RowMapper<Order> {
 
     @Override
-    public MisoOrder mapRow(ResultSet rs, int rowNum) throws SQLException {
-      MisoOrder o = new MisoOrder();
+    public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
+      Order o = new DefaultOrder();
       
       o.setId(rs.getInt("poolId"));
       o.setStatus(rs.getString("ready")); // TODO: I think this is wrong table field
@@ -345,11 +397,11 @@ public class MisoClient implements Lims {
     
   }
   
-  private static class RunRowMapper implements RowMapper<MisoRun> {
+  private static class RunRowMapper implements RowMapper<Run> {
 
     @Override
-    public MisoRun mapRow(ResultSet rs, int rowNum) throws SQLException {
-      MisoRun r = new MisoRun();
+    public Run mapRow(ResultSet rs, int rowNum) throws SQLException {
+      Run r = new DefaultRun();
       
       r.setState(rs.getString("health"));
       r.setName(rs.getString("alias"));
@@ -360,6 +412,21 @@ public class MisoClient implements Lims {
       // TODO: createdById
       
       return r;
+    }
+    
+  }
+  
+  private static class RunPositionRowMapper implements RowMapper<MisoRunPosition> {
+
+    @Override
+    public MisoRunPosition mapRow(ResultSet rs, int rowNum) throws SQLException {
+      MisoRunPosition p = new MisoRunPosition();
+      
+      p.setPosition(rs.getInt("partitionNumber"));
+      p.setRunId(rs.getInt("Run_runId"));
+      p.setPoolId(rs.getInt("pool_poolId"));
+      
+      return p;
     }
     
   }

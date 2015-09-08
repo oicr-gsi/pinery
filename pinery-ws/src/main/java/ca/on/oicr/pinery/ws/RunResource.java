@@ -119,9 +119,11 @@ public class RunResource {
 
       if (dto.getPositions() != null) {
          for (RunDtoPosition runDtoPosition : dto.getPositions()) {
-            for (RunDtoSample runDtoSample : runDtoPosition.getSamples()) {
+           if (runDtoPosition.getSamples() != null && !runDtoPosition.getSamples().isEmpty()) {
+             for (RunDtoSample runDtoSample : runDtoPosition.getSamples()) {
                runDtoSample.setUrl(baseUriSample + runDtoSample.getId().toString());
-            }
+             }
+           }
          }
       }
       if (dto.getCreatedById() != null) {
