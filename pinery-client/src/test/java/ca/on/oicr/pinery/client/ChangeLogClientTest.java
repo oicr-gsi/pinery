@@ -1,15 +1,18 @@
 package ca.on.oicr.pinery.client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
 import org.junit.AfterClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.ChangeDto;
 import ca.on.oicr.ws.dto.ChangeLogDto;
 
+@Ignore
 public class ChangeLogClientTest {
 	
 	private String pineryUrl = "http://localhost:8888/pinery-ws/";
@@ -20,7 +23,7 @@ public class ChangeLogClientTest {
 	private static final String KNOWN_CHANGE_DATE = "2010-08-27T15:56:28-04:00";
 	private static final String KNOWN_CHANGELOG_SAMPLE_RELATIVE_URL = "sample/2204";
 	
-	private String knownSampleUrl;
+	private final String knownSampleUrl;
 	
 	public ChangeLogClientTest() {
 		String urlArg = System.getProperty("pinery-url");
