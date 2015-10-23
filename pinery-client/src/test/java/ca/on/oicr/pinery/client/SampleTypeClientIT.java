@@ -6,13 +6,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.TypeDto;
 
-@Ignore
-public class SampleTypeClientTest {
+public class SampleTypeClientIT {
 	
 	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
@@ -20,7 +18,7 @@ public class SampleTypeClientTest {
 	private static final String KNOWN_TYPE_NAME = "Illumina PE Library";
 	private static final String KNOWN_TYPE_EARLIEST = "2010-08-03T07:40:59-04:00";
 	
-	public SampleTypeClientTest() {
+	public SampleTypeClientIT() {
 		String urlArg = System.getProperty("pinery-url");
 		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
 	}

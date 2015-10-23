@@ -6,13 +6,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.AttributeNameDto;
 
-@Ignore
-public class AttributeNameClientTest {
+public class AttributeNameClientIT {
 	
 	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
@@ -20,7 +18,7 @@ public class AttributeNameClientTest {
 	private static final String KNOWN_ATTRIBUTE_NAME = "Tissue Origin";
 	private static final String KNOWN_ATTRIBUTE_EARLIEST = "2010-02-12T12:12:59-05:00";
 
-	public AttributeNameClientTest() {
+	public AttributeNameClientIT() {
 		String urlArg = System.getProperty("pinery-url");
 		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
 	}

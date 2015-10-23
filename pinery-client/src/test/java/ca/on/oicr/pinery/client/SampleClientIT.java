@@ -8,14 +8,12 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ca.on.oicr.pinery.client.SampleClient.SamplesFilter;
 import ca.on.oicr.ws.dto.SampleDto;
 
-@Ignore
-public class SampleClientTest {
+public class SampleClientIT {
 	
 	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
@@ -26,7 +24,7 @@ public class SampleClientTest {
 	private static final boolean KNOWN_SAMPLE_ARCHIVED = false;
 	private static final String KNOWN_SAMPLE_TYPE = "Default";
 	
-	public SampleClientTest() {
+	public SampleClientIT() {
 		String urlArg = System.getProperty("pinery-url");
 		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
 	}

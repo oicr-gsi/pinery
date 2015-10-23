@@ -7,15 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.RunDto;
 import ca.on.oicr.ws.dto.RunDtoPosition;
 import ca.on.oicr.ws.dto.RunDtoSample;
 
-@Ignore
-public class SequencerRunClientTest {
+public class SequencerRunClientIT {
 	
 	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
@@ -26,7 +24,7 @@ public class SequencerRunClientTest {
 	private static final Integer KNOWN_RUN_LANE = 4;
 	private static final Integer KNOWN_RUN_LANE_SAMPLE_ID = 131;
 
-	public SequencerRunClientTest() {
+	public SequencerRunClientIT() {
 		String urlArg = System.getProperty("pinery-url");
 		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
 	}

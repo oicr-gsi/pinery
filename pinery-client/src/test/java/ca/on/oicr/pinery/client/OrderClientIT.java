@@ -7,15 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.AttributeDto;
 import ca.on.oicr.ws.dto.OrderDto;
 import ca.on.oicr.ws.dto.OrderDtoSample;
 
-@Ignore
-public class OrderClientTest {
+public class OrderClientIT {
 	
 	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
@@ -27,7 +25,7 @@ public class OrderClientTest {
 	private static final String KNOWN_ORDER_SAMPLE_ATTRIBUTE_NAME = "Reference";
 	private static final String KNOWN_ORDER_SAMPLE_ATTRIBUTE_VALUE = "Human hg19 random";
 
-	public OrderClientTest() {
+	public OrderClientIT() {
 		String urlArg = System.getProperty("pinery-url");
 		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
 	}

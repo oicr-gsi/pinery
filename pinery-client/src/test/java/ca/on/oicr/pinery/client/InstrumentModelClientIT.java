@@ -6,13 +6,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.InstrumentModelDto;
 
-@Ignore
-public class InstrumentModelClientTest {
+public class InstrumentModelClientIT {
 	
 	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
@@ -20,7 +18,7 @@ public class InstrumentModelClientTest {
 	private static final Integer KNOWN_MODEL_ID = 6;
 	private static final String KNOWN_MODEL_NAME = "HiSeq";
 
-	public InstrumentModelClientTest() {
+	public InstrumentModelClientIT() {
 		String urlArg = System.getProperty("pinery-url");
 		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
 	}

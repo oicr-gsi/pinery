@@ -6,13 +6,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.UserDto;
 
-@Ignore
-public class UserClientTest {
+public class UserClientIT {
 	
 	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
@@ -21,7 +19,7 @@ public class UserClientTest {
 	private static final String KNOWN_USER_LAST_NAME = "Cooke";
 	private static final String KNOWN_USER_CREATED = "2015-07-14T10:51:36-04:00";
 	
-	public UserClientTest() {
+	public UserClientIT() {
 		String urlArg = System.getProperty("pinery-url");
 		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
 	}

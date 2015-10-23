@@ -6,14 +6,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.ChangeDto;
 import ca.on.oicr.ws.dto.ChangeLogDto;
 
-@Ignore
-public class ChangeLogClientTest {
+public class ChangeLogClientIT {
 	
 	private String pineryUrl = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
@@ -25,7 +23,7 @@ public class ChangeLogClientTest {
 	
 	private final String knownSampleUrl;
 	
-	public ChangeLogClientTest() {
+	public ChangeLogClientIT() {
 		String urlArg = System.getProperty("pinery-url");
 		if (urlArg != null) pineryUrl = urlArg;
 		pinery = new PineryClient(pineryUrl);
