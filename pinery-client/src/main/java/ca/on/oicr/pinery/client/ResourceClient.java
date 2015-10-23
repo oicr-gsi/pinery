@@ -1,9 +1,11 @@
 package ca.on.oicr.pinery.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 /**
  * Subtypes of this class should offer methods for retrieving their resource type from Pinery by 
@@ -50,6 +52,10 @@ public abstract class ResourceClient<T> {
 		try {
 			response = mainClient.callPinery(resourceUrl);
 			T resource = response.readEntity(resourceClass);
+			if (resource == null) {
+			  // The server should really return a 404 error if a specific resource isn't found
+			  throw new HttpResponseException(resourceUrl, Status.NOT_FOUND.getStatusCode());
+			}
 			return resource;
 		} 
 		finally {
@@ -61,7 +67,7 @@ public abstract class ResourceClient<T> {
 	 * Retrieve multiple resources (objects) from Pinery
 	 * 
 	 * @param resourceUrl the resource URL, relative to the base Pinery URL
-	 * @return the requested resources
+	 * @return the requested resources, or an empty list if no resources of the requested type are available
 	 * @throws HttpResponseException on any HTTP Status other than 200 OK
 	 */
 	protected List<T> getResourceList(String resourceUrl) throws HttpResponseException {
@@ -70,7 +76,12 @@ public abstract class ResourceClient<T> {
 		try {
 			response = mainClient.callPinery(resourceUrl);
 			T[] entities = response.readEntity(arrayClass);
-			return Arrays.asList(entities);
+			if (entities == null || entities.length == 0) {
+			  return new ArrayList<T>();
+			}
+			else {
+			  return Arrays.asList(entities);
+			}
 		}
 		finally {
 			if (response != null) response.close();

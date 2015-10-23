@@ -106,7 +106,7 @@ public class SampleClient extends ResourceClient<SampleDto> {
 		 * @param urlWithoutParams the resource URL to add parameters to
 		 * @return a String composed of the resource URL with all parameters appended
 		 */
-		private String buildUrl(String urlWithoutParams) {
+		protected String buildUrl(String urlWithoutParams) {
 			StringBuilder sb = new StringBuilder(urlWithoutParams).append("?");
 			
 			if (archived != null) {
@@ -125,7 +125,7 @@ public class SampleClient extends ResourceClient<SampleDto> {
 			}
 			if (types != null && !types.isEmpty()) {
 				for (String type : types) {
-					sb.append("types=").append(type).append("&");
+					sb.append("type=").append(type).append("&");
 				}
 			}
 			

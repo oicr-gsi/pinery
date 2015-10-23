@@ -3,6 +3,7 @@ package ca.on.oicr.pinery.client;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -11,6 +12,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.jboss.resteasy.plugins.providers.jackson.ResteasyJacksonProvider;
 import org.junit.Rule;
@@ -32,10 +34,8 @@ public class PineryClientTest {
   public void testCallPinery() throws HttpResponseException {
     Client clientMock = makeMockClient();
     WebTarget targetMock = mock(WebTarget.class);
-    targetMock.request();
     Invocation.Builder builderMock = mock(Invocation.Builder.class);
     Response responseMock = Response.ok("response").build();
-    
     when(clientMock.target("http://pretend.pinery.server/test")).thenReturn(targetMock);
     when(targetMock.request()).thenReturn(builderMock);
     when(builderMock.get()).thenReturn(responseMock);
@@ -45,7 +45,43 @@ public class PineryClientTest {
       response = client.callPinery("test");
     }
     assertNotNull(response);
-    assertEquals(response.getStatus(), 200);
+    assertEquals(200, response.getStatus());
+    assertEquals("response", response.getEntity());
+  }
+  
+  @Test
+  public void testCallPineryNull() throws HttpResponseException {
+    Client clientMock = makeMockClient();
+    WebTarget targetMock = mock(WebTarget.class);
+    Invocation.Builder builderMock = mock(Invocation.Builder.class);
+    Response responseMock = Response.ok(null).build();
+    when(clientMock.target("http://pretend.pinery.server/test")).thenReturn(targetMock);
+    when(targetMock.request()).thenReturn(builderMock);
+    when(builderMock.get()).thenReturn(responseMock);
+    
+    Response response = null;
+    try (PineryClient client = new PineryClient("http://pretend.pinery.server/")) {
+      response = client.callPinery("test");
+    }
+    assertNotNull(response);
+    assertEquals(200, response.getStatus());
+    assertNull(response.getEntity());
+  }
+  
+  @Test
+  public void testCallPineryStatusNotOk() throws HttpResponseException {
+    Client clientMock = makeMockClient();
+    WebTarget targetMock = mock(WebTarget.class);
+    Invocation.Builder builderMock = mock(Invocation.Builder.class);
+    Response responseMock = Response.status(Status.INTERNAL_SERVER_ERROR).entity(null).build();
+    when(clientMock.target("http://pretend.pinery.server/test")).thenReturn(targetMock);
+    when(targetMock.request()).thenReturn(builderMock);
+    when(builderMock.get()).thenReturn(responseMock);
+    
+    try (PineryClient client = new PineryClient("http://pretend.pinery.server/")) {
+      exception.expect(HttpResponseException.class);
+      client.callPinery("test");
+    }
   }
   
   private Client makeMockClient() {
@@ -76,6 +112,7 @@ public class PineryClientTest {
     makeMockClient();
     PineryClient client = new PineryClient("http://pretend.pinery.server/", true);
     assertNotNull(client.getSample());
+    assertNotNull(client.getSample());
     
     client.close();
     exception.expect(IllegalStateException.class);
@@ -86,6 +123,7 @@ public class PineryClientTest {
   public void testGetSampleProject() {
     makeMockClient();
     PineryClient client = new PineryClient("http://pretend.pinery.server/", true);
+    assertNotNull(client.getSampleProject());
     assertNotNull(client.getSampleProject());
     
     client.close();
@@ -98,6 +136,7 @@ public class PineryClientTest {
     makeMockClient();
     PineryClient client = new PineryClient("http://pretend.pinery.server/", true);
     assertNotNull(client.getSampleType());
+    assertNotNull(client.getSampleType());
     
     client.close();
     exception.expect(IllegalStateException.class);
@@ -108,6 +147,7 @@ public class PineryClientTest {
   public void testGetSequencerRun() {
     makeMockClient();
     PineryClient client = new PineryClient("http://pretend.pinery.server/", true);
+    assertNotNull(client.getSequencerRun());
     assertNotNull(client.getSequencerRun());
     
     client.close();
@@ -120,6 +160,7 @@ public class PineryClientTest {
     makeMockClient();
     PineryClient client = new PineryClient("http://pretend.pinery.server/", true);
     assertNotNull(client.getUser());
+    assertNotNull(client.getUser());
     
     client.close();
     exception.expect(IllegalStateException.class);
@@ -130,6 +171,7 @@ public class PineryClientTest {
   public void testGetAttributeName() {
     makeMockClient();
     PineryClient client = new PineryClient("http://pretend.pinery.server/", true);
+    assertNotNull(client.getAttributeName());
     assertNotNull(client.getAttributeName());
     
     client.close();
@@ -142,6 +184,7 @@ public class PineryClientTest {
     makeMockClient();
     PineryClient client = new PineryClient("http://pretend.pinery.server/", true);
     assertNotNull(client.getChangeLog());
+    assertNotNull(client.getChangeLog());
     
     client.close();
     exception.expect(IllegalStateException.class);
@@ -152,6 +195,7 @@ public class PineryClientTest {
   public void testGetInstrument() {
     makeMockClient();
     PineryClient client = new PineryClient("http://pretend.pinery.server/", true);
+    assertNotNull(client.getInstrument());
     assertNotNull(client.getInstrument());
     
     client.close();
@@ -164,6 +208,7 @@ public class PineryClientTest {
     makeMockClient();
     PineryClient client = new PineryClient("http://pretend.pinery.server/", true);
     assertNotNull(client.getInstrumentModel());
+    assertNotNull(client.getInstrumentModel());
     
     client.close();
     exception.expect(IllegalStateException.class);
@@ -174,6 +219,7 @@ public class PineryClientTest {
   public void testGetOrder() {
     makeMockClient();
     PineryClient client = new PineryClient("http://pretend.pinery.server/", true);
+    assertNotNull(client.getOrder());
     assertNotNull(client.getOrder());
     
     client.close();
