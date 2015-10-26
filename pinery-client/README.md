@@ -7,11 +7,11 @@ This is a Java client for accessing the [Pinery API](https://wiki.oicr.on.ca/dis
 After importing the client into your code, usage as as simple as creating a PineryClient that points to a Pinery webservice URL, and making requests.
 
 1. Instantiate a PineryClient object:
-    
+
     PineryClient pinery = new PineryClient("http://localhost:8888/pinery-ws");
 
 2. Get resources. The example below demonstrates the types of calls available and the patterns they follow. See the javadocs for more information regarding specific classes.
-    
+
     // Full list
     List<SampleDto> sampleList = pinery.getSample().all();
     
@@ -26,7 +26,7 @@ After importing the client into your code, usage as as simple as creating a Pine
     );
 
 3. Remember to close the PineryClient when it is no longer needed.
-    
+
     pinery.close();
 
 ##Testing

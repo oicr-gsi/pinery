@@ -18,6 +18,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import ca.on.oicr.pinery.client.SampleClient.SamplesFilter;
 import ca.on.oicr.ws.dto.SampleDto;
 
 public class SampleClientTest {
@@ -148,6 +149,42 @@ public class SampleClientTest {
         .withTypes(types);
     String url = filter.buildUrl("my.pretend.url");
     assertTrue(url.matches("^my\\.pretend\\.url\\?([^\\?&=]*=[^\\?&=]*&){4}[^\\?&=]*=[^\\?&=]*$"));
+  }
+  
+  @Test
+  public void testGetFiltered() throws HttpResponseException {
+    SampleDto sample1 = new SampleDto();
+    sample1.setId(111);
+    SampleDto sample2 = new SampleDto();
+    sample2.setId(222);
+    List<SampleDto> list = new ArrayList<>();
+    list.add(sample1);
+    list.add(sample2);
+    doReturn(list).when(client).getResourceList("samples?archived=true");
+    SamplesFilter filter = new SamplesFilter().withArchived(true);
+    
+    List<SampleDto> results = client.allFiltered(filter);
+    assertEquals(2, results.size());
+    assertEquals(new Integer(111), results.get(0).getId());
+    assertEquals(new Integer(222), results.get(1).getId());
+  }
+  
+  @Test
+  public void testGetFilteredButNoneAvailable() throws HttpResponseException {
+    doReturn(new ArrayList<String>()).when(client).getResourceList("samples?archived=true");
+    SamplesFilter filter = new SamplesFilter().withArchived(true);
+    List<SampleDto> results = client.allFiltered(filter);
+    assertNotNull(results);
+    assertEquals(0, results.size());
+  }
+  
+  @Test
+  public void testGetFilteredBadStatus() throws HttpResponseException {
+    doThrow(new HttpResponseException()).when(client).getResourceList("samples?archived=true");
+    SamplesFilter filter = new SamplesFilter().withArchived(true);
+    
+    exception.expect(HttpResponseException.class);
+    client.allFiltered(filter);
   }
   
 }
