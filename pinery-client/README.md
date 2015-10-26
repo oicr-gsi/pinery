@@ -8,26 +8,26 @@ After importing the client into your code, usage as as simple as creating a Pine
 
 1. Instantiate a PineryClient object:
 
-    PineryClient pinery = new PineryClient("http://localhost:8888/pinery-ws");
+        PineryClient pinery = new PineryClient("http://localhost:8888/pinery-ws");
 
 2. Get resources. The example below demonstrates the types of calls available and the patterns they follow. See the javadocs for more information regarding specific classes.
 
-    // Full list
-    List<SampleDto> sampleList = pinery.getSample().all();
-    
-    // Single field filter
-    SampleDto sample = pinery.getSample().byId(22);
-    
-    // Multiple field filter
-    List<SampleDto> filteredSampleList = pinery.getSample().allFiltered(
-        new SamplesFilter()
-            .withArchived(false)
-            .withDateBefore(myDateTime);
-    );
+        // Full list
+        List<SampleDto> sampleList = pinery.getSample().all();
+        
+        // Single field filter
+        SampleDto sample = pinery.getSample().byId(22);
+        
+        // Multiple field filter
+        List<SampleDto> filteredSampleList = pinery.getSample().allFiltered(
+            new SamplesFilter()
+                .withArchived(false)
+                .withDateBefore(myDateTime);
+        );
 
 3. Remember to close the PineryClient when it is no longer needed.
 
-    pinery.close();
+        pinery.close();
 
 ##Testing
 
