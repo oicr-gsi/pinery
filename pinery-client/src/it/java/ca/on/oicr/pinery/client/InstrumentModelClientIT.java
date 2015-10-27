@@ -3,24 +3,29 @@ package ca.on.oicr.pinery.client;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.InstrumentModelDto;
 
 public class InstrumentModelClientIT {
 	
-	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
 	
-	private static final Integer KNOWN_MODEL_ID = 6;
-	private static final String KNOWN_MODEL_NAME = "HiSeq";
+	private static Integer KNOWN_MODEL_ID;
+	private static String KNOWN_MODEL_NAME;
 
-	public InstrumentModelClientIT() {
-		String urlArg = System.getProperty("pinery-url");
-		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
+	@BeforeClass
+  public static void setup() throws FileNotFoundException, IOException {
+    ItProperties props = new ItProperties();
+    pinery = props.getPineryClient();
+    KNOWN_MODEL_ID = props.getInt("it.instrumentModel.id");
+    KNOWN_MODEL_NAME = props.get("it.instrumentModel.name");
 	}
 	
 	@AfterClass

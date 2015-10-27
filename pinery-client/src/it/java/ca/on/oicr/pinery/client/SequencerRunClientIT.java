@@ -3,10 +3,13 @@ package ca.on.oicr.pinery.client;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.RunDto;
@@ -15,18 +18,23 @@ import ca.on.oicr.ws.dto.RunDtoSample;
 
 public class SequencerRunClientIT {
 	
-	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
 	
-	private static final Integer KNOWN_RUN_ID = 22;
-	private static final String KNOWN_RUN_NAME = "081114_i320_30KHK_LT";
-	private static final String KNOWN_RUN_BARCODE = "30KHK_1";
-	private static final Integer KNOWN_RUN_LANE = 4;
-	private static final Integer KNOWN_RUN_LANE_SAMPLE_ID = 131;
-
-	public SequencerRunClientIT() {
-		String urlArg = System.getProperty("pinery-url");
-		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
+	private static Integer KNOWN_RUN_ID;
+	private static String KNOWN_RUN_NAME;
+	private static String KNOWN_RUN_BARCODE;
+	private static Integer KNOWN_RUN_LANE;
+	private static Integer KNOWN_RUN_LANE_SAMPLE_ID;
+	
+	@BeforeClass
+  public static void setup() throws FileNotFoundException, IOException {
+    ItProperties props = new ItProperties();
+    pinery = props.getPineryClient();
+    KNOWN_RUN_ID = props.getInt("it.run.id");
+    KNOWN_RUN_NAME = props.get("it.run.name");
+    KNOWN_RUN_BARCODE = props.get("it.run.barcode");
+    KNOWN_RUN_LANE = props.getInt("it.run.lane.number");
+    KNOWN_RUN_LANE_SAMPLE_ID = props.getInt("it.run.lane.sampleId");
 	}
 	
 	@AfterClass

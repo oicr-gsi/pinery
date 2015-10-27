@@ -3,24 +3,29 @@ package ca.on.oicr.pinery.client;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.AttributeNameDto;
 
 public class AttributeNameClientIT {
 	
-	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
 	
-	private static final String KNOWN_ATTRIBUTE_NAME = "Tissue Origin";
-	private static final String KNOWN_ATTRIBUTE_EARLIEST = "2010-02-12T12:12:59-05:00";
-
-	public AttributeNameClientIT() {
-		String urlArg = System.getProperty("pinery-url");
-		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
+	private static String KNOWN_ATTRIBUTE_NAME;
+	private static String KNOWN_ATTRIBUTE_EARLIEST;
+	
+	@BeforeClass
+	public static void setup() throws FileNotFoundException, IOException {
+	  ItProperties props = new ItProperties();
+	  pinery = props.getPineryClient();
+	  KNOWN_ATTRIBUTE_NAME = props.get("it.attribute.name");
+	  KNOWN_ATTRIBUTE_EARLIEST = props.get("it.attribute.earliest");
 	}
 	
 	@AfterClass

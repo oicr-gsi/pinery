@@ -3,24 +3,29 @@ package ca.on.oicr.pinery.client;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.TypeDto;
 
 public class SampleTypeClientIT {
 	
-	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
 	
-	private static final String KNOWN_TYPE_NAME = "Illumina PE Library";
-	private static final String KNOWN_TYPE_EARLIEST = "2010-08-03T07:40:59-04:00";
+	private static String KNOWN_TYPE_NAME;
+	private static String KNOWN_TYPE_EARLIEST;
 	
-	public SampleTypeClientIT() {
-		String urlArg = System.getProperty("pinery-url");
-		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
+	@BeforeClass
+  public static void setup() throws FileNotFoundException, IOException {
+    ItProperties props = new ItProperties();
+    pinery = props.getPineryClient();
+    KNOWN_TYPE_NAME = props.get("it.sampleType.name");
+    KNOWN_TYPE_EARLIEST = props.get("it.sampleType.earliest");
 	}
 	
 	@AfterClass

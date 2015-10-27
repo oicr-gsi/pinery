@@ -3,10 +3,13 @@ package ca.on.oicr.pinery.client;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.AttributeDto;
@@ -15,19 +18,25 @@ import ca.on.oicr.ws.dto.OrderDtoSample;
 
 public class OrderClientIT {
 	
-	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
 	
-	private static final Integer KNOWN_ORDER_ID = 2306;
-	private static final String KNOWN_ORDER_PROJECT = "EsophagealAdenocarcinoma";
-	private static final String KNOWN_ORDER_PLATFORM = "Illumina HiSeq 2000";
-	private static final Integer KNOWN_ORDER_SAMPLE_ID = 57667;
-	private static final String KNOWN_ORDER_SAMPLE_ATTRIBUTE_NAME = "Reference";
-	private static final String KNOWN_ORDER_SAMPLE_ATTRIBUTE_VALUE = "Human hg19 random";
-
-	public OrderClientIT() {
-		String urlArg = System.getProperty("pinery-url");
-		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
+	private static Integer KNOWN_ORDER_ID;
+	private static String KNOWN_ORDER_PROJECT;
+	private static String KNOWN_ORDER_PLATFORM;
+	private static Integer KNOWN_ORDER_SAMPLE_ID;
+	private static String KNOWN_ORDER_SAMPLE_ATTRIBUTE_NAME;
+	private static String KNOWN_ORDER_SAMPLE_ATTRIBUTE_VALUE;
+	
+	@BeforeClass
+  public static void setup() throws FileNotFoundException, IOException {
+    ItProperties props = new ItProperties();
+    pinery = props.getPineryClient();
+    KNOWN_ORDER_ID = props.getInt("it.order.id");
+    KNOWN_ORDER_PROJECT = props.get("it.order.project");
+    KNOWN_ORDER_PLATFORM = props.get("it.order.platform");
+    KNOWN_ORDER_SAMPLE_ID = props.getInt("it.order.sampleId");
+    KNOWN_ORDER_SAMPLE_ATTRIBUTE_NAME = props.get("it.order.sample.attribute.name");
+    KNOWN_ORDER_SAMPLE_ATTRIBUTE_VALUE = props.get("it.order.sample.attribute.value");
 	}
 	
 	@AfterClass

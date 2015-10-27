@@ -3,25 +3,31 @@ package ca.on.oicr.pinery.client;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.InstrumentDto;
 
 public class InstrumentClientIT {
 	
-	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
 	
-	private static final Integer KNOWN_INSTRUMENT_ID = 205213;
-	private static final Integer KNOWN_INSTRUMENT_MODEL_ID = 6;
-	private static final String KNOWN_INSTRUMENT_NAME = "D00353";
+	private static Integer KNOWN_INSTRUMENT_ID;
+	private static Integer KNOWN_INSTRUMENT_MODEL_ID;
+	private static String KNOWN_INSTRUMENT_NAME;
 	
-	public InstrumentClientIT() {
-		String urlArg = System.getProperty("pinery-url");
-		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
+	@BeforeClass
+	public static void setup() throws FileNotFoundException, IOException {
+	  ItProperties props = new ItProperties();
+	  pinery = props.getPineryClient();
+	  KNOWN_INSTRUMENT_ID = props.getInt("it.instrument.id");
+	  KNOWN_INSTRUMENT_MODEL_ID = props.getInt("it.instrument.modelId");
+	  KNOWN_INSTRUMENT_NAME = props.get("it.instrument.name");
 	}
 	
 	@AfterClass
