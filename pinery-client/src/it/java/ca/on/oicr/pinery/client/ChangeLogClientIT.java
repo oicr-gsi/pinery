@@ -21,7 +21,7 @@ public class ChangeLogClientIT {
 	private static Integer KNOWN_SAMPLE_ID;
 	private static String KNOWN_CHANGE_ACTION;
 	private static String KNOWN_CHANGE_DATE;
-	private static String KNOWN_CHANGELOG_SAMPLE_RELATIVE_URL;
+	private static String KNOWN_CHANGELOG_SAMPLE_URL_PATTERN;
 	
 	@BeforeClass
   public static void setup() throws FileNotFoundException, IOException {
@@ -30,7 +30,7 @@ public class ChangeLogClientIT {
     KNOWN_SAMPLE_ID = props.getInt("it.changelog.sampleId");
     KNOWN_CHANGE_ACTION = props.get("it.changelog.changeAction");
     KNOWN_CHANGE_DATE = props.get("it.changelog.changeDate");
-    KNOWN_CHANGELOG_SAMPLE_RELATIVE_URL = "sample//" + KNOWN_SAMPLE_ID;
+    KNOWN_CHANGELOG_SAMPLE_URL_PATTERN = ".*/sample/" + KNOWN_SAMPLE_ID + "$";
   }
 	
 	@AfterClass
@@ -67,7 +67,7 @@ public class ChangeLogClientIT {
 	private void assertKnownChangeLogInList(List<ChangeLogDto> logs) {
 		boolean logFound = false;
 		for (ChangeLogDto log : logs) {
-			if (log.getSampleUrl().matches(KNOWN_CHANGELOG_SAMPLE_RELATIVE_URL+ "$")) {
+			if (log.getSampleUrl().matches(KNOWN_CHANGELOG_SAMPLE_URL_PATTERN)) {
 				logFound = true;
 				assertIsKnownChangeLog(log);
 				break;
