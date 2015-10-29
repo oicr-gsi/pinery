@@ -1,75 +1,85 @@
 package ca.on.oicr.pinery.client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import ca.on.oicr.ws.dto.ChangeDto;
 import ca.on.oicr.ws.dto.ChangeLogDto;
 
 public class ChangeLogClientTest {
-	
-	private String pineryUrl = "http://localhost:8888/pinery-ws/";
-	private static PineryClient pinery;
-	
-	private static final Integer KNOWN_SAMPLE_ID = 2204;
-	private static final String KNOWN_CHANGE_ACTION = "storage_location: J_H_x_y_z_oicr00000872_A10 -> E_D_1_1_6_oicr00000872_A10";
-	private static final String KNOWN_CHANGE_DATE = "2010-08-27T15:56:28-04:00";
-	private static final String KNOWN_CHANGELOG_SAMPLE_RELATIVE_URL = "sample/2204";
-	
-	private String knownSampleUrl;
-	
-	public ChangeLogClientTest() {
-		String urlArg = System.getProperty("pinery-url");
-		if (urlArg != null) pineryUrl = urlArg;
-		pinery = new PineryClient(pineryUrl);
-		knownSampleUrl = pineryUrl + (pineryUrl.endsWith("/") ? "" : "/") + KNOWN_CHANGELOG_SAMPLE_RELATIVE_URL;
-	}
-	
-	@AfterClass
-	public static void cleanUp() {
-		pinery.close();
-	}
-	
-	@Test
-	public void getAll() throws HttpResponseException {
-		List<ChangeLogDto> logs = pinery.getChangeLog().all();
-		assertTrue(logs.size() > 1);
-		assertKnownChangeLogInList(logs);
-	}
-	
-	@Test
-	public void getForSample() throws HttpResponseException {
-		ChangeLogDto log = pinery.getChangeLog().forSample(KNOWN_SAMPLE_ID);
-		assertIsKnownChangeLog(log);
-	}
-	
-	private void assertIsKnownChangeLog(ChangeLogDto log) {
-		boolean changeFound = false;
-		List<ChangeDto> changes = log.getChanges();
-		for (ChangeDto change : changes) {
-			if (KNOWN_CHANGE_ACTION.equals(change.getAction())) {
-				changeFound = true;
-				assertEquals(KNOWN_CHANGE_DATE, change.getCreatedDate());
-				break;
-			}
-		}
-		assertTrue(changeFound);
-	}
-	
-	private void assertKnownChangeLogInList(List<ChangeLogDto> logs) {
-		boolean logFound = false;
-		for (ChangeLogDto log : logs) {
-			if (knownSampleUrl.equals(log.getSampleUrl())) {
-				logFound = true;
-				assertIsKnownChangeLog(log);
-				break;
-			}
-		}
-		assertTrue(logFound);
-	}
-
+  
+  @Rule
+  public final ExpectedException exception = ExpectedException.none();
+  
+  private PineryClient pineryClientMock;
+  private ChangeLogClient client;
+  
+  @Before
+  public void setup() {
+    pineryClientMock = mock(PineryClient.class);
+    client = spy(new ChangeLogClient(pineryClientMock));
+  }
+  
+  @Test
+  public void testGetAll() throws HttpResponseException {
+    ChangeLogDto log1 = new ChangeLogDto();
+    log1.setSampleUrl("url1");
+    ChangeLogDto log2 = new ChangeLogDto();
+    log2.setSampleUrl("url2");
+    List<ChangeLogDto> list = new ArrayList<>();
+    list.add(log1);
+    list.add(log2);
+    doReturn(list).when(client).getResourceList("sample/changelogs");
+    
+    List<ChangeLogDto> results = client.all();
+    assertEquals(2, results.size());
+    assertEquals("url1", results.get(0).getSampleUrl());
+    assertEquals("url2", results.get(1).getSampleUrl());
+  }
+  
+  @Test
+  public void testGetAllButNoneAvailable() throws HttpResponseException {
+    doReturn(new ArrayList<ChangeLogDto>()).when(client).getResourceList("sample/changelogs");
+    List<ChangeLogDto> results = client.all();
+    assertNotNull(results);
+    assertEquals(0, results.size());
+  }
+  
+  @Test
+  public void testGetAllBadStatus() throws HttpResponseException {
+    doThrow(new HttpResponseException()).when(client).getResourceList("sample/changelogs");
+    
+    exception.expect(HttpResponseException.class);
+    client.all();
+  }
+  
+  @Test
+  public void testGetById() throws HttpResponseException {
+    ChangeLogDto log = new ChangeLogDto();
+    log.setSampleUrl("url");
+    doReturn(log).when(client).getResource("sample/22/changelog");
+    
+    ChangeLogDto result = client.forSample(22);
+    assertEquals("url", result.getSampleUrl());
+  }
+  
+  @Test
+  public void testGetByIdBadStatus() throws HttpResponseException {
+    doThrow(new HttpResponseException()).when(client).getResource("sample/22/changelog");
+    
+    exception.expect(HttpResponseException.class);
+    client.forSample(22);
+  }
+  
 }

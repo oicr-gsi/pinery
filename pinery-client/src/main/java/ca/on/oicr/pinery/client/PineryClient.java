@@ -62,17 +62,17 @@ public class PineryClient implements Closeable {
 	 */
 	public PineryClient(String baseUrl, boolean ignoreHttpsWarnings) {
 		this.pineryBaseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
-		this.client = ignoreHttpsWarnings ? getInsecureClient() : getSecureClient();
+		this.client = ignoreHttpsWarnings ? PineryClient.getInsecureClient() : PineryClient.getSecureClient();
 		// Register provider manually because it Was not registering automatically in dependent projects
 		this.client.register(ResteasyJacksonProvider.class);
 		this.open = true;
 	}
 	
-	private static Client getSecureClient() {
+	protected static Client getSecureClient() {
 		return ClientBuilder.newBuilder().build();
 	}
 	
-	private static Client getInsecureClient() {
+	protected static Client getInsecureClient() {
 	    SSLContext sslcontext;
 		try {
 			sslcontext = SSLContext.getInstance("TLS");

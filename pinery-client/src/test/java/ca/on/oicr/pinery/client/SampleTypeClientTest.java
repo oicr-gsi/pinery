@@ -1,46 +1,67 @@
 package ca.on.oicr.pinery.client;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import ca.on.oicr.ws.dto.TypeDto;
 
 public class SampleTypeClientTest {
-	
-	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
-	private static PineryClient pinery;
-	
-	private static final String KNOWN_TYPE_NAME = "Illumina PE Library";
-	private static final String KNOWN_TYPE_EARLIEST = "2010-08-03T07:40:59-04:00";
-	
-	public SampleTypeClientTest() {
-		String urlArg = System.getProperty("pinery-url");
-		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
-	}
-	
-	@AfterClass
-	public static void cleanUp() {
-		pinery.close();
-	}
-	
-	@Test
-	public void getAll() throws HttpResponseException {
-		List<TypeDto> types = pinery.getSampleType().all();
-		assertTrue(types.size() > 1);
-		boolean typeFound = false;
-		for (TypeDto type : types) {
-			if (KNOWN_TYPE_NAME.equals(type.getName())) {
-				typeFound = true;
-				assertEquals(KNOWN_TYPE_EARLIEST, type.getEarliest());
-				break;
-			}
-		}
-		assertTrue(typeFound);
-	}
-
+  
+  @Rule
+  public final ExpectedException exception = ExpectedException.none();
+  
+  private PineryClient pineryClientMock;
+  private SampleTypeClient client;
+  
+  @Before
+  public void setup() {
+    pineryClientMock = mock(PineryClient.class);
+    client = spy(new SampleTypeClient(pineryClientMock));
+  }
+  
+  @Test
+  public void testGetAll() throws HttpResponseException {
+    TypeDto type1 = new TypeDto();
+    type1.setName("type1");
+    TypeDto type2 = new TypeDto();
+    type2.setName("type2");
+    List<TypeDto> list = new ArrayList<>();
+    list.add(type1);
+    list.add(type2);
+    doReturn(list).when(client).getResourceList("sample/types");
+    
+    List<TypeDto> results = client.all();
+    assertEquals(2, results.size());
+    assertEquals("type1", results.get(0).getName());
+    assertEquals("type2", results.get(1).getName());
+  }
+  
+  @Test
+  public void testGetAllButNoneAvailable() throws HttpResponseException {
+    doReturn(new ArrayList<TypeDto>()).when(client).getResourceList("sample/types");
+    List<TypeDto> results = client.all();
+    assertNotNull(results);
+    assertEquals(0, results.size());
+  }
+  
+  @Test
+  public void testGetAllBadStatus() throws HttpResponseException {
+    doThrow(new HttpResponseException()).when(client).getResourceList("sample/types");
+    
+    exception.expect(HttpResponseException.class);
+    client.all();
+  }
+  
 }

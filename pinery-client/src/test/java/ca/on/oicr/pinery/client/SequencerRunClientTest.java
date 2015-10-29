@@ -1,85 +1,103 @@
 package ca.on.oicr.pinery.client;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import ca.on.oicr.ws.dto.RunDto;
-import ca.on.oicr.ws.dto.RunDtoPosition;
-import ca.on.oicr.ws.dto.RunDtoSample;
 
 public class SequencerRunClientTest {
-	
-	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
-	private static PineryClient pinery;
-	
-	private static final Integer KNOWN_RUN_ID = 22;
-	private static final String KNOWN_RUN_NAME = "081114_i320_30KHK_LT";
-	private static final String KNOWN_RUN_BARCODE = "30KHK_1";
-	private static final Integer KNOWN_RUN_LANE = 4;
-	private static final Integer KNOWN_RUN_LANE_SAMPLE_ID = 131;
-
-	public SequencerRunClientTest() {
-		String urlArg = System.getProperty("pinery-url");
-		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
-	}
-	
-	@AfterClass
-	public static void cleanUp() {
-		pinery.close();
-	}
-	
-	@Test
-	public void getById() throws HttpResponseException {
-		RunDto run = pinery.getSequencerRun().byId(KNOWN_RUN_ID);
-		assertIsKnownRun(run);
-	}
+  
+  @Rule
+  public final ExpectedException exception = ExpectedException.none();
+  
+  private PineryClient pineryClientMock;
+  private SequencerRunClient client;
+  
+  @Before
+  public void setup() {
+    pineryClientMock = mock(PineryClient.class);
+    client = spy(new SequencerRunClient(pineryClientMock));
+  }
   
   @Test
-  public void getByName() throws HttpResponseException {
-    RunDto run = pinery.getSequencerRun().byName(KNOWN_RUN_NAME);
-    assertIsKnownRun(run);
+  public void testGetAll() throws HttpResponseException {
+    RunDto run1 = new RunDto();
+    run1.setId(111);
+    RunDto run2 = new RunDto();
+    run2.setId(222);
+    List<RunDto> list = new ArrayList<>();
+    list.add(run1);
+    list.add(run2);
+    doReturn(list).when(client).getResourceList("sequencerruns");
+    
+    List<RunDto> results = client.all();
+    assertEquals(2, results.size());
+    assertEquals(new Integer(111), results.get(0).getId());
+    assertEquals(new Integer(222), results.get(1).getId());
   }
-	
-	@Test
-	public void getAll() throws HttpResponseException {
-		List<RunDto> runs = pinery.getSequencerRun().all();
-		assertTrue(runs.size() > 1);
-		boolean runFound = false;
-		for (RunDto run : runs) {
-			if (KNOWN_RUN_ID.equals(run.getId())) {
-				runFound = true;
-				assertIsKnownRun(run);
-				break;
-			}
-		}
-		assertTrue(runFound);
-	}
-	
-	private void assertIsKnownRun(RunDto run) {
-		assertEquals(KNOWN_RUN_ID, run.getId());
-		assertEquals(KNOWN_RUN_NAME, run.getName());
-		assertEquals(KNOWN_RUN_BARCODE, run.getBarcode());
-		Set<RunDtoPosition> lanes = run.getPositions();
-		boolean sampleFound = false;
-		for (RunDtoPosition lane : lanes) {
-			if (KNOWN_RUN_LANE.equals(lane.getPosition())) {
-				Set<RunDtoSample> samples = lane.getSamples();
-				for (RunDtoSample sample : samples) {
-					if (KNOWN_RUN_LANE_SAMPLE_ID.equals(sample.getId())) {
-						sampleFound = true;
-						break;
-					}
-				}
-				break;
-			}
-		}
-		assertTrue(sampleFound);
-	}
-
+  
+  @Test
+  public void testGetAllButNoneAvailable() throws HttpResponseException {
+    doReturn(new ArrayList<RunDto>()).when(client).getResourceList("sequencerruns");
+    List<RunDto> results = client.all();
+    assertNotNull(results);
+    assertEquals(0, results.size());
+  }
+  
+  @Test
+  public void testGetAllBadStatus() throws HttpResponseException {
+    doThrow(new HttpResponseException()).when(client).getResourceList("sequencerruns");
+    
+    exception.expect(HttpResponseException.class);
+    client.all();
+  }
+  
+  @Test
+  public void testGetById() throws HttpResponseException {
+    RunDto run = new RunDto();
+    run.setId(6);
+    doReturn(run).when(client).getResource("sequencerrun/6");
+    
+    RunDto result = client.byId(6);
+    assertEquals(new Integer(6), result.getId());
+  }
+  
+  @Test
+  public void testGetByIdBadStatus() throws HttpResponseException {
+    doThrow(new HttpResponseException()).when(client).getResource("sequencerrun/6");
+    
+    exception.expect(HttpResponseException.class);
+    client.byId(6);
+  }
+  
+  @Test
+  public void testGetByName() throws HttpResponseException {
+    RunDto run = new RunDto();
+    run.setId(567);
+    doReturn(run).when(client).getResource("sequencerrun?name=Jimmy");
+    
+    RunDto result = client.byName("Jimmy");
+    assertEquals(new Integer(567), result.getId());
+  }
+  
+  @Test
+  public void testGetByNameBadStatus() throws HttpResponseException {
+    doThrow(new HttpResponseException()).when(client).getResource("sequencerrun?name=Jimmy");
+    
+    exception.expect(HttpResponseException.class);
+    client.byName("Jimmy");
+  }
+  
 }

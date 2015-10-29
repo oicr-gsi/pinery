@@ -3,24 +3,29 @@ package ca.on.oicr.pinery.client;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.SampleProjectDto;
 
-public class SampleProjectClientTest {
+public class SampleProjectClientIT {
 
-	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
 	private static PineryClient pinery;
 	
-	private static final String KNOWN_PROJECT_NAME = "ASHPC";
-	private static final String KNOWN_PROJECT_EARLIEST = "2012-12-10T10:14:54-05:00";
+	private static String KNOWN_PROJECT_NAME;
+	private static String KNOWN_PROJECT_EARLIEST;
 	
-	public SampleProjectClientTest() {
-		String urlArg = System.getProperty("pinery-url");
-		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
+	@BeforeClass
+  public static void setup() throws FileNotFoundException, IOException {
+    ItProperties props = new ItProperties();
+    pinery = props.getPineryClient();
+    KNOWN_PROJECT_NAME = props.get("it.project.name");
+    KNOWN_PROJECT_EARLIEST = props.get("it.project.earliest");
 	}
 	
 	@AfterClass

@@ -1,67 +1,118 @@
 package ca.on.oicr.pinery.client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import ca.on.oicr.ws.dto.InstrumentDto;
 
 public class InstrumentClientTest {
-	
-	private static final String PINERY_URL_DEFAULT = "http://localhost:8888/pinery-ws/";
-	private static PineryClient pinery;
-	
-	private static final Integer KNOWN_INSTRUMENT_ID = 205213;
-	private static final Integer KNOWN_INSTRUMENT_MODEL_ID = 6;
-	private static final String KNOWN_INSTRUMENT_NAME = "D00353";
-	
-	public InstrumentClientTest() {
-		String urlArg = System.getProperty("pinery-url");
-		pinery = new PineryClient(urlArg == null ? PINERY_URL_DEFAULT : urlArg);
-	}
-	
-	@AfterClass
-	public static void cleanUp() {
-		pinery.close();
-	}
-	
-	@Test
-	public void getById() throws HttpResponseException {
-		InstrumentDto instrument = pinery.getInstrument().byId(KNOWN_INSTRUMENT_ID);
-		assertIsKnownInstrument(instrument);
-	}
-	
-	@Test
-	public void getByModel() throws HttpResponseException {
-		List<InstrumentDto> instruments = pinery.getInstrument().byModel(KNOWN_INSTRUMENT_MODEL_ID);
-		assertKnownInstrumentInList(instruments);
-	}
-	
-	@Test
-	public void getAll() throws HttpResponseException {
-		List<InstrumentDto> instruments = pinery.getInstrument().all();
-		assertTrue(instruments.size() > 1);
-		assertKnownInstrumentInList(instruments);
-	}
-	
-	private void assertIsKnownInstrument(InstrumentDto instrument) {
-		assertEquals(KNOWN_INSTRUMENT_ID, instrument.getId());
-		assertEquals(KNOWN_INSTRUMENT_NAME, instrument.getName());
-	}
-	
-	private void assertKnownInstrumentInList(List<InstrumentDto> instruments) {
-		boolean instrumentFound = false;
-		for (InstrumentDto instrument : instruments) {
-			if (KNOWN_INSTRUMENT_ID.equals(instrument.getId())) {
-				instrumentFound = true;
-				assertIsKnownInstrument(instrument);
-				break;
-			}
-		}
-		assertTrue(instrumentFound);
-	}
-
+  
+  @Rule
+  public final ExpectedException exception = ExpectedException.none();
+  
+  private PineryClient pineryClientMock;
+  private InstrumentClient client;
+  
+  @Before
+  public void setup() {
+    pineryClientMock = mock(PineryClient.class);
+    client = spy(new InstrumentClient(pineryClientMock));
+  }
+  
+  @Test
+  public void testGetAll() throws HttpResponseException {
+    InstrumentDto in1 = new InstrumentDto();
+    in1.setId(111);
+    InstrumentDto in2 = new InstrumentDto();
+    in2.setId(222);
+    List<InstrumentDto> list = new ArrayList<>();
+    list.add(in1);
+    list.add(in2);
+    doReturn(list).when(client).getResourceList("instruments");
+    
+    List<InstrumentDto> results = client.all();
+    assertEquals(2, results.size());
+    assertEquals(new Integer(111), results.get(0).getId());
+    assertEquals(new Integer(222), results.get(1).getId());
+  }
+  
+  @Test
+  public void testGetAllButNoneAvailable() throws HttpResponseException {
+    doReturn(new ArrayList<InstrumentDto>()).when(client).getResourceList("instruments");
+    List<InstrumentDto> results = client.all();
+    assertNotNull(results);
+    assertEquals(0, results.size());
+  }
+  
+  @Test
+  public void testGetAllBadStatus() throws HttpResponseException {
+    doThrow(new HttpResponseException()).when(client).getResourceList("instruments");
+    
+    exception.expect(HttpResponseException.class);
+    client.all();
+  }
+  
+  @Test
+  public void testGetByModel() throws HttpResponseException {
+    InstrumentDto in1 = new InstrumentDto();
+    in1.setId(111);
+    InstrumentDto in2 = new InstrumentDto();
+    in2.setId(222);
+    List<InstrumentDto> list = new ArrayList<>();
+    list.add(in1);
+    list.add(in2);
+    doReturn(list).when(client).getResourceList("instrumentmodel/5/instruments");
+    
+    List<InstrumentDto> results = client.byModel(5);
+    assertEquals(2, results.size());
+    assertEquals(new Integer(111), results.get(0).getId());
+    assertEquals(new Integer(222), results.get(1).getId());
+  }
+  
+  @Test
+  public void testGetByModelButNoneAvailable() throws HttpResponseException {
+    doReturn(new ArrayList<InstrumentDto>()).when(client).getResourceList("instrumentmodel/5/instruments");
+    List<InstrumentDto> results = client.byModel(5);
+    assertNotNull(results);
+    assertEquals(0, results.size());
+  }
+  
+  @Test
+  public void testGetByModelBadStatus() throws HttpResponseException {
+    doThrow(new HttpResponseException()).when(client).getResourceList("instrumentmodel/5/instruments");
+    
+    exception.expect(HttpResponseException.class);
+    client.byModel(5);
+  }
+  
+  @Test
+  public void testGetById() throws HttpResponseException {
+    InstrumentDto in = new InstrumentDto();
+    in.setId(123);
+    doReturn(in).when(client).getResource("instrument/123");
+    
+    InstrumentDto result = client.byId(123);
+    assertEquals(new Integer(123), result.getId());
+  }
+  
+  @Test
+  public void testGetByIdBadStatus() throws HttpResponseException {
+    doThrow(new HttpResponseException()).when(client).getResource("instrument/123");
+    
+    exception.expect(HttpResponseException.class);
+    client.byId(123);
+  }
+  
 }
