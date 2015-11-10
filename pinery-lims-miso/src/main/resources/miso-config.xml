@@ -9,8 +9,8 @@
       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-
-   <context:property-placeholder location="classpath:miso.properties"/>
+   
+   <context:property-placeholder location="${miso.propertiesFile}" />
    
    <bean id="misoDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
       <property name="driverClassName" value="com.mysql.jdbc.Driver" />
