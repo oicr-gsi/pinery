@@ -10,7 +10,7 @@
       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
    
-   <context:property-placeholder location="classpath:gsle.properties"/>
+   <context:property-placeholder location="${gsle.propertiesFile}"/>
    
    <bean id="gsleClient" class="ca.on.oicr.pinery.lims.gsle.GsleClient">
       <property name="key" value="${gsle.key}" />
