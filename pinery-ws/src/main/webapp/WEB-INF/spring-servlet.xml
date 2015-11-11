@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:aop="http://www.springframework.org/schema/aop"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+   xmlns:mvc="http://www.springframework.org/schema/mvc"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+      http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+   <import resource="classpath:springmvc-resteasy.xml"/>
+   
+   <context:component-scan base-package="ca.on.oicr.pinery" />
+   
+   <!-- static mapping for swagger ui -->
+   <mvc:resources mapping="/api-docs/**" location="/api-docs/"/>
+   
+   <!-- Swagger config -->
+   <bean id="apiListingResourceJSON" class="io.swagger.jaxrs.listing.ApiListingResource"/>
+   <bean id="apiDeclarationProvider" class="io.swagger.jaxrs.listing.SwaggerSerializers"/>
+   
+   <bean id="beanConfig" class="io.swagger.jaxrs.config.BeanConfig">
+      <property name="title" value="Pinery"/>
+      <property name="version" value="2.0-SNAPSHOT" />
+      <property name="schemes" value="http" />
+      <property name="host" value="localhost:8080" />
+      <property name="basePath" value="/pinery-gsle"/>
+      <property name="resourcePackage" value="ca.on.oicr.pinery.ws"/>
+      <property name="scan" value="true"/>
+   </bean>
+   
+   <!-- Profiles (keep below all other beans) -->
+   <beans profile="gsle">
+      <import resource="classpath:gsle-config.xml"/>
+   </beans>
+
+</beans>
