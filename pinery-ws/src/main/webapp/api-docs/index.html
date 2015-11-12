@@ -33,7 +33,10 @@
       if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
-        url = "http://localhost:8080/pinery-gsle/swagger.json";
+        url = window.location.href;
+        url = url.substring(0, url.lastIndexOf("/"));
+        url = url.substring(0, url.lastIndexOf("/"));
+        url = url + "/swagger.json";
       }
 
       // Pre load translate...

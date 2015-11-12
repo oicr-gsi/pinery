@@ -14,6 +14,7 @@
 
    <import resource="classpath:springmvc-resteasy.xml"/>
    
+   <context:property-placeholder location="classpath:project.properties" ignore-unresolvable="true"/>
    <context:component-scan base-package="ca.on.oicr.pinery" />
    
    <!-- static mapping for swagger ui -->
@@ -24,11 +25,10 @@
    <bean id="apiDeclarationProvider" class="io.swagger.jaxrs.listing.SwaggerSerializers"/>
    
    <bean id="beanConfig" class="io.swagger.jaxrs.config.BeanConfig">
-      <property name="title" value="Pinery"/>
-      <property name="version" value="2.0-SNAPSHOT" />
-      <property name="schemes" value="http" />
-      <property name="host" value="localhost:8080" />
-      <property name="basePath" value="/pinery-gsle"/>
+      <property name="title" value="${project.name}"/>
+      <property name="schemes" value="http"/>
+      <property name="basePath" value="#{servletContext.contextPath}"/>
+      <property name="version" value="${project.version}"/>
       <property name="resourcePackage" value="ca.on.oicr.pinery.ws"/>
       <property name="scan" value="true"/>
    </bean>
