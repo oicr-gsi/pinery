@@ -1,5 +1,10 @@
 package ca.on.oicr.pinery.ws;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.List;
@@ -30,6 +35,7 @@ import com.google.common.collect.Lists;
 
 @Component
 @Path("/")
+@Api(value = "sequencer run")
 public class RunResource {
 
 //   private static final Logger log = LoggerFactory.getLogger(RunResource.class);
@@ -51,6 +57,7 @@ public class RunResource {
    @GET
    @Produces({ "application/json" })
    @Path("/sequencerruns")
+   @ApiOperation(value = "List all sequencer runs", response = RunDto.class, responseContainer = "List")
    public List<RunDto> getRuns() {
       List<Run> runs = runService.getRun();
       if (runs.isEmpty()) {
@@ -71,6 +78,11 @@ public class RunResource {
    @GET
    @Produces({ "application/json" })
    @Path("/sequencerrun/{id}")
+   @ApiOperation(value = "Find sequencer run by ID", response = RunDto.class)
+   @ApiResponses({
+     @ApiResponse(code = 400, message = "Invalid ID supplied"),
+     @ApiResponse(code = 404, message = "No sequencer run found")
+   })
    public RunDto getRun(@PathParam("id") Integer id) {
 
       Run run = runService.getRun(id);
@@ -86,6 +98,11 @@ public class RunResource {
    @GET
    @Produces({ "application/json" })
    @Path("/sequencerrun")
+   @ApiOperation(value = "Find sequencer run by name", response = RunDto.class)
+   @ApiResponses({
+     @ApiResponse(code = 400, message = "Invalid name supplied"),
+     @ApiResponse(code = 404, message = "No sequencer run found")
+   })
    public RunDto getRunByName(@QueryParam("name") String runName) {
      if (runName == null) {
        throw new WebApplicationException(Response.status(HttpURLConnection.HTTP_BAD_REQUEST)

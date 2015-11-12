@@ -1,5 +1,10 @@
 package ca.on.oicr.pinery.ws;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 import java.net.URI;
 import java.util.List;
 
@@ -25,6 +30,7 @@ import com.google.common.collect.Lists;
 
 @Component
 @Path("/")
+@Api(value = "user")
 public class UserResource {
 
 //	private static final Logger log = LoggerFactory.getLogger(UserResource.class);
@@ -38,6 +44,7 @@ public class UserResource {
 	@GET
 	@Produces({ "application/json" })
 	@Path("/users")
+	@ApiOperation(value = "List all users", response = UserDto.class, responseContainer = "List")
 	public List<UserDto> getUsers() {
 		List<User> users = userService.getUsers();
 		if (users.isEmpty()) {
@@ -57,6 +64,11 @@ public class UserResource {
 	@GET
 	@Produces({ "application/json" })
 	@Path("/user/{id}")
+	@ApiOperation(value = "Find user by ID", response = UserDto.class)
+	@ApiResponses({
+	  @ApiResponse(code = 400, message = "Invalid ID supplied"),
+	  @ApiResponse(code = 404, message = "No user found")
+	})
 	public UserDto getUser(@PathParam("id") Integer id) {
 		User user = userService.getUser(id);
 		UserDto dto = Dtos.asDto(user);
