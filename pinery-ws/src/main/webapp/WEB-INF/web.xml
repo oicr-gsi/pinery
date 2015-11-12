@@ -5,6 +5,16 @@
 <web-app>
     <display-name>Pinery Web Service</display-name>
 
+    <context-param>
+       <param-name>spring.profiles.default</param-name>
+       <param-value>gsle</param-value>
+    </context-param>
+    
+    <context-param>
+       <param-name>gsle.propertiesFile</param-name>
+       <param-value>classpath:gsle.properties</param-value>
+    </context-param>
+    
 <!--   
     <listener>
       <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

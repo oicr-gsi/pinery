@@ -1,9 +1,16 @@
 package ca.on.oicr.pinery.ws;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -12,7 +19,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import org.jboss.resteasy.spi.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,11 +30,6 @@ import ca.on.oicr.ws.dto.InstrumentDto;
 import ca.on.oicr.ws.dto.InstrumentModelDto;
 
 import com.google.common.collect.Lists;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiError;
-import com.wordnik.swagger.annotations.ApiErrors;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
 
 @Component
 @Path("/")
@@ -44,8 +45,8 @@ public class InstrumentResource {
    @GET
    @Produces({ "application/json" })
    @Path("/instrumentmodels")
-   @ApiOperation(value = "List all instrument models", multiValueResponse = true, responseClass = "ca.on.oicr.ws.dto.InstrumentModelDto")
-   @ApiErrors(value = { @ApiError(code = 404, reason = "No instruments found") })
+   @ApiOperation(value = "List all instrument models", response = ca.on.oicr.ws.dto.InstrumentModelDto.class, responseContainer = "List")
+   @ApiResponse(code = 404, message = "No instruments found")
    public List<InstrumentModelDto> getInstrumentModels() {
       List<InstrumentModel> instrumentModels = instrumentService.getInstrumentModels();
       if (instrumentModels.isEmpty()) {
@@ -72,8 +73,11 @@ public class InstrumentResource {
    @GET
    @Produces({ "application/json" })
    @Path("/instrumentmodel/{id}")
-   @ApiOperation(value = "Find instrument model by ID", responseClass = "ca.on.oicr.ws.dto.InstrumentModelDto")
-   @ApiErrors(value = { @ApiError(code = 400, reason = "Invalid ID supplied"), @ApiError(code = 404, reason = "Instrument not found") })
+   @ApiOperation(value = "Find instrument model by ID", response = ca.on.oicr.ws.dto.InstrumentModelDto.class)
+   @ApiResponses(value = {
+       @ApiResponse(code = 400, message = "Invalid ID supplied"),
+       @ApiResponse(code = 404, message = "Instrument not found")
+   })
    public InstrumentModelDto getInstrumentModel(
          @ApiParam(value = "ID of instrument model that needs to be fetched", required = true) @PathParam("id") Integer id) {
       InstrumentModel instrumentModel = instrumentService.getInstrumentModel(id);
@@ -98,7 +102,7 @@ public class InstrumentResource {
    @GET
    @Produces({ "application/json" })
    @Path("/instruments")
-   @ApiOperation(value = "List all instruments for a given instrument model ID", multiValueResponse = true, responseClass = "ca.on.oicr.ws.dto.InstrumentDto")
+   @ApiOperation(value = "List all instruments for a given instrument model ID", response = ca.on.oicr.ws.dto.InstrumentDto.class, responseContainer = "List")
    public List<InstrumentDto> getInstruments() {
       List<Instrument> instruments = instrumentService.getInstruments();
 
@@ -120,8 +124,11 @@ public class InstrumentResource {
    @GET
    @Produces({ "application/json" })
    @Path("/instrumentmodel/{id}/instruments")
-   @ApiOperation(value = "List all instruments for a given instrument model ID", multiValueResponse = true, responseClass = "ca.on.oicr.ws.dto.InstrumentDto")
-   @ApiErrors(value = { @ApiError(code = 400, reason = "Invalid ID supplied"), @ApiError(code = 404, reason = "No instruments found") })
+   @ApiOperation(value = "List all instruments for a given instrument model ID", response = ca.on.oicr.ws.dto.InstrumentDto.class, responseContainer = "List")
+   @ApiResponses(value = {
+       @ApiResponse(code = 400, message = "Invalid ID supplied"),
+       @ApiResponse(code = 404, message = "No instruments found")
+   })
    public List<InstrumentDto> getInstrumentsModelInstrument(
          @ApiParam(value = "ID of instrument model", required = true) @PathParam("id") Integer id) {
       List<Instrument> instruments = instrumentService.getInstrumentModelInstrument(id);
@@ -144,8 +151,11 @@ public class InstrumentResource {
    @GET
    @Produces({ "application/json" })
    @Path("/instrument/{id}")
-   @ApiOperation(value = "Fine instrument by ID", responseClass = "ca.on.oicr.ws.dto.InstrumentDto")
-   @ApiErrors(value = { @ApiError(code = 400, reason = "Invalid ID supplied"), @ApiError(code = 404, reason = "No instrument found") })
+   @ApiOperation(value = "Fine instrument by ID", response = ca.on.oicr.ws.dto.InstrumentDto.class)
+   @ApiResponses(value = {
+       @ApiResponse(code = 400, message = "Invalid ID supplied"),
+       @ApiResponse(code = 404, message = "No instrument found")
+   })
    public InstrumentDto getInstrument(@ApiParam(value = "ID of instrument", required = true) @PathParam("id") Integer instrumentId) {
       Instrument instrument = instrumentService.getInstrument(instrumentId);
       if (instrument == null) {
