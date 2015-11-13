@@ -2,23 +2,21 @@ package ca.on.oicr.pinery.ws;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.List;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +58,6 @@ public class RunResource {
    @ApiOperation(value = "List all sequencer runs", response = RunDto.class, responseContainer = "List")
    public List<RunDto> getRuns() {
       List<Run> runs = runService.getRun();
-      if (runs.isEmpty()) {
-         throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
-      }
       List<RunDto> result = Lists.newArrayList();
       final URI baseUri = uriInfo.getBaseUriBuilder().path("sequencerrun").build();
       for (Run run : runs) {
@@ -79,13 +74,12 @@ public class RunResource {
    @Produces({ "application/json" })
    @Path("/sequencerrun/{id}")
    @ApiOperation(value = "Find sequencer run by ID", response = RunDto.class)
-   @ApiResponses({
-     @ApiResponse(code = 400, message = "Invalid ID supplied"),
-     @ApiResponse(code = 404, message = "No sequencer run found")
-   })
-   public RunDto getRun(@PathParam("id") Integer id) {
-
+   @ApiResponse(code = 404, message = "No sequencer run found")
+   public RunDto getRun(@ApiParam(value = "ID of sequencer run to fetch", required = true) @PathParam("id") Integer id) {
       Run run = runService.getRun(id);
+      if (run == null) {
+        throw new NotFoundException("No run found with ID: " + id);
+      }
       RunDto dto = Dtos.asDto(run);
       final URI uri = uriInfo.getAbsolutePathBuilder().build();
       dto.setUrl(uri.toString());
@@ -100,17 +94,18 @@ public class RunResource {
    @Path("/sequencerrun")
    @ApiOperation(value = "Find sequencer run by name", response = RunDto.class)
    @ApiResponses({
-     @ApiResponse(code = 400, message = "Invalid name supplied"),
+     @ApiResponse(code = 400, message = "Missing or invalid name parameter"),
      @ApiResponse(code = 404, message = "No sequencer run found")
    })
-   public RunDto getRunByName(@QueryParam("name") String runName) {
-     if (runName == null) {
-       throw new WebApplicationException(Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-           .entity("name parameter is required")
-           .build());
+   public RunDto getRunByName(@ApiParam(value = "Name of sequencer run to fetch", required = true) @QueryParam("name") String runName) {
+     if (runName == null || runName.isEmpty()) {
+       throw new BadRequestException("Name parameter is required");
      }
      
      Run run = runService.getRun(runName);
+     if (run == null) {
+       throw new NotFoundException("No run found with name: " + runName);
+     }
      RunDto dto = Dtos.asDto(run);
      final URI baseUri = uriInfo.getBaseUriBuilder().path("sequencerrun").build();
      dto.setUrl(baseUri + "/" + dto.getId().toString());

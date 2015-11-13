@@ -2,8 +2,8 @@ package ca.on.oicr.pinery.ws;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 import java.net.URI;
 import java.util.List;
@@ -14,8 +14,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +54,6 @@ public class OrderResource {
    @ApiOperation(value = "List all orders", response = OrderDto.class, responseContainer = "List")
    public List<OrderDto> getOrders() {
       List<Order> orders = orderService.getOrder();
-      if (orders.isEmpty()) {
-         throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
-      }
       List<OrderDto> result = Lists.newArrayList();
       final URI baseUri = uriInfo.getBaseUriBuilder().path("order").build();
       for (Order order : orders) {
@@ -75,13 +70,12 @@ public class OrderResource {
    @Produces({ "application/json" })
    @Path("/order/{id}")
    @ApiOperation(value = "Find order by ID", response = OrderDto.class)
-   @ApiResponses({
-     @ApiResponse(code = 400, message = "Invalid ID supplied"),
-     @ApiResponse(code = 404, message = "No order found")
-   })
-   public OrderDto getOrder(@PathParam("id") Integer id) {
-
+   @ApiResponse(code = 404, message = "No order found")
+   public OrderDto getOrder(@ApiParam(value = "ID of order to fetch", required = true) @PathParam("id") Integer id) {
       Order order = orderService.getOrder(id);
+      if (order == null) {
+        throw new NotFoundException("No order found with ID: " + id);
+      }
       OrderDto dto = Dtos.asDto(order);
       final URI uri = uriInfo.getAbsolutePathBuilder().build();
       dto.setUrl(uri.toString());
