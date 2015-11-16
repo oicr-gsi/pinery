@@ -1,5 +1,10 @@
 package ca.on.oicr.pinery.ws;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 import java.net.URI;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,6 +48,7 @@ import com.google.common.collect.Sets;
 
 @Component
 @Path("/")
+@Api(value = "sample")
 public class SampleResource {
 
    private static final Logger log = LoggerFactory.getLogger(SampleResource.class);
@@ -56,6 +62,7 @@ public class SampleResource {
    @GET
    @Produces({ "application/json" })
    @Path("/samples")
+   @ApiOperation(value = "List all samples", response = SampleDto.class, responseContainer = "List")
    public List<SampleDto> getSamples(@QueryParam("archived") Boolean archived, @QueryParam("project") Set<String> projects,
          @QueryParam("type") Set<String> types, @QueryParam("before") String before, @QueryParam("after") String after) {
       log.debug("archived = [{}].", archived);
@@ -106,6 +113,11 @@ public class SampleResource {
    @GET
    @Produces({ "application/json" })
    @Path("/sample/{id}")
+   @ApiOperation(value = "Find sample by ID", response = SampleDto.class)
+   @ApiResponses({
+     @ApiResponse(code = 400, message = "Invalid ID supplied"),
+     @ApiResponse(code = 404, message = "No sample found")
+   })
    public SampleDto getSample(@PathParam("id") Integer id) {
       Sample sample = sampleService.getSample(id);
       SampleDto dto = Dtos.asDto(sample);
@@ -126,6 +138,7 @@ public class SampleResource {
    @GET
    @Produces({ "application/json" })
    @Path("/sample/projects")
+   @ApiOperation(value = "List all projects", response = SampleProjectDto.class, responseContainer = "List")
    public List<SampleProjectDto> getSampleProjects() {
       List<SampleProject> projects = sampleService.getSampleProjects();
       List<SampleProjectDto> result = Lists.newArrayList();
@@ -145,6 +158,7 @@ public class SampleResource {
    @GET
    @Produces({ "application/json" })
    @Path("/sample/types")
+   @ApiOperation(value = "List all sample types", response = TypeDto.class, responseContainer = "List")
    public List<TypeDto> getTypes() {
       List<Type> types = sampleService.getTypes();
       List<TypeDto> result = Lists.newArrayList();
@@ -164,6 +178,7 @@ public class SampleResource {
    @GET
    @Produces({ "application/json" })
    @Path("/sample/attributenames")
+   @ApiOperation(value = "List all sample attribute names", response = AttributeNameDto.class, responseContainer = "List")
    public List<AttributeNameDto> getAttributeNames() {
       List<AttributeName> attributeNames = sampleService.getAttributeNames();
       List<AttributeNameDto> result = Lists.newArrayList();
@@ -221,6 +236,7 @@ public class SampleResource {
    @GET
    @Produces({ "application/json" })
    @Path("/sample/changelogs")
+   @ApiOperation(value = "List changelogs for all samples", response = ChangeLogDto.class, responseContainer = "List")
    public List<ChangeLogDto> getChangeLogs() {
       List<ChangeLog> changeLogs = sampleService.getChangeLogs();
       List<ChangeLogDto> result = Lists.newArrayList();
@@ -248,6 +264,11 @@ public class SampleResource {
    @GET
    @Produces({ "application/json" })
    @Path("/sample/{id}/changelog")
+   @ApiOperation(value = "Find sample changelog by sample ID", response = ChangeLogDto.class)
+   @ApiResponses({
+     @ApiResponse(code = 400, message = "Invalid ID supplied"),
+     @ApiResponse(code = 404, message = "No sample changelog found")
+   })
    public ChangeLogDto getChangeLog(@PathParam("id") Integer id) {
       ChangeLog changeLog = sampleService.getChangeLog(id);
       ChangeLogDto dto = Dtos.asDto(changeLog);

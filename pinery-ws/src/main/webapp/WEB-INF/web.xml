@@ -4,7 +4,7 @@
 
 <web-app>
     <display-name>Pinery Web Service</display-name>
-
+    
     <context-param>
        <param-name>spring.profiles.default</param-name>
        <param-value>gsle</param-value>
@@ -14,43 +14,15 @@
        <param-name>gsle.propertiesFile</param-name>
        <param-value>classpath:gsle.properties</param-value>
     </context-param>
-    
-<!--   
-    <listener>
-      <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-   -->
    
-    <!-- Set this if you want Resteasy to scan for JAX-RS classes -->
-    <!--  
-    <context-param>
-        <param-name>resteasy.scan</param-name>
-        <param-value>true</param-value>
-    </context-param>
--->
-    <!-- set this if you map the Resteasy servlet to something other than /*
-    <context-param>
-       <param-name>resteasy.servlet.mapping.prefix</param-name>
-       <param-value>/resteasy</param-value>
-    </context-param>
-    -->
-    
-    <listener>
-        <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
-    </listener>
-    
-   <listener>
-      <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
-   </listener>
+   <servlet>
+      <servlet-name>spring</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+   </servlet>
    
-    <servlet>
-        <servlet-name>Resteasy</servlet-name>
-        <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>Resteasy</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
-  
+   <servlet-mapping>
+      <servlet-name>spring</servlet-name>
+      <url-pattern>/*</url-pattern>
+   </servlet-mapping>
+   
 </web-app>

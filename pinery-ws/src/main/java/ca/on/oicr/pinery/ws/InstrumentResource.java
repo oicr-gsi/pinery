@@ -33,7 +33,7 @@ import com.google.common.collect.Lists;
 
 @Component
 @Path("/")
-@Api(value = "/instrument", description = "Operations about instruments")
+@Api(value = "instrument")
 public class InstrumentResource {
 
    @Context
@@ -102,7 +102,7 @@ public class InstrumentResource {
    @GET
    @Produces({ "application/json" })
    @Path("/instruments")
-   @ApiOperation(value = "List all instruments for a given instrument model ID", response = ca.on.oicr.ws.dto.InstrumentDto.class, responseContainer = "List")
+   @ApiOperation(value = "List all instruments", response = ca.on.oicr.ws.dto.InstrumentDto.class, responseContainer = "List")
    public List<InstrumentDto> getInstruments() {
       List<Instrument> instruments = instrumentService.getInstruments();
 
@@ -151,7 +151,7 @@ public class InstrumentResource {
    @GET
    @Produces({ "application/json" })
    @Path("/instrument/{id}")
-   @ApiOperation(value = "Fine instrument by ID", response = ca.on.oicr.ws.dto.InstrumentDto.class)
+   @ApiOperation(value = "Find instrument by ID", response = ca.on.oicr.ws.dto.InstrumentDto.class)
    @ApiResponses(value = {
        @ApiResponse(code = 400, message = "Invalid ID supplied"),
        @ApiResponse(code = 404, message = "No instrument found")

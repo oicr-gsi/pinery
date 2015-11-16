@@ -1,5 +1,10 @@
 package ca.on.oicr.pinery.ws;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 import java.net.URI;
 import java.util.List;
 
@@ -26,6 +31,7 @@ import com.google.common.collect.Lists;
 
 @Component
 @Path("/")
+@Api(value = "order")
 public class OrderResource {
 
 //   private static final Logger log = LoggerFactory.getLogger(OrderResource.class);
@@ -47,6 +53,7 @@ public class OrderResource {
    @GET
    @Produces({ "application/json" })
    @Path("/orders")
+   @ApiOperation(value = "List all orders", response = OrderDto.class, responseContainer = "List")
    public List<OrderDto> getOrders() {
       List<Order> orders = orderService.getOrder();
       if (orders.isEmpty()) {
@@ -67,6 +74,11 @@ public class OrderResource {
    @GET
    @Produces({ "application/json" })
    @Path("/order/{id}")
+   @ApiOperation(value = "Find order by ID", response = OrderDto.class)
+   @ApiResponses({
+     @ApiResponse(code = 400, message = "Invalid ID supplied"),
+     @ApiResponse(code = 404, message = "No order found")
+   })
    public OrderDto getOrder(@PathParam("id") Integer id) {
 
       Order order = orderService.getOrder(id);
