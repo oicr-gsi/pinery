@@ -55,10 +55,10 @@ public class OrderResource {
    public List<OrderDto> getOrders() {
       List<Order> orders = orderService.getOrder();
       List<OrderDto> result = Lists.newArrayList();
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("order").build();
+      final URI baseUri = uriInfo.getBaseUriBuilder().path("order/").build();
       for (Order order : orders) {
          OrderDto dto = Dtos.asDto(order);
-         dto.setUrl(baseUri + "/" + dto.getId().toString());
+         dto.setUrl(baseUri + dto.getId().toString());
          addSampleUrl(dto);
          addOrders(order, dto);
          result.add(dto);

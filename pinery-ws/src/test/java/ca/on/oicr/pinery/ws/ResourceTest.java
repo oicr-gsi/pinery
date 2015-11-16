@@ -350,7 +350,7 @@ public class ResourceTest {
       when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
       when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
       when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample"));
+      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/"));
 
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder()).thenReturn(getListOrder());
@@ -366,6 +366,7 @@ public class ResourceTest {
 
       Set<OrderDtoSample> orderDtoSampleSet = Sets.newHashSet();
       OrderDtoSample orderDtoSampleObj = new OrderDtoSample();
+      orderDtoSampleObj.setUrl("http://test/sample/2");
       orderDtoSampleSet.add(orderDtoSampleObj);
 
       orderDto.setCreatedDate(sf.format(date));
