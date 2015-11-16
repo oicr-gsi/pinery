@@ -41,5 +41,9 @@
    <beans profile="flatfile">
       <import resource="classpath:flatfile-config.xml"/>
    </beans>
+   
+   <beans profile="miso">
+      <import resource="classpath:miso-config.xml"/>
+   </beans>
 
 </beans>
