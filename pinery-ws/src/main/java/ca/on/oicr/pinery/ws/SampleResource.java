@@ -239,7 +239,7 @@ public class SampleResource {
 
             @Override
             public int compare(ChangeDto o1, ChangeDto o2) {
-               return o1.getCreated().compareTo(o2.getCreated());
+               return o1.getCreatedDate().compareTo(o2.getCreatedDate());
             }
 
          });
@@ -268,7 +268,7 @@ public class SampleResource {
 
          @Override
          public int compare(ChangeDto o1, ChangeDto o2) {
-            return o1.getCreated().compareTo(o2.getCreated());
+            return o1.getCreatedDate().compareTo(o2.getCreatedDate());
          }
 
       });
