@@ -52,6 +52,7 @@
       <module>pinery-lims</module>
       <module>pinery-lims-gsle</module>
       <module>pinery-client</module>
+      <module>pinery-to-flatfile</module>
    </modules>
 
    <licenses>
@@ -109,7 +110,11 @@
             <artifactId>pinery-lims-gsle</artifactId>
             <version>${project.version}</version>
          </dependency>
-
+         <dependency>
+            <groupId>ca.on.oicr</groupId>
+            <artifactId>pinery-client</artifactId>
+            <version>${project.version}</version>
+         </dependency>
          <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
@@ -206,6 +211,11 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-spring</artifactId>
             <version>${resteasy.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>com.opencsv</groupId>
+           <artifactId>opencsv</artifactId>
+           <version>3.6</version>
          </dependency>
 
          <dependency>
