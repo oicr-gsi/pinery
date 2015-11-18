@@ -1,0 +1,14 @@
+<!-- 
+
+This file is used in Tomcat to switch Spring profile and allow properties to be set outside of the packaged webapp. To 
+use this file, copy it to $CATALINA_HOME/conf/[engine]/[host]/ and rename it to match the webapp name. E.g. if your 
+webapp is pinery-flatfile, change the filename to pinery-flatfile.xml.
+
+You may need to change the value of flatfile.propertiesFile (below) if your properties file will be in a different location.
+
+-->
+
+<Context>
+   <Parameter name="spring.profiles.active" value="flatfile" override="false"/>
+   <Parameter name="flatfile.propertiesFile" value="file:${CATALINA_HOME}/conf/Catalina/localhost/flatfile.properties" override="false"/>
+</Context>

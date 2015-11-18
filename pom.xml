@@ -51,6 +51,7 @@
       <module>pinery-ws</module>
       <module>pinery-lims</module>
       <module>pinery-lims-gsle</module>
+      <module>pinery-lims-flatfile</module>
       <module>pinery-client</module>
       <module>pinery-to-flatfile</module>
    </modules>
@@ -93,6 +94,11 @@
          <dependency>
             <groupId>ca.on.oicr</groupId>
             <artifactId>pinery-lims</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>ca.on.oicr</groupId>
+            <artifactId>pinery-lims-flatfile</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
