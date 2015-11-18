@@ -2,8 +2,8 @@ package ca.on.oicr.pinery.ws;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 import java.net.URI;
 import java.util.Collections;
@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
@@ -18,14 +19,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import org.jboss.resteasy.spi.BadRequestException;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -51,7 +47,7 @@ import com.google.common.collect.Sets;
 @Api(value = "sample")
 public class SampleResource {
 
-   private static final Logger log = LoggerFactory.getLogger(SampleResource.class);
+//   private static final Logger log = LoggerFactory.getLogger(SampleResource.class);
 
    @Context
    private UriInfo uriInfo;
@@ -63,12 +59,13 @@ public class SampleResource {
    @Produces({ "application/json" })
    @Path("/samples")
    @ApiOperation(value = "List all samples", response = SampleDto.class, responseContainer = "List")
-   public List<SampleDto> getSamples(@QueryParam("archived") Boolean archived, @QueryParam("project") Set<String> projects,
-         @QueryParam("type") Set<String> types, @QueryParam("before") String before, @QueryParam("after") String after) {
-      log.debug("archived = [{}].", archived);
-      for (String type : types) {
-         log.debug("type={}", type);
-      }
+   @ApiResponse(code = 400, message = "Invalid parameter")
+   public List<SampleDto> getSamples(
+         @ApiParam(value = "filter by archived status", required = false) @QueryParam("archived") Boolean archived,
+         @ApiParam(value = "filter by project(s)", required = false, allowMultiple = true) @QueryParam("project") Set<String> projects,
+         @ApiParam(value = "filter by sample type(s)", required = false, allowMultiple = true) @QueryParam("type") Set<String> types,
+         @ApiParam(value = "filter to include samples created before this date", required = false) @QueryParam("before") String before,
+         @ApiParam(value = "filter to include samples created after this date", required = false) @QueryParam("after") String after) {
       DateTime beforeDateTime = null;
       DateTime afterDateTime = null;
       try {
@@ -82,9 +79,6 @@ public class SampleResource {
          throw new BadRequestException("Invalid date format in parameter [before] or [after]. Use ISO8601 formatting. " + e.getMessage(), e);
       }
       List<Sample> samples = sampleService.getSamples(archived, projects, types, beforeDateTime, afterDateTime);
-      if (samples.isEmpty()) {
-         throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
-      }
       List<SampleDto> result = Lists.newArrayList();
       final URI baseUri = uriInfo.getBaseUriBuilder().path("sample").build();
       for (Sample sample : samples) {
@@ -98,13 +92,6 @@ public class SampleResource {
          }
          addParents(sample, dto);
          addUsers(sample, dto);
-         // if (sample.getParents() != null &&
-         // !sample.getParents().isEmpty()) {
-         // dto.setParents(Sets.<String> newHashSet());
-         // for (Integer parentId : sample.getParents()) {
-         // dto.getParents().add(baseUri + "/" + parentId);
-         // }
-         // }
          result.add(dto);
       }
       return result;
@@ -114,12 +101,12 @@ public class SampleResource {
    @Produces({ "application/json" })
    @Path("/sample/{id}")
    @ApiOperation(value = "Find sample by ID", response = SampleDto.class)
-   @ApiResponses({
-     @ApiResponse(code = 400, message = "Invalid ID supplied"),
-     @ApiResponse(code = 404, message = "No sample found")
-   })
-   public SampleDto getSample(@PathParam("id") Integer id) {
+   @ApiResponse(code = 404, message = "No sample found")
+   public SampleDto getSample(@ApiParam(value = "ID of sample to fetch", required = true) @PathParam("id") Integer id) {
       Sample sample = sampleService.getSample(id);
+      if (sample == null) {
+        throw new NotFoundException("No sample found with ID: " + id);
+      }
       SampleDto dto = Dtos.asDto(sample);
       final URI uri = uriInfo.getAbsolutePathBuilder().build();
       dto.setUrl(uri.toString());
@@ -252,7 +239,7 @@ public class SampleResource {
 
             @Override
             public int compare(ChangeDto o1, ChangeDto o2) {
-               return o1.getCreated().compareTo(o2.getCreated());
+               return o1.getCreatedDate().compareTo(o2.getCreatedDate());
             }
 
          });
@@ -265,12 +252,12 @@ public class SampleResource {
    @Produces({ "application/json" })
    @Path("/sample/{id}/changelog")
    @ApiOperation(value = "Find sample changelog by sample ID", response = ChangeLogDto.class)
-   @ApiResponses({
-     @ApiResponse(code = 400, message = "Invalid ID supplied"),
-     @ApiResponse(code = 404, message = "No sample changelog found")
-   })
-   public ChangeLogDto getChangeLog(@PathParam("id") Integer id) {
+   @ApiResponse(code = 404, message = "No sample changelog found")
+   public ChangeLogDto getChangeLog(@ApiParam(value = "ID of sample to fetch changelogs for", required = true) @PathParam("id") Integer id) {
       ChangeLog changeLog = sampleService.getChangeLog(id);
+      if (changeLog == null) {
+        throw new NotFoundException("No changelog found for sample ID: " + id);
+      }
       ChangeLogDto dto = Dtos.asDto(changeLog);
       final URI uri = uriInfo.getBaseUriBuilder().path("sample").path(changeLog.getSampleId().toString()).build();
       dto.setSampleUrl(uri.toString());
@@ -281,7 +268,7 @@ public class SampleResource {
 
          @Override
          public int compare(ChangeDto o1, ChangeDto o2) {
-            return o1.getCreated().compareTo(o2.getCreated());
+            return o1.getCreatedDate().compareTo(o2.getCreatedDate());
          }
 
       });

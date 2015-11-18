@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -183,7 +182,6 @@ public final class Dtos {
       }
       if (from.getCreated() != null) {
          dto.setCreatedDate(dateTimeFormatter.print(from.getCreated().getTime()));
-         dto.setCreated(new DateTime(from.getCreated()));
       }
       if (from.getCreatedById() != null) {
          dto.setCreatedById(from.getCreatedById());

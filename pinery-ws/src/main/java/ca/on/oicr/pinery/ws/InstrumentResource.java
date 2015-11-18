@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 import java.net.URI;
 import java.util.List;
@@ -46,12 +45,8 @@ public class InstrumentResource {
    @Produces({ "application/json" })
    @Path("/instrumentmodels")
    @ApiOperation(value = "List all instrument models", response = ca.on.oicr.ws.dto.InstrumentModelDto.class, responseContainer = "List")
-   @ApiResponse(code = 404, message = "No instruments found")
    public List<InstrumentModelDto> getInstrumentModels() {
       List<InstrumentModel> instrumentModels = instrumentService.getInstrumentModels();
-      if (instrumentModels.isEmpty()) {
-         throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
-      }
       List<InstrumentModelDto> result = Lists.newArrayList();
       final URI baseUri = uriInfo.getBaseUriBuilder().path("instrumentmodel").build();
       final URI baseUserUri = uriInfo.getBaseUriBuilder().path("user/").build();
@@ -74,12 +69,9 @@ public class InstrumentResource {
    @Produces({ "application/json" })
    @Path("/instrumentmodel/{id}")
    @ApiOperation(value = "Find instrument model by ID", response = ca.on.oicr.ws.dto.InstrumentModelDto.class)
-   @ApiResponses(value = {
-       @ApiResponse(code = 400, message = "Invalid ID supplied"),
-       @ApiResponse(code = 404, message = "Instrument not found")
-   })
+   @ApiResponse(code = 404, message = "Instrument model not found")
    public InstrumentModelDto getInstrumentModel(
-         @ApiParam(value = "ID of instrument model that needs to be fetched", required = true) @PathParam("id") Integer id) {
+         @ApiParam(value = "ID of instrument model to fetch", required = true) @PathParam("id") Integer id) {
       InstrumentModel instrumentModel = instrumentService.getInstrumentModel(id);
       if (instrumentModel == null) {
          throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
@@ -105,10 +97,6 @@ public class InstrumentResource {
    @ApiOperation(value = "List all instruments", response = ca.on.oicr.ws.dto.InstrumentDto.class, responseContainer = "List")
    public List<InstrumentDto> getInstruments() {
       List<Instrument> instruments = instrumentService.getInstruments();
-
-      if (instruments.isEmpty()) {
-         throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
-      }
       List<InstrumentDto> result = Lists.newArrayList();
       final URI baseUriInstrumentModel = uriInfo.getBaseUriBuilder().path("instrumentmodel").build();
       final URI baseUri = uriInfo.getBaseUriBuilder().build();
@@ -125,17 +113,10 @@ public class InstrumentResource {
    @Produces({ "application/json" })
    @Path("/instrumentmodel/{id}/instruments")
    @ApiOperation(value = "List all instruments for a given instrument model ID", response = ca.on.oicr.ws.dto.InstrumentDto.class, responseContainer = "List")
-   @ApiResponses(value = {
-       @ApiResponse(code = 400, message = "Invalid ID supplied"),
-       @ApiResponse(code = 404, message = "No instruments found")
-   })
+   @ApiResponse(code = 404, message = "No instruments found")
    public List<InstrumentDto> getInstrumentsModelInstrument(
-         @ApiParam(value = "ID of instrument model", required = true) @PathParam("id") Integer id) {
+         @ApiParam(value = "ID of instrument model to fetch instruments for", required = true) @PathParam("id") Integer id) {
       List<Instrument> instruments = instrumentService.getInstrumentModelInstrument(id);
-
-      if (instruments.isEmpty()) {
-         throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
-      }
       List<InstrumentDto> result = Lists.newArrayList();
       final URI baseUriInstumentModel = uriInfo.getBaseUriBuilder().path("instrumentmodel").build();
       final URI baseUri = uriInfo.getBaseUriBuilder().build();
@@ -152,14 +133,11 @@ public class InstrumentResource {
    @Produces({ "application/json" })
    @Path("/instrument/{id}")
    @ApiOperation(value = "Find instrument by ID", response = ca.on.oicr.ws.dto.InstrumentDto.class)
-   @ApiResponses(value = {
-       @ApiResponse(code = 400, message = "Invalid ID supplied"),
-       @ApiResponse(code = 404, message = "No instrument found")
-   })
-   public InstrumentDto getInstrument(@ApiParam(value = "ID of instrument", required = true) @PathParam("id") Integer instrumentId) {
+   @ApiResponse(code = 404, message = "No instrument found")
+   public InstrumentDto getInstrument(@ApiParam(value = "ID of instrument to fetch", required = true) @PathParam("id") Integer instrumentId) {
       Instrument instrument = instrumentService.getInstrument(instrumentId);
       if (instrument == null) {
-         throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
+         throw new NotFoundException("No instrument found with ID: " + instrumentId);
       }
 
       InstrumentDto dto = Dtos.asDto(instrument);

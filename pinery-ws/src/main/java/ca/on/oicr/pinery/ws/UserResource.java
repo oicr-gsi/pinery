@@ -2,8 +2,8 @@ package ca.on.oicr.pinery.ws;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 import java.net.URI;
 import java.util.List;
@@ -14,8 +14,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +45,6 @@ public class UserResource {
 	@ApiOperation(value = "List all users", response = UserDto.class, responseContainer = "List")
 	public List<UserDto> getUsers() {
 		List<User> users = userService.getUsers();
-		if (users.isEmpty()) {
-			throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
-		}
 		List<UserDto> result = Lists.newArrayList();
 		final URI baseUri = uriInfo.getBaseUriBuilder().path("user").build();
 		for (User user : users) {
@@ -65,12 +60,12 @@ public class UserResource {
 	@Produces({ "application/json" })
 	@Path("/user/{id}")
 	@ApiOperation(value = "Find user by ID", response = UserDto.class)
-	@ApiResponses({
-	  @ApiResponse(code = 400, message = "Invalid ID supplied"),
-	  @ApiResponse(code = 404, message = "No user found")
-	})
-	public UserDto getUser(@PathParam("id") Integer id) {
+	@ApiResponse(code = 404, message = "No user found")
+	public UserDto getUser(@ApiParam(value = "ID of user to fetch", required = true) @PathParam("id") Integer id) {
 		User user = userService.getUser(id);
+		if (user == null) {
+		  throw new NotFoundException("No user found with ID: " + id);
+		}
 		UserDto dto = Dtos.asDto(user);
 		final URI uri = uriInfo.getAbsolutePathBuilder().build();
 		dto.setUrl(uri.toString());

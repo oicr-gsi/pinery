@@ -7,11 +7,29 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @JsonAutoDetect
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class RunDtoSample extends SampleDto {
+public class RunDtoSample {
 
    private String barcode;
    @JsonProperty("barcode_two")
    private String barcodeTwo;
+   private Integer id;
+   private String url;
+
+   public Integer getId() {
+     return id;
+   }
+
+   public void setId(Integer id) {
+     this.id = id;
+   }
+
+   public String getUrl() {
+     return url;
+   }
+
+   public void setUrl(String url) {
+     this.url = url;
+   }
 
    public String getBarcode() {
       return barcode;
@@ -29,40 +47,51 @@ public class RunDtoSample extends SampleDto {
       this.barcodeTwo = barcodeTwo;
    }
 
-   @Override
-   public int hashCode() {
-      final int prime = 31;
-      int result = super.hashCode();
-      result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
-      result = prime * result + ((barcodeTwo == null) ? 0 : barcodeTwo.hashCode());
-      return result;
-   }
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
+    result = prime * result
+        + ((barcodeTwo == null) ? 0 : barcodeTwo.hashCode());
+    result = prime * result + ((id == null) ? 0 : id.hashCode());
+    return result;
+  }
 
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (!super.equals(obj)) return false;
-      if (getClass() != obj.getClass()) return false;
-      RunDtoSample other = (RunDtoSample) obj;
-      if (barcode == null) {
-         if (other.barcode != null) return false;
-      } else if (!barcode.equals(other.barcode)) return false;
-      if (barcodeTwo == null) {
-         if (other.barcodeTwo != null) return false;
-      } else if (!barcodeTwo.equals(other.barcodeTwo)) return false;
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
       return true;
-   }
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    RunDtoSample other = (RunDtoSample) obj;
+    if (barcode == null) {
+      if (other.barcode != null)
+        return false;
+    }
+    else if (!barcode.equals(other.barcode))
+      return false;
+    if (barcodeTwo == null) {
+      if (other.barcodeTwo != null)
+        return false;
+    }
+    else if (!barcodeTwo.equals(other.barcodeTwo))
+      return false;
+    if (id == null) {
+      if (other.id != null)
+        return false;
+    }
+    else if (!id.equals(other.id))
+      return false;
+    return true;
+  }
 
-   @Override
-   public String toString() {
-      return "RunDtoSample [barcode=" + barcode + ", barcodeTwo=" + barcodeTwo + ", getUrl()=" + getUrl() + ", getName()=" + getName()
-            + ", getDescription()=" + getDescription() + ", getId()=" + getId() + ", getTubeBarcode()=" + getTubeBarcode()
-            + ", getStorageLocation()=" + getStorageLocation() + ", getCreatedDate()=" + getCreatedDate() + ", getModifiedDate()="
-            + getModifiedDate() + ", getArchived()=" + getArchived() + ", getPreparationKit()=" + getPreparationKit() + ", getVolume()="
-            + getVolume() + ", getConcentration()=" + getConcentration() + ", getProjectName()=" + getProjectName() + ", getSampleType()="
-            + getSampleType() + ", getAttributes()=" + getAttributes() + ", getStatus()=" + getStatus() + ", getChildren()="
-            + getChildren() + ", getParents()=" + getParents() + ", getCreatedByUrl()=" + getCreatedByUrl() + ", getModifiedByUrl()="
-            + getModifiedByUrl() + ", toString()=" + super.toString() + ", getClass()=" + getClass() + "]";
-   }
+  @Override
+  public String toString() {
+    return "RunDtoSample [barcode=" + barcode + ", barcodeTwo=" + barcodeTwo
+        + ", id=" + id + ", url=" + url + ", hashCode()=" + hashCode() + "]";
+  }
 
 }

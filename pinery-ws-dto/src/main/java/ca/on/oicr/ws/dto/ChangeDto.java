@@ -8,7 +8,6 @@ import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.joda.time.DateTime;
 
 @XmlRootElement(name = "change")
 @JsonAutoDetect
@@ -20,7 +19,6 @@ public class ChangeDto {
    private Integer createdById;
    @JsonProperty("created_date")
    private String createdDate;
-   private DateTime created;
    @JsonProperty("created_by_url")
    private String createdByUrl;
    private String comment;
@@ -66,15 +64,6 @@ public class ChangeDto {
 
    public void setCreatedById(Integer createdById) {
       this.createdById = createdById;
-   }
-
-   @XmlTransient
-   public DateTime getCreated() {
-      return created;
-   }
-
-   public void setCreated(DateTime created) {
-      this.created = created;
    }
 
 }

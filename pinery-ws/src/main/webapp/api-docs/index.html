@@ -34,8 +34,7 @@
         url = decodeURIComponent(url[1]);
       } else {
         url = window.location.href;
-        url = url.substring(0, url.lastIndexOf("/"));
-        url = url.substring(0, url.lastIndexOf("/"));
+        url = url.substring(0, url.lastIndexOf("/api-docs"));
         url = url + "/swagger.json";
       }
 
