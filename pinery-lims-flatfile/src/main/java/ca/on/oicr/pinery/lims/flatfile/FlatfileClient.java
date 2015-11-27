@@ -146,7 +146,7 @@ public class FlatfileClient implements Lims {
 
   @Override
   public List<Instrument> getInstrumentModelInsrument(Integer id) { // TODO: fix typo in interface
-    return instrumentDao.getInstrumentModelInstruments();
+    return instrumentDao.getInstrumentModelInstruments(id);
   }
 
 }

@@ -11,6 +11,6 @@ public interface InstrumentDao {
   public Instrument getInstrument(Integer id);
   public List<InstrumentModel> getAllInstrumentModels();
   public InstrumentModel getInstrumentModel(Integer id);
-  public List<Instrument> getInstrumentModelInstruments();
+  public List<Instrument> getInstrumentModelInstruments(Integer modelId);
   
 }
