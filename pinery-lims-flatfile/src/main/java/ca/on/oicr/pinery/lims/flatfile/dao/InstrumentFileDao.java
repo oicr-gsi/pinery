@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.lims.DefaultInstrumentModel;
 
@@ -53,6 +54,24 @@ public class InstrumentFileDao implements InstrumentDao {
     default:
       throw new RuntimeException(); // TODO: better exception type
     }
+  }
+
+  @Override
+  public List<Instrument> getAllInstruments() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Instrument getInstrument(Integer id) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<Instrument> getInstrumentModelInstruments() {
+    // TODO Auto-generated method stub
+    return null;
   }
   
 }

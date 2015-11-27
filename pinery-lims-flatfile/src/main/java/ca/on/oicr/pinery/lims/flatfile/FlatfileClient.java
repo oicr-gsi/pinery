@@ -31,79 +31,6 @@ public class FlatfileClient implements Lims {
   public void setInstrumentDao(InstrumentDao instrumentDao) {
     this.instrumentDao = instrumentDao;
   }
-  
-//  private JdbcTemplate template;
-//  
-//  public FlatfileClient(JdbcTemplate template) {
-//    setTemplate(template);
-//  }
-//  
-//  public FlatfileClient(DataSource dataSource) {
-//    setTemplate(new JdbcTemplate(dataSource));
-//  }
-//
-//  public JdbcTemplate getTemplate() {
-//    return template;
-//  }
-//
-//  public void setTemplate(JdbcTemplate template) {
-//    this.template = template;
-//  }
-  
-//  private File instrumentsFile;
-//  private File ordersFile;
-//  private File samplesFile;
-//  private File changesFile;
-//  private File runsFile;
-//  private File usersFile;
-//  
-//  public File getInstrumentsFile() {
-//    return instrumentsFile;
-//  }
-//
-//  public void setInstrumentsFile(File instrumentsFile) {
-//    this.instrumentsFile = instrumentsFile;
-//  }
-//
-//  public File getOrdersFile() {
-//    return ordersFile;
-//  }
-//
-//  public void setOrdersFile(File ordersFile) {
-//    this.ordersFile = ordersFile;
-//  }
-//
-//  public File getSamplesFile() {
-//    return samplesFile;
-//  }
-//
-//  public void setSamplesFile(File samplesFile) {
-//    this.samplesFile = samplesFile;
-//  }
-//
-//  public File getChangesFile() {
-//    return changesFile;
-//  }
-//
-//  public void setChangesFile(File changesFile) {
-//    this.changesFile = changesFile;
-//  }
-//
-//  public File getRunsFile() {
-//    return runsFile;
-//  }
-//
-//  public void setRunsFile(File runsFile) {
-//    this.runsFile = runsFile;
-//  }
-//
-//  public File getUsersFile() {
-//    return usersFile;
-//  }
-//
-//  public void setUsersFile(File usersFile) {
-//    this.usersFile = usersFile;
-//  }
 
   @Override
   public List<String> getProjects() {
@@ -208,20 +135,17 @@ public class FlatfileClient implements Lims {
 
   @Override
   public List<Instrument> getInstruments() {
-    // TODO Auto-generated method stub
-    return null;
+    return instrumentDao.getAllInstruments();
   }
 
   @Override
   public Instrument getInstrument(Integer instrumentId) {
-    // TODO Auto-generated method stub
-    return null;
+    return instrumentDao.getInstrument(instrumentId);
   }
 
   @Override
-  public List<Instrument> getInstrumentModelInsrument(Integer id) {
-    // TODO Auto-generated method stub
-    return null;
+  public List<Instrument> getInstrumentModelInsrument(Integer id) { // TODO: fix typo in interface
+    return instrumentDao.getInstrumentModelInstruments();
   }
 
 }
