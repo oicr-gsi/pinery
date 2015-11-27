@@ -12,32 +12,17 @@
    
    <context:property-placeholder location="${flatfile.propertiesFile}"/>
    
-   <bean id="instrumentsFile" class="java.io.File">
-      <constructor-arg value="${flatfile.instruments}"/>
-   </bean>
-   <bean id="ordersFile" class="java.io.File">
-      <constructor-arg value="${flatfile.orders}"/>
-   </bean>
-   <bean id="samplesFile" class="java.io.File">
-      <constructor-arg value="${flatfile.samples}"/>
-   </bean>
-   <bean id="changesFile" class="java.io.File">
-      <constructor-arg value="${flatfile.changes}"/>
-   </bean>
-   <bean id="runsFile" class="java.io.File">
-      <constructor-arg value="${flatfile.runs}"/>
-   </bean>
-   <bean id="usersFile" class="java.io.File">
-      <constructor-arg value="${flatfile.users}"/>
+   <bean id="fileDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+      <property name="driverClassName" value="org.relique.jdbc.csv.CsvDriver"/>
+      <property name="url" value="jdbc:relique:csv:${flatfile.dir}?fileExtension=${flatfile.suffix}&amp;separator=%09"/>
    </bean>
    
-   <bean id="flatfileClient" class="ca.on.oicr.pinery.lims.flatfile.FlatfileClient">
-      <property name="instrumentsFile" ref="instrumentsFile" />
-      <property name="ordersFile" ref="ordersFile" />
-      <property name="samplesFile" ref="samplesFile" />
-      <property name="changesFile" ref="changesFile" />
-      <property name="runsFile" ref="runsFile" />
-      <property name="usersFile" ref="usersFile" />
+   <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+      <constructor-arg ref="fileDataSource"/>
    </bean>
+   
+   <bean id="instrumentDao" class="ca.on.oicr.pinery.lims.flatfile.dao.InstrumentFileDao"/>
+   
+   <bean id="flatfileClient" class="ca.on.oicr.pinery.lims.flatfile.FlatfileClient"/>
    
 </beans>
