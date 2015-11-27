@@ -17,12 +17,27 @@ import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
+import ca.on.oicr.pinery.lims.flatfile.dao.ChangeDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.InstrumentDao;
+import ca.on.oicr.pinery.lims.flatfile.dao.OrderDao;
+import ca.on.oicr.pinery.lims.flatfile.dao.RunDao;
+import ca.on.oicr.pinery.lims.flatfile.dao.SampleDao;
+import ca.on.oicr.pinery.lims.flatfile.dao.UserDao;
 
 public class FlatfileClient implements Lims {
   
   @Autowired
   private InstrumentDao instrumentDao;
+  @Autowired
+  private OrderDao orderDao;
+  @Autowired
+  private RunDao runDao;
+  @Autowired
+  private SampleDao sampleDao;
+  @Autowired
+  private UserDao userDao;
+  @Autowired
+  private ChangeDao changeDao;
 
   public InstrumentDao getInstrumentDao() {
     return instrumentDao;
@@ -33,94 +48,80 @@ public class FlatfileClient implements Lims {
   }
 
   @Override
-  public List<String> getProjects() {
+  public List<String> getProjects() { // TODO: remove unused endpoint
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
   public Sample getSample(Integer id) {
-    // TODO Auto-generated method stub
-    return null;
+    return sampleDao.getSample(id);
   }
 
   @Override
   public List<SampleProject> getSampleProjects() {
-    // TODO Auto-generated method stub
-    return null;
+    return sampleDao.getAllSampleProjects();
   }
 
   @Override
   public List<Sample> getSamples(Boolean archived, Set<String> projects,
       Set<String> types, DateTime before, DateTime after) {
-    // TODO Auto-generated method stub
-    return null;
+    return sampleDao.getSamplesFiltered(archived, projects, types, before, after);
   }
 
   @Override
   public List<User> getUsers() {
-    // TODO Auto-generated method stub
-    return null;
+    return userDao.getAllUsers();
   }
 
   @Override
   public User getUser(Integer id) {
-    // TODO Auto-generated method stub
-    return null;
+    return userDao.getUser(id);
   }
 
   @Override
   public List<Order> getOrders() {
-    // TODO Auto-generated method stub
-    return null;
+    return orderDao.getAllOrders();
   }
 
   @Override
   public Order getOrder(Integer id) {
-    // TODO Auto-generated method stub
-    return null;
+    return orderDao.getOrder(id);
   }
 
   @Override
   public List<Run> getRuns() {
-    // TODO Auto-generated method stub
-    return null;
+    return runDao.getAllRuns();
   }
 
   @Override
   public Run getRun(Integer id) {
-    // TODO Auto-generated method stub
-    return null;
+    return runDao.getRun(id);
   }
 
   @Override
   public Run getRun(String runName) {
-    // TODO Auto-generated method stub
-    return null;
+    return runDao.getRun(runName);
   }
 
   @Override
   public List<Type> getTypes() {
-    // TODO Auto-generated method stub
-    return null;
+    return sampleDao.getAllSampleTypes();
   }
 
   @Override
   public List<AttributeName> getAttributeNames() {
-    // TODO Auto-generated method stub
-    return null;
+    return sampleDao.getAllSampleAttributes();
   }
 
   @Override
   public List<ChangeLog> getChangeLogs() {
-    // TODO Auto-generated method stub
-    return null;
+    return changeDao.getAllChanges();
   }
 
   @Override
   public ChangeLog getChangeLog(Integer id) {
-    // TODO Auto-generated method stub
-    return null;
+    return changeDao.getSampleChanges(id);
   }
 
   @Override

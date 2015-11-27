@@ -22,6 +22,11 @@
    </bean>
    
    <bean id="instrumentDao" class="ca.on.oicr.pinery.lims.flatfile.dao.InstrumentFileDao"/>
+   <bean id="changeDao" class="ca.on.oicr.pinery.lims.flatfile.dao.ChangeFileDao"/>
+   <bean id="orderDao" class="ca.on.oicr.pinery.lims.flatfile.dao.OrderFileDao"/>
+   <bean id="runDao" class="ca.on.oicr.pinery.lims.flatfile.dao.RunFileDao"/>
+   <bean id="sampleDao" class="ca.on.oicr.pinery.lims.flatfile.dao.SampleFileDao"/>
+   <bean id="userDao" class="ca.on.oicr.pinery.lims.flatfile.dao.UserFileDao"/>
    
    <bean id="flatfileClient" class="ca.on.oicr.pinery.lims.flatfile.FlatfileClient"/>
    
