@@ -1,10 +1,10 @@
 package ca.on.oicr.pinery.lims.flatfile;
 
-import java.io.File;
 import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.ChangeLog;
@@ -17,63 +17,93 @@ import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
+import ca.on.oicr.pinery.lims.flatfile.dao.InstrumentDao;
 
 public class FlatfileClient implements Lims {
   
-  private File instrumentsFile;
-  private File ordersFile;
-  private File samplesFile;
-  private File changesFile;
-  private File runsFile;
-  private File usersFile;
+  @Autowired
+  private InstrumentDao instrumentDao;
+
+  public InstrumentDao getInstrumentDao() {
+    return instrumentDao;
+  }
+
+  public void setInstrumentDao(InstrumentDao instrumentDao) {
+    this.instrumentDao = instrumentDao;
+  }
   
-  public File getInstrumentsFile() {
-    return instrumentsFile;
-  }
-
-  public void setInstrumentsFile(File instrumentsFile) {
-    this.instrumentsFile = instrumentsFile;
-  }
-
-  public File getOrdersFile() {
-    return ordersFile;
-  }
-
-  public void setOrdersFile(File ordersFile) {
-    this.ordersFile = ordersFile;
-  }
-
-  public File getSamplesFile() {
-    return samplesFile;
-  }
-
-  public void setSamplesFile(File samplesFile) {
-    this.samplesFile = samplesFile;
-  }
-
-  public File getChangesFile() {
-    return changesFile;
-  }
-
-  public void setChangesFile(File changesFile) {
-    this.changesFile = changesFile;
-  }
-
-  public File getRunsFile() {
-    return runsFile;
-  }
-
-  public void setRunsFile(File runsFile) {
-    this.runsFile = runsFile;
-  }
-
-  public File getUsersFile() {
-    return usersFile;
-  }
-
-  public void setUsersFile(File usersFile) {
-    this.usersFile = usersFile;
-  }
+//  private JdbcTemplate template;
+//  
+//  public FlatfileClient(JdbcTemplate template) {
+//    setTemplate(template);
+//  }
+//  
+//  public FlatfileClient(DataSource dataSource) {
+//    setTemplate(new JdbcTemplate(dataSource));
+//  }
+//
+//  public JdbcTemplate getTemplate() {
+//    return template;
+//  }
+//
+//  public void setTemplate(JdbcTemplate template) {
+//    this.template = template;
+//  }
+  
+//  private File instrumentsFile;
+//  private File ordersFile;
+//  private File samplesFile;
+//  private File changesFile;
+//  private File runsFile;
+//  private File usersFile;
+//  
+//  public File getInstrumentsFile() {
+//    return instrumentsFile;
+//  }
+//
+//  public void setInstrumentsFile(File instrumentsFile) {
+//    this.instrumentsFile = instrumentsFile;
+//  }
+//
+//  public File getOrdersFile() {
+//    return ordersFile;
+//  }
+//
+//  public void setOrdersFile(File ordersFile) {
+//    this.ordersFile = ordersFile;
+//  }
+//
+//  public File getSamplesFile() {
+//    return samplesFile;
+//  }
+//
+//  public void setSamplesFile(File samplesFile) {
+//    this.samplesFile = samplesFile;
+//  }
+//
+//  public File getChangesFile() {
+//    return changesFile;
+//  }
+//
+//  public void setChangesFile(File changesFile) {
+//    this.changesFile = changesFile;
+//  }
+//
+//  public File getRunsFile() {
+//    return runsFile;
+//  }
+//
+//  public void setRunsFile(File runsFile) {
+//    this.runsFile = runsFile;
+//  }
+//
+//  public File getUsersFile() {
+//    return usersFile;
+//  }
+//
+//  public void setUsersFile(File usersFile) {
+//    this.usersFile = usersFile;
+//  }
 
   @Override
   public List<String> getProjects() {
@@ -168,14 +198,12 @@ public class FlatfileClient implements Lims {
 
   @Override
   public List<InstrumentModel> getInstrumentModels() {
-    // TODO Auto-generated method stub
-    return null;
+    return instrumentDao.getAllInstrumentModels();
   }
 
   @Override
   public InstrumentModel getInstrumentModel(Integer id) {
-    // TODO Auto-generated method stub
-    return null;
+    return instrumentDao.getInstrumentModel(id);
   }
 
   @Override
