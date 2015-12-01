@@ -21,7 +21,7 @@ public class KeyValueStringBuilder {
    */
   public KeyValueStringBuilder append(String key, String value) {
     if (hasFirstPair) {
-      sb.append(';');
+      sb.append('|');
     }
     sb.append(key).append('=').append(value);
     hasFirstPair = true;
