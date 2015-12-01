@@ -17,31 +17,31 @@ public class Main {
     
     PineryClient client = new PineryClient(args[0]);
     File outputDir = new File(args[1]);
-    String prefix = "";
+    String suffix = "";
     if (args.length > 2) {
-      prefix = args[2] + '_';
+      suffix = '_' + args[2];
     }
     
     Converter converter = new Converter(client, outputDir);
     
     try {
       System.out.println("Writing instruments file...");
-      converter.convertInstruments(prefix + "instruments.tsv");
+      converter.convertInstruments("instruments" + suffix + ".tsv");
       
       System.out.println("Writing samples file...");
-      converter.convertSamples(prefix + "samples.tsv");
+      converter.convertSamples("samples" + suffix + ".tsv");
       
       System.out.println("Writing changes file...");
-      converter.convertChangeLogs(prefix + "changes.tsv");
+      converter.convertChangeLogs("changes" + suffix + ".tsv");
       
       System.out.println("Writing users file...");
-      converter.convertUsers(prefix + "users.tsv");
+      converter.convertUsers("users" + suffix + ".tsv");
       
       System.out.println("Writing sequencer runs file...");
-      converter.convertRuns(prefix + "runs.tsv");
+      converter.convertRuns("runs" + suffix + ".tsv");
       
       System.out.println("Writing orders file...");
-      converter.convertOrders(prefix + "orders.tsv");
+      converter.convertOrders("orders" + suffix + ".tsv");
       
       System.out.println("Finished writing all files.");
       
