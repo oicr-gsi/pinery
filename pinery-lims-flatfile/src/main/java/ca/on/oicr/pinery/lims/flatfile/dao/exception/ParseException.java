@@ -1,4 +1,4 @@
-package ca.on.oicr.pinery.lims.flatfile.model;
+package ca.on.oicr.pinery.lims.flatfile.dao.exception;
 
 public class ParseException extends RuntimeException {
 

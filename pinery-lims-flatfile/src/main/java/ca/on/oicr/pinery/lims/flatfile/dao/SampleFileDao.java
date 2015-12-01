@@ -120,7 +120,7 @@ public class SampleFileDao implements SampleDao {
     }
     
     private Status parseStatus(String string) {
-      Map<String, String> map = ModelUtils.parseKeyValuePairs(string);
+      Map<String, String> map = DaoUtils.parseKeyValuePairs(string);
       if (map.isEmpty())  return null;
       
       Status status = new DefaultStatus();
@@ -130,7 +130,7 @@ public class SampleFileDao implements SampleDao {
     }
     
     private Set<Attribute> parseAttributes(String string) {
-      Map<String, String> attributeMap = ModelUtils.parseKeyValuePairs(string);
+      Map<String, String> attributeMap = DaoUtils.parseKeyValuePairs(string);
       
       Set<Attribute> attributes = new HashSet<>();
       for (String key : attributeMap.keySet()) {

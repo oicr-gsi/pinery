@@ -55,16 +55,16 @@ public class OrderFileDao implements OrderDao {
     }
     
     private Set<OrderSample> parseOrderSamples(String samplesString) {
-      List<String> sampleStrings = ModelUtils.parseList(samplesString);
+      List<String> sampleStrings = DaoUtils.parseList(samplesString);
       Set<OrderSample> samples = new HashSet<>();
       for (String sampleString : sampleStrings) {
-        Map<String, String> sampleMap = ModelUtils.parseKeyValuePairs(sampleString);
+        Map<String, String> sampleMap = DaoUtils.parseKeyValuePairs(sampleString);
         OrderSample sample = new DefaultOrderSample();
         
         sample.setId(Integer.parseInt(sampleMap.get("id")));
         if (sampleMap.containsKey("barcode")) sample.setBarcode(sampleMap.get("barcode"));
         if (sampleMap.containsKey("barcodeTwo")) sample.setBarcode(sampleMap.get("barcodeTwo"));
-        Map<String, String> attributeMap = ModelUtils.parseKeyValuePairs(sampleMap.get("attributes"));
+        Map<String, String> attributeMap = DaoUtils.parseKeyValuePairs(sampleMap.get("attributes"));
         
         Set<Attribute> attributes = new HashSet<>();
         for (String key : attributeMap.keySet()) {

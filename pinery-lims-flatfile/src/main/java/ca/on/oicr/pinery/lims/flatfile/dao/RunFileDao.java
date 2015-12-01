@@ -17,7 +17,6 @@ import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.lims.DefaultRun;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
-import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
 
 public class RunFileDao implements RunDao {
   
@@ -49,9 +48,9 @@ public class RunFileDao implements RunDao {
     private Set<RunPosition> parseRunPositions(String positionsString) {
       if (positionsString == null || positionsString.length() == 0) return null;
       Set<RunPosition> positions = new HashSet<>();
-      List<String> positionStrings = ModelUtils.parseList(positionsString);
+      List<String> positionStrings = DaoUtils.parseList(positionsString);
       for (String positionString : positionStrings) {
-        Map<String, String> map = ModelUtils.parseKeyValuePairs(positionString);
+        Map<String, String> map = DaoUtils.parseKeyValuePairs(positionString);
         RunPosition pos = new DefaultRunPosition();
         pos.setPosition(Integer.parseInt(map.get("position")));
         pos.setRunSample(parseRunSamples(map.get("samples")));
@@ -61,11 +60,11 @@ public class RunFileDao implements RunDao {
     }
     
     private Set<RunSample> parseRunSamples(String samplesString) {
-      List<String> sampleStrings = ModelUtils.parseList(samplesString);
+      List<String> sampleStrings = DaoUtils.parseList(samplesString);
       if (samplesString == null || samplesString.length() == 0) return null;
       Set<RunSample> samples = new HashSet<>();
       for (String sampleString : sampleStrings) {
-        Map<String, String> sampleMap = ModelUtils.parseKeyValuePairs(sampleString);
+        Map<String, String> sampleMap = DaoUtils.parseKeyValuePairs(sampleString);
         RunSample sample = new DefaultRunSample();
         sample.setId(Integer.parseInt(sampleMap.get("id")));
         if (sampleMap.containsKey("barcode")) sample.setBarcode(sampleMap.get("barcode"));
