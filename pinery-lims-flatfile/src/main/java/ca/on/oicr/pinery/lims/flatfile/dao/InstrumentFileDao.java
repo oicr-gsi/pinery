@@ -12,7 +12,6 @@ import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.lims.DefaultInstrument;
 import ca.on.oicr.pinery.lims.DefaultInstrumentModel;
-import ca.on.oicr.pinery.lims.flatfile.dao.exception.NonUniqueKeyException;
 import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
 
 public class InstrumentFileDao implements InstrumentDao {
@@ -88,14 +87,7 @@ public class InstrumentFileDao implements InstrumentDao {
   @Override
   public InstrumentModel getInstrumentModel(Integer id) {
     List<InstrumentModel> models = template.query(queryModelById, new Object[]{id}, modelMapper);
-    switch (models.size()) {
-    case 0:
-      return null;
-    case 1:
-      return models.get(0);
-    default:
-      throw new NonUniqueKeyException("More than one model found with ID " + id);
-    }
+    return DaoUtils.getExpectedSingleResult(models);
   }
 
   @Override
@@ -106,14 +98,7 @@ public class InstrumentFileDao implements InstrumentDao {
   @Override
   public Instrument getInstrument(Integer id) {
     List<Instrument> instruments = template.query(queryInstrumentById, new Object[]{id}, instrumentMapper);
-    switch (instruments.size()) {
-    case 0:
-      return null;
-    case 1:
-      return instruments.get(0);
-    default:
-      throw new NonUniqueKeyException("More than one instrument found with ID " + id);
-    }
+    return DaoUtils.getExpectedSingleResult(instruments);
   }
 
   @Override
