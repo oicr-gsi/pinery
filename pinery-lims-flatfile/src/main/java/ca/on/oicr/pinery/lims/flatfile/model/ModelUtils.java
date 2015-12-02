@@ -18,9 +18,11 @@ public class ModelUtils {
   }
   
   /**
-   * @param date
-   * @return
-   * @throws IllegalArgumentException
+   * Creates a Date object from String representation
+   * 
+   * @param date String date representation in format yyyy-mm-ddThh:mm:ss+ZZ:zz (e.g. "2012-06-12T14:47:09-04:00")
+   * @return null if date is null or empty; otherwise, the Date represented by the provided String
+   * @throws IllegalArgumentException if the String does not match the expected format
    */
   public static Date convertToDate(String date) {
     if (date == null || "".equals(date)) {

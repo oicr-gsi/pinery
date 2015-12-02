@@ -8,12 +8,22 @@ import java.util.Map;
 import ca.on.oicr.pinery.lims.flatfile.dao.exception.NonUniqueKeyException;
 import ca.on.oicr.pinery.lims.flatfile.dao.exception.ParseException;
 
+/**
+ * Static class that provides utility methods used by DAOs
+ */
 public class DaoUtils {
   
   private DaoUtils() {
     throw new AssertionError("Util class is not meant to be instantiated");
   }
 
+  /**
+   * Determines the proper result of a request that expects one object to have been returned in a list
+   * 
+   * @param list the list to check
+   * @return the object if there is only one object in the list; null if the list is empty
+   * @throws NonUniqueKeyException if there is more than one item in the list
+   */
   public static final <T> T getExpectedSingleResult(List<T> list) {
     switch (list.size()) {
     case 0:
@@ -25,6 +35,12 @@ public class DaoUtils {
     }
   }
 
+  /**
+   * Parses a String representation of a list, from a LIMS flat file
+   * 
+   * @param string the list String to parse
+   * @return a List of the Strings contained within the original list String
+   */
   public static List<String> parseList(String string) {
     List<String> list = new ArrayList<>();
     if (string.matches("^\\[\\s\\]$")) {
@@ -65,8 +81,14 @@ public class DaoUtils {
     return list;
   }
   
-  private static enum ReadSection {KEY, VALUE}
+  private static enum PairPart {KEY, VALUE}
   
+  /**
+   * Parses a String representation of a set of key:value pairs, from a LIMS flat file
+   * 
+   * @param string the key:value pair set String to parse
+   * @return a Map containing all the key:value pairs (as String:String) contained within the original pairs String
+   */
   public static Map<String, String> parseKeyValuePairs(String string) {
     Map<String, String> map = new HashMap<>();
     if (string.matches("^\\{\\s*\\}$")) {
@@ -80,13 +102,13 @@ public class DaoUtils {
     
     int currentStringStart = 1;
     int nestLevel = 0;
-    ReadSection readSection = ReadSection.KEY;
+    PairPart readingPart = PairPart.KEY;
     String key = null;
     String value = null;
     
     for (int i = 1; i < string.length()-1; i++) {
       char c = string.charAt(i);
-      switch (readSection) {
+      switch (readingPart) {
       case KEY:
         switch (c) {
         case '[': case ']': case '{': case '}':
@@ -94,7 +116,7 @@ public class DaoUtils {
         case '=':
           key = string.substring(currentStringStart, i);
           currentStringStart = i+1;
-          readSection = ReadSection.VALUE;
+          readingPart = PairPart.VALUE;
           break;
         }
         break;
@@ -113,14 +135,14 @@ public class DaoUtils {
             map.put(key, value);
             key = null;
             value = null;
-            readSection = ReadSection.KEY;
+            readingPart = PairPart.KEY;
           }
           break;
         }
         break;
       }
     }
-    if (readSection != ReadSection.VALUE) {
+    if (readingPart != PairPart.VALUE) {
       throw ParseException.fromErrorData(string, string.length()-1, "Does not end in key=value pair");
     }
     value = string.substring(currentStringStart, string.length()-1);

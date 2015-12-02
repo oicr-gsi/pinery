@@ -1,5 +1,8 @@
 package ca.on.oicr.pinery.lims.flatfile.dao.exception;
 
+/**
+ * Runtime exception for parsing data from LIMS flat files. Will be thrown if any part of a String cannot be parsed
+ */
 public class ParseException extends RuntimeException {
 
   private static final long serialVersionUID = -2252611185888186476L;
@@ -28,6 +31,14 @@ public class ParseException extends RuntimeException {
     return errorPosition;
   }
 
+  /**
+   * Factory method to create a ParseException which indicates the point in the String where the error occurred
+   * 
+   * @param badString The String for which parsing has failed
+   * @param errorPosition The character position within the String where the error occurred
+   * @param detailMessage Additional details
+   * @return the new ParseException
+   */
   public static ParseException fromErrorData(String badString, int errorPosition, String detailMessage) {
     String message = makeMessage(badString, errorPosition, detailMessage);
     ParseException exception = new ParseException(message);
@@ -35,6 +46,13 @@ public class ParseException extends RuntimeException {
     return exception;
   }
   
+  /**
+   * Factory method to create a ParseException which indicates the point in the String where the error occurred
+   * 
+   * @param badString The String for which parsing has failed
+   * @param errorPosition The character position within the String where the error occurred
+   * @return the new ParseException
+   */
   public static ParseException fromErrorData(String badString, int errorPosition) {
    return fromErrorData(badString, errorPosition, "Error parsing String"); 
   }

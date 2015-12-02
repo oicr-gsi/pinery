@@ -39,14 +39,6 @@ public class FlatfileClient implements Lims {
   @Autowired
   private ChangeDao changeDao;
 
-  public InstrumentDao getInstrumentDao() {
-    return instrumentDao;
-  }
-
-  public void setInstrumentDao(InstrumentDao instrumentDao) {
-    this.instrumentDao = instrumentDao;
-  }
-
   @Override
   public List<String> getProjects() { // TODO: remove unused endpoint
     // TODO Auto-generated method stub

@@ -153,14 +153,16 @@ public class SampleFileDao implements SampleDao {
     return DaoUtils.getExpectedSingleResult(samples);
   }
 
-  @Override
   public List<Sample> getAllSamples() {
     return template.query(queryAllSamples, sampleMapper);
   }
 
   @Override
-  public List<Sample> getSamplesFiltered(Boolean archived,
-      Set<String> projects, Set<String> types, DateTime before, DateTime after) {
+  public List<Sample> getSamplesFiltered(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after) {
+    if (archived == null && projects == null && types == null && before == null && after == null) {
+      return getAllSamples();
+    }
+    
     String fullQuery = queryFilteredSamples 
         + makeProjectsClause(projects == null ? 0 : projects.size())
         + makeTypesClause(types == null ? 0 : types.size());
