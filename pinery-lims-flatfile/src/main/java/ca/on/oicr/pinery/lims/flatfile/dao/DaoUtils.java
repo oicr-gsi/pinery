@@ -43,7 +43,7 @@ public class DaoUtils {
    */
   public static List<String> parseList(String string) {
     List<String> list = new ArrayList<>();
-    if (string.matches("^\\[\\s\\]$")) {
+    if (string == null || string.length() == 0 || string.matches("^\\[\\s\\]$")) {
       // contains no data
       return list;
     }
@@ -91,7 +91,7 @@ public class DaoUtils {
    */
   public static Map<String, String> parseKeyValuePairs(String string) {
     Map<String, String> map = new HashMap<>();
-    if (string.matches("^\\{\\s*\\}$")) {
+    if (string == null || string.length() == 0 || string.matches("^\\{\\s*\\}$")) {
       // contains no data
       return map;
     }
@@ -140,6 +140,8 @@ public class DaoUtils {
           break;
         }
         break;
+      default:
+        throw new AssertionError("Bad logic in parse method. Unspecified read part");
       }
     }
     if (readingPart != PairPart.VALUE) {

@@ -1,0 +1,3 @@
+id	title	firstName	lastName	institution	phone	email	archived	createdDate	createdUserId	modifiedDate	modifiedUserId
+1		Admin	Istrator	Ontario Institute for Cancer Research	+1 416 555 1234	admin.istrator@oicr.on.ca	false	2015-07-14T10:51:36-04:00	1	2015-07-14T11:36:37-04:00	1
+2		Test	User	Ontario Institute for Cancer Research	+1 416 555 5678	test.user@oicr.on.ca	false	2015-07-14T10:51:36-04:00	1	2015-07-14T11:36:37-04:00	2

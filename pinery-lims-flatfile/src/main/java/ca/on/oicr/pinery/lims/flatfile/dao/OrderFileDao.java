@@ -33,21 +33,13 @@ public class OrderFileDao implements OrderDao {
       Order o = new DefaultOrder();
       
       o.setId(rs.getInt("id"));
-      o.setProject(rs.getString("projectName"));
-      o.setStatus(rs.getString("status"));
-      o.setPlatform(rs.getString("platformName"));
-      
+      o.setProject(ModelUtils.nullIfEmpty(rs.getString("projectName")));
+      o.setStatus(ModelUtils.nullIfEmpty(rs.getString("status")));
+      o.setPlatform(ModelUtils.nullIfEmpty(rs.getString("platformName")));
       o.setCreatedDate(ModelUtils.convertToDate(rs.getString("createdDate")));
-      int creator = rs.getInt("createdUserId");
-      if (creator != 0) {
-        o.setCreatedById(creator);
-      }
-      
+      o.setCreatedById(ModelUtils.nullIfZero(rs.getInt("createdUserId")));
       o.setModifiedDate(ModelUtils.convertToDate(rs.getString("modifiedDate")));
-      int modifier = rs.getInt("createdUserId");
-      if (modifier != 0) {
-        o.setCreatedById(modifier);
-      }
+      o.setModifiedById(ModelUtils.nullIfZero(rs.getInt("createdUserId")));
       
       o.setSample(parseOrderSamples(rs.getString("samples")));
       
@@ -62,8 +54,8 @@ public class OrderFileDao implements OrderDao {
         OrderSample sample = new DefaultOrderSample();
         
         sample.setId(Integer.parseInt(sampleMap.get("id")));
-        if (sampleMap.containsKey("barcode")) sample.setBarcode(sampleMap.get("barcode"));
-        if (sampleMap.containsKey("barcodeTwo")) sample.setBarcode(sampleMap.get("barcodeTwo"));
+        if (sampleMap.containsKey("barcode")) sample.setBarcode(ModelUtils.nullIfEmpty(sampleMap.get("barcode")));
+        if (sampleMap.containsKey("barcodeTwo")) sample.setBarcode(ModelUtils.nullIfEmpty(sampleMap.get("barcodeTwo")));
         Map<String, String> attributeMap = DaoUtils.parseKeyValuePairs(sampleMap.get("attributes"));
         
         Set<Attribute> attributes = new HashSet<>();

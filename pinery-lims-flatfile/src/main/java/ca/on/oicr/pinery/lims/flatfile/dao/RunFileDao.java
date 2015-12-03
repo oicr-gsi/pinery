@@ -17,6 +17,7 @@ import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.lims.DefaultRun;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
+import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
 
 public class RunFileDao implements RunDao {
   
@@ -35,10 +36,10 @@ public class RunFileDao implements RunDao {
       Run r = new DefaultRun();
       
       r.setId(rs.getInt("id"));
-      r.setName(rs.getString("name"));
-      r.setInstrumentId(rs.getInt("instrumentId"));
-      r.setState(rs.getString("state"));
-      r.setBarcode(rs.getString("barcode"));
+      r.setName(ModelUtils.nullIfEmpty(rs.getString("name")));
+      r.setInstrumentId(ModelUtils.nullIfZero(rs.getInt("instrumentId")));
+      r.setState(ModelUtils.nullIfEmpty(rs.getString("state")));
+      r.setBarcode(ModelUtils.nullIfEmpty(rs.getString("barcode")));
       
       r.setSample(parseRunPositions(rs.getString("positions")));
       
@@ -67,8 +68,8 @@ public class RunFileDao implements RunDao {
         Map<String, String> sampleMap = DaoUtils.parseKeyValuePairs(sampleString);
         RunSample sample = new DefaultRunSample();
         sample.setId(Integer.parseInt(sampleMap.get("id")));
-        if (sampleMap.containsKey("barcode")) sample.setBarcode(sampleMap.get("barcode"));
-        if (sampleMap.containsKey("barcodeTwo")) sample.setBarcodeTwo(sampleMap.get("barcodeTwo"));
+        if (sampleMap.containsKey("barcode")) sample.setBarcode(ModelUtils.nullIfEmpty(sampleMap.get("barcode")));
+        if (sampleMap.containsKey("barcodeTwo")) sample.setBarcodeTwo(ModelUtils.nullIfEmpty(sampleMap.get("barcodeTwo")));
         samples.add(sample);
       }
       return samples;

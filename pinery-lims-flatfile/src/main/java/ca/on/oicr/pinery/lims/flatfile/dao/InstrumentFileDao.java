@@ -42,18 +42,9 @@ public class InstrumentFileDao implements InstrumentDao {
       m.setId(rs.getInt("modelId"));
       m.setName(rs.getString("modelName"));
       m.setCreated(ModelUtils.convertToDate(rs.getString("createdDate")));
-      
-      int creator = rs.getInt("createdUserId");
-      if (creator != 0) {
-        m.setCreatedById(creator);
-      }
-      
+      m.setCreatedById(ModelUtils.nullIfZero(rs.getInt("createdUserId")));
       m.setModified(ModelUtils.convertToDate(rs.getString("modifiedDate")));
-      
-      int modifier = rs.getInt("modifiedUserId");
-      if (modifier != 0) {
-        m.setModifiedById(modifier);
-      }
+      m.setModifiedById(ModelUtils.nullIfZero(rs.getInt("modifiedUserId")));
       
       return m;
     }

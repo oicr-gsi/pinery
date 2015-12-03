@@ -33,4 +33,24 @@ public class ModelUtils {
     }
   }
   
+  /**
+   * Utility method to eliminate empty Strings
+   * 
+   * @param s String to check
+   * @return null if s is null or an empty String; otherwise s
+   */
+  public static String nullIfEmpty(String s) {
+    return s == null || s.length() == 0 ? null : s;
+  }
+  
+  /**
+   * Utility method to eliminate zero-valued Integers
+   * 
+   * @param i the Integer to check
+   * @return null if i is null or has a value of 0; otherwise i
+   */
+  public static Integer nullIfZero(Integer i) {
+    return i == null || i.equals(Integer.valueOf(0)) ? null : i;
+  }
+  
 }

@@ -58,8 +58,8 @@ public class SampleFileDao implements SampleDao {
     public SampleProject mapRow(ResultSet rs, int rowNum) throws SQLException {
       SampleProject p = new DefaultSampleProject();
       p.setName(rs.getString("projectName"));
-      p.setCount(rs.getInt("count"));
-      p.setArchivedCount(rs.getInt("archivedCount"));
+      p.setCount(ModelUtils.nullIfZero(rs.getInt("count")));
+      p.setArchivedCount(ModelUtils.nullIfZero(rs.getInt("archivedCount")));
       p.setEarliest(ModelUtils.convertToDate(rs.getString("earliest")));
       p.setLatest(ModelUtils.convertToDate(rs.getString("latest")));
       return p;
@@ -73,8 +73,8 @@ public class SampleFileDao implements SampleDao {
     public Type mapRow(ResultSet rs, int rowNum) throws SQLException {
       Type t = new DefaultType();
       t.setName(rs.getString("sampleType"));
-      t.setCount(rs.getInt("count"));
-      t.setArchivedCount(rs.getInt("archivedCount"));
+      t.setCount(ModelUtils.nullIfZero(rs.getInt("count")));
+      t.setArchivedCount(ModelUtils.nullIfZero(rs.getInt("archivedCount")));
       t.setEarliest(ModelUtils.convertToDate(rs.getString("earliest")));
       t.setLatest(ModelUtils.convertToDate(rs.getString("latest")));
       return t;
@@ -90,18 +90,16 @@ public class SampleFileDao implements SampleDao {
       
       s.setId(rs.getInt("id"));
       s.setName(rs.getString("name"));
-      s.setDescription(rs.getString("description"));
-      s.setTubeBarcode(rs.getString("tubeBarcode"));
-      s.setStorageLocation(rs.getString("storageLocation"));
-      s.setSampleType(rs.getString("sampleType"));
+      s.setDescription(ModelUtils.nullIfEmpty(rs.getString("description")));
+      s.setTubeBarcode(ModelUtils.nullIfEmpty(rs.getString("tubeBarcode")));
+      s.setStorageLocation(ModelUtils.nullIfEmpty(rs.getString("storageLocation")));
+      s.setSampleType(ModelUtils.nullIfEmpty(rs.getString("sampleType")));
       
       s.setCreated(ModelUtils.convertToDate(rs.getString("createdDate")));
-      int creator = rs.getInt("createdUserId");
-      if (creator != 0) s.setCreatedById(creator);
+      s.setCreatedById(ModelUtils.nullIfZero(rs.getInt("createdUserId")));
       
       s.setModified(ModelUtils.convertToDate(rs.getString("modifiedDate")));
-      int modifier = rs.getInt("modifiedUserId");
-      if (modifier != 0) s.setModifiedById(modifier);
+      s.setModifiedById(ModelUtils.nullIfZero(rs.getInt("modifiedUserId")));
       
       int parentId = rs.getInt("parentSampleId");
       if (parentId != 0) {
@@ -110,7 +108,7 @@ public class SampleFileDao implements SampleDao {
         s.setParents(parents);
       }
       
-      s.setProject(rs.getString("projectName"));
+      s.setProject(ModelUtils.nullIfEmpty(rs.getString("projectName")));
       s.setArchived(rs.getBoolean("archived"));
       
       s.setStatus(parseStatus(rs.getString("status")));
@@ -124,8 +122,8 @@ public class SampleFileDao implements SampleDao {
       if (map.isEmpty())  return null;
       
       Status status = new DefaultStatus();
-      status.setName(map.get("name"));
-      status.setState(map.get("state"));
+      status.setName(ModelUtils.nullIfEmpty(map.get("name")));
+      status.setState(ModelUtils.nullIfEmpty(map.get("state")));
       return status;
     }
     
@@ -178,11 +176,15 @@ public class SampleFileDao implements SampleDao {
     queryParams[1] = before == null ? DateTime.now().plusDays(1).toString() : before.toString();
     queryParams[2] = after == null ? DateTime.now().withYear(2000).toString() : after.toString();
     int paramPos = 3;
-    for (String project : projects) {
-      queryParams[paramPos++] = project;
+    if (projects != null) {
+      for (String project : projects) {
+        queryParams[paramPos++] = project;
+      }
     }
-    for (String type : types) {
-      queryParams[paramPos++] = type;
+    if (types != null) {
+      for (String type : types) {
+        queryParams[paramPos++] = type;
+      }
     }
     return queryParams;
   }

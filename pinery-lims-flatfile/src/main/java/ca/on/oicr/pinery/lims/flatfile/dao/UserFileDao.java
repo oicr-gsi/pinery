@@ -26,21 +26,17 @@ public class UserFileDao implements UserDao {
       User u = new DefaultUser();
       
       u.setId(rs.getInt("id"));
-      u.setTitle(rs.getString("title"));
-      u.setFirstname(rs.getString("firstName"));
-      u.setLastname(rs.getString("lastName"));
-      u.setInstitution(rs.getString("institution"));
-      u.setPhone(rs.getString("phone"));
-      u.setEmail(rs.getString("email"));
+      u.setTitle(ModelUtils.nullIfEmpty(rs.getString("title")));
+      u.setFirstname(ModelUtils.nullIfEmpty(rs.getString("firstName")));
+      u.setLastname(ModelUtils.nullIfEmpty(rs.getString("lastName")));
+      u.setInstitution(ModelUtils.nullIfEmpty(rs.getString("institution")));
+      u.setPhone(ModelUtils.nullIfEmpty(rs.getString("phone")));
+      u.setEmail(ModelUtils.nullIfEmpty(rs.getString("email")));
       u.setArchived(rs.getBoolean("archived"));
-      
       u.setCreated(ModelUtils.convertToDate(rs.getString("createdDate")));
-      int creator = rs.getInt("createdUserId");
-      if (creator != 0) u.setCreatedById(creator);
-      
+      u.setCreatedById(ModelUtils.nullIfZero(rs.getInt("createdUserId")));
       u.setModified(ModelUtils.convertToDate(rs.getString("modifiedDate")));
-      int modifier = rs.getInt("modifiedUserId");
-      if (modifier != 0) u.setModifiedById(modifier);
+      u.setModifiedById(ModelUtils.nullIfZero(rs.getInt("modifiedUserId")));
       
       return u;
     }
