@@ -1,0 +1,156 @@
+package ca.on.oicr.pinery.lims.flatfile.dao;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import ca.on.oicr.pinery.lims.flatfile.dao.exception.NonUniqueKeyException;
+import ca.on.oicr.pinery.lims.flatfile.dao.exception.ParseException;
+
+/**
+ * Static class that provides utility methods used by DAOs
+ */
+public class DaoUtils {
+  
+  private DaoUtils() {
+    throw new AssertionError("Util class is not meant to be instantiated");
+  }
+
+  /**
+   * Determines the proper result of a request that expects one object to have been returned in a list
+   * 
+   * @param list the list to check
+   * @return the object if there is only one object in the list; null if the list is empty
+   * @throws NonUniqueKeyException if there is more than one item in the list
+   */
+  public static final <T> T getExpectedSingleResult(List<T> list) {
+    switch (list.size()) {
+    case 0:
+      return null;
+    case 1:
+      return list.get(0);
+    default:
+      throw new NonUniqueKeyException("Expected one matching item, but found " + list.size() + " using the same key");
+    }
+  }
+
+  /**
+   * Parses a String representation of a list, from a LIMS flat file
+   * 
+   * @param string the list String to parse
+   * @return a List of the Strings contained within the original list String
+   */
+  public static List<String> parseList(String string) {
+    List<String> list = new ArrayList<>();
+    if (string == null || string.length() == 0 || string.matches("^\\[\\s\\]$")) {
+      // contains no data
+      return list;
+    }
+    if (!string.matches("^\\[.*\\]$")) {
+      int errorPos = string.matches("^\\[") ? string.length()-1 : 0;
+      throw ParseException.fromErrorData(string, errorPos, "Invalid list String");
+    }
+    
+    int currentStringStart = 1;
+    int nestLevel = 0;
+    for (int i = 1; i < string.length()-1; i++) {
+      char c = string.charAt(i);
+      switch (c) {
+      case '[':
+      case '{':
+        nestLevel += 1;
+        break;
+      case ']':
+      case '}':
+        nestLevel -= 1;
+        break;
+      case ',':
+        if (nestLevel == 0) {
+          list.add(string.substring(currentStringStart, i));
+          currentStringStart = i+1;
+        }
+      }
+    }
+    if (nestLevel != 0) {
+      throw ParseException.fromErrorData(string, string.length()-1, "Improper object nesting");
+    }
+    String lastString = string.substring(currentStringStart, string.length()-1);
+    if (lastString.length() > 0) list.add(lastString);
+    
+    return list;
+  }
+  
+  private static enum PairPart {KEY, VALUE}
+  
+  /**
+   * Parses a String representation of a set of key:value pairs, from a LIMS flat file
+   * 
+   * @param string the key:value pair set String to parse
+   * @return a Map containing all the key:value pairs (as String:String) contained within the original pairs String
+   */
+  public static Map<String, String> parseKeyValuePairs(String string) {
+    Map<String, String> map = new HashMap<>();
+    if (string == null || string.length() == 0 || string.matches("^\\{\\s*\\}$")) {
+      // contains no data
+      return map;
+    }
+    if (!string.matches("^\\{.*\\}$")) {
+      int errorPos = string.matches("^\\{") ? string.length()-1 : 0;
+      throw ParseException.fromErrorData(string, errorPos, "String not enclosed in {}");
+    }
+    
+    int currentStringStart = 1;
+    int nestLevel = 0;
+    PairPart readingPart = PairPart.KEY;
+    String key = null;
+    String value = null;
+    
+    for (int i = 1; i < string.length()-1; i++) {
+      char c = string.charAt(i);
+      switch (readingPart) {
+      case KEY:
+        switch (c) {
+        case '[': case ']': case '{': case '}':
+          throw ParseException.fromErrorData(string, i, "Key contains nested items");
+        case '=':
+          key = string.substring(currentStringStart, i);
+          currentStringStart = i+1;
+          readingPart = PairPart.VALUE;
+          break;
+        }
+        break;
+      case VALUE:
+        switch (c) {
+        case '{': case '[':
+          nestLevel += 1;
+          break;
+        case '}': case ']':
+          nestLevel -= 1;
+          break;
+        case '|':
+          if (nestLevel == 0) {
+            value = string.substring(currentStringStart, i);
+            currentStringStart = i+1;
+            map.put(key, value);
+            key = null;
+            value = null;
+            readingPart = PairPart.KEY;
+          }
+          break;
+        }
+        break;
+      default:
+        throw new AssertionError("Bad logic in parse method. Unspecified read part");
+      }
+    }
+    if (readingPart != PairPart.VALUE) {
+      throw ParseException.fromErrorData(string, string.length()-1, "Does not end in key=value pair");
+    }
+    value = string.substring(currentStringStart, string.length()-1);
+    map.put(key, value);
+    
+    return map;
+  }
+  
+}

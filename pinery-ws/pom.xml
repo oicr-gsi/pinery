@@ -15,6 +15,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
+        <!-- RESTEasy dependencies (keep at top to prevent NoSuchMethodErrors on some Tomcat versions) -->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson-provider</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-spring</artifactId>
+        </dependency>
+        <!-- Other dependencies -->
         <dependency>
             <groupId>ca.on.oicr</groupId>
             <artifactId>pinery-service</artifactId>
@@ -22,10 +32,6 @@
         <dependency>
             <groupId>ca.on.oicr</groupId>
             <artifactId>pinery-ws-dto</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jackson-provider</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -36,10 +42,6 @@
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
             <version>2.2.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-spring</artifactId>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>

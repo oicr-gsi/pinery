@@ -1,0 +1,3 @@
+id	name	instrumentId	instrumentName	state	barcode	positions
+1	Run1	3	h001	Completed	ABCD	[{position=1|samples=[{id=2}]},{position=2|samples=[{id=3}]}]
+2	Run2	4	h002	Completed	EFGH	[{position=1|samples=[{id=2},{id=3}]},{position=2|samples=[{id=4},{id=5}]}]
