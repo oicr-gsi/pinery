@@ -14,7 +14,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.jboss.resteasy.plugins.providers.jackson.ResteasyJacksonProvider;
+import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -86,7 +86,7 @@ public class PineryClientTest {
   
   private Client makeMockClient() {
     Client clientMock = mock(Client.class);
-    when(clientMock.register(ResteasyJacksonProvider.class)).thenReturn(clientMock);
+    when(clientMock.register(ResteasyJackson2Provider.class)).thenReturn(clientMock);
     
     PowerMockito.mockStatic(PineryClient.class);
     when(PineryClient.getInsecureClient()).thenReturn(clientMock);

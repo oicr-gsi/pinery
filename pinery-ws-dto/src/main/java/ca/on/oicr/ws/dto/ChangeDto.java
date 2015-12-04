@@ -1,25 +1,15 @@
 package ca.on.oicr.ws.dto;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
-@XmlRootElement(name = "change")
-@JsonAutoDetect
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonInclude(Include.NON_NULL)
 public class ChangeDto {
 
    private String action;
-   @JsonProperty("created_by_id")
    private Integer createdById;
-   @JsonProperty("created_date")
    private String createdDate;
-   @JsonProperty("created_by_url")
    private String createdByUrl;
    private String comment;
 
@@ -31,7 +21,7 @@ public class ChangeDto {
       this.action = action;
    }
 
-   @XmlElement(name = "created_date")
+   @JsonProperty("created_date")
    public String getCreatedDate() {
       return createdDate;
    }
@@ -40,7 +30,7 @@ public class ChangeDto {
       this.createdDate = createdDate;
    }
 
-   @XmlElement(name = "created_by_url")
+   @JsonProperty("created_by_url")
    public String getCreatedByUrl() {
       return createdByUrl;
    }
@@ -57,7 +47,7 @@ public class ChangeDto {
       this.comment = comment;
    }
 
-   @XmlTransient
+   @JsonProperty("created_by_id")
    public Integer getCreatedById() {
       return createdById;
    }

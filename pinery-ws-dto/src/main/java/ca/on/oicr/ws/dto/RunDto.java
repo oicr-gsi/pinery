@@ -2,16 +2,11 @@ package ca.on.oicr.ws.dto;
 
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
-@XmlRootElement(name = "sequencer_run")
-@JsonAutoDetect
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonInclude(Include.NON_NULL)
 public class RunDto {
 
    @Override
@@ -83,17 +78,12 @@ public class RunDto {
    private String state;
    private String name;
    private String barcode;
-   @JsonProperty("instrument_name")
    private String instrumentName;
    private Set<RunDtoPosition> positions;
-
-   @JsonProperty("created_by_url")
    private String createdByUrl;
-   @JsonProperty("created_date")
    private String createdDate;
    private Integer id;
    private String url;
-   @JsonProperty("instrument_url")
    private String instrumentUrl;
 
    public String getState() {
@@ -128,6 +118,7 @@ public class RunDto {
       this.positions = positions;
    }
 
+   @JsonProperty("created_by_url")
    public String getCreatedByUrl() {
       return createdByUrl;
    }
@@ -136,6 +127,7 @@ public class RunDto {
       this.createdByUrl = createdByUrl;
    }
 
+   @JsonProperty("created_date")
    public String getCreatedDate() {
       return createdDate;
    }
@@ -160,6 +152,7 @@ public class RunDto {
       this.url = url;
    }
 
+   @JsonProperty("instrument_name")
    public String getInstrumentName() {
       return instrumentName;
    }
@@ -168,6 +161,7 @@ public class RunDto {
       this.instrumentName = instrumentName;
    }
 
+   @JsonProperty("instrument_url")
    public String getInstrumentUrl() {
       return instrumentUrl;
    }

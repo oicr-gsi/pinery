@@ -1,16 +1,10 @@
 package ca.on.oicr.ws.dto;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
-@XmlRootElement(name = "user")
-@JsonAutoDetect
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonInclude(Include.NON_NULL)
 public class UserDto {
 
    @Override
@@ -84,13 +78,9 @@ public class UserDto {
    private String phone;
    private String email;
    private String comment;
-   @JsonProperty("created_date")
    private String createdDate;
-   @JsonProperty("created_by_url")
    private String createdByUrl;
-   @JsonProperty("modified_date")
    private String modifiedDate;
-   @JsonProperty("modified_by_url")
    private String modifiedByUrl;
    private Integer id;
    private Boolean archived;
@@ -111,7 +101,7 @@ public class UserDto {
       this.id = id;
    }
 
-   @XmlElement(name = "created_date")
+   @JsonProperty("created_date")
    public String getCreatedDate() {
       return createdDate;
    }
@@ -120,7 +110,7 @@ public class UserDto {
       this.createdDate = createdDate;
    }
 
-   @XmlElement(name = "modified_date")
+   @JsonProperty("modified_date")
    public String getModifiedDate() {
       return modifiedDate;
    }
@@ -137,7 +127,7 @@ public class UserDto {
       this.archived = archived;
    }
 
-   @XmlElement(name = "created_by_url")
+   @JsonProperty("created_by_url")
    public String getCreatedByUrl() {
       return createdByUrl;
    }
@@ -146,7 +136,7 @@ public class UserDto {
       this.createdByUrl = createdByUrl;
    }
 
-   @XmlElement(name = "modified_by_url")
+   @JsonProperty("modified_by_url")
    public String getModifiedByUrl() {
       return modifiedByUrl;
    }
