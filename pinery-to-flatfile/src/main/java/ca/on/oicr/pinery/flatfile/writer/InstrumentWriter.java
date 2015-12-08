@@ -1,6 +1,5 @@
 package ca.on.oicr.pinery.flatfile.writer;
 
-import static ca.on.oicr.pinery.flatfile.util.ConverterUtils.getIdFromUrl;
 import static ca.on.oicr.pinery.flatfile.util.ConverterUtils.mapToIds;
 
 import java.util.List;
@@ -45,7 +44,7 @@ public class InstrumentWriter extends Writer {
   @Override
   protected String[] getRecord(int row) {
     InstrumentDto instrument = instruments.get(row);
-    InstrumentModelDto model = models.get(instrument.getModelId());
+    InstrumentModelDto model = models.get(instrument.getModelId()); // TODO: modelId null
     
     String[] data = {
         instrument.getId().toString(),
@@ -54,9 +53,9 @@ public class InstrumentWriter extends Writer {
         model.getId().toString(),
         model.getName(),
         model.getCreatedDate(),
-        model.getCreatedByUrl() == null ? "" : getIdFromUrl(model.getCreatedByUrl()).toString(),
+        model.getCreatedById() == null ? "" : model.getCreatedById().toString(),
         model.getModifiedDate(),
-        model.getModifiedByUrl() == null ? "" : getIdFromUrl(model.getModifiedByUrl()).toString(),
+        model.getModifiedById() == null ? "" : model.getModifiedById().toString(),
     };
     
     return data;

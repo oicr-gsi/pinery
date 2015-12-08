@@ -1053,6 +1053,7 @@ public class GsleClient implements Lims {
       map.put("created_at", "createdDateString");
       map.put("id", "idString");
       map.put("instr_id", "instrumentIdString");
+      map.put("instrument_name", "instrumentName");
 
       strat.setColumnMapping(map);
 

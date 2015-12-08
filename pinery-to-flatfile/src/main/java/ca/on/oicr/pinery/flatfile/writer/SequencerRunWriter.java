@@ -1,7 +1,5 @@
 package ca.on.oicr.pinery.flatfile.writer;
 
-import static ca.on.oicr.pinery.flatfile.util.ConverterUtils.getIdFromUrl;
-
 import java.util.List;
 
 import ca.on.oicr.pinery.flatfile.util.ArrayStringBuilder;
@@ -45,7 +43,7 @@ public class SequencerRunWriter extends Writer {
     String[] data = {
         run.getId().toString(),
         run.getName(),
-        run.getInstrumentUrl() == null ? "" : getIdFromUrl(run.getInstrumentUrl()).toString(),
+        run.getInstrumentId() == null ? "" : run.getInstrumentId().toString(),
         run.getInstrumentName(),
         run.getState(),
         run.getBarcode(),

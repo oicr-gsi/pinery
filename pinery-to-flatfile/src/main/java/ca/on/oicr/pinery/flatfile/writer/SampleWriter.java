@@ -1,9 +1,9 @@
 package ca.on.oicr.pinery.flatfile.writer;
-import static ca.on.oicr.pinery.flatfile.util.ConverterUtils.getIdFromUrl;
 
 import java.util.List;
 import java.util.Set;
 
+import ca.on.oicr.pinery.flatfile.util.ConverterUtils;
 import ca.on.oicr.pinery.flatfile.util.KeyValueStringBuilder;
 import ca.on.oicr.ws.dto.AttributeDto;
 import ca.on.oicr.ws.dto.SampleDto;
@@ -57,9 +57,9 @@ public class SampleWriter extends Writer {
         sample.getStorageLocation(),
         sample.getSampleType(),
         sample.getCreatedDate(),
-        sample.getCreatedByUrl() == null ? "" : getIdFromUrl(sample.getCreatedByUrl()).toString(),
+        sample.getCreatedById() == null ? "" : sample.getCreatedById().toString(),
         sample.getModifiedDate(),
-        sample.getModifiedByUrl() == null ? "" : getIdFromUrl(sample.getModifiedByUrl()).toString(),
+        sample.getModifiedById() == null ? "" : sample.getModifiedById().toString(),
         getParentIdString(sample),
         sample.getProjectName(),
         sample.getArchived().toString(),
@@ -75,7 +75,7 @@ public class SampleWriter extends Writer {
     if (sample.getParents() != null) {
       for (String parent : sample.getParents()) {
         if (parentId != null) throw new RuntimeException("Sample ID " + sample.getId() + " has multiple parents");
-        parentId = getIdFromUrl(parent).toString();
+        parentId = ConverterUtils.getIdFromUrl(parent).toString();
       }
     }
     return parentId;
