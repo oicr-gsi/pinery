@@ -80,18 +80,12 @@ public class SampleResource {
       }
       List<Sample> samples = sampleService.getSamples(archived, projects, types, beforeDateTime, afterDateTime);
       List<SampleDto> result = Lists.newArrayList();
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("sample").build();
+      
       for (Sample sample : samples) {
          SampleDto dto = Dtos.asDto(sample);
-         dto.setUrl(baseUri + "/" + dto.getId().toString());
-         if (sample.getChildren() != null && !sample.getChildren().isEmpty()) {
-            dto.setChildren(Sets.<String> newHashSet());
-            for (Integer childId : sample.getChildren()) {
-               dto.getChildren().add(baseUri + "/" + childId);
-            }
-         }
+         addChildren(sample, dto);
          addParents(sample, dto);
-         addUsers(sample, dto);
+         addUrls(dto);
          result.add(dto);
       }
       return result;
@@ -108,17 +102,9 @@ public class SampleResource {
         throw new NotFoundException("No sample found with ID: " + id);
       }
       SampleDto dto = Dtos.asDto(sample);
-      final URI uri = uriInfo.getAbsolutePathBuilder().build();
-      dto.setUrl(uri.toString());
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("sample").build();
-      if (sample.getChildren() != null && !sample.getChildren().isEmpty()) {
-         dto.setChildren(Sets.<String> newHashSet());
-         for (Integer childId : sample.getChildren()) {
-            dto.getChildren().add(baseUri + "/" + childId);
-         }
-      }
+      addChildren(sample, dto);
       addParents(sample, dto);
-      addUsers(sample, dto);
+      addUrls(dto);
       return dto;
    }
 
@@ -181,6 +167,16 @@ public class SampleResource {
       });
       return result;
    }
+   
+   private void addChildren(Sample sample, SampleDto dto) {
+      if (sample.getChildren() != null && !sample.getChildren().isEmpty()) {
+         final URI baseUri = uriInfo.getBaseUriBuilder().path("sample").build();
+         dto.setChildren(Sets.<String> newHashSet());
+         for (Integer childId : sample.getChildren()) {
+            dto.getChildren().add(baseUri + "/" + childId);
+         }
+      }
+   }
 
    private void addParents(Sample sample, SampleDto dto) {
       // Keep a temporary Set of parents. We'll check to see if any of these
@@ -203,20 +199,17 @@ public class SampleResource {
       }
    }
 
-   private void addUsers(Sample sample, SampleDto dto) {
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
-      if (sample.getCreatedById() != null) {
-         dto.setCreatedByUrl(baseUri + sample.getCreatedById().toString());
-      }
-      if (sample.getModifiedById() != null) {
-         dto.setModifiedByUrl(baseUri + sample.getModifiedById().toString());
-      }
-   }
-
-   private void addChangeUser(ChangeDto dto) {
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
+   private void addUrls(SampleDto dto) {
+      final URI baseUri = uriInfo.getBaseUriBuilder().path("sample").build();
+      final URI baseUriUser = uriInfo.getBaseUriBuilder().path("user/").build();
+      
+      dto.setUrl(baseUri + "/" + dto.getId().toString());
+      
       if (dto.getCreatedById() != null) {
-         dto.setCreatedByUrl(baseUri + dto.getCreatedById().toString());
+         dto.setCreatedByUrl(baseUriUser + dto.getCreatedById().toString());
+      }
+      if (dto.getModifiedById() != null) {
+         dto.setModifiedByUrl(baseUriUser + dto.getModifiedById().toString());
       }
    }
 
@@ -233,7 +226,7 @@ public class SampleResource {
          ChangeLogDto dto = Dtos.asDto(changeLog);
          dto.setSampleUrl(baseUri + changeLog.getSampleId().toString());
          for (ChangeDto change : dto.getChanges()) {
-            addChangeUser(change);
+            addUrls(change);
          }
          Collections.sort(dto.getChanges(), new Comparator<ChangeDto>() {
 
@@ -262,7 +255,7 @@ public class SampleResource {
       final URI uri = uriInfo.getBaseUriBuilder().path("sample").path(changeLog.getSampleId().toString()).build();
       dto.setSampleUrl(uri.toString());
       for (ChangeDto change : dto.getChanges()) {
-         addChangeUser(change);
+         addUrls(change);
       }
       Collections.sort(dto.getChanges(), new Comparator<ChangeDto>() {
 
@@ -274,4 +267,12 @@ public class SampleResource {
       });
       return dto;
    }
+
+   private void addUrls(ChangeDto dto) {
+      final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
+      if (dto.getCreatedById() != null) {
+         dto.setCreatedByUrl(baseUri + dto.getCreatedById().toString());
+      }
+   }
+   
 }

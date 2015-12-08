@@ -17,8 +17,10 @@ public class SampleDto {
    private Float concentration;
    private String storageLocation;
    private String createdDate;
+   private Integer createdById;
    private String createdByUrl;
    private String modifiedDate;
+   private Integer modifiedById;
    private String modifiedByUrl;
    private Integer id;
    private Boolean archived;
@@ -181,6 +183,15 @@ public class SampleDto {
       this.parents = parents;
    }
 
+   @JsonProperty("created_by_id")
+   public Integer getCreatedById() {
+      return createdById;
+   }
+
+   public void setCreatedById(Integer createdById) {
+      this.createdById = createdById;
+   }
+
    @JsonProperty("created_by_url")
    public String getCreatedByUrl() {
       return createdByUrl;
@@ -188,6 +199,15 @@ public class SampleDto {
 
    public void setCreatedByUrl(String createdByUrl) {
       this.createdByUrl = createdByUrl;
+   }
+
+   @JsonProperty("modified_by_id")
+   public Integer getModifiedById() {
+      return modifiedById;
+   }
+
+   public void setModifiedById(Integer modifiedById) {
+      this.modifiedById = modifiedById;
    }
 
    @JsonProperty("modified_by_url")
@@ -206,6 +226,8 @@ public class SampleDto {
       result = prime * result + ((archived == null) ? 0 : archived.hashCode());
       result = prime * result + ((concentration == null) ? 0 : concentration.hashCode());
       result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
+      result = prime * result + ((createdById == null) ? 0 : createdById.hashCode());
+      result = prime * result + ((modifiedById == null) ? 0 : modifiedById.hashCode());
       result = prime * result + ((description == null) ? 0 : description.hashCode());
       result = prime * result + ((id == null) ? 0 : id.hashCode());
       result = prime * result + ((modifiedDate == null) ? 0 : modifiedDate.hashCode());
@@ -264,14 +286,20 @@ public class SampleDto {
       if (volume == null) {
          if (other.volume != null) return false;
       } else if (!volume.equals(other.volume)) return false;
+      if (createdById == null) {
+         if (other.createdById != null) return false;
+      } else if (!createdById.equals(other.createdById)) return false;
+      if (modifiedById == null) {
+         if (other.modifiedById != null) return false;
+      } else if (!modifiedById.equals(other.modifiedById)) return false;
       return true;
    }
 
    @Override
    public String toString() {
       return "SampleDto [name=" + name + ", description=" + description + ", tubeBarcode=" + tubeBarcode + ", volume=" + volume
-            + ", concentration=" + concentration + ", storageLocation=" + storageLocation + ", createdDate=" + createdDate
-            + ", modifiedDate=" + modifiedDate + ", id=" + id + ", archived=" + archived + ", projectName=" + projectName + ", sampleType="
-            + sampleType + ", status=" + status + "]";
+            + ", concentration=" + concentration + ", storageLocation=" + storageLocation + ", createdDate=" + createdDate 
+            + ", createdById=" + createdById + ", modifiedDate=" + modifiedDate + ", modifiedById=" + modifiedById + ", id=" 
+            + id + ", archived=" + archived + ", projectName=" + projectName + ", sampleType=" + sampleType + ", status=" + status + "]";
    }
 }

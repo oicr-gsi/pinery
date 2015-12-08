@@ -51,8 +51,14 @@ public final class Dtos {
       if (from.getCreated() != null) {
          dto.setCreatedDate(dateTimeFormatter.print(from.getCreated().getTime()));
       }
+      if (from.getCreatedById() != null) {
+         dto.setCreatedById(from.getCreatedById());
+      }
       if (from.getModified() != null) {
          dto.setModifiedDate(dateTimeFormatter.print(from.getModified().getTime()));
+      }
+      if (from.getModifiedById() != null) {
+         dto.setModifiedById(from.getModifiedById());
       }
       if (from.getTubeBarcode() != null) {
          dto.setTubeBarcode(from.getTubeBarcode());
@@ -191,6 +197,9 @@ public final class Dtos {
 
    public static ChangeLogDto asDto(ChangeLog from) {
       ChangeLogDto dto = new ChangeLogDto();
+      if (from.getSampleId() != null) {
+        dto.setSampleId(from.getSampleId());
+      }
       if (!from.getChanges().isEmpty()) {
          List<ChangeDto> changes = Lists.newArrayList();
          for (Change change : from.getChanges()) {
@@ -218,8 +227,14 @@ public final class Dtos {
       if (from.getCreatedDate() != null) {
          dto.setCreatedDate(dateTimeFormatter.print(from.getCreatedDate().getTime()));
       }
+      if (from.getCreatedById() != null) {
+        dto.setCreatedById(from.getCreatedById());
+      }
       if (from.getModifiedDate() != null) {
          dto.setModifiedDate(dateTimeFormatter.print(from.getModifiedDate().getTime()));
+      }
+      if (from.getModifiedById() != null) {
+        dto.setModifiedById(from.getModifiedById());
       }
       if (from.getSamples() != null && !from.getSamples().isEmpty()) {
          dto.setSamples(asDto1(from.getSamples()));
@@ -274,6 +289,12 @@ public final class Dtos {
       if (from.getSamples() != null && !from.getSamples().isEmpty()) {
          dto.setPositions(asDto2(from.getSamples()));
       }
+      if (from.getCreatedById() != null) {
+        dto.setCreatedById(from.getCreatedById());
+      }
+      if (from.getInstrumentId() != null) {
+        dto.setInstrumentId(from.getInstrumentId());
+      }
       return dto;
    }
 
@@ -321,11 +342,6 @@ public final class Dtos {
       return dto;
    }
 
-   // ///////////////////////////////////////////////////////////////////////////////////////////////////////
-   // ////////////////////////////////////////////////////////////////////////////////////////////////////
-   // /////////////////////////////////////////////////////////////////////////////////////////////////////
-   // ////////////////////////////////////////////////////////////////////////////////////////////////
-   // //////////////////////////////////////////////////////////////////////////////////////////////////////
    public static UserDto asDto(User from) {
       UserDto dto = new UserDto();
       dto.setId(from.getId());
@@ -360,6 +376,12 @@ public final class Dtos {
       if (!StringUtils.isBlank(from.getInstitution())) {
          dto.setInstitution(from.getInstitution());
       }
+      if (from.getCreatedById() != null) {
+        dto.setCreatedById(from.getCreatedById());
+      }
+      if (from.getModifiedById() != null) {
+        dto.setModifiedById(from.getModifiedById());
+      }
       return dto;
    }
 
@@ -372,8 +394,14 @@ public final class Dtos {
       if (from.getCreated() != null) {
          dto.setCreatedDate(dateTimeFormatter.print(from.getCreated().getTime()));
       }
+      if (from.getCreatedById() != null) {
+        dto.setCreatedById(from.getCreatedById());
+      }
       if (from.getModified() != null) {
          dto.setModifiedDate(dateTimeFormatter.print(from.getModified().getTime()));
+      }
+      if (from.getModifiedById() != null) {
+        dto.setModifiedById(from.getModifiedById());
       }
       return dto;
    }
@@ -388,8 +416,8 @@ public final class Dtos {
          dto.setCreatedDate(dateTimeFormatter.print(from.getCreated().getTime()));
       }
 
-      if (from.getInstrumentModel() != null) {
-         dto.setInstrumentModel(from.getInstrumentModel());
+      if (from.getModelId() != null) {
+         dto.setModelId(from.getModelId());
       }
       return dto;
    }

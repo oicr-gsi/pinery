@@ -63,8 +63,7 @@ public class RunResource {
       for (Run run : runs) {
          RunDto dto = Dtos.asDto(run);
          dto.setUrl(baseUri + "/" + dto.getId().toString());
-         addUser(run, dto);
-         addSampleUrl(dto);
+         addUrls(dto);
          result.add(dto);
       }
       return result;
@@ -83,8 +82,7 @@ public class RunResource {
       RunDto dto = Dtos.asDto(run);
       final URI uri = uriInfo.getAbsolutePathBuilder().build();
       dto.setUrl(uri.toString());
-      addUser(run, dto);
-      addSampleUrl(dto);
+      addUrls(dto);
 
       return dto;
    }
@@ -109,13 +107,14 @@ public class RunResource {
      RunDto dto = Dtos.asDto(run);
      final URI baseUri = uriInfo.getBaseUriBuilder().path("sequencerrun").build();
      dto.setUrl(baseUri + "/" + dto.getId().toString());
-     addUser(run, dto);
-     addSampleUrl(dto);
+     addUrls(dto);
      
      return dto;
    }
 
-   private RunDto addSampleUrl(RunDto dto) {
+   private void addUrls(RunDto dto) {
+      final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
+      final URI baseUriInstrument = uriInfo.getBaseUriBuilder().path("instrument/").build();
       final URI baseUriSample = uriInfo.getBaseUriBuilder().path("sample/").build();
 
       if (dto.getPositions() != null) {
@@ -125,20 +124,11 @@ public class RunResource {
             }
          }
       }
-      return dto;
-   }
-
-   private void addUser(Run run, RunDto dto) {
-
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
-      final URI baseUriInstrument = uriInfo.getBaseUriBuilder().path("instrument/").build();
-
-      if (run.getCreatedById() != null) {
-         dto.setCreatedByUrl(baseUri + run.getCreatedById().toString());
+      if (dto.getCreatedById() != null) {
+         dto.setCreatedByUrl(baseUri + dto.getCreatedById().toString());
       }
-
-      if (run.getInstrumentId() != null) {
-         dto.setInstrumentUrl(((baseUriInstrument + run.getInstrumentId().toString())));
+      if (dto.getInstrumentId() != null) {
+         dto.setInstrumentUrl(((baseUriInstrument + dto.getInstrumentId().toString())));
       }
    }
 }

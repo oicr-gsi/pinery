@@ -26,7 +26,7 @@ public class InstrumentFileDaoTest {
     
     Assert.assertEquals(Integer.valueOf(1), ins.getId());
     Assert.assertEquals("s001", ins.getName());
-    Assert.assertEquals("1", ins.getInstrumentModel());
+    Assert.assertEquals(Integer.valueOf(1), ins.getModelId());
   }
   
   @Test

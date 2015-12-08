@@ -11,7 +11,8 @@ public class InstrumentDto {
    private String name;
    private String createdDate;
    private Integer id;
-   private String instrumentModel;
+   private Integer modelId;
+   private String modelUrl;
 
    public String getUrl() {
       return url;
@@ -46,13 +47,22 @@ public class InstrumentDto {
       this.id = id;
    }
 
-   @JsonProperty("instrument_model")
-   public String getInstrumentModel() {
-      return instrumentModel;
+   @JsonProperty("model_id")
+   public Integer getModelId() {
+      return modelId;
    }
 
-   public void setInstrumentModel(String instrumentModel) {
-      this.instrumentModel = instrumentModel;
+   public void setModelId(Integer modelId) {
+      this.modelId = modelId;
    }
+
+   @JsonProperty("model_url")
+  public String getModelUrl() {
+    return modelUrl;
+  }
+
+  public void setModelUrl(String modelUrl) {
+    this.modelUrl = modelUrl;
+  }
 
 }

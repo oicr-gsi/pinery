@@ -59,8 +59,7 @@ public class OrderResource {
       for (Order order : orders) {
          OrderDto dto = Dtos.asDto(order);
          dto.setUrl(baseUri + dto.getId().toString());
-         addSampleUrl(dto);
-         addOrders(order, dto);
+         addUrls(order, dto);
          result.add(dto);
       }
       return result;
@@ -79,12 +78,12 @@ public class OrderResource {
       OrderDto dto = Dtos.asDto(order);
       final URI uri = uriInfo.getAbsolutePathBuilder().build();
       dto.setUrl(uri.toString());
-      addSampleUrl(dto);
-      addOrders(order, dto);
+      addUrls(order, dto);
       return dto;
    }
 
-   private OrderDto addSampleUrl(OrderDto dto) {
+   private void addUrls(Order order, OrderDto dto) {
+      final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
       final URI baseUriSample = uriInfo.getBaseUriBuilder().path("sample/").build();
 
       if (dto != null && dto.getSamples() != null) {
@@ -92,17 +91,9 @@ public class OrderResource {
             orderDtoSample.setUrl(baseUriSample + orderDtoSample.getId().toString());
          }
       }
-      return dto;
-   }
-
-   private void addOrders(Order order, OrderDto dto) {
-
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
-
       if (order.getCreatedById() != null) {
          dto.setCreatedByUrl(baseUri + order.getCreatedById().toString());
       }
-
       if (order.getModifiedById() != null) {
          dto.setModifiedByUrl(baseUri + order.getModifiedById().toString());
       }

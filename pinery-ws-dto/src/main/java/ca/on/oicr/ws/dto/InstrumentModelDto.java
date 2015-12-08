@@ -10,8 +10,10 @@ public class InstrumentModelDto {
    private String url;
    private String name;
    private String createdDate;
+   private Integer createdById;
    private String createdByUrl;
    private String modifiedDate;
+   private Integer modifiedById;
    private String modifiedByUrl;
    private String instrumentsUrl;
    private Integer id;
@@ -83,6 +85,24 @@ public class InstrumentModelDto {
 
    public void setInstrumentsUrl(String instrumentsUrl) {
       this.instrumentsUrl = instrumentsUrl;
+   }
+   
+   @JsonProperty("created_by_id")
+   public Integer getCreatedById() {
+      return createdById;
+   }
+
+   public void setCreatedById(Integer createdById) {
+      this.createdById = createdById;
+   }
+
+   @JsonProperty("modified_by_id")
+   public Integer getModifiedById() {
+      return modifiedById;
+   }
+
+   public void setModifiedById(Integer modifiedById) {
+      this.modifiedById = modifiedById;
    }
 
 }
