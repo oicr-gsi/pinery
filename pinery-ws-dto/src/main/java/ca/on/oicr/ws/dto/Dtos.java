@@ -295,6 +295,9 @@ public final class Dtos {
       if (from.getInstrumentId() != null) {
         dto.setInstrumentId(from.getInstrumentId());
       }
+      if (!StringUtils.isBlank(from.getInstrumentName())) {
+        dto.setInstrumentName(from.getInstrumentName());
+      }
       return dto;
    }
 

@@ -13,6 +13,8 @@ public class SequencerRunWriter extends Writer {
   private static final String[] headers = {
     "id",
     "name",
+    "createdDate",
+    "createdUserId",
     "instrumentId",
     "instrumentName",
     "state",
@@ -43,6 +45,8 @@ public class SequencerRunWriter extends Writer {
     String[] data = {
         run.getId().toString(),
         run.getName(),
+        run.getCreatedDate() == null ? "" : run.getCreatedDate(),
+        run.getCreatedById() == null ? "" : run.getCreatedById().toString(),
         run.getInstrumentId() == null ? "" : run.getInstrumentId().toString(),
         run.getInstrumentName(),
         run.getState(),

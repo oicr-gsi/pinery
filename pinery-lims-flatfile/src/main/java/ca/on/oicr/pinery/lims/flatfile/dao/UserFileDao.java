@@ -32,6 +32,7 @@ public class UserFileDao implements UserDao {
       u.setInstitution(ModelUtils.nullIfEmpty(rs.getString("institution")));
       u.setPhone(ModelUtils.nullIfEmpty(rs.getString("phone")));
       u.setEmail(ModelUtils.nullIfEmpty(rs.getString("email")));
+      u.setComment(ModelUtils.nullIfEmpty(rs.getString("comment")));
       u.setArchived(rs.getBoolean("archived"));
       u.setCreated(ModelUtils.convertToDate(rs.getString("createdDate")));
       u.setCreatedById(ModelUtils.nullIfZero(rs.getInt("createdUserId")));
