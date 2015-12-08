@@ -207,12 +207,6 @@ public class GsleClient implements Lims {
       this.url = url;
    }
 
-   @Override
-   public List<String> getProjects() {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
    private List<Sample> getSamples() {
       return getSamples(null, null, null, null, null);
    }
@@ -1542,7 +1536,7 @@ public class GsleClient implements Lims {
    }
 
    @Override
-   public List<Instrument> getInstrumentModelInsrument(Integer instrumentModelId) {
+   public List<Instrument> getInstrumentModelInstrument(Integer instrumentModelId) {
       List<Instrument> result = Lists.newArrayList();
 
       StringBuilder url = getBaseUrl(instrumentModelInstrumentList);
