@@ -44,4 +44,8 @@ public interface Run {
    public Integer getInstrumentId();
 
    public void setInstrumentId(Integer instrumentId);
+   
+   public String getInstrumentName();
+   
+   public void setInstrumentName(String instrumentName);
 }

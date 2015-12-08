@@ -1571,8 +1571,8 @@ public class GsleClient implements Lims {
       Map<String, String> map = Maps.newHashMap();
       map.put("instr_id", "idString");
       map.put("name", "name");
-      map.put("created_at", "createdString");
-      map.put("model_id", "instrumentModel");
+      map.put("date_added", "createdString");
+      map.put("model_id", "modelId");
       strat.setColumnMapping(map);
 
       CsvToBean<GsleInstrument> csvToBean = new CsvToBean<GsleInstrument>();
