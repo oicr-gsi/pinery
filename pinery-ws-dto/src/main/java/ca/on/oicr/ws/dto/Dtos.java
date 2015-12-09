@@ -1,5 +1,6 @@
 package ca.on.oicr.ws.dto;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -89,6 +90,20 @@ public final class Dtos {
       }
       if (from.getSampleType() != null && !from.getSampleType().equals("")) {
          dto.setSampleType(from.getSampleType());
+      }
+      if (from.getParents() != null) {
+        Set<SampleReferenceDto> parents = new HashSet<>();
+        for (Integer parentId : from.getParents()) {
+          parents.add(new SampleReferenceDto(parentId));
+        }
+        dto.setParents(parents);
+      }
+      if (from.getChildren() != null) {
+        Set<SampleReferenceDto> children = new HashSet<>();
+        for (Integer childId : from.getChildren()) {
+          children.add(new SampleReferenceDto(childId));
+        }
+        dto.setChildren(children);
       }
       return dto;
    }

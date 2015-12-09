@@ -29,8 +29,8 @@ public class SampleDto {
    private String sampleType;
    private Set<AttributeDto> attributes;
    private StatusDto status;
-   private Set<String> children;
-   private Set<String> parents;
+   private Set<SampleReferenceDto> children;
+   private Set<SampleReferenceDto> parents;
 
    public String getUrl() {
       return url;
@@ -167,19 +167,19 @@ public class SampleDto {
       this.status = status;
    }
 
-   public Set<String> getChildren() {
+   public Set<SampleReferenceDto> getChildren() {
       return children;
    }
 
-   public void setChildren(Set<String> children) {
+   public void setChildren(Set<SampleReferenceDto> children) {
       this.children = children;
    }
 
-   public Set<String> getParents() {
+   public Set<SampleReferenceDto> getParents() {
       return parents;
    }
 
-   public void setParents(Set<String> parents) {
+   public void setParents(Set<SampleReferenceDto> parents) {
       this.parents = parents;
    }
 

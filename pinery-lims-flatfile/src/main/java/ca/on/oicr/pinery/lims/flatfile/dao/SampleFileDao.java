@@ -101,12 +101,8 @@ public class SampleFileDao implements SampleDao {
       s.setModified(ModelUtils.convertToDate(rs.getString("modifiedDate")));
       s.setModifiedById(ModelUtils.nullIfZero(rs.getInt("modifiedUserId")));
       
-      int parentId = rs.getInt("parentSampleId");
-      if (parentId != 0) {
-        Set<Integer> parents = new HashSet<>();
-        parents.add(parentId);
-        s.setParents(parents);
-      }
+      s.setParents(parseSampleReferences(rs.getString("parentIds")));
+      s.setChildren(parseSampleReferences(rs.getString("childIds")));
       
       s.setProject(ModelUtils.nullIfEmpty(rs.getString("projectName")));
       s.setArchived(rs.getBoolean("archived"));
@@ -115,6 +111,17 @@ public class SampleFileDao implements SampleDao {
       s.setAttributes(parseAttributes(rs.getString("attributes")));
       
       return s;
+    }
+    
+    private Set<Integer> parseSampleReferences(String string) {
+      List<String> list = DaoUtils.parseList(string);
+      if (list.isEmpty()) return null;
+      
+      Set<Integer> ids = new HashSet<>();
+      for (String id : list) {
+        ids.add(Integer.valueOf(id));
+      }
+      return ids;
     }
     
     private Status parseStatus(String string) {

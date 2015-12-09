@@ -3,10 +3,11 @@ package ca.on.oicr.pinery.flatfile.writer;
 import java.util.List;
 import java.util.Set;
 
-import ca.on.oicr.pinery.flatfile.util.ConverterUtils;
+import ca.on.oicr.pinery.flatfile.util.ArrayStringBuilder;
 import ca.on.oicr.pinery.flatfile.util.KeyValueStringBuilder;
 import ca.on.oicr.ws.dto.AttributeDto;
 import ca.on.oicr.ws.dto.SampleDto;
+import ca.on.oicr.ws.dto.SampleReferenceDto;
 import ca.on.oicr.ws.dto.StatusDto;
 
 public class SampleWriter extends Writer {
@@ -22,7 +23,8 @@ public class SampleWriter extends Writer {
     "createdUserId",
     "modifiedDate",
     "modifiedUserId",
-    "parentSampleId",
+    "parentIds",
+    "childIds",
     "projectName",
     "archived",
     "status",
@@ -60,7 +62,8 @@ public class SampleWriter extends Writer {
         sample.getCreatedById() == null ? "" : sample.getCreatedById().toString(),
         sample.getModifiedDate(),
         sample.getModifiedById() == null ? "" : sample.getModifiedById().toString(),
-        getParentIdString(sample),
+        getIdsString(sample.getParents()),
+        getIdsString(sample.getChildren()),
         sample.getProjectName(),
         sample.getArchived().toString(),
         getStatusString(sample),
@@ -70,15 +73,14 @@ public class SampleWriter extends Writer {
     return data;
   }
   
-  private static String getParentIdString(SampleDto sample) {
-    String parentId = null;
-    if (sample.getParents() != null) {
-      for (String parent : sample.getParents()) {
-        if (parentId != null) throw new RuntimeException("Sample ID " + sample.getId() + " has multiple parents");
-        parentId = ConverterUtils.getIdFromUrl(parent).toString();
+  private static String getIdsString(Set<SampleReferenceDto> samples) {
+    ArrayStringBuilder sb = new ArrayStringBuilder();
+    if (samples != null) {
+      for (SampleReferenceDto sample : samples) {
+        sb.append(sample.getId());
       }
     }
-    return parentId;
+    return sb.toString();
   }
   
   private static String getStatusString(SampleDto sample) {
