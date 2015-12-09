@@ -44,7 +44,7 @@ public class InstrumentWriter extends Writer {
   @Override
   protected String[] getRecord(int row) {
     InstrumentDto instrument = instruments.get(row);
-    InstrumentModelDto model = models.get(instrument.getModelId()); // TODO: modelId null
+    InstrumentModelDto model = models.get(instrument.getModelId());
     
     String[] data = {
         instrument.getId().toString(),
