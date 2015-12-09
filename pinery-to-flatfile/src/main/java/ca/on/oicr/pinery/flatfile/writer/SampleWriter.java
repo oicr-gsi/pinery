@@ -6,6 +6,7 @@ import java.util.Set;
 import ca.on.oicr.pinery.flatfile.util.ArrayStringBuilder;
 import ca.on.oicr.pinery.flatfile.util.KeyValueStringBuilder;
 import ca.on.oicr.ws.dto.AttributeDto;
+import ca.on.oicr.ws.dto.PreparationKitDto;
 import ca.on.oicr.ws.dto.SampleDto;
 import ca.on.oicr.ws.dto.SampleReferenceDto;
 import ca.on.oicr.ws.dto.StatusDto;
@@ -28,6 +29,9 @@ public class SampleWriter extends Writer {
     "projectName",
     "archived",
     "status",
+    "volume",
+    "concentration",
+    "preparationKit",
     "attributes"
   };
   
@@ -67,10 +71,23 @@ public class SampleWriter extends Writer {
         sample.getProjectName(),
         sample.getArchived().toString(),
         getStatusString(sample),
+        sample.getVolume() == null ? "" : sample.getVolume().toString(),
+        sample.getConcentration() == null ? "" : sample.getConcentration().toString(),
+        getPreparationKitString(sample),
         getAttributesString(sample)
     };
     
     return data;
+  }
+  
+  private String getPreparationKitString(SampleDto sample) {
+    PreparationKitDto kit = sample.getPreparationKit();
+    KeyValueStringBuilder sb = new KeyValueStringBuilder();
+    if (kit != null) {
+      if (kit.getName() != null) sb.append("name", kit.getName());
+      if (kit.getDescription() != null) sb.append("description", kit.getDescription());
+    }
+    return sb.toString();
   }
   
   private static String getIdsString(Set<SampleReferenceDto> samples) {
