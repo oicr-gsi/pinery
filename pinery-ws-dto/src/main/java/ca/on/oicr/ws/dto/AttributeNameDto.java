@@ -1,20 +1,14 @@
 package ca.on.oicr.ws.dto;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
-@XmlRootElement(name = "attribute_name")
-@JsonAutoDetect
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonInclude(Include.NON_NULL)
 public class AttributeNameDto {
 
    private String name;
    private Integer count;
-   @JsonProperty("archived_count")
    private Integer archivedCount;
    private String earliest;
    private String latest;
@@ -51,6 +45,7 @@ public class AttributeNameDto {
       this.latest = latest;
    }
 
+   @JsonProperty("archived_count")
    public Integer getArchivedCount() {
       return archivedCount;
    }

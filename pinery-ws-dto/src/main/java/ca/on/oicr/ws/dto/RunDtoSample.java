@@ -1,16 +1,13 @@
 package ca.on.oicr.ws.dto;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonAutoDetect
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonInclude(Include.NON_NULL)
 public class RunDtoSample {
 
    private String barcode;
-   @JsonProperty("barcode_two")
    private String barcodeTwo;
    private Integer id;
    private String url;
@@ -39,6 +36,7 @@ public class RunDtoSample {
       this.barcode = barcode;
    }
 
+   @JsonProperty("barcode_two")
    public String getBarcodeTwo() {
       return barcodeTwo;
    }

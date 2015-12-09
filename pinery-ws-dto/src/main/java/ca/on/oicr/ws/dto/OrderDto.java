@@ -2,17 +2,11 @@ package ca.on.oicr.ws.dto;
 
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
-@XmlRootElement(name = "order")
-@JsonAutoDetect
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonInclude(Include.NON_NULL)
 public class OrderDto {
 
    @Override
@@ -86,13 +80,9 @@ public class OrderDto {
    private String project;
    private String platform;
    private Set<OrderDtoSample> samples;
-   @JsonProperty("created_by_url")
    private String createdByUrl;
-   @JsonProperty("created_date")
    private String createdDate;
-   @JsonProperty("modified_by_url")
    private String modifiedByUrl;
-   @JsonProperty("modified_date")
    private String modifiedDate;
    private Integer id;
    private String url;
@@ -129,7 +119,7 @@ public class OrderDto {
       this.samples = samples;
    }
 
-   @XmlElement(name = "created_by_url")
+   @JsonProperty("created_by_url")
    public String getCreatedByUrl() {
       return createdByUrl;
    }
@@ -138,7 +128,7 @@ public class OrderDto {
       this.createdByUrl = createdByUrl;
    }
 
-   @XmlElement(name = "created_date")
+   @JsonProperty("created_date")
    public String getCreatedDate() {
       return createdDate;
    }
@@ -147,7 +137,7 @@ public class OrderDto {
       this.createdDate = createdDate;
    }
 
-   @XmlElement(name = "modified_by_url")
+   @JsonProperty("modified_by_url")
    public String getModifiedByUrl() {
       return modifiedByUrl;
    }
@@ -156,7 +146,7 @@ public class OrderDto {
       this.modifiedByUrl = modifiedByUrl;
    }
 
-   @XmlElement(name = "modified_date")
+   @JsonProperty("modified_date")
    public String getModifiedDate() {
       return modifiedDate;
    }

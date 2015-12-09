@@ -2,44 +2,28 @@ package ca.on.oicr.ws.dto;
 
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
-@XmlRootElement(name = "sample")
-@JsonAutoDetect
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonInclude(Include.NON_NULL)
 public class SampleDto {
 
    private String url;
    private String name;
    private String description;
-   @JsonProperty("tube_barcode")
    private String tubeBarcode;
    private Float volume;
    private Float concentration;
-   @JsonProperty("storage_location")
    private String storageLocation;
-   @JsonProperty("created_date")
    private String createdDate;
-   @JsonProperty("created_by_url")
    private String createdByUrl;
-   @JsonProperty("modified_date")
    private String modifiedDate;
-   @JsonProperty("modified_by_url")
    private String modifiedByUrl;
    private Integer id;
    private Boolean archived;
-   @JsonProperty("preparation_kit")
    private PreparationKitDto preparationKit;
-
-   @JsonProperty("project_name")
    private String projectName;
-   @JsonProperty("sample_type")
    private String sampleType;
    private Set<AttributeDto> attributes;
    private StatusDto status;
@@ -78,7 +62,7 @@ public class SampleDto {
       this.id = id;
    }
 
-   @XmlElement(name = "tube_barcode")
+   @JsonProperty("tube_barcode")
    public String getTubeBarcode() {
       return tubeBarcode;
    }
@@ -87,7 +71,7 @@ public class SampleDto {
       this.tubeBarcode = tubeBarcode;
    }
 
-   @XmlElement(name = "storage_location")
+   @JsonProperty("storage_location")
    public String getStorageLocation() {
       return storageLocation;
    }
@@ -96,7 +80,7 @@ public class SampleDto {
       this.storageLocation = storageLocation;
    }
 
-   @XmlElement(name = "created_date")
+   @JsonProperty("created_date")
    public String getCreatedDate() {
       return createdDate;
    }
@@ -105,7 +89,7 @@ public class SampleDto {
       this.createdDate = createdDate;
    }
 
-   @XmlElement(name = "modified_date")
+   @JsonProperty("modified_date")
    public String getModifiedDate() {
       return modifiedDate;
    }
@@ -122,7 +106,7 @@ public class SampleDto {
       this.archived = archived;
    }
 
-   @XmlElement(name = "preparation_kit")
+   @JsonProperty("preparation_kit")
    public PreparationKitDto getPreparationKit() {
       return preparationKit;
    }
@@ -147,7 +131,7 @@ public class SampleDto {
       this.concentration = concentration;
    }
 
-   @XmlElement(name = "project_name")
+   @JsonProperty("project_name")
    public String getProjectName() {
       return projectName;
    }
@@ -156,7 +140,7 @@ public class SampleDto {
       this.projectName = projectName;
    }
 
-   @XmlElement(name = "sample_type")
+   @JsonProperty("sample_type")
    public String getSampleType() {
       return sampleType;
    }
@@ -197,7 +181,7 @@ public class SampleDto {
       this.parents = parents;
    }
 
-   @XmlElement(name = "created_by_url")
+   @JsonProperty("created_by_url")
    public String getCreatedByUrl() {
       return createdByUrl;
    }
@@ -206,7 +190,7 @@ public class SampleDto {
       this.createdByUrl = createdByUrl;
    }
 
-   @XmlElement(name = "modified_by_url")
+   @JsonProperty("modified_by_url")
    public String getModifiedByUrl() {
       return modifiedByUrl;
    }

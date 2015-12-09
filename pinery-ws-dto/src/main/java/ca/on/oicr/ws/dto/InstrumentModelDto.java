@@ -1,25 +1,18 @@
 package ca.on.oicr.ws.dto;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonAutoDetect
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonInclude(Include.NON_NULL)
 public class InstrumentModelDto {
 
    private String url;
    private String name;
-   @JsonProperty("created_date")
    private String createdDate;
-   @JsonProperty("created_by_url")
    private String createdByUrl;
-   @JsonProperty("modified_date")
    private String modifiedDate;
-   @JsonProperty("modified_by_url")
    private String modifiedByUrl;
-   @JsonProperty("instruments_url")
    private String instrumentsUrl;
    private Integer id;
 
@@ -39,6 +32,7 @@ public class InstrumentModelDto {
       this.name = name;
    }
 
+   @JsonProperty("created_date")
    public String getCreatedDate() {
       return createdDate;
    }
@@ -47,6 +41,7 @@ public class InstrumentModelDto {
       this.createdDate = createdDate;
    }
 
+   @JsonProperty("created_by_url")
    public String getCreatedByUrl() {
       return createdByUrl;
    }
@@ -55,6 +50,7 @@ public class InstrumentModelDto {
       this.createdByUrl = createdByUrl;
    }
 
+   @JsonProperty("modified_date")
    public String getModifiedDate() {
       return modifiedDate;
    }
@@ -63,6 +59,7 @@ public class InstrumentModelDto {
       this.modifiedDate = modifiedDate;
    }
 
+   @JsonProperty("modified_by_url")
    public String getModifiedByUrl() {
       return modifiedByUrl;
    }
@@ -79,6 +76,7 @@ public class InstrumentModelDto {
       this.id = id;
    }
 
+   @JsonProperty("instruments_url")
    public String getInstrumentsUrl() {
       return instrumentsUrl;
    }

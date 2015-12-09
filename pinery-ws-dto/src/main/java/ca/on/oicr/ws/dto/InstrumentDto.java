@@ -1,20 +1,16 @@
 package ca.on.oicr.ws.dto;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonAutoDetect
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonInclude(Include.NON_NULL)
 public class InstrumentDto {
 
    private String url;
    private String name;
-   @JsonProperty("created_date")
    private String createdDate;
    private Integer id;
-   @JsonProperty("instrument_model")
    private String instrumentModel;
 
    public String getUrl() {
@@ -33,6 +29,7 @@ public class InstrumentDto {
       this.name = name;
    }
 
+   @JsonProperty("created_date")
    public String getCreatedDate() {
       return createdDate;
    }
@@ -49,6 +46,7 @@ public class InstrumentDto {
       this.id = id;
    }
 
+   @JsonProperty("instrument_model")
    public String getInstrumentModel() {
       return instrumentModel;
    }

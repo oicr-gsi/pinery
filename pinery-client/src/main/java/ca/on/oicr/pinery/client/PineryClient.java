@@ -15,7 +15,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import org.jboss.resteasy.plugins.providers.jackson.ResteasyJacksonProvider;
+import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 
 /**
  * This is the main class used for retrieving data from the Pinery webservice. It contains "child" clients for each 
@@ -64,7 +64,7 @@ public class PineryClient implements Closeable {
 		this.pineryBaseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
 		this.client = ignoreHttpsWarnings ? PineryClient.getInsecureClient() : PineryClient.getSecureClient();
 		// Register provider manually because it Was not registering automatically in dependent projects
-		this.client.register(ResteasyJacksonProvider.class);
+		this.client.register(ResteasyJackson2Provider.class);
 		this.open = true;
 	}
 	

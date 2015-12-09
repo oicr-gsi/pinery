@@ -2,24 +2,17 @@ package ca.on.oicr.ws.dto;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
-@XmlRootElement(name = "sample_changelog")
-@JsonAutoDetect
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonInclude(Include.NON_NULL)
 public class ChangeLogDto {
 
-   @JsonProperty("sample_url")
    private String sampleUrl;
    private List<ChangeDto> changes;
 
-   @XmlElement(name = "sample_url")
+   @JsonProperty("sample_url")
    public String getSampleUrl() {
       return sampleUrl;
    }
