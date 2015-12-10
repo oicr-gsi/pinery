@@ -60,7 +60,7 @@ public class InstrumentFileDao implements InstrumentDao {
       i.setId(rs.getInt("id"));
       i.setName(rs.getString("name"));
       i.setCreated(ModelUtils.convertToDate(rs.getString("createdDate")));
-      i.setInstrumentModel(rs.getString("modelId"));
+      i.setModelId(rs.getInt("modelId"));
       
       return i;
     }

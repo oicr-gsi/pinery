@@ -37,7 +37,10 @@ public class RunFileDao implements RunDao {
       
       r.setId(rs.getInt("id"));
       r.setName(ModelUtils.nullIfEmpty(rs.getString("name")));
+      r.setCreatedDate(ModelUtils.convertToDate(rs.getString("createdDate")));
+      r.setCreatedById(ModelUtils.nullIfZero(rs.getInt("createdUserId")));
       r.setInstrumentId(ModelUtils.nullIfZero(rs.getInt("instrumentId")));
+      r.setInstrumentName(ModelUtils.nullIfEmpty(rs.getString("instrumentName")));
       r.setState(ModelUtils.nullIfEmpty(rs.getString("state")));
       r.setBarcode(ModelUtils.nullIfEmpty(rs.getString("barcode")));
       

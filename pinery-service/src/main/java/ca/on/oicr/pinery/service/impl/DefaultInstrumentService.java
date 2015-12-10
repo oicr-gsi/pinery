@@ -38,6 +38,6 @@ public class DefaultInstrumentService implements InstrumentService {
 
    @Override
    public List<Instrument> getInstrumentModelInstrument(Integer id) {
-      return lims.getInstrumentModelInsrument(id);
+      return lims.getInstrumentModelInstrument(id);
    }
 }

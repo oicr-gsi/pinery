@@ -1,12 +1,14 @@
 package ca.on.oicr.pinery.flatfile.writer;
-import static ca.on.oicr.pinery.flatfile.util.ConverterUtils.getIdFromUrl;
 
 import java.util.List;
 import java.util.Set;
 
+import ca.on.oicr.pinery.flatfile.util.ArrayStringBuilder;
 import ca.on.oicr.pinery.flatfile.util.KeyValueStringBuilder;
 import ca.on.oicr.ws.dto.AttributeDto;
+import ca.on.oicr.ws.dto.PreparationKitDto;
 import ca.on.oicr.ws.dto.SampleDto;
+import ca.on.oicr.ws.dto.SampleReferenceDto;
 import ca.on.oicr.ws.dto.StatusDto;
 
 public class SampleWriter extends Writer {
@@ -22,10 +24,14 @@ public class SampleWriter extends Writer {
     "createdUserId",
     "modifiedDate",
     "modifiedUserId",
-    "parentSampleId",
+    "parentIds",
+    "childIds",
     "projectName",
     "archived",
     "status",
+    "volume",
+    "concentration",
+    "preparationKit",
     "attributes"
   };
   
@@ -57,28 +63,41 @@ public class SampleWriter extends Writer {
         sample.getStorageLocation(),
         sample.getSampleType(),
         sample.getCreatedDate(),
-        sample.getCreatedByUrl() == null ? "" : getIdFromUrl(sample.getCreatedByUrl()).toString(),
+        sample.getCreatedById() == null ? "" : sample.getCreatedById().toString(),
         sample.getModifiedDate(),
-        sample.getModifiedByUrl() == null ? "" : getIdFromUrl(sample.getModifiedByUrl()).toString(),
-        getParentIdString(sample),
+        sample.getModifiedById() == null ? "" : sample.getModifiedById().toString(),
+        getIdsString(sample.getParents()),
+        getIdsString(sample.getChildren()),
         sample.getProjectName(),
         sample.getArchived().toString(),
         getStatusString(sample),
+        sample.getVolume() == null ? "" : sample.getVolume().toString(),
+        sample.getConcentration() == null ? "" : sample.getConcentration().toString(),
+        getPreparationKitString(sample),
         getAttributesString(sample)
     };
     
     return data;
   }
   
-  private static String getParentIdString(SampleDto sample) {
-    String parentId = null;
-    if (sample.getParents() != null) {
-      for (String parent : sample.getParents()) {
-        if (parentId != null) throw new RuntimeException("Sample ID " + sample.getId() + " has multiple parents");
-        parentId = getIdFromUrl(parent).toString();
+  private String getPreparationKitString(SampleDto sample) {
+    PreparationKitDto kit = sample.getPreparationKit();
+    KeyValueStringBuilder sb = new KeyValueStringBuilder();
+    if (kit != null) {
+      if (kit.getName() != null) sb.append("name", kit.getName());
+      if (kit.getDescription() != null) sb.append("description", kit.getDescription());
+    }
+    return sb.toString();
+  }
+  
+  private static String getIdsString(Set<SampleReferenceDto> samples) {
+    ArrayStringBuilder sb = new ArrayStringBuilder();
+    if (samples != null) {
+      for (SampleReferenceDto sample : samples) {
+        sb.append(sample.getId());
       }
     }
-    return parentId;
+    return sb.toString();
   }
   
   private static String getStatusString(SampleDto sample) {

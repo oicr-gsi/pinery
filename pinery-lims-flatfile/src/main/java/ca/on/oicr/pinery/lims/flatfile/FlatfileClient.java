@@ -40,12 +40,6 @@ public class FlatfileClient implements Lims {
   private ChangeDao changeDao;
 
   @Override
-  public List<String> getProjects() { // TODO: remove unused endpoint
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public Sample getSample(Integer id) {
     return sampleDao.getSample(id);
   }
@@ -137,7 +131,7 @@ public class FlatfileClient implements Lims {
   }
 
   @Override
-  public List<Instrument> getInstrumentModelInsrument(Integer id) { // TODO: fix typo in interface
+  public List<Instrument> getInstrumentModelInstrument(Integer id) {
     return instrumentDao.getInstrumentModelInstruments(id);
   }
 

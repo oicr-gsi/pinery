@@ -48,18 +48,9 @@ public class InstrumentResource {
    public List<InstrumentModelDto> getInstrumentModels() {
       List<InstrumentModel> instrumentModels = instrumentService.getInstrumentModels();
       List<InstrumentModelDto> result = Lists.newArrayList();
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("instrumentmodel").build();
-      final URI baseUserUri = uriInfo.getBaseUriBuilder().path("user/").build();
       for (InstrumentModel instrumentModel : instrumentModels) {
          InstrumentModelDto dto = Dtos.asDto(instrumentModel);
-         dto.setUrl(baseUri + "/" + dto.getId().toString());
-         dto.setInstrumentsUrl(baseUri + "/" + dto.getId().toString() + "/instruments");
-         if (instrumentModel.getCreatedById() != null) {
-            dto.setCreatedByUrl(baseUserUri + instrumentModel.getCreatedById().toString());
-         }
-         if (instrumentModel.getModifiedById() != null) {
-            dto.setModifiedByUrl(baseUserUri + instrumentModel.getModifiedById().toString());
-         }
+         addUrls(dto);
          result.add(dto);
       }
       return result;
@@ -77,17 +68,7 @@ public class InstrumentResource {
          throw new NotFoundException("", Response.noContent().status(Status.NOT_FOUND).build());
       }
       InstrumentModelDto dto = Dtos.asDto(instrumentModel);
-
-      final URI uri = uriInfo.getAbsolutePathBuilder().build();
-      final URI baseUserUri = uriInfo.getBaseUriBuilder().path("user/").build();
-      dto.setUrl(uri.toString());
-      dto.setInstrumentsUrl(uri + "/instruments");
-      if (instrumentModel.getCreatedById() != null) {
-         dto.setCreatedByUrl(baseUserUri + instrumentModel.getCreatedById().toString());
-      }
-      if (instrumentModel.getModifiedById() != null) {
-         dto.setModifiedByUrl(baseUserUri + instrumentModel.getModifiedById().toString());
-      }
+      addUrls(dto);
       return dto;
    }
 
@@ -98,12 +79,9 @@ public class InstrumentResource {
    public List<InstrumentDto> getInstruments() {
       List<Instrument> instruments = instrumentService.getInstruments();
       List<InstrumentDto> result = Lists.newArrayList();
-      final URI baseUriInstrumentModel = uriInfo.getBaseUriBuilder().path("instrumentmodel").build();
-      final URI baseUri = uriInfo.getBaseUriBuilder().build();
       for (Instrument instrument : instruments) {
          InstrumentDto dto = Dtos.asDto(instrument);
-         dto.setUrl(baseUri + "instrument/" + dto.getId().toString());
-         dto.setInstrumentModel(baseUriInstrumentModel + "/" + dto.getInstrumentModel());
+         addUrls(dto);
          result.add(dto);
       }
       return result;
@@ -118,12 +96,9 @@ public class InstrumentResource {
          @ApiParam(value = "ID of instrument model to fetch instruments for", required = true) @PathParam("id") Integer id) {
       List<Instrument> instruments = instrumentService.getInstrumentModelInstrument(id);
       List<InstrumentDto> result = Lists.newArrayList();
-      final URI baseUriInstumentModel = uriInfo.getBaseUriBuilder().path("instrumentmodel").build();
-      final URI baseUri = uriInfo.getBaseUriBuilder().build();
       for (Instrument instrument : instruments) {
          InstrumentDto dto = Dtos.asDto(instrument);
-         dto.setUrl(baseUri + "instrument/" + dto.getId().toString());
-         dto.setInstrumentModel(baseUriInstumentModel + "/" + id);
+         addUrls(dto);
          result.add(dto);
       }
       return result;
@@ -141,11 +116,28 @@ public class InstrumentResource {
       }
 
       InstrumentDto dto = Dtos.asDto(instrument);
-
-      final URI uri = uriInfo.getBaseUriBuilder().build();
-      final URI uriInstrumentModel = uriInfo.getBaseUriBuilder().path("instrumentmodel").build();
-      dto.setUrl(uri + "instrument/" + dto.getId().toString());
-      dto.setInstrumentModel(uriInstrumentModel + "/" + dto.getInstrumentModel());
+      addUrls(dto);
       return dto;
    }
+   
+   private void addUrls(InstrumentDto dto) {
+     final URI uri = uriInfo.getBaseUriBuilder().build();
+     final URI uriInstrumentModel = uriInfo.getBaseUriBuilder().path("instrumentmodel").build();
+     dto.setUrl(uri + "instrument/" + dto.getId().toString());
+     dto.setModelUrl(uriInstrumentModel + "/" + dto.getModelId());
+   }
+   
+   private void addUrls(InstrumentModelDto dto) {
+     final URI uri = uriInfo.getBaseUriBuilder().path("instrumentmodel/").build();
+     final URI baseUserUri = uriInfo.getBaseUriBuilder().path("user/").build();
+     dto.setUrl(uri + dto.getId().toString());
+     dto.setInstrumentsUrl(uri + dto.getId().toString() + "/instruments");
+     if (dto.getCreatedById() != null) {
+        dto.setCreatedByUrl(baseUserUri + dto.getCreatedById().toString());
+     }
+     if (dto.getModifiedById() != null) {
+        dto.setModifiedByUrl(baseUserUri + dto.getModifiedById().toString());
+     }
+   }
+   
 }

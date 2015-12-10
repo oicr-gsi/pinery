@@ -9,37 +9,45 @@ public class DefaultInstrument implements Instrument {
    private Integer id;
    private String name;
    private Date created;
-   private String instrumentModel;
+   private Integer modelId;
 
-   public Integer getId() {
+   @Override
+  public Integer getId() {
       return id;
    }
 
-   public void setId(Integer id) {
+   @Override
+  public void setId(Integer id) {
       this.id = id;
    }
 
-   public String getName() {
+   @Override
+  public String getName() {
       return name;
    }
 
-   public void setName(String name) {
+   @Override
+  public void setName(String name) {
       this.name = name;
    }
 
-   public Date getCreated() {
+   @Override
+  public Date getCreated() {
       return created;
    }
 
-   public void setCreated(Date created) {
+   @Override
+  public void setCreated(Date created) {
       this.created = created;
    }
 
-   public String getInstrumentModel() {
-      return instrumentModel;
-   }
+  @Override
+  public Integer getModelId() {
+    return modelId;
+  }
 
-   public void setInstrumentModel(String instrumentModel) {
-      this.instrumentModel = instrumentModel;
-   }
+  @Override
+  public void setModelId(Integer modelId) {
+    this.modelId = modelId;
+  }
 }

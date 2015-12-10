@@ -16,12 +16,14 @@ import org.springframework.jdbc.core.RowMapper;
 
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.PreparationKit;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Status;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.lims.DefaultAttribute;
 import ca.on.oicr.pinery.lims.DefaultAttributeName;
+import ca.on.oicr.pinery.lims.DefaultPreparationKit;
 import ca.on.oicr.pinery.lims.DefaultSample;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.lims.DefaultStatus;
@@ -101,20 +103,40 @@ public class SampleFileDao implements SampleDao {
       s.setModified(ModelUtils.convertToDate(rs.getString("modifiedDate")));
       s.setModifiedById(ModelUtils.nullIfZero(rs.getInt("modifiedUserId")));
       
-      int parentId = rs.getInt("parentSampleId");
-      if (parentId != 0) {
-        Set<Integer> parents = new HashSet<>();
-        parents.add(parentId);
-        s.setParents(parents);
-      }
+      s.setParents(parseSampleReferences(rs.getString("parentIds")));
+      s.setChildren(parseSampleReferences(rs.getString("childIds")));
       
       s.setProject(ModelUtils.nullIfEmpty(rs.getString("projectName")));
       s.setArchived(rs.getBoolean("archived"));
+      s.setVolume(ModelUtils.nullIfEmptyFloat(rs.getString("volume")));
+      s.setConcentration(ModelUtils.nullIfEmptyFloat(rs.getString("concentration")));
       
+      s.setPreparationKit(parsePreparationKit(rs.getString("preparationKit")));
       s.setStatus(parseStatus(rs.getString("status")));
       s.setAttributes(parseAttributes(rs.getString("attributes")));
       
       return s;
+    }
+    
+    private PreparationKit parsePreparationKit(String string) {
+      Map<String,String> map = DaoUtils.parseKeyValuePairs(string);
+      if (map.isEmpty()) return null;
+      
+      PreparationKit kit = new DefaultPreparationKit();
+      kit.setName(ModelUtils.nullIfEmpty(map.get("name")));
+      kit.setDescription(ModelUtils.nullIfEmpty(map.get("description")));
+      return kit;
+    }
+    
+    private Set<Integer> parseSampleReferences(String string) {
+      List<String> list = DaoUtils.parseList(string);
+      if (list.isEmpty()) return null;
+      
+      Set<Integer> ids = new HashSet<>();
+      for (String id : list) {
+        ids.add(Integer.valueOf(id));
+      }
+      return ids;
     }
     
     private Status parseStatus(String string) {

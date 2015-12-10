@@ -9,81 +9,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(Include.NON_NULL)
 public class RunDto {
 
-   @Override
-   public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
-      result = prime * result + ((createdByUrl == null) ? 0 : createdByUrl.hashCode());
-      result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
-      result = prime * result + ((id == null) ? 0 : id.hashCode());
-      result = prime * result + ((instrumentName == null) ? 0 : instrumentName.hashCode());
-      result = prime * result + ((instrumentUrl == null) ? 0 : instrumentUrl.hashCode());
-      result = prime * result + ((name == null) ? 0 : name.hashCode());
-      result = prime * result + ((positions == null) ? 0 : positions.hashCode());
-      result = prime * result + ((state == null) ? 0 : state.hashCode());
-      result = prime * result + ((url == null) ? 0 : url.hashCode());
-      return result;
-   }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null) return false;
-      if (getClass() != obj.getClass()) return false;
-      RunDto other = (RunDto) obj;
-      if (barcode == null) {
-         if (other.barcode != null) return false;
-      } else if (!barcode.equals(other.barcode)) return false;
-      if (createdByUrl == null) {
-         if (other.createdByUrl != null) return false;
-      } else if (!createdByUrl.equals(other.createdByUrl)) return false;
-      if (createdDate == null) {
-         if (other.createdDate != null) return false;
-      } else if (!createdDate.equals(other.createdDate)) return false;
-      if (id == null) {
-         if (other.id != null) return false;
-      } else if (!id.equals(other.id)) return false;
-      if (instrumentName == null) {
-         if (other.instrumentName != null) return false;
-      } else if (!instrumentName.equals(other.instrumentName)) return false;
-      if (instrumentUrl == null) {
-         if (other.instrumentUrl != null) return false;
-      } else if (!instrumentUrl.equals(other.instrumentUrl)) return false;
-      if (name == null) {
-         if (other.name != null) return false;
-      } else if (!name.equals(other.name)) return false;
-      if (positions == null) {
-         if (other.positions != null) return false;
-      } else if (!positions.equals(other.positions)) return false;
-      if (state == null) {
-         if (other.state != null) return false;
-      } else if (!state.equals(other.state)) return false;
-      if (url == null) {
-         if (other.url != null) return false;
-      } else if (!url.equals(other.url)) return false;
-      return true;
-   }
-
-   @Override
-   public String toString() {
-      return "RunDto [state=" + state + ", name=" + name + ", barcode=" + barcode + ", instrumentName=" + instrumentName + ", positions="
-            + positions + ", createdByUrl=" + createdByUrl + ", createdDate=" + createdDate + ", id=" + id + ", url=" + url
-            + ", instrumentUrl=" + instrumentUrl + ", hashCode()=" + hashCode() + ", getState()=" + getState() + ", getName()=" + getName()
-            + ", getBarcode()=" + getBarcode() + ", getPositions()=" + getPositions() + ", getCreatedByUrl()=" + getCreatedByUrl()
-            + ", getCreatedDate()=" + getCreatedDate() + ", getId()=" + getId() + ", getUrl()=" + getUrl() + ", getInstrument_Url()="
-            + getInstrumentUrl() + ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
-   }
-
    private String state;
    private String name;
    private String barcode;
    private String instrumentName;
    private Set<RunDtoPosition> positions;
+   private Integer createdById;
    private String createdByUrl;
    private String createdDate;
    private Integer id;
    private String url;
+   private Integer instrumentId;
    private String instrumentUrl;
 
    public String getState() {
@@ -116,6 +52,15 @@ public class RunDto {
 
    public void setPositions(Set<RunDtoPosition> positions) {
       this.positions = positions;
+   }
+
+   @JsonProperty("created_by_id")
+   public Integer getCreatedById() {
+      return createdById;
+   }
+
+   public void setCreatedById(Integer createdById) {
+      this.createdById = createdById;
    }
 
    @JsonProperty("created_by_url")
@@ -161,6 +106,15 @@ public class RunDto {
       this.instrumentName = instrumentName;
    }
 
+   @JsonProperty("instrument_id")
+   public Integer getInstrumentId() {
+      return instrumentId;
+   }
+
+   public void setInstrumentId(Integer instrumentId) {
+      this.instrumentId = instrumentId;
+   }
+
    @JsonProperty("instrument_url")
    public String getInstrumentUrl() {
       return instrumentUrl;
@@ -168,6 +122,77 @@ public class RunDto {
 
    public void setInstrumentUrl(String instrumentUrl) {
       this.instrumentUrl = instrumentUrl;
+   }
+
+   @Override
+   public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
+      result = prime * result + ((createdById == null) ? 0 : createdById.hashCode());
+      result = prime * result + ((createdByUrl == null) ? 0 : createdByUrl.hashCode());
+      result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
+      result = prime * result + ((id == null) ? 0 : id.hashCode());
+      result = prime * result + ((instrumentId == null) ? 0 : instrumentId.hashCode());
+      result = prime * result + ((instrumentName == null) ? 0 : instrumentName.hashCode());
+      result = prime * result + ((instrumentUrl == null) ? 0 : instrumentUrl.hashCode());
+      result = prime * result + ((name == null) ? 0 : name.hashCode());
+      result = prime * result + ((positions == null) ? 0 : positions.hashCode());
+      result = prime * result + ((state == null) ? 0 : state.hashCode());
+      result = prime * result + ((url == null) ? 0 : url.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
+      RunDto other = (RunDto) obj;
+      if (barcode == null) {
+         if (other.barcode != null) return false;
+      } else if (!barcode.equals(other.barcode)) return false;
+      if (createdById == null) {
+         if (other.createdById != null) return false;
+      } else if (!createdById.equals(other.createdById)) return false;
+      if (createdByUrl == null) {
+         if (other.createdByUrl != null) return false;
+      } else if (!createdByUrl.equals(other.createdByUrl)) return false;
+      if (createdDate == null) {
+         if (other.createdDate != null) return false;
+      } else if (!createdDate.equals(other.createdDate)) return false;
+      if (id == null) {
+         if (other.id != null) return false;
+      } else if (!id.equals(other.id)) return false;
+      if (instrumentId == null) {
+         if (other.instrumentId != null) return false;
+      } else if (!instrumentId.equals(other.instrumentId)) return false;
+      if (instrumentName == null) {
+         if (other.instrumentName != null) return false;
+      } else if (!instrumentName.equals(other.instrumentName)) return false;
+      if (instrumentUrl == null) {
+         if (other.instrumentUrl != null) return false;
+      } else if (!instrumentUrl.equals(other.instrumentUrl)) return false;
+      if (name == null) {
+         if (other.name != null) return false;
+      } else if (!name.equals(other.name)) return false;
+      if (positions == null) {
+         if (other.positions != null) return false;
+      } else if (!positions.equals(other.positions)) return false;
+      if (state == null) {
+         if (other.state != null) return false;
+      } else if (!state.equals(other.state)) return false;
+      if (url == null) {
+         if (other.url != null) return false;
+      } else if (!url.equals(other.url)) return false;
+      return true;
+   }
+
+   @Override
+   public String toString() {
+      return "RunDto [state=" + state + ", name=" + name + ", barcode=" + barcode + ", instrumentName=" + instrumentName + ", positions="
+            + positions + ", createdById=" + createdById + ", createdByUrl=" + createdByUrl + ", createdDate=" + createdDate + ", id=" + id + ", url=" + url + ", instrumentId=" + instrumentId
+            + ", instrumentUrl=" + instrumentUrl + "]";
    }
 
 }

@@ -53,4 +53,14 @@ public class ModelUtils {
     return i == null || i.equals(Integer.valueOf(0)) ? null : i;
   }
   
+  /**
+   * Utility method to avoid setting value of zero when a Float should actually be null
+   * 
+   * @param floatString String representing a Float or null
+   * @return null if floatString is null or an empty String; the Float value otherwise
+   */
+  public static Float nullIfEmptyFloat(String floatString) {
+    return floatString == null || floatString.length() == 0 ? null : Float.valueOf(floatString);
+  }
+  
 }

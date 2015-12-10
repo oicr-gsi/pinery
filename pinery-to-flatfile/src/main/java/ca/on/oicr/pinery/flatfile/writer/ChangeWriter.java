@@ -1,7 +1,5 @@
 package ca.on.oicr.pinery.flatfile.writer;
 
-import static ca.on.oicr.pinery.flatfile.util.ConverterUtils.getIdFromUrl;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class ChangeWriter extends Writer {
     ArrayList<Change> changes = new ArrayList<>();
     
     for (ChangeLogDto changeLog : changeLogs) {
-      Integer sampleId = getIdFromUrl(changeLog.getSampleUrl());
+      Integer sampleId = changeLog.getSampleId();
       for (ChangeDto change : changeLog.getChanges()) {
         changes.add(new Change(sampleId, change));
       }
@@ -50,7 +48,7 @@ public class ChangeWriter extends Writer {
         "" + changes.get(row).getSampleId(),
         change.getAction(),
         change.getCreatedDate(),
-        getIdFromUrl(change.getCreatedByUrl()).toString()
+        change.getCreatedById().toString()
     };
     
     return data;

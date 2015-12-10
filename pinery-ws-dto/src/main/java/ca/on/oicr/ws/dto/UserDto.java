@@ -7,69 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(Include.NON_NULL)
 public class UserDto {
 
-   @Override
-   public String toString() {
-      return "UserDto [title=" + title + ", firstname=" + firstname + ", lastname=" + lastname + ", institution=" + institution
-            + ", phone=" + phone + ", email=" + email + ", comment=" + comment + ", createdDate=" + createdDate + ", modifiedDate="
-            + modifiedDate + ", id=" + id + "]";
-   }
-
-   @Override
-   public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((archived == null) ? 0 : archived.hashCode());
-      result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
-      result = prime * result + ((email == null) ? 0 : email.hashCode());
-      result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-      result = prime * result + ((id == null) ? 0 : id.hashCode());
-      result = prime * result + ((institution == null) ? 0 : institution.hashCode());
-      result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
-      result = prime * result + ((modifiedDate == null) ? 0 : modifiedDate.hashCode());
-      result = prime * result + ((phone == null) ? 0 : phone.hashCode());
-      result = prime * result + ((title == null) ? 0 : title.hashCode());
-      return result;
-   }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null) return false;
-      if (getClass() != obj.getClass()) return false;
-      UserDto other = (UserDto) obj;
-      if (archived == null) {
-         if (other.archived != null) return false;
-      } else if (!archived.equals(other.archived)) return false;
-      if (createdDate == null) {
-         if (other.createdDate != null) return false;
-      } else if (!createdDate.equals(other.createdDate)) return false;
-      if (email == null) {
-         if (other.email != null) return false;
-      } else if (!email.equals(other.email)) return false;
-      if (firstname == null) {
-         if (other.firstname != null) return false;
-      } else if (!firstname.equals(other.firstname)) return false;
-      if (id == null) {
-         if (other.id != null) return false;
-      } else if (!id.equals(other.id)) return false;
-      if (institution == null) {
-         if (other.institution != null) return false;
-      } else if (!institution.equals(other.institution)) return false;
-      if (lastname == null) {
-         if (other.lastname != null) return false;
-      } else if (!lastname.equals(other.lastname)) return false;
-      if (modifiedDate == null) {
-         if (other.modifiedDate != null) return false;
-      } else if (!modifiedDate.equals(other.modifiedDate)) return false;
-      if (phone == null) {
-         if (other.phone != null) return false;
-      } else if (!phone.equals(other.phone)) return false;
-      if (title == null) {
-         if (other.title != null) return false;
-      } else if (!title.equals(other.title)) return false;
-      return true;
-   }
-
    private String url;
    private String title;
    private String firstname;
@@ -79,8 +16,10 @@ public class UserDto {
    private String email;
    private String comment;
    private String createdDate;
+   private Integer createdById;
    private String createdByUrl;
    private String modifiedDate;
+   private Integer modifiedById;
    private String modifiedByUrl;
    private Integer id;
    private Boolean archived;
@@ -127,6 +66,15 @@ public class UserDto {
       this.archived = archived;
    }
 
+   @JsonProperty("created_by_id")
+   public Integer getCreatedById() {
+      return createdById;
+   }
+
+   public void setCreatedById(Integer createdById) {
+      this.createdById = createdById;
+   }
+
    @JsonProperty("created_by_url")
    public String getCreatedByUrl() {
       return createdByUrl;
@@ -134,6 +82,15 @@ public class UserDto {
 
    public void setCreatedByUrl(String createdByUrl) {
       this.createdByUrl = createdByUrl;
+   }
+
+   @JsonProperty("modified_by_id")
+   public Integer getModifiedById() {
+      return modifiedById;
+   }
+
+   public void setModifiedById(Integer modifiedById) {
+      this.modifiedById = modifiedById;
    }
 
    @JsonProperty("modified_by_url")
@@ -199,6 +156,69 @@ public class UserDto {
 
    public void setComment(String comment) {
       this.comment = comment;
+   }
+
+   @Override
+   public String toString() {
+      return "UserDto [title=" + title + ", firstname=" + firstname + ", lastname=" + lastname + ", institution=" + institution
+            + ", phone=" + phone + ", email=" + email + ", comment=" + comment + ", createdDate=" + createdDate + ", modifiedDate="
+            + modifiedDate + ", id=" + id + "]";
+   }
+
+   @Override
+   public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((archived == null) ? 0 : archived.hashCode());
+      result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
+      result = prime * result + ((email == null) ? 0 : email.hashCode());
+      result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
+      result = prime * result + ((id == null) ? 0 : id.hashCode());
+      result = prime * result + ((institution == null) ? 0 : institution.hashCode());
+      result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
+      result = prime * result + ((modifiedDate == null) ? 0 : modifiedDate.hashCode());
+      result = prime * result + ((phone == null) ? 0 : phone.hashCode());
+      result = prime * result + ((title == null) ? 0 : title.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (obj == null) return false;
+      if (getClass() != obj.getClass()) return false;
+      UserDto other = (UserDto) obj;
+      if (archived == null) {
+         if (other.archived != null) return false;
+      } else if (!archived.equals(other.archived)) return false;
+      if (createdDate == null) {
+         if (other.createdDate != null) return false;
+      } else if (!createdDate.equals(other.createdDate)) return false;
+      if (email == null) {
+         if (other.email != null) return false;
+      } else if (!email.equals(other.email)) return false;
+      if (firstname == null) {
+         if (other.firstname != null) return false;
+      } else if (!firstname.equals(other.firstname)) return false;
+      if (id == null) {
+         if (other.id != null) return false;
+      } else if (!id.equals(other.id)) return false;
+      if (institution == null) {
+         if (other.institution != null) return false;
+      } else if (!institution.equals(other.institution)) return false;
+      if (lastname == null) {
+         if (other.lastname != null) return false;
+      } else if (!lastname.equals(other.lastname)) return false;
+      if (modifiedDate == null) {
+         if (other.modifiedDate != null) return false;
+      } else if (!modifiedDate.equals(other.modifiedDate)) return false;
+      if (phone == null) {
+         if (other.phone != null) return false;
+      } else if (!phone.equals(other.phone)) return false;
+      if (title == null) {
+         if (other.title != null) return false;
+      } else if (!title.equals(other.title)) return false;
+      return true;
    }
 
 }

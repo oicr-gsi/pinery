@@ -1,7 +1,5 @@
 package ca.on.oicr.pinery.flatfile.writer;
 
-import static ca.on.oicr.pinery.flatfile.util.ConverterUtils.getIdFromUrl;
-
 import java.util.List;
 
 import ca.on.oicr.ws.dto.UserDto;
@@ -16,6 +14,7 @@ public class UserWriter extends Writer {
     "institution",
     "phone",
     "email",
+    "comment",
     "archived",
     "createdDate",
     "createdUserId",
@@ -51,11 +50,12 @@ public class UserWriter extends Writer {
         user.getInstitution(),
         user.getPhone(),
         user.getEmail(),
+        user.getComment(),
         user.getArchived().toString(),
         user.getCreatedDate(),
-        getIdFromUrl(user.getCreatedByUrl()).toString(),
+        user.getCreatedById().toString(),
         user.getModifiedDate(),
-        getIdFromUrl(user.getModifiedByUrl()).toString()
+        user.getModifiedById().toString()
     };
     
     return data;

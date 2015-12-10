@@ -46,11 +46,9 @@ public class UserResource {
 	public List<UserDto> getUsers() {
 		List<User> users = userService.getUsers();
 		List<UserDto> result = Lists.newArrayList();
-		final URI baseUri = uriInfo.getBaseUriBuilder().path("user").build();
 		for (User user : users) {
 			UserDto dto = Dtos.asDto(user);
-			dto.setUrl(baseUri + "/" + dto.getId().toString());
-			addUsers(user, dto);
+			addUrls(dto);
 			result.add(dto);
 		}
 		return result;
@@ -67,19 +65,18 @@ public class UserResource {
 		  throw new NotFoundException("No user found with ID: " + id);
 		}
 		UserDto dto = Dtos.asDto(user);
-		final URI uri = uriInfo.getAbsolutePathBuilder().build();
-		dto.setUrl(uri.toString());
-		addUsers(user, dto);
+		addUrls(dto);
 		return dto;
 	}
 	
-	private void addUsers(User user, UserDto dto) {
+	private void addUrls(UserDto dto) {
 		final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
-		if(user.getCreatedById() != null) {
-			dto.setCreatedByUrl(baseUri + user.getCreatedById().toString());
+		dto.setUrl(baseUri + dto.getId().toString());
+		if(dto.getCreatedById() != null) {
+			dto.setCreatedByUrl(baseUri + dto.getCreatedById().toString());
 		}
-		if (user.getModifiedById() != null) {
-			dto.setModifiedByUrl(baseUri + user.getModifiedById().toString());
+		if (dto.getModifiedById() != null) {
+			dto.setModifiedByUrl(baseUri + dto.getModifiedById().toString());
 		}
 	}
 

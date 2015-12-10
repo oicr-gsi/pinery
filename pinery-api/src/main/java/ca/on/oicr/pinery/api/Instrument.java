@@ -16,8 +16,8 @@ public interface Instrument {
 
    public void setCreated(Date created);
 
-   public String getInstrumentModel();
+   public Integer getModelId();
 
-   public void setInstrumentModel(String instumentModel);
+   public void setModelId(Integer modelId);
 
 }

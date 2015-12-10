@@ -1,7 +1,5 @@
 package ca.on.oicr.pinery.flatfile.writer;
 
-import static ca.on.oicr.pinery.flatfile.util.ConverterUtils.getIdFromUrl;
-
 import java.util.List;
 
 import ca.on.oicr.pinery.flatfile.util.ArrayStringBuilder;
@@ -50,9 +48,9 @@ public class OrderWriter extends Writer {
         order.getStatus(),
         order.getPlatform(),
         order.getCreatedDate(),
-        order.getModifiedByUrl() == null ? "" : getIdFromUrl(order.getCreatedByUrl()).toString(),
-        order.getCreatedDate(),
-        order.getModifiedByUrl() == null ? "" : getIdFromUrl(order.getCreatedByUrl()).toString(),
+        order.getCreatedById() == null ? "" : order.getCreatedById().toString(),
+        order.getModifiedDate(),
+        order.getModifiedById() == null ? "" : order.getModifiedById().toString(),
         getSamplesString(order)
     };
     
@@ -61,8 +59,10 @@ public class OrderWriter extends Writer {
   
   private static String getSamplesString(OrderDto order) {
     ArrayStringBuilder sb = new ArrayStringBuilder();
-    for (OrderDtoSample sample : order.getSamples()) {
-      sb.append(getOrderSampleString(sample));
+    if (order.getSamples() != null) {
+      for (OrderDtoSample sample : order.getSamples()) {
+        sb.append(getOrderSampleString(sample));
+      }
     }
     return sb.toString();
   }

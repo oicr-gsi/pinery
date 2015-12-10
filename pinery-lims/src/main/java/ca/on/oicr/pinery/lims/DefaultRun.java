@@ -18,6 +18,7 @@ public class DefaultRun implements Run {
    private Integer id;
    private Integer createdById;
    private Integer instrumentId;
+   private String instrumentName;
 
    @Override
    public String getState() {
@@ -120,7 +121,16 @@ public class DefaultRun implements Run {
    @Override
    public void setBarcodeTwo(String barcodeTwo) {
       this.barcodeTwo = barcodeTwo;
+   }
 
+   @Override
+   public String getInstrumentName() {
+     return instrumentName;
+   }
+
+   @Override
+   public void setInstrumentName(String instrumentName) {
+     this.instrumentName = instrumentName;
    }
 
    @Override
@@ -137,6 +147,7 @@ public class DefaultRun implements Run {
       result = prime * result + ((name == null) ? 0 : name.hashCode());
       result = prime * result + ((sample == null) ? 0 : sample.hashCode());
       result = prime * result + ((state == null) ? 0 : state.hashCode());
+      result = prime * result + ((instrumentName == null) ? 0 : instrumentName.hashCode());
       return result;
    }
 
@@ -176,6 +187,9 @@ public class DefaultRun implements Run {
       if (state == null) {
          if (other.state != null) return false;
       } else if (!state.equals(other.state)) return false;
+      if (instrumentName == null) {
+        if (other.instrumentName != null) return false;
+     } else if (!instrumentName.equals(other.instrumentName)) return false;
       return true;
    }
 
@@ -183,7 +197,7 @@ public class DefaultRun implements Run {
    public String toString() {
       return "DefaultRun [state=" + state + ", name=" + name + ", barcode=" + barcode + ", barcodeTwo=" + barcodeTwo + ", sample=" + sample
             + ", createdByUrl=" + createdByUrl + ", createdDate=" + createdDate + ", id=" + id + ", createdById=" + createdById
-            + ", instrumentId=" + instrumentId + "]";
+            + ", instrumentId=" + instrumentId+ ", instrumentName=" + instrumentName + "]";
    }
 
 }

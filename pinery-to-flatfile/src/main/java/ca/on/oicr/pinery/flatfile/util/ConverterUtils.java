@@ -35,14 +35,4 @@ public class ConverterUtils {
     public Integer getId(T item);
   }
   
-  /**
-   * Convenience method to get the ID out of a URL
-   * 
-   * @param url the URL. Must end with "/{id}"
-   * @return the ID
-   */
-  public static Integer getIdFromUrl(String url) {
-    return Integer.parseInt(url.substring(url.lastIndexOf("/")+1, url.length()));
-  }
-  
 }
