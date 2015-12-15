@@ -56,10 +56,14 @@ Contains all sample data. Fields:
 | createdUserId | int | ID of user who created this sample |
 | modifiedDate | Date | format: 2015-12-01T17:16:32-04:00 |
 | modifiedUserId | int | ID of user who last modified this sample |
-| parentSampleId | int | ID of parent sample |
+| parentIds | List of int | IDs of parent samples |
+| childIds | List of int | IDs of child samples |
 | projectName | String |  |
 | archived | boolean |  |
 | status | key:value set | contains exactly 2 keys: 'name' and 'state' |
+| volume | Float |  |
+| concentration |  |
+| preparationKit | key:value set | possible keys: 'name' and 'description' |
 | attributes | key:value set | Any additional sample attributes. Attribute names are used as the keys | 
 
 #### changes.tsv
@@ -97,6 +101,8 @@ Contains all sequencer run data. Fields:
 | ----- | ---- | ----- |
 | id | int | ID from LIMS |
 | name | String | Run name |
+| createdDate | Date | format: 2015-12-01T17:16:32-04:00 |
+| createdUserId | ID of user who created this run |
 | instrumentId | int | LIMS ID of instrument used for this run |
 | instrumentName | String | Name of instrument usec for this run |
 | state | String | Current state of run. Should be one of {Running, Completed, Failed, Unknown} |
@@ -140,6 +146,7 @@ Contains all user data. Fields:
 | institution | String ||
 | phone | String ||
 | email | String ||
+| comment | String ||
 | archived | boolean ||
 | createdDate | Date | format: 2015-12-01T17:16:32-04:00 |
 | createdUserId | int | ID of user who created this user |

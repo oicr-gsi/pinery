@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import org.apache.log4j.Logger;
 import org.jboss.resteasy.spi.Failure;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Component;
 @Provider
 @Component
 public class DefaultExceptionHandler implements ExceptionMapper<Exception> {
+  
+  private static final Logger log = Logger.getLogger(DefaultExceptionHandler.class);
   
   @Override
   public Response toResponse(Exception exception) {
@@ -42,6 +45,13 @@ public class DefaultExceptionHandler implements ExceptionMapper<Exception> {
       // Unexpected exception type
       status = Status.INTERNAL_SERVER_ERROR;
       data.put("exceptionClass", exception.getClass().getName());
+    }
+    
+    if (status.getFamily() == Status.Family.SERVER_ERROR) {
+      log.error("Error handling REST request", exception);
+    }
+    else {
+      log.debug("Non-server error handling REST request", exception);
     }
     
     error = new RestError(status, exception.getMessage());
