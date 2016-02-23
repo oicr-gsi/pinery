@@ -40,16 +40,5 @@
       <property name="instrumentSingle" value="${gsle.instrumentSingle}" />
       <property name="sampleIdSingle" value="${gsle.sampleIdSingle}" />
    </bean>
-   
-   <!-- <bean id="misoDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-      <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-      <property name="url" value="jdbc:mysql://localhost:3306/lims" />
-      <property name="username" value="user" />
-      <property name="password" value="password" />
-   </bean>
-   
-   <bean id="misoClient" class="ca.on.oicr.pinery.lims.miso.MisoClient">
-      <constructor-arg ref="misoDataSource" />
-   </bean> -->
 
 </beans>
