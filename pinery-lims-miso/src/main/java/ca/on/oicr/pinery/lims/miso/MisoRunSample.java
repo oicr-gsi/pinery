@@ -4,14 +4,14 @@ import ca.on.oicr.pinery.lims.DefaultRunSample;
 
 public class MisoRunSample extends DefaultRunSample {
 
-  private Integer positionId;
+  private Integer partitionId;
 
-  public Integer getPositionId() {
-    return positionId;
+  public Integer getPartitionId() {
+    return partitionId;
   }
 
-  public void setPositionId(Integer positionId) {
-    this.positionId = positionId;
+  public void setPartitionId(Integer partitionId) {
+    this.partitionId = partitionId;
   }
 
 }

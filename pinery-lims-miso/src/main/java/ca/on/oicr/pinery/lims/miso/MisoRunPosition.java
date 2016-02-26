@@ -5,7 +5,7 @@ import ca.on.oicr.pinery.lims.DefaultRunPosition;
 public class MisoRunPosition extends DefaultRunPosition {
 
   private Integer runId;
-  private Integer poolId;
+  private Integer partitionId;
 
   public Integer getRunId() {
     return runId;
@@ -15,12 +15,12 @@ public class MisoRunPosition extends DefaultRunPosition {
     this.runId = runId;
   }
 
-  public Integer getPoolId() {
-    return poolId;
+  public Integer getPartitionId() {
+    return partitionId;
   }
 
-  public void setPoolId(Integer poolId) {
-    this.poolId = poolId;
+  public void setPartitionId(Integer partitionId) {
+    this.partitionId = partitionId;
   }
 
 }
