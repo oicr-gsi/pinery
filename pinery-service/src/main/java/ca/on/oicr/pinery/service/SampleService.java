@@ -16,7 +16,7 @@ public interface SampleService {
 	public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, DateTime before,
 			DateTime after);
 
-	public Sample getSample(Integer id);
+	public Sample getSample(String id);
 
 	public List<SampleProject> getSampleProjects();
 	

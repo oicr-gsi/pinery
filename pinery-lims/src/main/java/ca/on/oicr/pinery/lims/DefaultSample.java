@@ -113,7 +113,7 @@ public class DefaultSample implements Sample {
    protected String url;
    protected String name;
    protected String description;
-   protected Integer id;
+   protected String id;
    protected Set<Integer> parents;
    protected Set<Integer> children;
    protected String sampleType;
@@ -197,12 +197,12 @@ public class DefaultSample implements Sample {
    }
 
    @Override
-   public Integer getId() {
+   public String getId() {
       return id;
    }
 
    @Override
-   public void setId(Integer id) {
+   public void setId(String id) {
       this.id = id;
    }
 
@@ -296,18 +296,22 @@ public class DefaultSample implements Sample {
       this.storageLocation = storageLocation != null && !storageLocation.equals("") ? storageLocation : null;
    }
 
+   @Override
    public Float getVolume() {
       return volume;
    }
 
+   @Override
    public void setVolume(Float volume) {
       this.volume = volume;
    }
 
+   @Override
    public Float getConcentration() {
       return concentration;
    }
 
+   @Override
    public void setConcentration(Float concentration) {
       this.concentration = concentration;
    }

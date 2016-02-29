@@ -44,6 +44,9 @@ import ca.on.oicr.pinery.lims.DefaultUser;
 
 public class MisoClient implements Lims {
   
+  private static final String MISO_SAMPLE_ID_PREFIX = "SAM";
+  private static final String MISO_LIBRARY_ID_PREFIX = "LIB";
+  
   // InstrumentModel queries
   private static final String queryAllModels = "SELECT p.platformId, p.instrumentModel " +
       "FROM Platform as p";
@@ -114,7 +117,7 @@ public class MisoClient implements Lims {
   private static final String queryRunPositionsByRunId = queryAllRunPositions + " WHERE r_spc.Run_runId = ?";
   
   // RunSample queries
-  private static final String queryAllRunSamples = "SELECT part.partitionId, l.libraryId " +
+  private static final String queryAllRunSamples = "SELECT part.partitionId, l.name libraryId " +
       "FROM _Partition part " +
       "JOIN Pool pool ON pool.poolId = part.pool_poolId " +
       "JOIN Pool_Elements ele ON ele.elementType='uk.ac.bbsrc.tgac.miso.core.data.impl.LibraryDilution'" + // scary
@@ -128,7 +131,7 @@ public class MisoClient implements Lims {
       " WHERE rcpc.Run_runId = ?";
   
   // Sample queries
-  private static final String queryAllSamples = "SELECT s.alias name, s.description description, s.sampleId id, " +
+  private static final String queryAllSamples = "SELECT s.alias name, s.description description, s.name id, " +
       "s.parentId parentId, sc.alias sampleType, tt.alias tissueType, p.alias project, sai.archived archived, " +
       "sai.creationDate created, sai.createdBy createdById, sai.lastUpdated modified, sai.updatedBy modifiedById, " +
       "s.identificationBarcode tubeBarcode, s.volume volume, sai.concentration concentration, s.locationBarcode " +
@@ -226,14 +229,26 @@ public class MisoClient implements Lims {
   }
 
   @Override
-  public List<String> getProjects() {
-    // This isn't connected to any endpoint (Not implemented in GSLE)
-    return null;
-  }
-
-  @Override
-  public Sample getSample(Integer id) {
-    List<Sample> samples = template.query(querySampleById, new Object[]{id}, sampleMapper);
+  public Sample getSample(String id) {
+    List<Sample> samples = null;
+    if (id != null && id.length() > 3) {
+      String idType = id.substring(0, 3);
+      try {
+        Integer trueId = Integer.parseInt(id.substring(3, id.length()));
+        if (idType.equals(MISO_SAMPLE_ID_PREFIX)) {
+          samples = template.query(querySampleById, new Object[]{trueId}, sampleMapper);
+        }
+        else if (idType.equals(MISO_LIBRARY_ID_PREFIX)) {
+          throw new UnsupportedOperationException(); // TODO: look up Library
+        }
+      } catch (NumberFormatException e) {
+        // Ignore; will end up throwing IllegalArgumentException below
+      }
+    }
+    if (samples == null) {
+      // No query executed; something was wrong with the ID
+      throw new IllegalArgumentException("ID '" + id + "' is not in expected format (e.g. SAM12 or LIB345)");
+    }
     return samples.size() == 1 ? samples.get(0) : null;
   }
 
@@ -491,7 +506,7 @@ public class MisoClient implements Lims {
   }
 
   @Override
-  public List<Instrument> getInstrumentModelInsrument(Integer id) {
+  public List<Instrument> getInstrumentModelInstrument(Integer id) {
     return template.query(queryInstrumentsByModelId, new Object[]{id}, instrumentMapper);
   }
   
@@ -503,7 +518,7 @@ public class MisoClient implements Lims {
       
       ins.setId(rs.getInt("referenceId"));
       ins.setName(rs.getString("name"));
-      ins.setInstrumentModel(rs.getString("platformId"));
+      ins.setModelId(rs.getInt("platformId"));
       // TODO: createdDate
       
       return ins;
@@ -614,7 +629,7 @@ public class MisoClient implements Lims {
       
       s.setName(rs.getString("name"));
       s.setDescription(rs.getString("description"));
-      s.setId(rs.getInt("id"));
+      s.setId(rs.getString("id"));
       Integer parentId = rs.getInt("parentId");
       if (parentId != null) {
         Set<Integer> parents = new HashSet<>();
@@ -653,8 +668,8 @@ public class MisoClient implements Lims {
     public MisoRunSample mapRow(ResultSet rs, int rowNum) throws SQLException {
       MisoRunSample s = new MisoRunSample();
       
-      s.setId(rs.getInt("l.libraryId"));
-      s.setPartitionId(rs.getInt("part.partitionId"));
+      s.setId(rs.getString("libraryId"));
+      s.setPartitionId(rs.getInt("partitionId"));
       
       return s;
     }

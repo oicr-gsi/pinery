@@ -9,14 +9,14 @@ public class RunDtoSample {
 
    private String barcode;
    private String barcodeTwo;
-   private Integer id;
+   private String id;
    private String url;
 
-   public Integer getId() {
+   public String getId() {
      return id;
    }
 
-   public void setId(Integer id) {
+   public void setId(String id) {
      this.id = id;
    }
 

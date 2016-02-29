@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
 
 public interface Lims {
 
-   public Sample getSample(Integer id);
+   public Sample getSample(String id);
 
    /**
     * Returns a list of project names. Useful for retrieving samples that belong

@@ -22,7 +22,7 @@ public class SampleDto {
    private String modifiedDate;
    private Integer modifiedById;
    private String modifiedByUrl;
-   private Integer id;
+   private String id;
    private Boolean archived;
    private PreparationKitDto preparationKit;
    private String projectName;
@@ -56,11 +56,11 @@ public class SampleDto {
       this.description = description;
    }
 
-   public Integer getId() {
+   public String getId() {
       return id;
    }
 
-   public void setId(Integer id) {
+   public void setId(String id) {
       this.id = id;
    }
 

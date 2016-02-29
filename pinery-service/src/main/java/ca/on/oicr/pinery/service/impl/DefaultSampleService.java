@@ -22,7 +22,7 @@ public class DefaultSampleService implements SampleService {
 	private Lims lims;
 
 	@Override
-	public Sample getSample(Integer id) {
+	public Sample getSample(String id) {
 		return lims.getSample(id);
 	}
 

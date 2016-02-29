@@ -24,7 +24,7 @@ public class SequencerRunClientIT {
 	private static String KNOWN_RUN_NAME;
 	private static String KNOWN_RUN_BARCODE;
 	private static Integer KNOWN_RUN_LANE;
-	private static Integer KNOWN_RUN_LANE_SAMPLE_ID;
+	private static String KNOWN_RUN_LANE_SAMPLE_ID;
 	
 	@BeforeClass
   public static void setup() throws FileNotFoundException, IOException {
@@ -34,7 +34,7 @@ public class SequencerRunClientIT {
     KNOWN_RUN_NAME = props.get("it.run.name");
     KNOWN_RUN_BARCODE = props.get("it.run.barcode");
     KNOWN_RUN_LANE = props.getInt("it.run.lane.number");
-    KNOWN_RUN_LANE_SAMPLE_ID = props.getInt("it.run.lane.sampleId");
+    KNOWN_RUN_LANE_SAMPLE_ID = props.get("it.run.lane.sampleId");
 	}
 	
 	@AfterClass

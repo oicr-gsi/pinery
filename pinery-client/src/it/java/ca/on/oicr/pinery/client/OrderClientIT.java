@@ -23,7 +23,7 @@ public class OrderClientIT {
 	private static Integer KNOWN_ORDER_ID;
 	private static String KNOWN_ORDER_PROJECT;
 	private static String KNOWN_ORDER_PLATFORM;
-	private static Integer KNOWN_ORDER_SAMPLE_ID;
+	private static String KNOWN_ORDER_SAMPLE_ID;
 	private static String KNOWN_ORDER_SAMPLE_ATTRIBUTE_NAME;
 	private static String KNOWN_ORDER_SAMPLE_ATTRIBUTE_VALUE;
 	
@@ -34,7 +34,7 @@ public class OrderClientIT {
     KNOWN_ORDER_ID = props.getInt("it.order.id");
     KNOWN_ORDER_PROJECT = props.get("it.order.project");
     KNOWN_ORDER_PLATFORM = props.get("it.order.platform");
-    KNOWN_ORDER_SAMPLE_ID = props.getInt("it.order.sampleId");
+    KNOWN_ORDER_SAMPLE_ID = props.get("it.order.sampleId");
     KNOWN_ORDER_SAMPLE_ATTRIBUTE_NAME = props.get("it.order.sample.attribute.name");
     KNOWN_ORDER_SAMPLE_ATTRIBUTE_VALUE = props.get("it.order.sample.attribute.value");
 	}

@@ -90,7 +90,7 @@ public class SampleFileDao implements SampleDao {
     public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
       Sample s = new DefaultSample();
       
-      s.setId(rs.getInt("id"));
+      s.setId(rs.getString("id"));
       s.setName(rs.getString("name"));
       s.setDescription(ModelUtils.nullIfEmpty(rs.getString("description")));
       s.setTubeBarcode(ModelUtils.nullIfEmpty(rs.getString("tubeBarcode")));

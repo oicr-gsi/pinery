@@ -70,7 +70,7 @@ public class RunFileDao implements RunDao {
       for (String sampleString : sampleStrings) {
         Map<String, String> sampleMap = DaoUtils.parseKeyValuePairs(sampleString);
         RunSample sample = new DefaultRunSample();
-        sample.setId(Integer.parseInt(sampleMap.get("id")));
+        sample.setId((sampleMap.get("id")));
         if (sampleMap.containsKey("barcode")) sample.setBarcode(ModelUtils.nullIfEmpty(sampleMap.get("barcode")));
         if (sampleMap.containsKey("barcodeTwo")) sample.setBarcodeTwo(ModelUtils.nullIfEmpty(sampleMap.get("barcodeTwo")));
         samples.add(sample);

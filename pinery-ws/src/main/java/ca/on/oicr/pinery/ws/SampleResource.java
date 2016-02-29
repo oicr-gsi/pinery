@@ -94,8 +94,13 @@ public class SampleResource {
    @Path("/sample/{id}")
    @ApiOperation(value = "Find sample by ID", response = SampleDto.class)
    @ApiResponse(code = 404, message = "No sample found")
-   public SampleDto getSample(@ApiParam(value = "ID of sample to fetch", required = true) @PathParam("id") Integer id) {
-      Sample sample = sampleService.getSample(id);
+   public SampleDto getSample(@ApiParam(value = "ID of sample to fetch", required = true) @PathParam("id") String id) {
+     Sample sample = null;
+      try {
+        sample = sampleService.getSample(id);
+      } catch (IllegalArgumentException e) {
+        throw new BadRequestException(e.getMessage(), e);
+      }
       if (sample == null) {
         throw new NotFoundException("No sample found with ID: " + id);
       }

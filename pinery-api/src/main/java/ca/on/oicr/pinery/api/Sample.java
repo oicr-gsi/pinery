@@ -17,9 +17,9 @@ public interface Sample {
 
 	public void setDescription(String description);
 
-	public Integer getId();
+	public String getId();
 
-	public void setId(Integer id);
+	public void setId(String id);
 
 	public Set<Integer> getParents();
 
