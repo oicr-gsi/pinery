@@ -142,19 +142,37 @@ public class MisoClient implements Lims {
       "LEFT JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId " +
       "LEFT JOIN TissueType tt ON tt.tissueTypeId = sai.tissueTypeId " +
       "LEFT JOIN Project p ON p.projectId = s.project_projectId " +
-      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = sai.kitDescriptorId";
-  private static final String queryAllSamplesFiltered = queryAllSamples +
-      " WHERE sai.archived IN (?,?)" +
-      " AND p.alias REGEXP ?" +
-      " AND sc.alias REGEXP ?" +
-      " AND sai.creationDate < ?" +
-      " AND sai.lastUpdated > ?";
-  private static final String querySampleById = queryAllSamples + " WHERE s.sampleId = ?";
-  // TODO: Pinery "samples" also includes MISO Libraries
+      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = sai.kitDescriptorId " +
+      "UNION " +
+      "SELECT l.alias name, l.description description, l.name id, parent.name parentId, 'library' sampleType, tt.alias tissueType, " +
+      "p.alias project, 0 archived, lai.creationDate created, lai.createdBy createdById, lai.lastUpdated modified, " +
+      "lai.updatedBy modifiedById, l.identificationBarcode tubeBarcode, l.volume volume, l.concentration concentration, " +
+      "l.locationBarcode storageLocation, kd.name kitName, kd.description kitDescription " +
+      "FROM Library l " +
+      "LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId " +
+      "LEFT JOIN Project p ON p.projectId = parent.project_projectId " +
+      "LEFT JOIN LibraryAdditionalInfo lai ON lai.libraryId = l.libraryId " +
+      "LEFT JOIN TissueType tt ON tt.tissueTypeId = lai.tissueTypeId " +
+      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId";
+  // TODO: library.archived and library.sampleType
+  private static final String queryAllSamplesFiltered = "SELECT * FROM (" + queryAllSamples + ") combined " +
+      "WHERE archived IN (?,?) " +
+      "AND project REGEXP ? " +
+      "AND sampleType REGEXP ? " +
+      "AND created < ? " +
+      "AND modified > ? ";
+  // NOTE: possible optimization: (SELECT... WHERE... UNION SELECT... WHERE...) vs. (SELECT FROM (SELECT... UNION SELECT... ) WHERE)
+  private static final String querySampleById = "SELECT * FROM (" + queryAllSamples + ") combined " + 
+      "WHERE id = ?";
   
   private static final String querySampleChildIdsBySampleId = "SELECT child.name id " +
       "FROM Sample child " +
       "JOIN Sample parent ON parent.sampleId = child.parentId " +
+      "WHERE parent.name = ? " +
+      "UNION " +
+      "SELECT child.name id " +
+      "FROM Library child " +
+      "JOIN Sample parent ON parent.sampleId = child.sample_sampleId " +
       "WHERE parent.name = ?";
   
   // SampleType (MISO SampleClass and Library) queries
@@ -176,12 +194,17 @@ public class MisoClient implements Lims {
       "GROUP BY p.projectId";
   
   // SampleChangeLog queries
-  private static final String queryAllSampleChangeLogs = "SELECT sampleId, message action, userId, changeTime " +
-      "FROM SampleChangeLog";
+  private static final String queryAllSampleChangeLogs = "SELECT s.name sampleId, scl.message action, scl.userId, scl.changeTime " +
+      "FROM SampleChangeLog scl " +
+      "JOIN Sample s ON s.sampleId = scl.sampleId " +
+      "UNION " +
+      "SELECT l.name sampleId, lcl.message action, lcl.userId, lcl.changeTime " +
+      "FROM LibraryChangeLog lcl " +
+      "JOIN Library l ON l.libraryId = lcl.libraryId";
   // TODO: Include LibraryChangeLogs too
   
-  private static final String querySampleChangeLogById = queryAllSampleChangeLogs +
-      " WHERE sampleId = ?";
+  private static final String querySampleChangeLogById = "SELECT * FROM (" + queryAllSampleChangeLogs + ") combined " +
+      "WHERE sampleId = ?";
   
   
   private final RowMapper<Instrument> instrumentMapper = new InstrumentMapper();
@@ -196,26 +219,6 @@ public class MisoClient implements Lims {
   private final RowMapper<SampleProject> sampleProjectMapper = new SampleProjectMapper();
   private final RowMapper<MisoChange> changeMapper = new ChangeMapper();
   private final RowMapper<String> idListMapper = new IdListMapper();
-  
-  public static String makeInClause(String arg1, String... more) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("(");
-    if (arg1 != null) {
-      appendInArg(sb, arg1);
-    }
-    for (String arg : more) {
-      sb.append(",");
-      appendInArg(sb, arg);
-    }
-    sb.append(")");
-    return sb.toString();
-  }
-  
-  private static void appendInArg(StringBuilder sb, String arg) {
-    sb.append("'")
-        .append(arg)
-        .append("'");
-  }
   
   private JdbcTemplate template;
 
@@ -237,26 +240,24 @@ public class MisoClient implements Lims {
 
   @Override
   public Sample getSample(String id) {
-    List<Sample> samples = null;
+    validateSampleId(id);
+    List<Sample> samples = template.query(querySampleById, new Object[]{id}, sampleMapper);
+    return samples.size() == 1 ? addChildren(samples.get(0)) : null;
+  }
+  
+  private void validateSampleId(String id) {
     if (id != null && id.length() > 3) {
-      String idType = id.substring(0, 3);
       try {
-        Integer trueId = Integer.parseInt(id.substring(3, id.length()));
-        if (idType.equals(MISO_SAMPLE_ID_PREFIX)) {
-          samples = template.query(querySampleById, new Object[]{trueId}, sampleMapper);
-        }
-        else if (idType.equals(MISO_LIBRARY_ID_PREFIX)) {
-          throw new UnsupportedOperationException(); // TODO: look up Library
+        Integer.parseInt(id.substring(3, id.length()));
+        String idType = id.substring(0, 3);
+        if (idType.equals(MISO_SAMPLE_ID_PREFIX) || idType.equals(MISO_LIBRARY_ID_PREFIX)) {
+          return;
         }
       } catch (NumberFormatException e) {
         // Ignore; will end up throwing IllegalArgumentException below
       }
     }
-    if (samples == null) {
-      // No query executed; something was wrong with the ID
-      throw new IllegalArgumentException("ID '" + id + "' is not in expected format (e.g. SAM12 or LIB345)");
-    }
-    return samples.size() == 1 ? addChildren(samples.get(0)) : null;
+    throw new IllegalArgumentException("ID '" + id + "' is not in expected format (e.g. SAM12 or LIB345)");
   }
 
   @Override
@@ -298,7 +299,7 @@ public class MisoClient implements Lims {
   }
   
   private Sample addChildren(Sample parent) {
-    List<String> children = template.query(querySampleChildIdsBySampleId, new Object[]{parent.getId()}, idListMapper);
+    List<String> children = template.query(querySampleChildIdsBySampleId, new Object[]{parent.getId(), parent.getId()}, idListMapper);
     if (children.size() > 0) {
       parent.setChildren(new HashSet<>(children));
     }
@@ -495,13 +496,14 @@ public class MisoClient implements Lims {
   }
 
   @Override
-  public ChangeLog getChangeLog(Integer id) {
+  public ChangeLog getChangeLog(String id) {
+    validateSampleId(id);
     List<ChangeLog> changes = mapChangesToChangeLogs(template.query(querySampleChangeLogById, new Object[]{id}, changeMapper));
     return changes.size() == 1 ? changes.get(0) : null;
   }
   
   private List<ChangeLog> mapChangesToChangeLogs(List<MisoChange> changes) {
-    Map<Integer, ChangeLog> map = new HashMap<>();
+    Map<String, ChangeLog> map = new HashMap<>();
     for (MisoChange c : changes) {
      ChangeLog l = map.get(c.getSampleId());
      if (l == null) {
@@ -755,7 +757,7 @@ public class MisoClient implements Lims {
       c.setAction(rs.getString("action"));
       c.setCreated(rs.getTimestamp("changeTime"));
       c.setCreatedById(rs.getInt("userId"));
-      c.setSampleId(rs.getInt("sampleId"));
+      c.setSampleId(rs.getString("sampleId"));
       
       return c;
     }

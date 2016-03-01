@@ -228,8 +228,13 @@ public class SampleResource {
    @Path("/sample/{id}/changelog")
    @ApiOperation(value = "Find sample changelog by sample ID", response = ChangeLogDto.class)
    @ApiResponse(code = 404, message = "No sample changelog found")
-   public ChangeLogDto getChangeLog(@ApiParam(value = "ID of sample to fetch changelogs for", required = true) @PathParam("id") Integer id) {
-      ChangeLog changeLog = sampleService.getChangeLog(id);
+   public ChangeLogDto getChangeLog(@ApiParam(value = "ID of sample to fetch changelogs for", required = true) @PathParam("id") String id) {
+      ChangeLog changeLog = null; 
+      try {
+        changeLog = sampleService.getChangeLog(id);
+      } catch (IllegalArgumentException e) {
+        throw new BadRequestException(e.getMessage(), e);
+      }
       if (changeLog == null) {
         throw new NotFoundException("No changelog found for sample ID: " + id);
       }

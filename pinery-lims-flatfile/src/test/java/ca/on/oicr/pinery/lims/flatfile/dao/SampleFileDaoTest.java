@@ -28,7 +28,7 @@ public class SampleFileDaoTest {
   
   @Test
   public void testGetSingleSampleAndMapping() {
-    Sample sample = dao.getSample(1);
+    Sample sample = dao.getSample("1");
     Assert.assertNotNull(sample);
 
     Assert.assertEquals("1", sample.getId());

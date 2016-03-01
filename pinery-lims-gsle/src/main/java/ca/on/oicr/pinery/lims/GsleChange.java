@@ -7,20 +7,14 @@ import org.slf4j.LoggerFactory;
 public class GsleChange extends DefaultChange {
 
 	private static final Logger log = LoggerFactory.getLogger(GsleChange.class);
-	private Integer sampleId;
+	private String sampleId;
 
-	public Integer getSampleId() {
+	public String getSampleId() {
 		return sampleId;
 	}
 
-	public void setSampleId(Integer sampleId) {
+	public void setSampleId(String sampleId) {
 		this.sampleId = sampleId;
-	}
-	
-	public void setSampleIdString(String sampleIdString) {
-		if (sampleIdString != null && !sampleIdString.equals("")) {
-			setSampleId(Integer.parseInt(sampleIdString));
-		}
 	}
 
 	public void setCreatedString(String created) {

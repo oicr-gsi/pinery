@@ -52,7 +52,7 @@ public class DefaultSampleService implements SampleService {
 	}
 
 	@Override
-	public ChangeLog getChangeLog(Integer id) {
+	public ChangeLog getChangeLog(String id) {
 		return lims.getChangeLog(id);
 	}
 }

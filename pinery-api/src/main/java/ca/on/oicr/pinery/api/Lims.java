@@ -39,7 +39,7 @@ public interface Lims {
 
    public List<ChangeLog> getChangeLogs();
 
-   public ChangeLog getChangeLog(Integer id);
+   public ChangeLog getChangeLog(String id);
 
    public List<InstrumentModel> getInstrumentModels();
 

@@ -29,7 +29,7 @@ public class ChangeFileDao implements ChangeDao {
 
     @Override
     public FileChange mapRow(ResultSet rs, int rowNum) throws SQLException {
-      FileChange c = new FileChange(rs.getInt("sampleId"));
+      FileChange c = new FileChange(rs.getString("sampleId"));
       c.setAction(rs.getString("action"));
       c.setCreated(ModelUtils.convertToDate(rs.getString("createdDate")));
       int creator = rs.getInt("createdUserId");
@@ -49,13 +49,14 @@ public class ChangeFileDao implements ChangeDao {
   }
 
   @Override
-  public ChangeLog getSampleChanges(Integer sampleId) {
+  public ChangeLog getSampleChanges(String sampleId) {
+    SampleFileDao.validateSampleId(sampleId);
     List<FileChange> changes = template.query(queryChangesBySampleId, new Object[]{sampleId}, changeMapper);
     return DaoUtils.getExpectedSingleResult(compileLogs(changes));
   }
   
   private static List<ChangeLog> compileLogs(List<FileChange> changes) {
-    Map<Integer, ChangeLog> map = new HashMap<>();
+    Map<String, ChangeLog> map = new HashMap<>();
     for (FileChange change : changes) {
       ChangeLog log = map.get(change.getSampleId());
       if (log == null) {

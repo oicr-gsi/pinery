@@ -1380,7 +1380,7 @@ public class GsleClient implements Lims {
       HeaderColumnNameTranslateMappingStrategy<GsleChange> strat = new HeaderColumnNameTranslateMappingStrategy<GsleChange>();
       strat.setType(GsleChange.class);
       Map<String, String> map = Maps.newHashMap();
-      map.put("template_id", "sampleIdString");
+      map.put("template_id", "sampleId");
       map.put("cmnt", "comment");
       map.put("notes", "action");
       map.put("created_by", "createdByIdString");
@@ -1398,30 +1398,38 @@ public class GsleClient implements Lims {
    }
 
    List<ChangeLog> getChangeLogs(List<Change> changes) {
-      Map<Integer, ChangeLog> changeLogMap = Maps.newHashMap();
+      Map<String, ChangeLog> changeLogMap = Maps.newHashMap();
 
       for (Change change : changes) {
-         if (changeLogMap.containsKey(((GsleChange) change).getSampleId())) {
-            changeLogMap.get(((GsleChange) change).getSampleId()).getChanges().add(change);
+         String sampleId = ((GsleChange) change).getSampleId();
+         if (changeLogMap.containsKey(sampleId)) {
+            changeLogMap.get(sampleId).getChanges().add(change);
          } else {
             ChangeLog changeLog = new DefaultChangeLog();
-            changeLog.setSampleId(((GsleChange) change).getSampleId());
+            changeLog.setSampleId(sampleId);
             Set<Change> changeSet = Sets.newHashSet();
             changeSet.add(change);
             changeLog.setChanges(changeSet);
-            changeLogMap.put(((GsleChange) change).getSampleId(), changeLog);
+            changeLogMap.put(sampleId, changeLog);
          }
       }
       return new ArrayList<ChangeLog>(changeLogMap.values());
    }
 
    @Override
-   public ChangeLog getChangeLog(Integer id) {
+   public ChangeLog getChangeLog(String id) {
       ChangeLog result = null;
+      
+      Integer idInt = null;
+      try {
+        idInt = Integer.parseInt(id);
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Sample ID " + id + " is invalid. Must be an integer"); 
+      }
 
       StringBuilder url = getBaseUrl(changeLogSingle);
       url.append(";bind=");
-      url.append(id);
+      url.append(idInt);
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");

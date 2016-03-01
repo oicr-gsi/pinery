@@ -4,9 +4,9 @@ import java.util.Set;
 
 public interface ChangeLog {
 
-	public Integer getSampleId();
+	public String getSampleId();
 
-	public void setSampleId(Integer sampleId);
+	public void setSampleId(String sampleId);
 
 	public Set<Change> getChanges();
 
