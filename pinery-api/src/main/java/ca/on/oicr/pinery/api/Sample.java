@@ -21,13 +21,13 @@ public interface Sample {
 
 	public void setId(String id);
 
-	public Set<Integer> getParents();
+	public Set<String> getParents();
 
-	public void setParents(Set<Integer> parents);
+	public void setParents(Set<String> parents);
 
-	public Set<Integer> getChildren();
+	public Set<String> getChildren();
 
-	public void setChildren(Set<Integer> children);
+	public void setChildren(Set<String> children);
 
 	public String getSampleType();
 

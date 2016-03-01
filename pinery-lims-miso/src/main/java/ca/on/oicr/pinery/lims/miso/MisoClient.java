@@ -630,9 +630,9 @@ public class MisoClient implements Lims {
       s.setName(rs.getString("name"));
       s.setDescription(rs.getString("description"));
       s.setId(rs.getString("id"));
-      Integer parentId = rs.getInt("parentId");
+      String parentId = rs.getString("parentId");
       if (parentId != null) {
-        Set<Integer> parents = new HashSet<>();
+        Set<String> parents = new HashSet<>();
         parents.add(parentId);
         s.setParents(parents);
       };

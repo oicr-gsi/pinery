@@ -128,14 +128,10 @@ public class SampleFileDao implements SampleDao {
       return kit;
     }
     
-    private Set<Integer> parseSampleReferences(String string) {
+    private Set<String> parseSampleReferences(String string) {
       List<String> list = DaoUtils.parseList(string);
       if (list.isEmpty()) return null;
-      
-      Set<Integer> ids = new HashSet<>();
-      for (String id : list) {
-        ids.add(Integer.valueOf(id));
-      }
+      Set<String> ids = new HashSet<>(list);
       return ids;
     }
     

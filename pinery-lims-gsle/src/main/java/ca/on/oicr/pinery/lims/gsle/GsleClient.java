@@ -287,8 +287,8 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   private Map<Integer, Set<Integer>> getChildren() {
-      Map<Integer, Set<Integer>> result = Maps.newHashMap();
+   private Map<String, Set<String>> getChildren() {
+      Map<String, Set<String>> result = Maps.newHashMap();
 
       StringBuilder url = getBaseUrl(children);
       try {
@@ -309,30 +309,30 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   private Map<Integer, Set<Integer>> getChildren(Reader reader) {
-      Map<Integer, Set<Integer>> result = Maps.newHashMap();
+   private Map<String, Set<String>> getChildren(Reader reader) {
+      Map<String, Set<String>> result = Maps.newHashMap();
 
       CSVReader csvReader = new CSVReader(reader, '\t');
       HeaderColumnNameTranslateMappingStrategy<GsleSampleChildren> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSampleChildren>();
       strat.setType(GsleSampleChildren.class);
       Map<String, String> map = Maps.newHashMap();
-      map.put("parent_id", "parentString");
-      map.put("template_id", "childString");
+      map.put("parent_id", "parent");
+      map.put("template_id", "child");
       strat.setColumnMapping(map);
 
       CsvToBean<GsleSampleChildren> csvToBean = new CsvToBean<GsleSampleChildren>();
       List<GsleSampleChildren> defaultAttributes = csvToBean.parse(strat, csvReader);
       for (GsleSampleChildren attribute : defaultAttributes) {
          if (!result.containsKey(attribute.getParent())) {
-            result.put(attribute.getParent(), Sets.<Integer> newHashSet());
+            result.put(attribute.getParent(), Sets.<String> newHashSet());
          }
          result.get(attribute.getParent()).add(attribute.getChild());
       }
       return result;
    }
 
-   private Map<Integer, Set<Integer>> getParents() {
-      Map<Integer, Set<Integer>> result = Maps.newHashMap();
+   private Map<String, Set<String>> getParents() {
+      Map<String, Set<String>> result = Maps.newHashMap();
 
       StringBuilder url = getBaseUrl(parents);
       try {
@@ -353,22 +353,22 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   private Map<Integer, Set<Integer>> getParents(Reader reader) {
-      Map<Integer, Set<Integer>> result = Maps.newHashMap();
+   private Map<String, Set<String>> getParents(Reader reader) {
+      Map<String, Set<String>> result = Maps.newHashMap();
 
       CSVReader csvReader = new CSVReader(reader, '\t');
       HeaderColumnNameTranslateMappingStrategy<GsleSampleParents> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSampleParents>();
       strat.setType(GsleSampleParents.class);
       Map<String, String> map = Maps.newHashMap();
-      map.put("template_id", "templateString");
-      map.put("parent_id", "parentString");
+      map.put("template_id", "template");
+      map.put("parent_id", "parent");
       strat.setColumnMapping(map);
 
       CsvToBean<GsleSampleParents> csvToBean = new CsvToBean<GsleSampleParents>();
       List<GsleSampleParents> defaultAttributes = csvToBean.parse(strat, csvReader);
       for (GsleSampleParents attribute : defaultAttributes) {
          if (!result.containsKey(attribute.getTemplate())) {
-            result.put(attribute.getTemplate(), Sets.<Integer> newHashSet());
+            result.put(attribute.getTemplate(), Sets.<String> newHashSet());
          }
          result.get(attribute.getTemplate()).add(attribute.getParent());
       }
@@ -384,7 +384,7 @@ public class GsleClient implements Lims {
    }
 
    private List<Sample> addChildren(List<Sample> samples) {
-      Map<Integer, Set<Integer>> children = getChildren();
+      Map<String, Set<String>> children = getChildren();
       for (Sample sample : samples) {
          sample.setChildren(children.get(sample.getId()));
       }
@@ -392,7 +392,7 @@ public class GsleClient implements Lims {
    }
 
    private List<Sample> addParents(List<Sample> samples) {
-      Map<Integer, Set<Integer>> parents = getParents();
+      Map<String, Set<String>> parents = getParents();
       for (Sample sample : samples) {
          sample.setParents(parents.get(sample.getId()));
       }

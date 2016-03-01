@@ -93,14 +93,14 @@ public final class Dtos {
       }
       if (from.getParents() != null) {
         Set<SampleReferenceDto> parents = new HashSet<>();
-        for (Integer parentId : from.getParents()) {
+        for (String parentId : from.getParents()) {
           parents.add(new SampleReferenceDto(parentId));
         }
         dto.setParents(parents);
       }
       if (from.getChildren() != null) {
         Set<SampleReferenceDto> children = new HashSet<>();
-        for (Integer childId : from.getChildren()) {
+        for (String childId : from.getChildren()) {
           children.add(new SampleReferenceDto(childId));
         }
         dto.setChildren(children);
