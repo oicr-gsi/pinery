@@ -132,11 +132,12 @@ public class MisoClient implements Lims {
   
   // Sample queries
   private static final String queryAllSamples = "SELECT s.alias name, s.description description, s.name id, " +
-      "s.parentId parentId, sc.alias sampleType, tt.alias tissueType, p.alias project, sai.archived archived, " +
+      "parent.name parentId, sc.alias sampleType, tt.alias tissueType, p.alias project, sai.archived archived, " +
       "sai.creationDate created, sai.createdBy createdById, sai.lastUpdated modified, sai.updatedBy modifiedById, " +
       "s.identificationBarcode tubeBarcode, s.volume volume, sai.concentration concentration, s.locationBarcode " +
       "storageLocation, kd.name kitName, kd.description kitDescription " +
       "FROM Sample s " +
+      "LEFT JOIN Sample parent ON parent.sampleId = s.parentId " +
       "LEFT JOIN SampleAdditionalInfo sai ON sai.sampleId = s.sampleId " +
       "LEFT JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId " +
       "LEFT JOIN TissueType tt ON tt.tissueTypeId = sai.tissueTypeId " +
@@ -150,6 +151,11 @@ public class MisoClient implements Lims {
       " AND sai.lastUpdated > ?";
   private static final String querySampleById = queryAllSamples + " WHERE s.sampleId = ?";
   // TODO: Pinery "samples" also includes MISO Libraries
+  
+  private static final String querySampleChildIdsBySampleId = "SELECT child.name id " +
+      "FROM Sample child " +
+      "JOIN Sample parent ON parent.sampleId = child.parentId " +
+      "WHERE parent.name = ?";
   
   // SampleType (MISO SampleClass and Library) queries
   private static final String queryAllSampleTypes = "SELECT sc.alias name, COUNT(*) count, " +
@@ -189,6 +195,7 @@ public class MisoClient implements Lims {
   private final RowMapper<Type> typeMapper = new TypeRowMapper();
   private final RowMapper<SampleProject> sampleProjectMapper = new SampleProjectMapper();
   private final RowMapper<MisoChange> changeMapper = new ChangeMapper();
+  private final RowMapper<String> idListMapper = new IdListMapper();
   
   public static String makeInClause(String arg1, String... more) {
     StringBuilder sb = new StringBuilder();
@@ -249,7 +256,7 @@ public class MisoClient implements Lims {
       // No query executed; something was wrong with the ID
       throw new IllegalArgumentException("ID '" + id + "' is not in expected format (e.g. SAM12 or LIB345)");
     }
-    return samples.size() == 1 ? samples.get(0) : null;
+    return samples.size() == 1 ? addChildren(samples.get(0)) : null;
   }
 
   @Override
@@ -270,9 +277,11 @@ public class MisoClient implements Lims {
     if (after == null) {
       after = DateTime.now().withYear(2005);
     }
-    return template.query(queryAllSamplesFiltered, 
+    List<Sample> samples = template.query(queryAllSamplesFiltered, 
         new Object[]{archivedArg1, archivedArg2, projectArg, typeArg, before.toString(), after.toString()}, 
         sampleMapper);
+    mapChildren(samples);
+    return samples;
   }
   
   private String pipeDelimitSet(Set<String> set) {
@@ -286,6 +295,33 @@ public class MisoClient implements Lims {
   
   public List<Sample> getSamples() {
     return getSamples(null, null, null, null, null);
+  }
+  
+  private Sample addChildren(Sample parent) {
+    List<String> children = template.query(querySampleChildIdsBySampleId, new Object[]{parent.getId()}, idListMapper);
+    if (children.size() > 0) {
+      parent.setChildren(new HashSet<>(children));
+    }
+    return parent;
+  }
+  
+  private List<Sample> mapChildren(List<Sample> samples) {
+    Map<String, Sample> map = new HashMap<>();
+    for (Sample sample : samples) {
+      map.put(sample.getId(), sample);
+    }
+    for (Sample child : samples) {
+      if (child.getParents() != null) {
+        for (String parentId : child.getParents()) {
+          Sample parent = map.get(parentId);
+          if (parent.getChildren() == null) {
+            parent.setChildren(new HashSet<String>());
+          }
+          parent.getChildren().add(child.getId());
+        }
+      }
+    }
+    return samples;
   }
 
   @Override
@@ -722,6 +758,15 @@ public class MisoClient implements Lims {
       c.setSampleId(rs.getInt("sampleId"));
       
       return c;
+    }
+    
+  }
+  
+  private static class IdListMapper implements RowMapper<String> {
+
+    @Override
+    public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return rs.getString("id");
     }
     
   }
