@@ -184,6 +184,7 @@ public final class Dtos {
       AttributeNameDto dto = new AttributeNameDto();
       dto.setName(from.getName());
       dto.setCount(from.getCount());
+      dto.setArchivedCount(from.getArchivedCount());
       if (from.getEarliest() != null) {
          dto.setEarliest(dateTimeFormatter.print(from.getEarliest().getTime()));
       }

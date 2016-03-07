@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Change;
 import ca.on.oicr.pinery.api.ChangeLog;
@@ -29,8 +30,11 @@ import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
+import ca.on.oicr.pinery.api.Status;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
+import ca.on.oicr.pinery.lims.DefaultAttribute;
+import ca.on.oicr.pinery.lims.DefaultAttributeName;
 import ca.on.oicr.pinery.lims.DefaultChangeLog;
 import ca.on.oicr.pinery.lims.DefaultInstrument;
 import ca.on.oicr.pinery.lims.DefaultInstrumentModel;
@@ -39,6 +43,7 @@ import ca.on.oicr.pinery.lims.DefaultPreparationKit;
 import ca.on.oicr.pinery.lims.DefaultRun;
 import ca.on.oicr.pinery.lims.DefaultSample;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
+import ca.on.oicr.pinery.lims.DefaultStatus;
 import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.DefaultUser;
 
@@ -132,10 +137,13 @@ public class MisoClient implements Lims {
   
   // Sample queries
   private static final String queryAllSamples = "SELECT s.alias name, s.description description, s.name id, " +
-      "parent.name parentId, sc.alias sampleType, tt.alias tissueType, p.alias project, sai.archived archived, " +
-      "sai.creationDate created, sai.createdBy createdById, sai.lastUpdated modified, sai.updatedBy modifiedById, " +
-      "s.identificationBarcode tubeBarcode, s.volume volume, sai.concentration concentration, s.locationBarcode " +
-      "storageLocation, kd.name kitName, kd.description kitDescription " +
+      "parent.name parentId, sc.alias sampleType, NULL sampleType_platform, NULL sampleType_description, tt.alias tissueType, " +
+      "p.alias project, sai.archived archived, sai.creationDate created, sai.createdBy createdById, sai.lastUpdated modified, " +
+      "sai.updatedBy modifiedById, s.identificationBarcode tubeBarcode, s.volume volume, sai.concentration concentration, " +
+      "s.locationBarcode storageLocation, kd.name kitName, kd.description kitDescription, s.receivedDate receive_date, " +
+      "i.externalName external_name, tor.alias tissue_origin, tm.alias tissue_preparation, sa.region tissue_region, sa.tubeId tube_id, " +
+      "NULL group_id, NULL group_id_description, sp.alias purpose, qubit.results qubit_concentration, " +
+      "nanodrop.results nanodrop_concentration, NULL barcode, NULL barcode_two, qpcr.results qpcr_percentage_human, s.qcPassed qcPassed " +
       "FROM Sample s " +
       "LEFT JOIN Sample parent ON parent.sampleId = s.parentId " +
       "LEFT JOIN SampleAdditionalInfo sai ON sai.sampleId = s.sampleId " +
@@ -143,17 +151,55 @@ public class MisoClient implements Lims {
       "LEFT JOIN TissueType tt ON tt.tissueTypeId = sai.tissueTypeId " +
       "LEFT JOIN Project p ON p.projectId = s.project_projectId " +
       "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = sai.kitDescriptorId " +
+      "LEFT JOIN Identity i ON i.sampleId = s.sampleId " +
+      "LEFT JOIN TissueOrigin tor ON tor.tissueOriginId = sai.tissueOriginId " +
+      "LEFT JOIN SampleAnalyte sa ON sa.sampleId = s.sampleId " +
+      "LEFT JOIN TissueMaterial tm ON tm.tissueMaterialId = sa.tissueMaterialId " +
+      "LEFT JOIN SamplePurpose sp ON sp.samplePurposeId = sa.samplePurposeId " +
+      "LEFT JOIN ( " +
+        "SELECT sample_sampleId, results FROM SampleQC JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod " +
+        "WHERE QCType.name = 'QuBit' " +
+      ") qubit ON qubit.sample_sampleId = s.sampleId " +
+      "LEFT JOIN ( " +
+        "SELECT sample_sampleId, results FROM SampleQC JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod " +
+        "WHERE QCType.name = 'Nanodrop' " +
+      ") nanodrop ON nanodrop.sample_sampleId = s.sampleId " +
+      "LEFT JOIN ( " +
+        "SELECT sample_sampleId, results FROM SampleQC JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod " +
+        "WHERE QCType.name = 'Human qPCR' " +
+      ") qpcr ON qpcr.sample_sampleId = s.sampleId " +
       "UNION " +
-      "SELECT l.alias name, l.description description, l.name id, parent.name parentId, 'library' sampleType, tt.alias tissueType, " +
+      "SELECT l.alias name, l.description description, l.name id, parent.name parentId, NULL sampleType, " +
+      "lt.platformType sampleType_platform, lt.description sampleType_description, tt.alias tissueType, " +
       "p.alias project, 0 archived, lai.creationDate created, lai.createdBy createdById, lai.lastUpdated modified, " +
       "lai.updatedBy modifiedById, l.identificationBarcode tubeBarcode, l.volume volume, l.concentration concentration, " +
-      "l.locationBarcode storageLocation, kd.name kitName, kd.description kitDescription " +
+      "l.locationBarcode storageLocation, kd.name kitName, kd.description kitDescription, NULL receive_date, NULL external_name, " +
+      "tor.alias tissue_origin, NULL tissue_preparation, NULL tissue_region, NULL tube_id, sg.groupId group_id, " +
+      "sg.description group_id_description, NULL purpose, qubit.results qubit_concentration, NULL nanodrop_concentration, " +
+      "bc1.sequence barcode, bc2.sequence barcode_two, NULL qpcr_percentage_human, l.qcPassed qcPassed " +
       "FROM Library l " +
       "LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId " +
       "LEFT JOIN Project p ON p.projectId = parent.project_projectId " +
       "LEFT JOIN LibraryAdditionalInfo lai ON lai.libraryId = l.libraryId " +
       "LEFT JOIN TissueType tt ON tt.tissueTypeId = lai.tissueTypeId " +
-      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId";
+      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId " +
+      "LEFT JOIN TissueOrigin tor ON tor.tissueOriginId = lai.tissueOriginId " +
+      "LEFT JOIN SampleGroup sg ON sg.sampleGroupId = lai.sampleGroupId " +
+      "LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType " +
+      "LEFT JOIN ( " +
+        "SELECT library_libraryId, results FROM LibraryQC JOIN QCType ON QCType.qcTypeId = LibraryQC.qcMethod " +
+        "WHERE QCType.name = 'QuBit' " +
+      ") qubit ON qubit.library_libraryId = l.libraryId " +
+      "LEFT JOIN ( " +
+        "SELECT library_libraryId, sequence FROM Library_TagBarcode " +
+        "JOIN TagBarcodes ON TagBarcodes.tagId = Library_TagBarcode.barcode_barcodeId " +
+        "WHERE name NOT LIKE 'N5%' AND name NOT LIKE 'S5%' " +
+      ") bc1 ON bc1.library_libraryId = l.libraryId " +
+      "LEFT JOIN ( " +
+        "SELECT library_libraryId, sequence FROM Library_TagBarcode " +
+        "JOIN TagBarcodes ON TagBarcodes.tagId = Library_TagBarcode.barcode_barcodeId " +
+        "WHERE name LIKE 'N5%' OR name LIKE 'S5%' " +
+      ") bc2 ON bc2.library_libraryId = l.libraryId";
   // TODO: library.archived and library.sampleType
   private static final String queryAllSamplesFiltered = "SELECT * FROM (" + queryAllSamples + ") combined " +
       "WHERE archived IN (?,?) " +
@@ -201,8 +247,6 @@ public class MisoClient implements Lims {
       "SELECT l.name sampleId, lcl.message action, lcl.userId, lcl.changeTime " +
       "FROM LibraryChangeLog lcl " +
       "JOIN Library l ON l.libraryId = lcl.libraryId";
-  // TODO: Include LibraryChangeLogs too
-  
   private static final String querySampleChangeLogById = "SELECT * FROM (" + queryAllSampleChangeLogs + ") combined " +
       "WHERE sampleId = ?";
   
@@ -486,8 +530,30 @@ public class MisoClient implements Lims {
 
   @Override
   public List<AttributeName> getAttributeNames() {
-    // TODO Auto-generated method stub
-    return null;
+    List<Sample> allSamples = getSamples();
+    Map<String, AttributeName> map = new HashMap<>();
+    for (Sample sample : allSamples) {
+      int archivedIncrement = sample.getArchived() ? 1 : 0;
+      for (Attribute att : sample.getAttributes()) {
+        AttributeName stats = map.get(att.getName());
+        if (stats == null) {
+          stats = new DefaultAttributeName();
+          stats.setName(att.getName());
+          stats.setArchivedCount(0);
+          stats.setCount(0);
+          map.put(stats.getName(), stats);
+        }
+        stats.setCount(stats.getCount() + 1);
+        stats.setArchivedCount(stats.getArchivedCount() + archivedIncrement);
+        if (stats.getEarliest() == null || sample.getCreated().before(stats.getEarliest())) {
+          stats.setEarliest(sample.getCreated());
+        }
+        if (stats.getLatest() == null || sample.getModified().after(stats.getLatest())) {
+          stats.setLatest(sample.getModified());
+        }
+      }
+    }
+    return new ArrayList<AttributeName>(map.values());
   }
 
   @Override
@@ -557,7 +623,6 @@ public class MisoClient implements Lims {
       ins.setId(rs.getInt("referenceId"));
       ins.setName(rs.getString("name"));
       ins.setModelId(rs.getInt("platformId"));
-      // TODO: createdDate
       
       return ins;
     }
@@ -572,7 +637,6 @@ public class MisoClient implements Lims {
       
       m.setId(rs.getInt("platformId"));
       m.setName(rs.getString("instrumentModel"));
-      // TODO: created, createdById, modified, modifiedById
       
       return m;
     }
@@ -582,10 +646,10 @@ public class MisoClient implements Lims {
   private static class OrderRowMapper implements RowMapper<Order> {
 
     @Override
-    public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public Order mapRow(ResultSet rs, int rowNum) throws SQLException { // TODO: revamp once MISO Orders exist
       Order o = new DefaultOrder();
       
-      o.setId(rs.getInt("poolId")); // TODO: this needs to be String and include poolName+projectName (e.g. IPO1PRO1)
+      o.setId(rs.getInt("poolId"));
       o.setStatus(rs.getString("runStatus"));
       o.setProject(rs.getString("project"));
       o.setPlatform(rs.getString("platform"));
@@ -619,7 +683,6 @@ public class MisoClient implements Lims {
       
       u.setEmail(rs.getString("email"));
       u.setArchived(!rs.getBoolean("active"));
-      // TODO: title, institution, phone, comment, created, createdById, modified, modifiedById
       
       return u;
     }
@@ -661,6 +724,11 @@ public class MisoClient implements Lims {
   
   private static class SampleRowMapper implements RowMapper<Sample> {
 
+    private static final String SAMPLE_STATUS_NAME = "Ready";
+    private static final String SAMPLE_STATUS_UNKNOWN = "Unknown";
+    private static final String SAMPLE_STATUS_READY = "Ready";
+    private static final String SAMPLE_STATUS_NOT_READY = "Not Ready";
+    
     @Override
     public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
       Sample s = new DefaultSample();
@@ -674,7 +742,11 @@ public class MisoClient implements Lims {
         parents.add(parentId);
         s.setParents(parents);
       };
-      s.setSampleType(rs.getString("sampleType"));
+      if (rs.getString("sampleType") != null) {
+        s.setSampleType(rs.getString("sampleType"));
+      } else {
+        s.setSampleType(mapSampleType(rs.getString("sampleType_platform"), rs.getString("sampleType_description")));
+      }
       s.setTissueType(rs.getString("tissueType"));
       s.setProject(rs.getString("project"));
       s.setArchived(rs.getBoolean("archived"));
@@ -693,9 +765,129 @@ public class MisoClient implements Lims {
       if (kit.getName() != null || kit.getDescription() != null) {
         s.setPreparationKit(kit);
       }
-      // TODO: children, attributes, status
+      Set<Attribute> atts = new HashSet<>();
+      for (AttributeKey possibleAtt : AttributeKey.values()) {
+        Attribute att = possibleAtt.extractAttributeFrom(rs);
+        if (att != null) atts.add(att);
+      }
+      if (atts.size() > 0) {
+        s.setAttributes(atts);
+      }
+      String qcPassed = rs.getString("qcPassed");
+      Status status = new DefaultStatus();
+      status.setName(SAMPLE_STATUS_NAME);
+      status.setState(
+          qcPassed == null ? SAMPLE_STATUS_UNKNOWN : (Boolean.valueOf(qcPassed) ? SAMPLE_STATUS_READY : SAMPLE_STATUS_NOT_READY));
       
       return s;
+    }
+    
+    private static final String PLATFORM_ILLUMINA = "Illumina";
+    
+    private static final String LIBRARY_TYPE_MRNA = "mRNA Seq";
+    private static final String LIBRARY_TYPE_PAIRED_END = "Paired End";
+    private static final String LIBRARY_TYPE_SMALL_RNA = "Small RNA";
+    private static final String LIBRARY_TYPE_SINGLE_END = "Single End";
+    private static final String LIBRARY_TYPE_WHOLE_TRANSCRIPTOME = "Whole Transcriptome";
+    
+    private static enum IlluminaSampleType {
+      
+      SE("Illumina SE Library"),
+      PE("Illumina PE Library"),
+      SM_RNA("Illumina smRNA Library"),
+      M_RNA("Illumina mRNA Library"),
+      WT("Illumina WT Library");
+      
+      private final String key;
+      
+      private IlluminaSampleType(String key) {
+        this.key = key;
+      }
+      
+      public String getKey() {
+        return key;
+      }
+    }
+    
+    private String mapSampleType(String platformName, String libraryType) {
+      switch (platformName) {
+      case PLATFORM_ILLUMINA:
+        switch (libraryType) {
+        case LIBRARY_TYPE_MRNA:
+          return IlluminaSampleType.M_RNA.getKey();
+        case LIBRARY_TYPE_PAIRED_END:
+          return IlluminaSampleType.PE.getKey();
+        case LIBRARY_TYPE_SMALL_RNA:
+          return IlluminaSampleType.SM_RNA.getKey();
+        case LIBRARY_TYPE_SINGLE_END:
+          return IlluminaSampleType.SE.getKey();
+        case LIBRARY_TYPE_WHOLE_TRANSCRIPTOME:
+          return IlluminaSampleType.WT.getKey();
+        default:
+          throw new RuntimeException("Unexpected LibraryType: " + libraryType + ", Cannot determine Sample Type");
+        }
+      default:
+        throw new RuntimeException("Unknown platform: " + platformName + ". Cannot determine Sample Type");
+      }
+    }
+    
+    private static enum AttributeKey {
+      
+      RECEIVE_DATE("receive_date") {
+        @Override
+        public String extractStringValueFrom(ResultSet rs) throws SQLException {
+          return rs.getDate(getKey()) == null ? null : rs.getDate(getKey()).toString();
+        }
+      },
+      EXTERNAL_NAME("external_name"),
+      TISSUE_ORIGIN("tissue_origin"),
+      TISSUE_PREPARATION("tissue_preparation"),
+      TISSUE_REGION("tissue_region"),
+      TUBE_ID("tube_id"),
+      GROUP_ID("group_id"),
+      GROUP_DESCRIPTION("group_id_description"),
+      PURPOSE("purpose"),
+//      STR_RESULT("str_result"), // TODO: str_result
+      QPCR_PERCENTAGE_HUMAN("qpcr_percentage_human"),
+      QUBIT_CONCENTRATION("qubit_concentration"),
+      NANODROP_CONCENTRATION("nanodrop_concentration"),
+      BARCODE("barcode"),
+      BARCODE_TWO("barcode_two");
+      
+      private final String key;
+      
+      private AttributeKey(String key) {
+        this.key = key;
+      }
+      
+      public String getKey() {
+        return key;
+      }
+      
+      /**
+       * Extracts the Attribute represented by this key from the result set. The column name within the ResultSet 
+       * must match this.getKey()
+       * 
+       * @param rs the ResultSet to extract the Attribute from
+       * @return
+       * @throws SQLException
+       */
+      public Attribute extractAttributeFrom(ResultSet rs) throws SQLException {
+        String val = extractStringValueFrom(rs);
+        return val == null ? null : makeAttribute(getKey(), extractStringValueFrom(rs));
+      };
+      
+      public String extractStringValueFrom(ResultSet rs) throws SQLException {
+        return rs.getString(getKey());
+      }
+      
+      private static Attribute makeAttribute(String name, String value) {
+        Attribute att = new DefaultAttribute();
+        att.setName(name);
+        att.setValue(value);
+        return att;
+      }
+      
     }
     
   }
