@@ -171,7 +171,7 @@ public class MisoClient implements Lims {
       "UNION " +
       "SELECT l.alias name, l.description description, l.name id, parent.name parentId, NULL sampleType, " +
       "lt.platformType sampleType_platform, lt.description sampleType_description, tt.alias tissueType, " +
-      "p.alias project, 0 archived, lai.creationDate created, lai.createdBy createdById, lai.lastUpdated modified, " +
+      "p.alias project, lai.archived archived, lai.creationDate created, lai.createdBy createdById, lai.lastUpdated modified, " +
       "lai.updatedBy modifiedById, l.identificationBarcode tubeBarcode, l.volume volume, l.concentration concentration, " +
       "l.locationBarcode storageLocation, kd.name kitName, kd.description kitDescription, NULL receive_date, NULL external_name, " +
       "tor.alias tissue_origin, NULL tissue_preparation, NULL tissue_region, NULL tube_id, sg.groupId group_id, " +
@@ -200,7 +200,6 @@ public class MisoClient implements Lims {
         "JOIN TagBarcodes ON TagBarcodes.tagId = Library_TagBarcode.barcode_barcodeId " +
         "WHERE name LIKE 'N5%' OR name LIKE 'S5%' " +
       ") bc2 ON bc2.library_libraryId = l.libraryId";
-  // TODO: library.archived and library.sampleType
   private static final String queryAllSamplesFiltered = "SELECT * FROM (" + queryAllSamples + ") combined " +
       "WHERE archived IN (?,?) " +
       "AND project REGEXP ? " +
@@ -222,13 +221,20 @@ public class MisoClient implements Lims {
       "WHERE parent.name = ?";
   
   // SampleType (MISO SampleClass and Library) queries
-  private static final String queryAllSampleTypes = "SELECT sc.alias name, COUNT(*) count, " +
-      "COUNT(CASE WHEN sai.archived = true THEN sai.archived END) archivedCount, MIN(sai.creationDate) earliest, " +
+  private static final String queryAllSampleTypes = "SELECT sc.alias name, NULL sampleType_platform, NULL sampleType_description, " +
+      "COUNT(*) count, COUNT(CASE WHEN sai.archived = true THEN sai.archived END) archivedCount, MIN(sai.creationDate) earliest, " +
       "MAX(sai.lastUpdated) latest " +
       "FROM SampleAdditionalInfo sai " +
       "JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId " +
-      "GROUP BY sai.sampleClassId";
-  // TODO: Include LibraryClasses too
+      "GROUP BY sai.sampleClassId " +
+      "UNION " +
+      "SELECT NULL name, lt.platformType sampleType_platform, lt.description sampleType_description, COUNT(*) count, " +
+      "COUNT(CASE WHEN lai.archived = true THEN lai.archived END) archivedCount, MIN(lai.creationDate) earliest, " +
+      "MAX(lai.lastUpdated) latest " +
+      "FROM Library l " +
+      "JOIN LibraryAdditionalInfo lai ON lai.libraryId = l.libraryId " +
+      "JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType " +
+      "GROUP BY l.libraryType";
   
   // SampleProject queries
   private static final String queryAllSampleProjects = "SELECT p.alias name, COUNT(*) count, " +
@@ -745,7 +751,7 @@ public class MisoClient implements Lims {
       if (rs.getString("sampleType") != null) {
         s.setSampleType(rs.getString("sampleType"));
       } else {
-        s.setSampleType(mapSampleType(rs.getString("sampleType_platform"), rs.getString("sampleType_description")));
+        s.setSampleType(TypeRowMapper.mapSampleType(rs.getString("sampleType_platform"), rs.getString("sampleType_description")));
       }
       s.setTissueType(rs.getString("tissueType"));
       s.setProject(rs.getString("project"));
@@ -778,57 +784,9 @@ public class MisoClient implements Lims {
       status.setName(SAMPLE_STATUS_NAME);
       status.setState(
           qcPassed == null ? SAMPLE_STATUS_UNKNOWN : (Boolean.valueOf(qcPassed) ? SAMPLE_STATUS_READY : SAMPLE_STATUS_NOT_READY));
+      s.setStatus(status);
       
       return s;
-    }
-    
-    private static final String PLATFORM_ILLUMINA = "Illumina";
-    
-    private static final String LIBRARY_TYPE_MRNA = "mRNA Seq";
-    private static final String LIBRARY_TYPE_PAIRED_END = "Paired End";
-    private static final String LIBRARY_TYPE_SMALL_RNA = "Small RNA";
-    private static final String LIBRARY_TYPE_SINGLE_END = "Single End";
-    private static final String LIBRARY_TYPE_WHOLE_TRANSCRIPTOME = "Whole Transcriptome";
-    
-    private static enum IlluminaSampleType {
-      
-      SE("Illumina SE Library"),
-      PE("Illumina PE Library"),
-      SM_RNA("Illumina smRNA Library"),
-      M_RNA("Illumina mRNA Library"),
-      WT("Illumina WT Library");
-      
-      private final String key;
-      
-      private IlluminaSampleType(String key) {
-        this.key = key;
-      }
-      
-      public String getKey() {
-        return key;
-      }
-    }
-    
-    private String mapSampleType(String platformName, String libraryType) {
-      switch (platformName) {
-      case PLATFORM_ILLUMINA:
-        switch (libraryType) {
-        case LIBRARY_TYPE_MRNA:
-          return IlluminaSampleType.M_RNA.getKey();
-        case LIBRARY_TYPE_PAIRED_END:
-          return IlluminaSampleType.PE.getKey();
-        case LIBRARY_TYPE_SMALL_RNA:
-          return IlluminaSampleType.SM_RNA.getKey();
-        case LIBRARY_TYPE_SINGLE_END:
-          return IlluminaSampleType.SE.getKey();
-        case LIBRARY_TYPE_WHOLE_TRANSCRIPTOME:
-          return IlluminaSampleType.WT.getKey();
-        default:
-          throw new RuntimeException("Unexpected LibraryType: " + libraryType + ", Cannot determine Sample Type");
-        }
-      default:
-        throw new RuntimeException("Unknown platform: " + platformName + ". Cannot determine Sample Type");
-      }
     }
     
     private static enum AttributeKey {
@@ -913,12 +871,64 @@ public class MisoClient implements Lims {
       Type t = new DefaultType();
       
       t.setName(rs.getString("name"));
+      if (t.getName() == null) {
+        t.setName(TypeRowMapper.mapSampleType(rs.getString("sampleType_platform"), rs.getString("sampleType_description")));
+      }
       t.setCount(rs.getInt("count"));
       t.setArchivedCount(rs.getInt("archivedCount"));
       t.setEarliest(rs.getTimestamp("earliest"));
       t.setLatest(rs.getTimestamp("latest"));
       
       return t;
+    }
+    
+    private static final String PLATFORM_ILLUMINA = "Illumina";
+    
+    private static final String LIBRARY_TYPE_MRNA = "mRNA Seq";
+    private static final String LIBRARY_TYPE_PAIRED_END = "Paired End";
+    private static final String LIBRARY_TYPE_SMALL_RNA = "Small RNA";
+    private static final String LIBRARY_TYPE_SINGLE_END = "Single End";
+    private static final String LIBRARY_TYPE_WHOLE_TRANSCRIPTOME = "Whole Transcriptome";
+    
+    private static enum IlluminaSampleType {
+      
+      SE("Illumina SE Library"),
+      PE("Illumina PE Library"),
+      SM_RNA("Illumina smRNA Library"),
+      M_RNA("Illumina mRNA Library"),
+      WT("Illumina WT Library");
+      
+      private final String key;
+      
+      private IlluminaSampleType(String key) {
+        this.key = key;
+      }
+      
+      public String getKey() {
+        return key;
+      }
+    }
+    
+    public static String mapSampleType(String platformName, String libraryType) {
+      switch (platformName) {
+      case PLATFORM_ILLUMINA:
+        switch (libraryType) {
+        case LIBRARY_TYPE_MRNA:
+          return IlluminaSampleType.M_RNA.getKey();
+        case LIBRARY_TYPE_PAIRED_END:
+          return IlluminaSampleType.PE.getKey();
+        case LIBRARY_TYPE_SMALL_RNA:
+          return IlluminaSampleType.SM_RNA.getKey();
+        case LIBRARY_TYPE_SINGLE_END:
+          return IlluminaSampleType.SE.getKey();
+        case LIBRARY_TYPE_WHOLE_TRANSCRIPTOME:
+          return IlluminaSampleType.WT.getKey();
+        default:
+          throw new RuntimeException("Unexpected LibraryType: " + libraryType + ", Cannot determine Sample Type");
+        }
+      default:
+        throw new RuntimeException("Unknown platform: " + platformName + ". Cannot determine Sample Type");
+      }
     }
     
   }

@@ -177,6 +177,7 @@ public final class Dtos {
       if (from.getLatest() != null) {
          dto.setLatest(dateTimeFormatter.print(from.getLatest().getTime()));
       }
+      dto.setArchivedCount(from.getArchivedCount());
       return dto;
    }
 
