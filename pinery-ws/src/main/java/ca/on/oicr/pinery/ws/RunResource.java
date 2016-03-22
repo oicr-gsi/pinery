@@ -129,6 +129,9 @@ public class RunResource {
       if (dto.getCreatedById() != null) {
          dto.setCreatedByUrl(baseUri + dto.getCreatedById().toString());
       }
+      if (dto.getModifiedById() != null) {
+        dto.setModifiedByUrl(baseUri + dto.getModifiedById().toString());
+      }
       if (dto.getInstrumentId() != null) {
          dto.setInstrumentUrl(((baseUriInstrument + dto.getInstrumentId().toString())));
       }

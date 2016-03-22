@@ -315,6 +315,16 @@ public final class Dtos {
       if (!StringUtils.isBlank(from.getInstrumentName())) {
         dto.setInstrumentName(from.getInstrumentName());
       }
+      dto.setModifiedById(from.getModifiedById());
+      if (from.getModified() != null) {
+        dto.setModifiedDate(dateTimeFormatter.print(from.getModified().getTime()));
+      }
+      if (from.getStartDate() != null) {
+        dto.setStartDate(dateTimeFormatter.print(from.getStartDate().getTime()));
+      }
+      if (from.getCompletionDate() != null) {
+        dto.setCompletionDate(dateTimeFormatter.print(from.getCompletionDate().getTime()));
+      }
       return dto;
    }
 

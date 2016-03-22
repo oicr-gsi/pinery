@@ -461,9 +461,28 @@ SELECT gir.run_id AS id
 	,girs.label AS STATE
 	,gir.created_by
 	,gir.created_at
+    ,gir.completed_at
+    ,mod.modified_by
+    ,mod.modified_at
 FROM ga_instrument_run gir
 INNER JOIN ga_instrument_run_state girs ON (gir.STATE = girs.instrument_run_state_id)
 LEFT JOIN instrument i ON (gir.instrument_id = i.instr_id)
+LEFT JOIN (
+    SELECT t1.run_id, t1.modified_at, t1.modified_by
+    FROM (
+        SELECT run_id, cl.change_log_id, created_at AS modified_at, created_by AS modified_by
+        FROM ga_instrument_run_change_log gircl
+        LEFT JOIN change_log cl ON (cl.change_log_id = gircl.change_log_id)
+    ) AS t1
+    LEFT JOIN (
+        SELECT run_id, cl.change_log_id, created_at AS modified_at, created_by AS modified_by
+        FROM ga_instrument_run_change_log gircl
+        LEFT JOIN change_log cl ON (cl.change_log_id = gircl.change_log_id)
+    ) AS t2
+    ON (t1.run_id = t2.run_id AND t1.modified_at < t2.modified_at)
+    WHERE t2.modified_at IS NULL AND t1.modified_at IS NOT NULL
+    GROUP BY t1.run_id, t1.modified_at, t1.modified_by
+) mod ON mod.run_id = gir.run_id
 WHERE gir.run_id = ?
 
 -- Name: /pinery/sequencerrun
@@ -478,9 +497,28 @@ SELECT gir.run_id AS id
 	,girs.label AS STATE
 	,gir.created_by
 	,gir.created_at
+    ,gir.completed_at
+    ,mod.modified_by
+    ,mod.modified_at
 FROM ga_instrument_run gir
 INNER JOIN ga_instrument_run_state girs ON (gir.STATE = girs.instrument_run_state_id)
 LEFT JOIN instrument i ON (gir.instrument_id = i.instr_id)
+LEFT JOIN (
+    SELECT t1.run_id, t1.modified_at, t1.modified_by
+    FROM (
+        SELECT run_id, cl.change_log_id, created_at AS modified_at, created_by AS modified_by
+        FROM ga_instrument_run_change_log gircl
+        LEFT JOIN change_log cl ON (cl.change_log_id = gircl.change_log_id)
+    ) AS t1
+    LEFT JOIN (
+        SELECT run_id, cl.change_log_id, created_at AS modified_at, created_by AS modified_by
+        FROM ga_instrument_run_change_log gircl
+        LEFT JOIN change_log cl ON (cl.change_log_id = gircl.change_log_id)
+    ) AS t2
+    ON (t1.run_id = t2.run_id AND t1.modified_at < t2.modified_at)
+    WHERE t2.modified_at IS NULL AND t1.modified_at IS NOT NULL
+    GROUP BY t1.run_id, t1.modified_at, t1.modified_by
+) mod ON mod.run_id = gir.run_id
 WHERE gir.NAME = ?
 
 -- Name: /pinery/sequencerruns
@@ -495,9 +533,28 @@ SELECT gir.run_id AS id
 	,girs.label AS STATE
 	,gir.created_by
 	,gir.created_at
+    ,gir.completed_at
+    ,mod.modified_by
+    ,mod.modified_at
 FROM ga_instrument_run gir
 INNER JOIN ga_instrument_run_state girs ON (gir.STATE = girs.instrument_run_state_id)
 LEFT JOIN instrument i ON (gir.instrument_id = i.instr_id)
+LEFT JOIN (
+    SELECT t1.run_id, t1.modified_at, t1.modified_by
+    FROM (
+        SELECT run_id, cl.change_log_id, created_at AS modified_at, created_by AS modified_by
+        FROM ga_instrument_run_change_log gircl
+        LEFT JOIN change_log cl ON (cl.change_log_id = gircl.change_log_id)
+    ) AS t1
+    LEFT JOIN (
+        SELECT run_id, cl.change_log_id, created_at AS modified_at, created_by AS modified_by
+        FROM ga_instrument_run_change_log gircl
+        LEFT JOIN change_log cl ON (cl.change_log_id = gircl.change_log_id)
+    ) AS t2
+    ON (t1.run_id = t2.run_id AND t1.modified_at < t2.modified_at)
+    WHERE t2.modified_at IS NULL AND t1.modified_at IS NOT NULL
+    GROUP BY t1.run_id, t1.modified_at, t1.modified_by
+) mod ON mod.run_id = gir.run_id
 
 -- Name: /pinery/user/{id}
 -- Description: LIMS API samples query

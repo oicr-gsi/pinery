@@ -101,7 +101,8 @@ public class MisoClient implements Lims {
   
   // Run queries
   private static final String queryAllRuns = "SELECT r.alias, r.sequencerReference_sequencerReferenceId AS instrumentId, r.runId, " +
-      "st.health, spc.identificationBarcode, createLog.userId, createLog.changeTime " +
+      "st.health, st.startDate, st.completionDate, spc.identificationBarcode, createLog.userId, createLog.changeTime, " +
+      "updateLog.userId, updateLog.changeTime " +
       "FROM Run AS r " +
       "JOIN Status AS st ON st.statusId = r.status_statusId " +
       "JOIN Run_SequencerPartitionContainer AS rscp ON rscp.Run_runId = r.runId " +
@@ -110,7 +111,12 @@ public class MisoClient implements Lims {
         "SELECT runId, userId, changeTime FROM RunChangeLog WHERE changeTime IN (" +
           "SELECT MIN(changeTime) AS changeTime FROM RunChangeLog GROUP BY runId" +
         ")" +
-      ") createLog ON createLog.runId = r.runId";
+      ") createLog ON createLog.runId = r.runId " +
+      "JOIN (" +
+        "SELECT runId, userId, changeTime FROM RunChangeLog WHERE changeTime IN (" +
+          "SELECT MAX(changeTime) AS changeTime FROM RunChangeLog GROUP BY runId" +
+        ")" +
+      ") updateLog ON updateLog.runId = r.runId";
   private static final String queryRunById = queryAllRuns + " WHERE r.runId = ?";
   private static final String queryRunByName = queryAllRuns + " WHERE r.alias = ?";
   
@@ -707,7 +713,11 @@ public class MisoClient implements Lims {
       r.setInstrumentId(rs.getInt("instrumentId"));
       r.setCreatedById(rs.getInt("createLog.userId"));
       r.setCreatedDate(rs.getTimestamp("createLog.changeTime"));
+      r.setModifiedById(rs.getInt("updateLog.userId"));
+      r.setModified(rs.getTimestamp("updateLog.changeTime"));
       r.setId(rs.getInt("runId"));
+      r.setStartDate(rs.getDate("startDate"));
+      r.setCompletionDate(rs.getDate("completionDate"));
       return r;
     }
     
