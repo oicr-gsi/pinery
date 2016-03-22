@@ -394,45 +394,47 @@ public class MisoClient implements Lims {
 
   @Override
   public List<Order> getOrders() {
-    List<Order> orders = template.query(queryAllOrders, orderMapper);
-    List<MisoOrderSample> samples = getOrderSamples();
-    Map<Integer, Order> map = new HashMap<>();
-    for (Order o : orders) {
-      map.put(o.getId(), o);
-    }
-    for (MisoOrderSample s : samples) {
-      Order o = map.get(s.getOrderId());
-      if (o != null) {
-        Set<OrderSample> os = o.getSamples();
-        if (os == null) {
-          os = new HashSet<OrderSample>();
-          o.setSample(os);
-        }
-        os.add(s);
-      }
-    }
-    return orders;
+    throw new UnsupportedOperationException("This method has not been implemented"); // TODO: get order by id
+//    List<Order> orders = template.query(queryAllOrders, orderMapper);
+//    List<MisoOrderSample> samples = getOrderSamples();
+//    Map<Integer, Order> map = new HashMap<>();
+//    for (Order o : orders) {
+//      map.put(o.getId(), o);
+//    }
+//    for (MisoOrderSample s : samples) {
+//      Order o = map.get(s.getOrderId());
+//      if (o != null) {
+//        Set<OrderSample> os = o.getSamples();
+//        if (os == null) {
+//          os = new HashSet<OrderSample>();
+//          o.setSample(os);
+//        }
+//        os.add(s);
+//      }
+//    }
+//    return orders;
   }
 
   @Override
   public Order getOrder(Integer id) {
-    List<Order> orders = template.query(queryOrderById, new Object[]{id}, orderMapper);
-    if (orders.size() != 1) return null;
-    Order order = orders.get(0);
-    Set<OrderSample> os = new HashSet<>();
-    os.addAll(getOrderSamples(id));
-    order.setSample(os);
-    return order;
+    throw new UnsupportedOperationException("This method has not been implemented"); // TODO: get all orders
+//    List<Order> orders = template.query(queryOrderById, new Object[]{id}, orderMapper);
+//    if (orders.size() != 1) return null;
+//    Order order = orders.get(0);
+//    Set<OrderSample> os = new HashSet<>();
+//    os.addAll(getOrderSamples(id));
+//    order.setSample(os);
+//    return order;
   }
   
   private List<MisoOrderSample> getOrderSamples() {
+    throw new UnsupportedOperationException("This method has not been implemented");
     // TODO: get all samples that are linked to any order
-    return new ArrayList<MisoOrderSample>();
   }
   
   private List<MisoOrderSample> getOrderSamples(Integer orderId) {
+    throw new UnsupportedOperationException("This method has not been implemented");
     // TODO: get all samples with this order id (poolId)
-    return new ArrayList<MisoOrderSample>();
   }
   
   private List<Order> mapSamplesToOrders(List<Order> orders, List<MisoOrderSample> samples) {
