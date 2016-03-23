@@ -6,21 +6,21 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class SampleReferenceDto {
   
-  private Integer id;
+  private String id;
   private String url;
   
   public SampleReferenceDto() {
     
   }
   
-  public SampleReferenceDto(Integer id) {
+  public SampleReferenceDto(String id) {
     this.id = id;
   }
   
-  public Integer getId() {
+  public String getId() {
     return id;
   }
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
   public String getUrl() {

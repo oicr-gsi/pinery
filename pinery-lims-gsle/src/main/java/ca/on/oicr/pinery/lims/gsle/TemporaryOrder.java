@@ -3,7 +3,7 @@ package ca.on.oicr.pinery.lims.gsle;
 public class TemporaryOrder {
 
    private Integer orderId;
-   private Integer sampleId;
+   private String sampleId;
    private String barcode;
    private String barcodeTwo;
    private String name;
@@ -18,11 +18,11 @@ public class TemporaryOrder {
       this.orderId = orderId;
    }
 
-   public Integer getSampleId() {
+   public String getSampleId() {
       return sampleId;
    }
 
-   public void setSampleId(Integer sampleId) {
+   public void setSampleId(String sampleId) {
       this.sampleId = sampleId;
    }
 
@@ -53,12 +53,6 @@ public class TemporaryOrder {
    public void setIdOrderString(String idOrderString) {
       if (idOrderString != null) {
          setOrderId(Integer.parseInt(idOrderString));
-      }
-   }
-
-   public void setIdSampleString(String idSampleString) {
-      if (idSampleString != null) {
-         setSampleId(Integer.parseInt(idSampleString));
       }
    }
 

@@ -49,7 +49,6 @@ import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.lims.DefaultType;
-import ca.on.oicr.pinery.lims.GsleAttribute;
 import ca.on.oicr.pinery.lims.GsleChange;
 import ca.on.oicr.pinery.lims.GsleInstrument;
 import ca.on.oicr.pinery.lims.GsleInstrumentModel;
@@ -268,16 +267,16 @@ public class GsleClient implements Lims {
       Map<Integer, Set<Attribute>> result = Maps.newHashMap();
 
       CSVReader csvReader = new CSVReader(reader, '\t');
-      HeaderColumnNameTranslateMappingStrategy<GsleAttribute> strat = new HeaderColumnNameTranslateMappingStrategy<GsleAttribute>();
-      strat.setType(GsleAttribute.class);
+      HeaderColumnNameTranslateMappingStrategy<DefaultAttribute> strat = new HeaderColumnNameTranslateMappingStrategy<DefaultAttribute>();
+      strat.setType(DefaultAttribute.class);
       Map<String, String> map = Maps.newHashMap();
-      map.put("template_id", "idString");
+      map.put("template_id", "id");
       map.put("display_label", "name");
       map.put("value", "value");
       strat.setColumnMapping(map);
 
-      CsvToBean<GsleAttribute> csvToBean = new CsvToBean<GsleAttribute>();
-      List<GsleAttribute> defaultAttributes = csvToBean.parse(strat, csvReader);
+      CsvToBean<DefaultAttribute> csvToBean = new CsvToBean<DefaultAttribute>();
+      List<DefaultAttribute> defaultAttributes = csvToBean.parse(strat, csvReader);
       for (Attribute attribute : defaultAttributes) {
          if (!result.containsKey(attribute.getId())) {
             result.put(attribute.getId(), Sets.<Attribute> newHashSet());
@@ -288,8 +287,8 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   private Map<Integer, Set<Integer>> getChildren() {
-      Map<Integer, Set<Integer>> result = Maps.newHashMap();
+   private Map<String, Set<String>> getChildren() {
+      Map<String, Set<String>> result = Maps.newHashMap();
 
       StringBuilder url = getBaseUrl(children);
       try {
@@ -310,30 +309,30 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   private Map<Integer, Set<Integer>> getChildren(Reader reader) {
-      Map<Integer, Set<Integer>> result = Maps.newHashMap();
+   private Map<String, Set<String>> getChildren(Reader reader) {
+      Map<String, Set<String>> result = Maps.newHashMap();
 
       CSVReader csvReader = new CSVReader(reader, '\t');
       HeaderColumnNameTranslateMappingStrategy<GsleSampleChildren> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSampleChildren>();
       strat.setType(GsleSampleChildren.class);
       Map<String, String> map = Maps.newHashMap();
-      map.put("parent_id", "parentString");
-      map.put("template_id", "childString");
+      map.put("parent_id", "parent");
+      map.put("template_id", "child");
       strat.setColumnMapping(map);
 
       CsvToBean<GsleSampleChildren> csvToBean = new CsvToBean<GsleSampleChildren>();
       List<GsleSampleChildren> defaultAttributes = csvToBean.parse(strat, csvReader);
       for (GsleSampleChildren attribute : defaultAttributes) {
          if (!result.containsKey(attribute.getParent())) {
-            result.put(attribute.getParent(), Sets.<Integer> newHashSet());
+            result.put(attribute.getParent(), Sets.<String> newHashSet());
          }
          result.get(attribute.getParent()).add(attribute.getChild());
       }
       return result;
    }
 
-   private Map<Integer, Set<Integer>> getParents() {
-      Map<Integer, Set<Integer>> result = Maps.newHashMap();
+   private Map<String, Set<String>> getParents() {
+      Map<String, Set<String>> result = Maps.newHashMap();
 
       StringBuilder url = getBaseUrl(parents);
       try {
@@ -354,22 +353,22 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   private Map<Integer, Set<Integer>> getParents(Reader reader) {
-      Map<Integer, Set<Integer>> result = Maps.newHashMap();
+   private Map<String, Set<String>> getParents(Reader reader) {
+      Map<String, Set<String>> result = Maps.newHashMap();
 
       CSVReader csvReader = new CSVReader(reader, '\t');
       HeaderColumnNameTranslateMappingStrategy<GsleSampleParents> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSampleParents>();
       strat.setType(GsleSampleParents.class);
       Map<String, String> map = Maps.newHashMap();
-      map.put("template_id", "templateString");
-      map.put("parent_id", "parentString");
+      map.put("template_id", "template");
+      map.put("parent_id", "parent");
       strat.setColumnMapping(map);
 
       CsvToBean<GsleSampleParents> csvToBean = new CsvToBean<GsleSampleParents>();
       List<GsleSampleParents> defaultAttributes = csvToBean.parse(strat, csvReader);
       for (GsleSampleParents attribute : defaultAttributes) {
          if (!result.containsKey(attribute.getTemplate())) {
-            result.put(attribute.getTemplate(), Sets.<Integer> newHashSet());
+            result.put(attribute.getTemplate(), Sets.<String> newHashSet());
          }
          result.get(attribute.getTemplate()).add(attribute.getParent());
       }
@@ -379,13 +378,13 @@ public class GsleClient implements Lims {
    private List<Sample> addAttributes(List<Sample> samples) {
       Map<Integer, Set<Attribute>> attributes = getAttributes();
       for (Sample sample : samples) {
-         sample.setAttributes(attributes.get(sample.getId()));
+         sample.setAttributes(attributes.get(Integer.parseInt(sample.getId())));
       }
       return samples;
    }
 
    private List<Sample> addChildren(List<Sample> samples) {
-      Map<Integer, Set<Integer>> children = getChildren();
+      Map<String, Set<String>> children = getChildren();
       for (Sample sample : samples) {
          sample.setChildren(children.get(sample.getId()));
       }
@@ -393,7 +392,7 @@ public class GsleClient implements Lims {
    }
 
    private List<Sample> addParents(List<Sample> samples) {
-      Map<Integer, Set<Integer>> parents = getParents();
+      Map<String, Set<String>> parents = getParents();
       for (Sample sample : samples) {
          sample.setParents(parents.get(sample.getId()));
       }
@@ -447,12 +446,11 @@ public class GsleClient implements Lims {
    }
 
    List<Sample> getSamples(Reader reader) {
-
       CSVReader csvReader = new CSVReader(reader, '\t');
       HeaderColumnNameTranslateMappingStrategy<GsleSample> strat = new HeaderColumnNameTranslateMappingStrategy<GsleSample>();
       strat.setType(GsleSample.class);
       Map<String, String> map = Maps.newHashMap();
-      map.put("template_id", "idString");
+      map.put("template_id", "id");
       map.put("name", "name");
       map.put("description", "description");
       map.put("created_at", "createdString");
@@ -499,13 +497,20 @@ public class GsleClient implements Lims {
    }
 
    @Override
-   public Sample getSample(Integer id) {
+   public Sample getSample(String id) {
 
+      Integer idInt = null;
+      try {
+        idInt = Integer.parseInt(id);
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Sample ID " + id + " is invalid. Must be an integer"); 
+      }
+      
       Sample result = null;
 
       StringBuilder url = getBaseUrl(sampleIdSingle);
       url.append(";bind=");
-      url.append(id);
+      url.append(idInt);
 
       // log.error("Inside getSample with id [{}]", id);
       try {
@@ -753,7 +758,7 @@ public class GsleClient implements Lims {
       strat.setType(GsleOrder.class);
       Map<String, String> map = Maps.newHashMap();
 
-      map.put("id", "idString");
+      map.put("id", "id");
       map.put("created_by", "createdByIdString");
       map.put("created_at", "createdDateString");
       map.put("modified_by", "modifiedByIdString");
@@ -799,7 +804,7 @@ public class GsleClient implements Lims {
       strat.setType(GsleOrder.class);
       Map<String, String> map = Maps.newHashMap();
 
-      map.put("id", "idString");
+      map.put("id", "id");
       map.put("created_by", "createdByIdString");
       map.put("created_at", "createdDateString");
       map.put("modified_by", "modifiedByIdString");
@@ -844,7 +849,7 @@ public class GsleClient implements Lims {
       strat.setType(TemporaryOrder.class);
       Map<String, String> map = Maps.newHashMap();
 
-      map.put("sample_id", "idSampleString");
+      map.put("sample_id", "sampleId");
       map.put("order_id", "idOrderString");
       map.put("barcode", "barcode");
       map.put("barcode_two", "barcodeTwo");
@@ -866,63 +871,63 @@ public class GsleClient implements Lims {
 
    }
 
-   public Map<String, Set<Attribute>> attributeOrderMap(List<TemporaryOrder> temp) {
+   public Map<String, Set<Attribute>> attributeOrderMap(List<TemporaryOrder> tempOrders) {
 
       Map<String, Set<Attribute>> attMap = Maps.newHashMap();
 
-      for (TemporaryOrder list : temp) {
+      for (TemporaryOrder order : tempOrders) {
 
-         if (attMap.containsKey(list.getOrderId() + "_" + list.getSampleId())) {
+         if (attMap.containsKey(order.getOrderId() + "_" + order.getSampleId())) {
 
             Attribute attribute = new DefaultAttribute();
-            attribute.setId(list.getOrderId());
-            attribute.setName(list.getName());
-            attribute.setValue(list.getValue());
+            attribute.setId(order.getOrderId());
+            attribute.setName(order.getName());
+            attribute.setValue(order.getValue());
 
-            attMap.get(list.getOrderId() + "_" + list.getSampleId()).add(attribute);
+            attMap.get(order.getOrderId() + "_" + order.getSampleId()).add(attribute);
 
          } else {
 
             Attribute attribute = new DefaultAttribute();
             Set<Attribute> attributeSet = Sets.newHashSet();
 
-            attribute.setId(list.getOrderId());
-            attribute.setName(list.getName());
-            attribute.setValue(list.getValue());
+            attribute.setId(order.getOrderId());
+            attribute.setName(order.getName());
+            attribute.setValue(order.getValue());
             attributeSet.add(attribute);
 
-            attMap.put(list.getOrderId() + "_" + list.getSampleId(), attributeSet);
+            attMap.put(order.getOrderId() + "_" + order.getSampleId(), attributeSet);
          }
       }
 
       return attMap;
    }
 
-   public Map<Integer, Set<OrderSample>> sampleOrderMap(List<TemporaryOrder> temp) {
+   public Map<Integer, Set<OrderSample>> sampleOrderMap(List<TemporaryOrder> tempOrders) {
       Map<Integer, Set<OrderSample>> attMap = Maps.newHashMap();
 
-      for (TemporaryOrder list : temp) {
+      for (TemporaryOrder tempOrder : tempOrders) {
 
-         if (attMap.containsKey(list.getOrderId())) {
+         if (attMap.containsKey(tempOrder.getOrderId())) {
 
             OrderSample orderSample = new DefaultOrderSample();
-            orderSample.setBarcode(list.getBarcode());
-            orderSample.setBarcodeTwo(list.getBarcodeTwo());
-            orderSample.setId(list.getSampleId());
-            orderSample.setUrl(list.getSampleUrl());
-            attMap.get(list.getOrderId()).add(orderSample);
+            orderSample.setBarcode(tempOrder.getBarcode());
+            orderSample.setBarcodeTwo(tempOrder.getBarcodeTwo());
+            orderSample.setId(tempOrder.getSampleId());
+            orderSample.setUrl(tempOrder.getSampleUrl());
+            attMap.get(tempOrder.getOrderId()).add(orderSample);
 
          } else {
 
             OrderSample orderSample = new DefaultOrderSample();
             Set<OrderSample> orderSampleSet = Sets.newHashSet();
 
-            orderSample.setBarcode(list.getBarcode());
-            orderSample.setBarcodeTwo(list.getBarcodeTwo());
-            orderSample.setId(list.getSampleId());
-            orderSample.setUrl(list.getSampleUrl());
+            orderSample.setBarcode(tempOrder.getBarcode());
+            orderSample.setBarcodeTwo(tempOrder.getBarcodeTwo());
+            orderSample.setId(tempOrder.getSampleId());
+            orderSample.setUrl(tempOrder.getSampleUrl());
             orderSampleSet.add(orderSample);
-            attMap.put(list.getOrderId(), orderSampleSet);
+            attMap.put(tempOrder.getOrderId(), orderSampleSet);
          }
       }
       return attMap;
@@ -1048,6 +1053,9 @@ public class GsleClient implements Lims {
       map.put("id", "idString");
       map.put("instr_id", "instrumentIdString");
       map.put("instrument_name", "instrumentName");
+      map.put("modified_by", "modifiedByIdString");
+      map.put("modified_at", "modifiedDateString");
+      map.put("completed_at", "completionDateString");
 
       strat.setColumnMapping(map);
 
@@ -1116,7 +1124,7 @@ public class GsleClient implements Lims {
          RunSample runSample = new DefaultRunSample();
          runSample.setBarcode(temp.getBarcode());
          runSample.setBarcodeTwo(temp.getBarcodeTwo());
-         runSample.setId(temp.getSampleId());
+         runSample.setId(temp.getSampleId().toString());
          if (table.contains(temp.getRunId(), temp.getPosition())) {
 
             table.get(temp.getRunId(), temp.getPosition()).add(runSample);
@@ -1137,7 +1145,7 @@ public class GsleClient implements Lims {
 
          if (attMap.containsKey(list.getRunId())) {
             RunSample runSample = new DefaultRunSample();
-            runSample.setId(list.getSampleId());
+            runSample.setId(list.getSampleId().toString());
             runSample.setBarcode(list.getBarcode());
             runSample.setBarcodeTwo(list.getBarcodeTwo());
             runSample.setUrl(list.getSampleUrl());
@@ -1148,7 +1156,7 @@ public class GsleClient implements Lims {
             RunSample runSample = new DefaultRunSample();
             Set<RunSample> runSampleSet = Sets.newHashSet();
 
-            runSample.setId(list.getSampleId());
+            runSample.setId(list.getSampleId().toString());
             runSample.setBarcode(list.getBarcode());
             runSample.setBarcodeTwo(list.getBarcodeTwo());
             runSample.setUrl(list.getSampleUrl());
@@ -1375,7 +1383,7 @@ public class GsleClient implements Lims {
       HeaderColumnNameTranslateMappingStrategy<GsleChange> strat = new HeaderColumnNameTranslateMappingStrategy<GsleChange>();
       strat.setType(GsleChange.class);
       Map<String, String> map = Maps.newHashMap();
-      map.put("template_id", "sampleIdString");
+      map.put("template_id", "sampleId");
       map.put("cmnt", "comment");
       map.put("notes", "action");
       map.put("created_by", "createdByIdString");
@@ -1393,30 +1401,38 @@ public class GsleClient implements Lims {
    }
 
    List<ChangeLog> getChangeLogs(List<Change> changes) {
-      Map<Integer, ChangeLog> changeLogMap = Maps.newHashMap();
+      Map<String, ChangeLog> changeLogMap = Maps.newHashMap();
 
       for (Change change : changes) {
-         if (changeLogMap.containsKey(((GsleChange) change).getSampleId())) {
-            changeLogMap.get(((GsleChange) change).getSampleId()).getChanges().add(change);
+         String sampleId = ((GsleChange) change).getSampleId();
+         if (changeLogMap.containsKey(sampleId)) {
+            changeLogMap.get(sampleId).getChanges().add(change);
          } else {
             ChangeLog changeLog = new DefaultChangeLog();
-            changeLog.setSampleId(((GsleChange) change).getSampleId());
+            changeLog.setSampleId(sampleId);
             Set<Change> changeSet = Sets.newHashSet();
             changeSet.add(change);
             changeLog.setChanges(changeSet);
-            changeLogMap.put(((GsleChange) change).getSampleId(), changeLog);
+            changeLogMap.put(sampleId, changeLog);
          }
       }
       return new ArrayList<ChangeLog>(changeLogMap.values());
    }
 
    @Override
-   public ChangeLog getChangeLog(Integer id) {
+   public ChangeLog getChangeLog(String id) {
       ChangeLog result = null;
+      
+      Integer idInt = null;
+      try {
+        idInt = Integer.parseInt(id);
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Sample ID " + id + " is invalid. Must be an integer"); 
+      }
 
       StringBuilder url = getBaseUrl(changeLogSingle);
       url.append(";bind=");
-      url.append(id);
+      url.append(idInt);
       try {
          ClientRequest request = new ClientRequest(url.toString());
          request.accept("text/plain");

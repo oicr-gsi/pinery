@@ -29,7 +29,7 @@ public class SampleClient extends ResourceClient<SampleDto> {
 	 * @return the sample
 	 * @throws HttpResponseException on any HTTP Status other than 200 OK
 	 */
-	public SampleDto byId(int sampleId) throws HttpResponseException {
+	public SampleDto byId(String sampleId) throws HttpResponseException {
 		return getResource(resourceDir + sampleId);
 	}
 	

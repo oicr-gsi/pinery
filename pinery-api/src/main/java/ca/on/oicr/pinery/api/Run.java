@@ -25,10 +25,6 @@ public interface Run {
 
    public void setSample(Set<RunPosition> samples);
 
-   public String getCreatedByUrl();
-
-   public void setCreatedByUrl(String createdByUrl);
-
    public Date getCreatedDate();
 
    public void setCreatedDate(Date createdDate);
@@ -48,4 +44,20 @@ public interface Run {
    public String getInstrumentName();
    
    public void setInstrumentName(String instrumentName);
+   
+   public Date getStartDate();
+   
+   public void setStartDate(Date startDate);
+   
+   public Date getCompletionDate();
+   
+   public void setCompletionDate(Date endDate);
+
+   public Date getModified();
+
+   public void setModified(Date modified);
+
+   public Integer getModifiedById();
+
+   public void setModifiedById(Integer modifiedById);
 }

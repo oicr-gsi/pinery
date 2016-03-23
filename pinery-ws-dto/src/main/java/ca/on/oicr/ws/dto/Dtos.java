@@ -93,14 +93,14 @@ public final class Dtos {
       }
       if (from.getParents() != null) {
         Set<SampleReferenceDto> parents = new HashSet<>();
-        for (Integer parentId : from.getParents()) {
+        for (String parentId : from.getParents()) {
           parents.add(new SampleReferenceDto(parentId));
         }
         dto.setParents(parents);
       }
       if (from.getChildren() != null) {
         Set<SampleReferenceDto> children = new HashSet<>();
-        for (Integer childId : from.getChildren()) {
+        for (String childId : from.getChildren()) {
           children.add(new SampleReferenceDto(childId));
         }
         dto.setChildren(children);
@@ -177,6 +177,7 @@ public final class Dtos {
       if (from.getLatest() != null) {
          dto.setLatest(dateTimeFormatter.print(from.getLatest().getTime()));
       }
+      dto.setArchivedCount(from.getArchivedCount());
       return dto;
    }
 
@@ -184,6 +185,7 @@ public final class Dtos {
       AttributeNameDto dto = new AttributeNameDto();
       dto.setName(from.getName());
       dto.setCount(from.getCount());
+      dto.setArchivedCount(from.getArchivedCount());
       if (from.getEarliest() != null) {
          dto.setEarliest(dateTimeFormatter.print(from.getEarliest().getTime()));
       }
@@ -312,6 +314,16 @@ public final class Dtos {
       }
       if (!StringUtils.isBlank(from.getInstrumentName())) {
         dto.setInstrumentName(from.getInstrumentName());
+      }
+      dto.setModifiedById(from.getModifiedById());
+      if (from.getModified() != null) {
+        dto.setModifiedDate(dateTimeFormatter.print(from.getModified().getTime()));
+      }
+      if (from.getStartDate() != null) {
+        dto.setStartDate(dateTimeFormatter.print(from.getStartDate().getTime()));
+      }
+      if (from.getCompletionDate() != null) {
+        dto.setCompletionDate(dateTimeFormatter.print(from.getCompletionDate().getTime()));
       }
       return dto;
    }

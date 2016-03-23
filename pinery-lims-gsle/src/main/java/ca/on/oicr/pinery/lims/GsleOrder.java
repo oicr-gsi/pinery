@@ -37,12 +37,6 @@ public class GsleOrder extends DefaultOrder {
       }
    }
 
-   public void setIdString(String idString) {
-      if (idString != null) {
-         setId(Integer.parseInt(idString));
-      }
-   }
-
    public void setCreatedByIdString(String createdByIdString) {
 
       if (createdByIdString != null && !createdByIdString.equals("")) {

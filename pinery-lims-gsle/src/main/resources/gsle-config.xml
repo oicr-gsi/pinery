@@ -40,5 +40,5 @@
       <property name="instrumentSingle" value="${gsle.instrumentSingle}" />
       <property name="sampleIdSingle" value="${gsle.sampleIdSingle}" />
    </bean>
-   
+
 </beans>

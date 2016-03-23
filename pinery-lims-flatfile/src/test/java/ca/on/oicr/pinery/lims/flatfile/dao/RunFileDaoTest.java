@@ -41,10 +41,10 @@ public class RunFileDaoTest {
         boolean foundSample3 = false;
         for (RunSample sample : pos.getRunSample()) {
           switch (sample.getId()) {
-          case 2:
+          case "2":
             foundSample2 = true;
             break;
-          case 3:
+          case "3":
             foundSample3 = true;
             break;
           default:

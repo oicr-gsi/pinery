@@ -7,22 +7,26 @@ import ca.on.oicr.pinery.api.ChangeLog;
 
 public class DefaultChangeLog implements ChangeLog {
 
-	private Integer sampleId;
+	private String sampleId;
 	private Set<Change> changes;
 
-	public Integer getSampleId() {
+	@Override
+  public String getSampleId() {
 		return sampleId;
 	}
 
-	public void setSampleId(Integer sampleId) {
+	@Override
+  public void setSampleId(String sampleId) {
 		this.sampleId = sampleId;
 	}
 
-	public Set<Change> getChanges() {
+	@Override
+  public Set<Change> getChanges() {
 		return changes;
 	}
 
-	public void setChanges(Set<Change> changes) {
+	@Override
+  public void setChanges(Set<Change> changes) {
 		this.changes = changes;
 	}
 

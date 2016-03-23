@@ -18,7 +18,7 @@ public interface SampleDao {
    * @param id ID of the Sample to retrieve
    * @return the Sample if one is found with the provided Sample ID; otherwise null
    */
-  public Sample getSample(Integer id);
+  public Sample getSample(String id);
   
   /**
    * Retrieves a filtered List of all Samples

@@ -90,7 +90,7 @@ public class SampleFileDao implements SampleDao {
     public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
       Sample s = new DefaultSample();
       
-      s.setId(rs.getInt("id"));
+      s.setId(rs.getString("id"));
       s.setName(rs.getString("name"));
       s.setDescription(ModelUtils.nullIfEmpty(rs.getString("description")));
       s.setTubeBarcode(ModelUtils.nullIfEmpty(rs.getString("tubeBarcode")));
@@ -128,14 +128,10 @@ public class SampleFileDao implements SampleDao {
       return kit;
     }
     
-    private Set<Integer> parseSampleReferences(String string) {
+    private Set<String> parseSampleReferences(String string) {
       List<String> list = DaoUtils.parseList(string);
       if (list.isEmpty()) return null;
-      
-      Set<Integer> ids = new HashSet<>();
-      for (String id : list) {
-        ids.add(Integer.valueOf(id));
-      }
+      Set<String> ids = new HashSet<>(list);
       return ids;
     }
     
@@ -167,8 +163,17 @@ public class SampleFileDao implements SampleDao {
   @Autowired
   private JdbcTemplate template;
   
+  public static void validateSampleId(String sampleId) {
+    try {
+      Integer.parseInt(sampleId);
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Sample ID " + sampleId + " is invalid. Must be an integer"); 
+    }
+  }
+  
   @Override
-  public Sample getSample(Integer id) {
+  public Sample getSample(String id) {
+    SampleFileDao.validateSampleId(id);
     List<Sample> samples = template.query(querySampleById,  new Object[]{id}, sampleMapper);
     return DaoUtils.getExpectedSingleResult(samples);
   }

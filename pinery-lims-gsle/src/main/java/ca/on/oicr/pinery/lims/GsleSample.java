@@ -59,12 +59,6 @@ public class GsleSample extends DefaultSample {
       }
    }
 
-   public void setIdString(String idString) {
-      if (idString != null) {
-         setId(Integer.parseInt(idString));
-      }
-   }
-
    public void setArchivedString(String archivedString) {
       if (archivedString != null && archivedString.equals("1")) {
          setArchived(Boolean.TRUE);

@@ -289,7 +289,7 @@ public class DtosTest {
       RunPosition runPosition = new DefaultRunPosition();
       RunSample runSample = new DefaultRunSample();
       Set<RunSample> runSamples = Sets.newHashSet();
-      runSample.setId(12);
+      runSample.setId("12");
       runSamples.add(runSample);
       runPosition.setRunSample(runSamples);
       RunDtoPosition runDtoPosition = Dtos.asDto(runPosition);
@@ -319,10 +319,10 @@ public class DtosTest {
       return false;
    }
 
-   public boolean RunSampleContainsId(Set<RunDtoSample> runDtoSample, Integer runSampleId) {
+   public boolean RunSampleContainsId(Set<RunDtoSample> runDtoSample, String runSampleId) {
 
       for (RunDtoSample dto : runDtoSample) {
-         if (dto.getId() == (runSampleId)) {
+         if (dto.getId().equals(runSampleId)) {
             return true;
          }
       }
