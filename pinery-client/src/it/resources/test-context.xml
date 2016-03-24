@@ -1,0 +1,4 @@
+<Context>
+   <Parameter name="spring.profiles.active" value="flatfile" override="false"/>
+   <Parameter name="flatfile.propertiesFile" value="file:src/it/resources/flatfile.properties" override="false"/>
+</Context>

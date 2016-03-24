@@ -17,15 +17,17 @@ public class UserClientIT {
 	
 	private static PineryClient pinery;
 	
-	private static final Integer KNOWN_USER_ID = 105;
-	private static final String KNOWN_USER_LAST_NAME = "Cooke";
-	private static final String KNOWN_USER_CREATED = "2015-07-14T10:51:36-04:00";
+	private static Integer KNOWN_USER_ID;
+	private static String KNOWN_USER_LAST_NAME;
+	private static String KNOWN_USER_CREATED;
 	
 	@BeforeClass
   public static void setup() throws FileNotFoundException, IOException {
     ItProperties props = new ItProperties();
     pinery = props.getPineryClient();
-    
+            KNOWN_USER_ID = props.getInt("it.user.id");
+            KNOWN_USER_LAST_NAME = props.get("it.user.lastName");
+            KNOWN_USER_CREATED = props.get("it.user.createDate");
 	}
 	
 	@AfterClass
