@@ -29,6 +29,10 @@ import ca.on.oicr.pinery.api.User;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import ca.on.oicr.gsi.provenance.api.model.SampleProvenance;
+import java.lang.reflect.InvocationTargetException;
+import org.apache.commons.beanutils.BeanUtils;
+
 /**
  * Methods to convert between domain objects and dtos.
  * 
@@ -439,4 +443,14 @@ public final class Dtos {
       }
       return dto;
    }
+   
+    public static SampleProvenanceDto asDto(SampleProvenance from) {
+        SampleProvenanceDto dto = new SampleProvenanceDto();
+        try {
+            BeanUtils.copyProperties(dto, from);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+        return dto;
+    }
 }
