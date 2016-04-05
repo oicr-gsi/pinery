@@ -167,6 +167,22 @@
                         <exclude>test.properties</exclude>
                     </excludes>
                 </testResource>
+                <testResource>
+                    <directory>src/it/resources</directory>
+                    <filtering>true</filtering>
+                    <includes>
+                        <include>test-flatfile.properties</include>
+                        <include>test-context.xml</include>
+                    </includes>
+                </testResource>
+                <testResource>
+                    <directory>src/it/resources</directory>
+                    <filtering>false</filtering>
+                    <excludes>
+                        <exclude>test-flatfile.properties</exclude>
+                        <exclude>test-context.xml</exclude>
+                    </excludes>
+                </testResource>
             </testResources>
 		<plugins>
 			<plugin>
@@ -229,7 +245,7 @@
                 <configuration>
                     <port>8888</port>
                     <path>/</path>
-                    <contextFile>src/it/resources/test-context.xml</contextFile>
+                    <contextFile>${build.testOutputDirectory}/test-context.xml</contextFile>
                     <webapps>
                         <webapp>
                             <groupId>ca.on.oicr</groupId>
