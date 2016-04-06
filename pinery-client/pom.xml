@@ -245,7 +245,7 @@
                 <configuration>
                     <port>8888</port>
                     <path>/</path>
-                    <contextFile>${build.testOutputDirectory}/test-context.xml</contextFile>
+                    <contextFile>${project.build.testOutputDirectory}/test-context.xml</contextFile>
                     <webapps>
                         <webapp>
                             <groupId>ca.on.oicr</groupId>
