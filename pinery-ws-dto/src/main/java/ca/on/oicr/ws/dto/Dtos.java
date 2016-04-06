@@ -31,6 +31,8 @@ import com.google.common.collect.Sets;
 
 import ca.on.oicr.gsi.provenance.api.model.SampleProvenance;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
 import org.apache.commons.beanutils.BeanUtils;
 
 /**
@@ -453,4 +455,13 @@ public final class Dtos {
         }
         return dto;
     }
+    
+    public static List<SampleProvenanceDto> asDto(Collection<SampleProvenance> from) {
+        List<SampleProvenanceDto> result = new ArrayList<>();
+        for (SampleProvenance sp : from) {
+            result.add(asDto(sp));
+        }
+        return result;
+    }
+    
 }

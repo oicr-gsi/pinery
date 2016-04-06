@@ -45,15 +45,11 @@ public class SampleProvenanceResource {
     public List<SampleProvenanceDto> getSamples() {
 
         List<SampleProvenance> sps = sampleProvenanceService.getSampleProvenance();
+        
         if (sps == null || sps.isEmpty()) {
             throw new NotFoundException("No records found");
         }
 
-        List<SampleProvenanceDto> result = new ArrayList<>();
-        for (SampleProvenance sp : sps) {
-            result.add(Dtos.asDto(sp));
-        }
-
-        return result;
+        return Dtos.asDto(sps);
     }
 }
