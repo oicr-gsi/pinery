@@ -115,12 +115,6 @@ public class DefaultSampleProvenance implements SampleProvenance {
         }
     }
 
-    //To be removed
-    @Override
-    public Map<String, Set<String>> getParentSampleAttributes() {
-        return Collections.EMPTY_MAP;
-    }
-
     @Override
     public String getSampleName() {
         if (sample == null) {
@@ -128,11 +122,6 @@ public class DefaultSampleProvenance implements SampleProvenance {
         } else {
             return sample.getName();
         }
-    }
-
-    @Override
-    public String getSampleOrganismCode() {
-        return null;
     }
 
     @Override
@@ -213,7 +202,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
     }
 
     @Override
-    public String getSequencerRunPlatformName() {
+    public String getSequencerRunPlatformModel() {
         if (instrumentModel == null) {
             return null;
         } else {
@@ -266,13 +255,11 @@ public class DefaultSampleProvenance implements SampleProvenance {
         sb.append(getStudyAttributes());
         sb.append(getRootSampleName());
         sb.append(getParentSampleName());
-        sb.append(getParentSampleAttributes());
         sb.append(getSampleName());
-        sb.append(getSampleOrganismCode());
         sb.append(getSampleAttributes(false)); //use SampleAttribute "key" Enum name value
         sb.append(getSequencerRunName());
         sb.append(getSequencerRunAttributes());
-        sb.append(getSequencerRunPlatformName());
+        sb.append(getSequencerRunPlatformModel());
         sb.append(getLaneNumber());
         sb.append(getLaneAttributes());
         sb.append(getIusTag());
@@ -326,11 +313,10 @@ public class DefaultSampleProvenance implements SampleProvenance {
                 + "rootSampleName=" + getRootSampleName() + ", "
                 + "parentSampleName=" + getParentSampleName() + ", "
                 + "sampleName=" + getSampleName() + ", "
-                + "sampleOrganismCode=" + getSampleOrganismCode() + ", "
                 + "sampleAttributes=" + getSampleAttributes() + ", "
                 + "sequencerRunName=" + getSequencerRunName() + ", "
                 + "sequencerRunAttributes=" + getSequencerRunAttributes() + ", "
-                + "sequencerRunPlatformName=" + getSequencerRunPlatformName() + ", "
+                + "sequencerRunPlatformModel=" + getSequencerRunPlatformModel() + ", "
                 + "laneNumber=" + getLaneNumber() + ", "
                 + "laneAttributes=" + getLaneAttributes() + ", "
                 + "iusTag=" + getIusTag() + ", "

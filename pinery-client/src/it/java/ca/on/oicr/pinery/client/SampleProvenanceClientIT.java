@@ -150,13 +150,13 @@ public class SampleProvenanceClientIT {
 
     @Test
     public void testGetSequencerRunPlatformName() {
-        assertEquals("HiSeq", spById.get("1_1_2").getSequencerRunPlatformName());
-        assertEquals("HiSeq", spById.get("1_2_3").getSequencerRunPlatformName());
-        assertEquals("HiSeq", spById.get("2_1_2").getSequencerRunPlatformName());
-        assertEquals("HiSeq", spById.get("2_1_3").getSequencerRunPlatformName());
-        assertEquals("HiSeq", spById.get("2_2_4").getSequencerRunPlatformName());
-        assertEquals("HiSeq", spById.get("2_2_5").getSequencerRunPlatformName());
-        assertEquals("HiSeq", spById.get("3_5_8").getSequencerRunPlatformName());
+        assertEquals("HiSeq", spById.get("1_1_2").getSequencerRunPlatformModel());
+        assertEquals("HiSeq", spById.get("1_2_3").getSequencerRunPlatformModel());
+        assertEquals("HiSeq", spById.get("2_1_2").getSequencerRunPlatformModel());
+        assertEquals("HiSeq", spById.get("2_1_3").getSequencerRunPlatformModel());
+        assertEquals("HiSeq", spById.get("2_2_4").getSequencerRunPlatformModel());
+        assertEquals("HiSeq", spById.get("2_2_5").getSequencerRunPlatformModel());
+        assertEquals("HiSeq", spById.get("3_5_8").getSequencerRunPlatformModel());
     }
 
     @Test
@@ -183,13 +183,13 @@ public class SampleProvenanceClientIT {
 
     @Test
     public void checkBarcodes() {
-        assertEquals("", spById.get("1_1_2").getIusTag());
-        assertEquals("", spById.get("1_2_3").getIusTag());
+        assertEquals("NoIndex", spById.get("1_1_2").getIusTag());
+        assertEquals("NoIndex", spById.get("1_2_3").getIusTag());
         assertEquals("AAAAAAA", spById.get("2_1_2").getIusTag());
         assertEquals("GGGGGGG", spById.get("2_1_3").getIusTag());
         assertEquals("AAAAAAA-GGGGGGG", spById.get("2_2_4").getIusTag());
         assertEquals("CCCCCCC-TTTTTTT", spById.get("2_2_5").getIusTag());
-        assertEquals("", spById.get("3_5_8").getIusTag());
+        assertEquals("NoIndex", spById.get("3_5_8").getIusTag());
     }
 
     @Test
@@ -208,13 +208,13 @@ public class SampleProvenanceClientIT {
         for (SampleProvenance sp : sps) {
             System.out.println(sp.getSampleProvenanceId() + " = " + sp.getVersion());
         }
-        assertEquals("5b849ee5fb94cd20caf1067e8463f20bbd47904545bab215117bb84028ac71eb", spById.get("1_1_2").getVersion());
-        assertEquals("ea656f7a8eebff6f15142877d7b2804314f3d2dc148508ea1ac1c9f02259a582", spById.get("1_2_3").getVersion());
-        assertEquals("c5e90a515f477240f20ed17f387f1c9a8e1ac3580d81de2eefc19afe84fcbdb4", spById.get("2_1_2").getVersion());
-        assertEquals("d367a9cfcf95e39fe9b64911a7bc17445c34c2b8aaf6f285f06866f43ebb8f5e", spById.get("2_1_3").getVersion());
-        assertEquals("4331cd999d4f1d568e437a248e45434ee256d4e44fec17c05f56b98eb77e42ba", spById.get("2_2_4").getVersion());
-        assertEquals("2f49bd8e5fea1899a2bf3c3f5d811a37308537c20d3e5b2e8af1bd66f9d73f4e", spById.get("2_2_5").getVersion());
-        assertEquals("346efbea3eceee6a0fdd2abd144c103baba251845c41139b039f1eb7cadeda39", spById.get("3_5_8").getVersion());
+        assertEquals("97933ede20adf7225665b74d537879d1eff1ccdeae10bdda89cd5ee56781b4e0", spById.get("1_1_2").getVersion());
+        assertEquals("95af0b5218f441a3652f65c12201d25bd8b7bc32f13ba938cd2800d914bbfecf", spById.get("1_2_3").getVersion());
+        assertEquals("58a4077e5dddebeb9a7cddfe5ebf172f2306e9d2a6061c64812ef6495b51530f", spById.get("2_1_2").getVersion());
+        assertEquals("a40c5a1e752d4738947f2404274af8f45c01072d3ad42f472af9ca62b32988ad", spById.get("2_1_3").getVersion());
+        assertEquals("637b3f50363ea87c29c01378ca4d27a80169209fc59eedb3902647dd7f6e508c", spById.get("2_2_4").getVersion());
+        assertEquals("2bfc8dcd227c3ec2598878f5191df778d6e9c663e835a3eb0e0da0c4d195ebbd", spById.get("2_2_5").getVersion());
+        assertEquals("fc8be46310e51f9dcb6d40d70b9ba58697e841fc73142c62d9888f09d548f85d", spById.get("3_5_8").getVersion());
     }
 
 }

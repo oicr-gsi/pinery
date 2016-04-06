@@ -15,13 +15,11 @@ public class SampleProvenanceDto implements SampleProvenance {
     private Map<String, Set<String>> studyAttributes;
     private String rootSampleName;
     private String parentSampleName;
-    private Map<String, Set<String>> parentSampleAttributes;
     private String sampleName;
-    private String sampleOrganismCode;
     private Map<String, Set<String>> sampleAttributes;
     private String sequencerRunName;
     private Map<String, Set<String>> sequencerRunAttributes;
-    private String sequencerRunPlatformName;
+    private String sequencerRunPlatformModel;
     private String laneNumber;
     private Map<String, Set<String>> laneAttributes;
     private String iusTag;
@@ -67,30 +65,12 @@ public class SampleProvenanceDto implements SampleProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getParentSampleAttributes() {
-        return parentSampleAttributes;
-    }
-
-    public void setParentSampleAttributes(Map<String, Set<String>> parentSampleAttributes) {
-        this.parentSampleAttributes = parentSampleAttributes;
-    }
-
-    @Override
     public String getSampleName() {
         return sampleName;
     }
 
     public void setSampleName(String sampleName) {
         this.sampleName = sampleName;
-    }
-
-    @Override
-    public String getSampleOrganismCode() {
-        return sampleOrganismCode;
-    }
-
-    public void setSampleOrganismCode(String sampleOrganismCode) {
-        this.sampleOrganismCode = sampleOrganismCode;
     }
 
     @Override
@@ -121,12 +101,12 @@ public class SampleProvenanceDto implements SampleProvenance {
     }
 
     @Override
-    public String getSequencerRunPlatformName() {
-        return sequencerRunPlatformName;
+    public String getSequencerRunPlatformModel() {
+        return sequencerRunPlatformModel;
     }
 
-    public void setSequencerRunPlatformName(String sequencerRunPlatformName) {
-        this.sequencerRunPlatformName = sequencerRunPlatformName;
+    public void setSequencerRunPlatformModel(String sequencerRunPlatformModel) {
+        this.sequencerRunPlatformModel = sequencerRunPlatformModel;
     }
 
     @Override
