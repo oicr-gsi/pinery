@@ -70,6 +70,7 @@ public class DefaultSampleProvenanceServiceTest {
 
         runSample = new DefaultRunSample();
         runSample.setId(1);
+        runSample.setAttributes(Collections.EMPTY_SET);
 
         lane = new DefaultRunPosition();
         lane.setPosition(1);
@@ -266,6 +267,32 @@ public class DefaultSampleProvenanceServiceTest {
         a.setName("Not in SampleAttribute enum");
         a.setValue("...");
         sample.setAttributes(Sets.newHashSet(a));
+
+        SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
+        assertEquals("{geo_run_id_and_position=[1_1]}", after.getSampleAttributes().toString());
+
+        //Immaterial attribute change, versions should NOT change
+        assertEquals(before.getVersion(), after.getVersion());
+    }
+
+    @Test
+    public void testRunSampleMaterialAttributeChange() {
+        Attribute a = new DefaultAttribute();
+        a.setName("Targeted Resequencing");
+        a.setValue("123");
+        runSample.setAttributes(Sets.newHashSet(a));
+
+        SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
+        assertEquals("{geo_run_id_and_position=[1_1], geo_targeted_resequencing=[123]}", after.getSampleAttributes().toString());
+        assertNotEquals(before.getVersion(), after.getVersion());
+    }
+
+    @Test
+    public void testRunSampleImmaterialAttributeChange() {
+        Attribute a = new DefaultAttribute();
+        a.setName("Targeted Resequencinggggg");
+        a.setValue("123");
+        runSample.setAttributes(Sets.newHashSet(a));
 
         SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
         assertEquals("{geo_run_id_and_position=[1_1]}", after.getSampleAttributes().toString());

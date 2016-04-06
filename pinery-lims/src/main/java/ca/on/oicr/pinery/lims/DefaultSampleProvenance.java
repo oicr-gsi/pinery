@@ -159,6 +159,9 @@ public class DefaultSampleProvenance implements SampleProvenance {
         //collect all sample attributes
         attrsAll.putAll(processSampleAttributes(sample));
 
+        //collect all run sample attributes
+        attrsAll.putAll(processSampleAttributes(runSample));
+        
         //collect additional sample fields as attributes
         if (sequencerRun.getId() != null && lane.getPosition() != null) {
             attrsAll.put("run_id_and_position", sequencerRun.getId() + "_" + lane.getPosition());
@@ -340,6 +343,10 @@ public class DefaultSampleProvenance implements SampleProvenance {
     private HashMultimap<String, String> processSampleAttributes(Sample sample) {
         HashMultimap<String, String> attrs = HashMultimap.create();
 
+        if (sample == null || sample.getAttributes() == null) {
+            return attrs;
+        }
+        
         for (Attribute attribute : sample.getAttributes()) {
             attrs.put(attribute.getName(), attribute.getValue());
         }
