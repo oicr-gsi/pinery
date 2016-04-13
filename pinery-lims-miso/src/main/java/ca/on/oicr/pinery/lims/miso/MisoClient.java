@@ -64,35 +64,32 @@ public class MisoClient implements Lims {
   private static final String queryInstrumentsByModelId = queryAllInstruments + " WHERE sr.platformId = ?";
   
   // Order queries
-  private static final String queryAllOrders = "SELECT stat.health runStatus, prj.name project, pool.platformType platform, " +
-      "pool.poolId, prj.projectId, createLog.userId createdBy, createLog.changeTime creationDate, updateLog.userId modifiedBy, " +
-      "updateLog.changeTime modified " +
-      "FROM Pool AS pool " +
-      "JOIN Pool_Elements ele ON ele.elementType='uk.ac.bbsrc.tgac.miso.core.data.impl.LibraryDilution' " + // scary
-      "AND ele.pool_poolId = pool.poolId " +
-      "JOIN LibraryDilution ld ON ld.dilutionId = ele.elementId " +
-      "JOIN Library l ON l.libraryId = ld.library_libraryId " +
-      "JOIN Sample s ON s.sampleId = l.sample_sampleId " +
-      "JOIN Project prj ON prj.projectId = s.project_projectId " +
-      "JOIN (" +
-        "SELECT poolId, userId, changeTime FROM PoolChangeLog WHERE changeTime IN (" +
-          "SELECT MIN(changeTime) AS changeTime FROM PoolChangeLog GROUP BY poolId" +
-        ")" +
-      ") createLog ON createLog.poolId = pool.poolId " +
-      "JOIN (" +
-        "SELECT poolId, userId, changeTime FROM PoolChangeLog WHERE changeTime IN (" +
-          "SELECT MAX(changeTime) AS changeTime FROM PoolChangeLog GROUP BY poolId" +
-        ")" +
-      ") updateLog ON createLog.poolId = pool.poolId " +
-      "LEFT JOIN _Partition part ON part.pool_poolId = pool.poolId " +
-      "LEFT JOIN SequencerPartitionContainer_Partition spcp ON spcp.partitions_partitionId = part.partitionId " +
-      "LEFT JOIN SequencerPartitionContainer spc ON spc.containerId = spcp.container_containerId " +
-      "LEFT JOIN Run_SequencerPartitionContainer rcpc ON rcpc.containers_containerId = spc.containerId " +
-      "LEFT JOIN Run r ON r.runId = rcpc.Run_runId " +
-      "LEFT JOIN Status stat ON stat.statusId = r.status_statusId " +
-      "GROUP BY poolId, projectId";
-  
-  private static final String queryOrderById = queryAllOrders + " WHERE pool.poolId = ?";
+  private static final String queryAllOrders = "SELECT o.poolOrderId orderId, o.creationDate createdDate, o.createdBy createdById, " +
+      "o.lastUpdated modifiedDate, o.updatedBy modifiedById, pool.platformType platform " +
+      "FROM PoolOrder o " +
+      "JOIN Pool pool ON pool.poolId = o.poolId ";
+  private static final String queryOrderById = queryAllOrders + " WHERE orderId = ?";
+  private static final String queryAllOrderSamples = "SELECT o.poolOrderId orderId, lib.name libraryId, bc1.sequence barcode, " +
+      "bc2.sequence barcode_two, sp.readLength read_length, NULL targeted_resequencing " + // TODO: targeted_resequencing
+      "FROM PoolOrder o " +
+      "LEFT JOIN SequencingParameters sp ON sp.parametersId = o.parametersId " +
+      "LEFT JOIN Pool p ON p.poolId = o.poolId " +
+      "LEFT JOIN Pool_Elements pe ON pe.elementType='uk.ac.bbsrc.tgac.miso.core.data.impl.LibraryDilution' " +
+      "AND pe.pool_poolId = p.poolId " +
+      "LEFT JOIN LibraryDilution ld ON ld.dilutionId = pe.elementId " +
+//      "LEFT JOIN TargetedResequencing tr ON tr.targetedResequencingId = ld.targetedResequencingId " +
+      "LEFT JOIN Library lib ON lib.libraryId = ld.library_libraryId " +
+      "LEFT JOIN ( " +
+        "SELECT library_libraryId, sequence FROM Library_TagBarcode " +
+        "JOIN TagBarcodes ON TagBarcodes.tagId = Library_TagBarcode.barcode_barcodeId " +
+        "WHERE name NOT LIKE 'N5%' AND name NOT LIKE 'S5%' " +
+      ") bc1 ON bc1.library_libraryId = lib.libraryId " +
+      "LEFT JOIN ( " +
+        "SELECT library_libraryId, sequence FROM Library_TagBarcode " +
+        "JOIN TagBarcodes ON TagBarcodes.tagId = Library_TagBarcode.barcode_barcodeId " +
+        "WHERE name LIKE 'N5%' OR name LIKE 'S5%' " +
+      ") bc2 ON bc2.library_libraryId = lib.libraryId";
+  private static final String queryOrderSamplesByOrderId = queryAllOrderSamples + " WHERE orderId = ?";
   
   // User queries
   private static final String queryAllUsers = "SELECT u.userId, u.fullname, u.email, u.active " +
@@ -148,11 +145,11 @@ public class MisoClient implements Lims {
       "sai.updatedBy modifiedById, s.identificationBarcode tubeBarcode, s.volume volume, sai.concentration concentration, " +
       "s.locationBarcode storageLocation, kd.name kitName, kd.description kitDescription, s.receivedDate receive_date, " +
       "i.externalName external_name, tor.alias tissue_origin, tm.alias tissue_preparation, sa.region tissue_region, sa.tubeId tube_id, " +
-      "NULL group_id, NULL group_id_description, sp.alias purpose, qubit.results qubit_concentration, " +
+      "sa.strStatus str_result, NULL group_id, NULL group_id_description, sp.alias purpose, qubit.results qubit_concentration, " +
       "nanodrop.results nanodrop_concentration, NULL barcode, NULL barcode_two, qpcr.results qpcr_percentage_human, s.qcPassed qcPassed " +
       "FROM Sample s " +
-      "LEFT JOIN Sample parent ON parent.sampleId = s.parentId " +
       "LEFT JOIN SampleAdditionalInfo sai ON sai.sampleId = s.sampleId " +
+      "LEFT JOIN Sample parent ON parent.sampleId = sai.parentId " +
       "LEFT JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId " +
       "LEFT JOIN TissueType tt ON tt.tissueTypeId = sai.tissueTypeId " +
       "LEFT JOIN Project p ON p.projectId = s.project_projectId " +
@@ -180,7 +177,7 @@ public class MisoClient implements Lims {
       "p.alias project, lai.archived archived, lai.creationDate created, lai.createdBy createdById, lai.lastUpdated modified, " +
       "lai.updatedBy modifiedById, l.identificationBarcode tubeBarcode, l.volume volume, l.concentration concentration, " +
       "l.locationBarcode storageLocation, kd.name kitName, kd.description kitDescription, NULL receive_date, NULL external_name, " +
-      "tor.alias tissue_origin, NULL tissue_preparation, NULL tissue_region, NULL tube_id, sg.groupId group_id, " +
+      "tor.alias tissue_origin, NULL tissue_preparation, NULL tissue_region, NULL tube_id, NULL str_result, sg.groupId group_id, " +
       "sg.description group_id_description, NULL purpose, qubit.results qubit_concentration, NULL nanodrop_concentration, " +
       "bc1.sequence barcode, bc2.sequence barcode_two, NULL qpcr_percentage_human, l.qcPassed qcPassed " +
       "FROM Library l " +
@@ -266,6 +263,7 @@ public class MisoClient implements Lims {
   private final RowMapper<Instrument> instrumentMapper = new InstrumentMapper();
   private final RowMapper<InstrumentModel> modelMapper = new InstrumentModelRowMapper();
   private final RowMapper<Order> orderMapper = new OrderRowMapper();
+  private final RowMapper<MisoOrderSample> orderSampleMapper = new OrderSampleRowMapper();
   private final RowMapper<User> userMapper = new UserRowMapper();
   private final RowMapper<Run> runMapper = new RunRowMapper();
   private final RowMapper<MisoRunPosition> runPositionMapper = new RunPositionRowMapper();
@@ -394,47 +392,29 @@ public class MisoClient implements Lims {
 
   @Override
   public List<Order> getOrders() {
-    throw new UnsupportedOperationException("This method has not been implemented"); // TODO: get order by id
-//    List<Order> orders = template.query(queryAllOrders, orderMapper);
-//    List<MisoOrderSample> samples = getOrderSamples();
-//    Map<Integer, Order> map = new HashMap<>();
-//    for (Order o : orders) {
-//      map.put(o.getId(), o);
-//    }
-//    for (MisoOrderSample s : samples) {
-//      Order o = map.get(s.getOrderId());
-//      if (o != null) {
-//        Set<OrderSample> os = o.getSamples();
-//        if (os == null) {
-//          os = new HashSet<OrderSample>();
-//          o.setSample(os);
-//        }
-//        os.add(s);
-//      }
-//    }
-//    return orders;
+    List<Order> orders = template.query(queryAllOrders, orderMapper);
+    List<MisoOrderSample> samples = getOrderSamples();
+    mapSamplesToOrders(orders, samples);
+    return orders;
   }
 
   @Override
   public Order getOrder(Integer id) {
-    throw new UnsupportedOperationException("This method has not been implemented"); // TODO: get all orders
-//    List<Order> orders = template.query(queryOrderById, new Object[]{id}, orderMapper);
-//    if (orders.size() != 1) return null;
-//    Order order = orders.get(0);
-//    Set<OrderSample> os = new HashSet<>();
-//    os.addAll(getOrderSamples(id));
-//    order.setSample(os);
-//    return order;
+    List<Order> orders = template.query(queryOrderById, new Object[]{id}, orderMapper);
+    if (orders.size() != 1) return null;
+    Order order = orders.get(0);
+    Set<OrderSample> os = new HashSet<>();
+    os.addAll(getOrderSamples(id));
+    order.setSample(os);
+    return order;
   }
   
   private List<MisoOrderSample> getOrderSamples() {
-    throw new UnsupportedOperationException("This method has not been implemented");
-    // TODO: get all samples that are linked to any order
+    return template.query(queryAllOrderSamples, orderSampleMapper);
   }
   
   private List<MisoOrderSample> getOrderSamples(Integer orderId) {
-    throw new UnsupportedOperationException("This method has not been implemented");
-    // TODO: get all samples with this order id (poolId)
+    return template.query(queryOrderSamplesByOrderId,  new Object[]{orderId}, orderSampleMapper);
   }
   
   private List<Order> mapSamplesToOrders(List<Order> orders, List<MisoOrderSample> samples) {
@@ -445,12 +425,12 @@ public class MisoClient implements Lims {
     for (MisoOrderSample s : samples) {
       Order o = map.get(s.getOrderId());
       if (o != null) {
-        Set<OrderSample> rs = o.getSamples();
-        if (rs == null) {
-          rs = new HashSet<OrderSample>();
-          o.setSample(rs);
+        Set<OrderSample> os = o.getSamples();
+        if (os == null) {
+          os = new HashSet<OrderSample>();
+          o.setSample(os);
         }
-        rs.add(s);
+        os.add(s);
       }
     }
     return orders;
@@ -660,17 +640,16 @@ public class MisoClient implements Lims {
   private static class OrderRowMapper implements RowMapper<Order> {
 
     @Override
-    public Order mapRow(ResultSet rs, int rowNum) throws SQLException { // TODO: revamp once MISO Orders exist
+    public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
       Order o = new DefaultOrder();
       
-      o.setId(rs.getInt("poolId"));
-      o.setStatus(rs.getString("runStatus"));
-      o.setProject(rs.getString("project"));
+      o.setId(rs.getInt("orderId"));
       o.setPlatform(rs.getString("platform"));
-      o.setCreatedById(rs.getInt("createdBy"));
-      o.setCreatedDate(rs.getTimestamp("creationDate"));
-      o.setModifiedById(rs.getInt("modifiedBy"));
-      o.setModifiedDate(rs.getTimestamp("modified"));
+      o.setCreatedById(rs.getInt("createdById"));
+      o.setCreatedDate(rs.getTimestamp("createdDate"));
+      o.setModifiedById(rs.getInt("modifiedById"));
+      o.setModifiedDate(rs.getTimestamp("modifiedDate"));
+      // TODO: status? project?
       
       return o;
     }
@@ -786,7 +765,9 @@ public class MisoClient implements Lims {
       Set<Attribute> atts = new HashSet<>();
       for (AttributeKey possibleAtt : AttributeKey.values()) {
         Attribute att = possibleAtt.extractAttributeFrom(rs);
-        if (att != null) atts.add(att);
+        if (att != null) {
+          atts.add(att);
+        }
       }
       if (atts.size() > 0) {
         s.setAttributes(atts);
@@ -817,7 +798,13 @@ public class MisoClient implements Lims {
       GROUP_ID("group_id"),
       GROUP_DESCRIPTION("group_id_description"),
       PURPOSE("purpose"),
-//      STR_RESULT("str_result"), // TODO: str_result
+      STR_RESULT("str_result") {
+        @Override
+        public String extractStringValueFrom(ResultSet rs) throws SQLException {
+          String str = rs.getString(getKey());
+          return str == null ? null : StrStatus.valueOf(str).getValue();
+        }
+      },
       QPCR_PERCENTAGE_HUMAN("qpcr_percentage_human"),
       QUBIT_CONCENTRATION("qubit_concentration"),
       NANODROP_CONCENTRATION("nanodrop_concentration"),
@@ -858,6 +845,23 @@ public class MisoClient implements Lims {
         return att;
       }
       
+      private static enum StrStatus {
+        NOT_SUBMITTED("Not Submitted"),
+        SUBMITTED("Submitted"),
+        PASS("Pass"),
+        FAIL("Fail");
+        
+        private final String value;
+        
+        private StrStatus(String value) {
+          this.value = value;
+        }
+        
+        public String getValue() {
+          return value;
+        }
+      }
+      
     }
     
   }
@@ -872,6 +876,74 @@ public class MisoClient implements Lims {
       s.setPartitionId(rs.getInt("partitionId"));
       
       return s;
+    }
+    
+  }
+  
+  private static class OrderSampleRowMapper implements RowMapper<MisoOrderSample> {
+
+    @Override
+    public MisoOrderSample mapRow(ResultSet rs, int rowNum) throws SQLException {
+      MisoOrderSample s = new MisoOrderSample();
+      
+      s.setId(rs.getString("libraryId"));
+      s.setOrderId(rs.getInt("orderId"));
+      
+      Set<Attribute> atts = new HashSet<>();
+      for (AttributeKey possibleAtt : AttributeKey.values()) {
+        Attribute att = possibleAtt.extractAttributeFrom(rs);
+        if (att != null) {
+          atts.add(att);
+        }
+      }
+      if (atts.size() > 0) {
+        s.setAttributes(atts);
+      }
+      
+      return s;
+    }
+    
+    private static enum AttributeKey {
+      
+      BARCODE("barcode"),
+      BARCODE_TWO("barcode_two"),
+      READ_LENGTH("read_length"),
+      TARGETED_RESEQUENCING("targeted_resequencing");
+      
+      private final String key;
+      
+      private AttributeKey(String key) {
+        this.key = key;
+      }
+      
+      public String getKey() {
+        return key;
+      }
+      
+      /**
+       * Extracts the Attribute represented by this key from the result set. The column name within the ResultSet 
+       * must match this.getKey()
+       * 
+       * @param rs the ResultSet to extract the Attribute from
+       * @return
+       * @throws SQLException
+       */
+      public Attribute extractAttributeFrom(ResultSet rs) throws SQLException {
+        String val = extractStringValueFrom(rs);
+        return val == null ? null : makeAttribute(getKey(), extractStringValueFrom(rs));
+      };
+      
+      public String extractStringValueFrom(ResultSet rs) throws SQLException {
+        return rs.getString(getKey());
+      }
+      
+      private static Attribute makeAttribute(String name, String value) {
+        Attribute att = new DefaultAttribute();
+        att.setName(name);
+        att.setValue(value);
+        return att;
+      }
+      
     }
     
   }
