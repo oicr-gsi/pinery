@@ -39,8 +39,12 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
 
     Logger log = LoggerFactory.getLogger(DefaultSampleProvenanceService.class);
 
-    @Autowired
     private Lims lims;
+    
+    @Autowired
+    public DefaultSampleProvenanceService(Lims lims){
+        this.lims = lims;
+    }
 
     @Override
     public List<SampleProvenance> getSampleProvenance() {
