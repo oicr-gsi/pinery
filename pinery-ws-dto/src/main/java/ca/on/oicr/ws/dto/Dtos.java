@@ -29,7 +29,7 @@ import ca.on.oicr.pinery.api.User;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import ca.on.oicr.gsi.provenance.api.model.SampleProvenance;
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;

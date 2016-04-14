@@ -1,6 +1,6 @@
 package ca.on.oicr.pinery.service.impl;
 
-import ca.on.oicr.gsi.provenance.api.model.SampleProvenance;
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Run;

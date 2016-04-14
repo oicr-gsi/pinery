@@ -1,6 +1,6 @@
 package ca.on.oicr.pinery.ws;
 
-import ca.on.oicr.gsi.provenance.api.model.SampleProvenance;
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
 import java.util.ArrayList;

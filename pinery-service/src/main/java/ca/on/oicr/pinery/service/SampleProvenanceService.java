@@ -1,6 +1,6 @@
 package ca.on.oicr.pinery.service;
 
-import ca.on.oicr.gsi.provenance.api.model.SampleProvenance;
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import java.util.List;
 
 /**

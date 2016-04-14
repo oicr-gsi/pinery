@@ -1,6 +1,6 @@
 package ca.on.oicr.ws.dto;
 
-import ca.on.oicr.gsi.provenance.api.model.SampleProvenance;
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import java.util.Map;
 import java.util.Set;
 import org.joda.time.DateTime;

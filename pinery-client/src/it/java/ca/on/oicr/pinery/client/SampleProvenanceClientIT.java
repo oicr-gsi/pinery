@@ -1,6 +1,6 @@
 package ca.on.oicr.pinery.client;
 
-import ca.on.oicr.gsi.provenance.api.model.SampleProvenance;
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
