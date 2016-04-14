@@ -19,7 +19,6 @@ import com.google.common.collect.TreeMultimap;
 import com.google.common.hash.Hashing;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +103,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     @Override
     public String getParentSampleName() {
-        if (parentSamples == null) {
+        if (parentSamples == null || parentSamples.isEmpty()) {
             return null;
         } else {
             List<String> parentSampleNames = new ArrayList<>();
