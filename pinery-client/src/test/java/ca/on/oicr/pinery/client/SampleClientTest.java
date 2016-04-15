@@ -38,9 +38,9 @@ public class SampleClientTest {
   @Test
   public void testGetAll() throws HttpResponseException {
     SampleDto sample1 = new SampleDto();
-    sample1.setId(111);
+    sample1.setId("111");
     SampleDto sample2 = new SampleDto();
-    sample2.setId(222);
+    sample2.setId("222");
     List<SampleDto> list = new ArrayList<>();
     list.add(sample1);
     list.add(sample2);
@@ -48,8 +48,8 @@ public class SampleClientTest {
     
     List<SampleDto> results = client.all();
     assertEquals(2, results.size());
-    assertEquals(new Integer(111), results.get(0).getId());
-    assertEquals(new Integer(222), results.get(1).getId());
+    assertEquals("111", results.get(0).getId());
+    assertEquals("222", results.get(1).getId());
   }
   
   @Test
@@ -71,11 +71,11 @@ public class SampleClientTest {
   @Test
   public void testGetById() throws HttpResponseException {
     SampleDto sample = new SampleDto();
-    sample.setId(22);
+    sample.setId("22");
     doReturn(sample).when(client).getResource("sample/22");
     
-    SampleDto result = client.byId(22);
-    assertEquals(new Integer(22), result.getId());
+    SampleDto result = client.byId("22");
+    assertEquals("22", result.getId());
   }
   
   @Test
@@ -83,7 +83,7 @@ public class SampleClientTest {
     doThrow(new HttpResponseException()).when(client).getResource("sample/22");
     
     exception.expect(HttpResponseException.class);
-    client.byId(22);
+    client.byId("22");
   }
   
   @Test
@@ -154,9 +154,9 @@ public class SampleClientTest {
   @Test
   public void testGetFiltered() throws HttpResponseException {
     SampleDto sample1 = new SampleDto();
-    sample1.setId(111);
+    sample1.setId("111");
     SampleDto sample2 = new SampleDto();
-    sample2.setId(222);
+    sample2.setId("222");
     List<SampleDto> list = new ArrayList<>();
     list.add(sample1);
     list.add(sample2);
@@ -165,8 +165,8 @@ public class SampleClientTest {
     
     List<SampleDto> results = client.allFiltered(filter);
     assertEquals(2, results.size());
-    assertEquals(new Integer(111), results.get(0).getId());
-    assertEquals(new Integer(222), results.get(1).getId());
+    assertEquals("111", results.get(0).getId());
+    assertEquals("222", results.get(1).getId());
   }
   
   @Test

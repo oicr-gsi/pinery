@@ -94,8 +94,13 @@ public class SampleResource {
    @Path("/sample/{id}")
    @ApiOperation(value = "Find sample by ID", response = SampleDto.class)
    @ApiResponse(code = 404, message = "No sample found")
-   public SampleDto getSample(@ApiParam(value = "ID of sample to fetch", required = true) @PathParam("id") Integer id) {
-      Sample sample = sampleService.getSample(id);
+   public SampleDto getSample(@ApiParam(value = "ID of sample to fetch", required = true) @PathParam("id") String id) {
+     Sample sample = null;
+      try {
+        sample = sampleService.getSample(id);
+      } catch (IllegalArgumentException e) {
+        throw new BadRequestException(e.getMessage(), e);
+      }
       if (sample == null) {
         throw new NotFoundException("No sample found with ID: " + id);
       }
@@ -223,8 +228,13 @@ public class SampleResource {
    @Path("/sample/{id}/changelog")
    @ApiOperation(value = "Find sample changelog by sample ID", response = ChangeLogDto.class)
    @ApiResponse(code = 404, message = "No sample changelog found")
-   public ChangeLogDto getChangeLog(@ApiParam(value = "ID of sample to fetch changelogs for", required = true) @PathParam("id") Integer id) {
-      ChangeLog changeLog = sampleService.getChangeLog(id);
+   public ChangeLogDto getChangeLog(@ApiParam(value = "ID of sample to fetch changelogs for", required = true) @PathParam("id") String id) {
+      ChangeLog changeLog = null; 
+      try {
+        changeLog = sampleService.getChangeLog(id);
+      } catch (IllegalArgumentException e) {
+        throw new BadRequestException(e.getMessage(), e);
+      }
       if (changeLog == null) {
         throw new NotFoundException("No changelog found for sample ID: " + id);
       }

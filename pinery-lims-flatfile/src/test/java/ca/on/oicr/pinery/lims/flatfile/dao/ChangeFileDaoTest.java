@@ -22,10 +22,10 @@ public class ChangeFileDaoTest {
   
   @Test
   public void testGetSingleChangeLogAndMapping() {
-    ChangeLog log = dao.getSampleChanges(2);
+    ChangeLog log = dao.getSampleChanges("2");
     Assert.assertNotNull(log);
     
-    Assert.assertEquals(Integer.valueOf(2), log.getSampleId());
+    Assert.assertEquals("2", log.getSampleId());
     Assert.assertEquals(2, log.getChanges().size());
     
     boolean createFound = false;

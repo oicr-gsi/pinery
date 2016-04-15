@@ -2,26 +2,22 @@ package ca.on.oicr.pinery.lims;
 
 public class GsleSampleChildren {
 
-	private Integer parent;
-	private Integer child;
+	private String parent;
+	private String child;
 
-	public Integer getParent() {
+	public String getParent() {
 		return parent;
 	}
 
-	public void setParentString(String parent) {
-		if (parent != null && !parent.equals("")) {
-			this.parent = Integer.parseInt(parent);
-		}
+	public void setParent(String parent) {
+		this.parent = parent;
 	}
 
-	public Integer getChild() {
+	public String getChild() {
 		return child;
 	}
 
-	public void setChildString(String child) {
-		if (child != null && !child.equals("")) {
-			this.child = Integer.parseInt(child);
-		}
+	public void setChild(String child) {
+		this.child = child;
 	}
 }

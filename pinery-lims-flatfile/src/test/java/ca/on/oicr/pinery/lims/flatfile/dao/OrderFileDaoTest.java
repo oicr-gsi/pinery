@@ -39,7 +39,7 @@ public class OrderFileDaoTest {
     boolean foundSample3 = false;
     for (OrderSample sample : order.getSamples()) {
       switch (sample.getId()) {
-      case 2:
+      case "2":
         foundSample2 = true;
         Assert.assertEquals("AACCGG", sample.getBarcode());
         boolean barcodeFound = false;
@@ -61,7 +61,7 @@ public class OrderFileDaoTest {
         Assert.assertTrue(barcodeFound);
         Assert.assertTrue(organismFound);
         break;
-      case 3:
+      case "3":
         foundSample3 = true;
         break;
       default:

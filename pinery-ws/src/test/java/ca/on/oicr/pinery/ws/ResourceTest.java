@@ -377,7 +377,7 @@ public class ResourceTest {
       orderDto.setUrl("http://test/sample/2");
 
       for (OrderDtoSample orderDtoSample : orderDtoSampleSet) {
-         orderDtoSample.setId(2);
+         orderDtoSample.setId("2");
       }
 
       orderDto.setSamples(orderDtoSampleSet);
@@ -401,7 +401,7 @@ public class ResourceTest {
       order.setProject("HALT");
       order.setStatus("Complete");
       for (OrderSample orderSample : orderSampleSet) {
-         orderSample.setId(45);
+         orderSample.setId("45");
       }
       order.setSample(orderSampleSet);
       return order;
@@ -443,7 +443,7 @@ public class ResourceTest {
       order.setStatus("Complete");
 
       for (OrderSample orderSample : orderSampleSet) {
-         orderSample.setId(2);
+         orderSample.setId("2");
       }
       order.setSample(orderSampleSet);
 
@@ -724,7 +724,7 @@ public class ResourceTest {
       RunDtoSample runDtoSample = new RunDtoSample();
       Set<RunDtoSample> runDtoSampleSet = Sets.newHashSet();
       RunDtoPosition runDtoPosition = new RunDtoPosition();
-      runDtoSample.setId(12);
+      runDtoSample.setId("12");
       runDtoSampleSet.add(runDtoSample);
       runDtoPosition.setSamples(runDtoSampleSet);
       status = runContainsId(runDtoPosition.getSamples(), runDtoSample.getId());
@@ -814,7 +814,7 @@ public class ResourceTest {
          position.setPosition(54);
          for (RunDtoSample sample : runSample) {
             sample.setBarcode("ABC");
-            sample.setId(45);
+            sample.setId("45");
             sample.setUrl("http://test/run/45");
          }
          position.setSamples(runSample);
@@ -847,7 +847,7 @@ public class ResourceTest {
          position.setPosition(54);
          for (RunSample sample : runSample) {
             sample.setBarcode("ABC");
-            sample.setId(45);
+            sample.setId("45");
          }
          position.setRunSample(runSample);
       }
@@ -876,10 +876,10 @@ public class ResourceTest {
       return false;
    }
 
-   public boolean runContainsId(Set<RunDtoSample> run, Integer runId) {
+   public boolean runContainsId(Set<RunDtoSample> runSamples, String runSampleId) {
 
-      for (RunDtoSample dto : run) {
-         if (dto.getId() == (runId)) {
+      for (RunDtoSample dto : runSamples) {
+         if (dto.getId().equals(runSampleId)) {
             return true;
          }
       }
@@ -908,7 +908,7 @@ public class ResourceTest {
          position.setPosition(54);
          for (RunSample sample : runSample) {
             sample.setBarcode("ABC");
-            sample.setId(45);
+            sample.setId("45");
          }
          position.setRunSample(runSample);
       }

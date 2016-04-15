@@ -20,7 +20,7 @@ public class SampleClientIT {
 	
 	private static PineryClient pinery;
 	
-	private static Integer KNOWN_SAMPLE_ID;
+	private static String KNOWN_SAMPLE_ID;
 	private static String KNOWN_SAMPLE_NAME;
 	private static String KNOWN_SAMPLE_CREATE_DATE;
 	private static boolean KNOWN_SAMPLE_ARCHIVED;
@@ -30,7 +30,7 @@ public class SampleClientIT {
   public static void setup() throws FileNotFoundException, IOException {
     ItProperties props = new ItProperties();
     pinery = props.getPineryClient();
-    KNOWN_SAMPLE_ID = props.getInt("it.sample.id");
+    KNOWN_SAMPLE_ID = props.get("it.sample.id");
     KNOWN_SAMPLE_NAME = props.get("it.sample.name");
     KNOWN_SAMPLE_CREATE_DATE = props.get("it.sample.createDate");
     KNOWN_SAMPLE_ARCHIVED = props.getBoolean("it.sample.archived");

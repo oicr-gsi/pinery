@@ -40,7 +40,7 @@ public class FlatfileClient implements Lims {
   private ChangeDao changeDao;
 
   @Override
-  public Sample getSample(Integer id) {
+  public Sample getSample(String id) {
     return sampleDao.getSample(id);
   }
 
@@ -106,7 +106,7 @@ public class FlatfileClient implements Lims {
   }
 
   @Override
-  public ChangeLog getChangeLog(Integer id) {
+  public ChangeLog getChangeLog(String id) {
     return changeDao.getSampleChanges(id);
   }
 

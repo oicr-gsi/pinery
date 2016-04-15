@@ -7,13 +7,13 @@ import ca.on.oicr.pinery.lims.DefaultChange;
  */
 public class FileChange extends DefaultChange {
   
-  private final Integer sampleId;
+  private final String sampleId;
   
-  public FileChange(Integer sampleId) {
+  public FileChange(String sampleId) {
     this.sampleId = sampleId;
   }
 
-  public Integer getSampleId() {
+  public String getSampleId() {
     return sampleId;
   }
   

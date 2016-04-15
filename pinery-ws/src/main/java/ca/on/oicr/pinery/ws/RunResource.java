@@ -119,13 +119,18 @@ public class RunResource {
 
       if (dto.getPositions() != null) {
          for (RunDtoPosition runDtoPosition : dto.getPositions()) {
-            for (RunDtoSample runDtoSample : runDtoPosition.getSamples()) {
+           if (runDtoPosition.getSamples() != null && !runDtoPosition.getSamples().isEmpty()) {
+             for (RunDtoSample runDtoSample : runDtoPosition.getSamples()) {
                runDtoSample.setUrl(baseUriSample + runDtoSample.getId().toString());
-            }
+             }
+           }
          }
       }
       if (dto.getCreatedById() != null) {
          dto.setCreatedByUrl(baseUri + dto.getCreatedById().toString());
+      }
+      if (dto.getModifiedById() != null) {
+        dto.setModifiedByUrl(baseUri + dto.getModifiedById().toString());
       }
       if (dto.getInstrumentId() != null) {
          dto.setInstrumentUrl(((baseUriInstrument + dto.getInstrumentId().toString())));

@@ -9,16 +9,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(Include.NON_NULL)
 public class ChangeLogDto {
 
-   private Integer sampleId;
+   private String sampleId;
    private String sampleUrl;
    private List<ChangeDto> changes;
 
    @JsonProperty("sample_id")
-   public Integer getSampleId() {
+   public String getSampleId() {
       return sampleId;
    }
 
-   public void setSampleId(Integer sampleId) {
+   public void setSampleId(String sampleId) {
       this.sampleId = sampleId;
    }
 

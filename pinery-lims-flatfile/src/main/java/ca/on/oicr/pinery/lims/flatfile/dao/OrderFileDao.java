@@ -53,7 +53,7 @@ public class OrderFileDao implements OrderDao {
         Map<String, String> sampleMap = DaoUtils.parseKeyValuePairs(sampleString);
         OrderSample sample = new DefaultOrderSample();
         
-        sample.setId(Integer.parseInt(sampleMap.get("id")));
+        sample.setId(sampleMap.get("id"));
         if (sampleMap.containsKey("barcode")) sample.setBarcode(ModelUtils.nullIfEmpty(sampleMap.get("barcode")));
         if (sampleMap.containsKey("barcodeTwo")) sample.setBarcode(ModelUtils.nullIfEmpty(sampleMap.get("barcodeTwo")));
         Map<String, String> attributeMap = DaoUtils.parseKeyValuePairs(sampleMap.get("attributes"));

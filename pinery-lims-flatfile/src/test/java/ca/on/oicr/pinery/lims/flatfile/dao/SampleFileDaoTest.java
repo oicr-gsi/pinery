@@ -28,10 +28,10 @@ public class SampleFileDaoTest {
   
   @Test
   public void testGetSingleSampleAndMapping() {
-    Sample sample = dao.getSample(1);
+    Sample sample = dao.getSample("1");
     Assert.assertNotNull(sample);
 
-    Assert.assertEquals(Integer.valueOf(1), sample.getId());
+    Assert.assertEquals("1", sample.getId());
     Assert.assertEquals("Sample1", sample.getName());
     Assert.assertEquals("First", sample.getDescription());
     Assert.assertEquals("12345", sample.getTubeBarcode());

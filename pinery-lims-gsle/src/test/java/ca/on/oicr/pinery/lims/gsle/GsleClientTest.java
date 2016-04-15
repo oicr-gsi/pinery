@@ -15,7 +15,7 @@ import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
-import ca.on.oicr.pinery.lims.GsleAttribute;
+import ca.on.oicr.pinery.lims.DefaultAttribute;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -44,7 +44,7 @@ public class GsleClientTest {
       map.put("Agilent_90_CTGGGT", "CTGGGT");
       sut.setBarcodeMap(map);
 
-      Attribute attr = new GsleAttribute();
+      Attribute attr = new DefaultAttribute();
       attr.setName("Barcode");
       attr.setValue("Agilent_90_CTGGGT");
 
@@ -59,7 +59,7 @@ public class GsleClientTest {
       map.put("Agilent_90_CTGGGT", "CTGGGT");
       sut.setBarcodeMap(map);
 
-      Attribute attr = new GsleAttribute();
+      Attribute attr = new DefaultAttribute();
       attr.setName("FailingBarcode");
       attr.setValue("Agilent_90_CTGGGT");
 
@@ -74,7 +74,7 @@ public class GsleClientTest {
       map.put("Agilent_90_CTGGGT", null);
       sut.setBarcodeMap(map);
 
-      Attribute attr = new GsleAttribute();
+      Attribute attr = new DefaultAttribute();
       attr.setName("Barcode");
       attr.setValue("Agilent_90_CTGGGT");
 
@@ -90,7 +90,7 @@ public class GsleClientTest {
       map.put("Agilent_90_CTGGGT", null);
       sut.setBarcodeMap(map);
 
-      Attribute attr = new GsleAttribute();
+      Attribute attr = new DefaultAttribute();
       attr.setName("Barcode");
       attr.setValue("Agilent_90_CTGGGT");
 
@@ -106,17 +106,17 @@ public class GsleClientTest {
       TemporaryOrder temp = new TemporaryOrder();
       temp.setBarcode("ATCGCCGGA");
       temp.setOrderId(45);
-      temp.setSampleId(45);
+      temp.setSampleId("45");
 
       TemporaryOrder temp1 = new TemporaryOrder();
       temp1.setBarcode("CCCCCAAATTGG");
       temp1.setOrderId(37);
-      temp1.setSampleId(37);
+      temp1.setSampleId("37");
 
       TemporaryOrder temp2 = new TemporaryOrder();
       temp2.setOrderId(45);
       temp2.setBarcode("GGGGGGGGCGGA");
-      temp2.setSampleId(45);
+      temp2.setSampleId("45");
 
       List<TemporaryOrder> sampleList = Lists.newArrayList();
       sampleList.add(temp);
@@ -165,31 +165,31 @@ public class GsleClientTest {
       List<TemporaryOrder> temporaries = Lists.newArrayList();
       TemporaryOrder t0 = new TemporaryOrder();
       t0.setOrderId(1047);
-      t0.setSampleId(13312);
+      t0.setSampleId("13312");
       t0.setName("Lib. Frag. Size (mean, bp)");
       t0.setValue("252");
 
       TemporaryOrder t1 = new TemporaryOrder();
       t1.setOrderId(1047);
-      t1.setSampleId(13312);
+      t1.setSampleId("13312");
       t1.setName("Read Length");
       t1.setValue("75x35");
 
       TemporaryOrder t2 = new TemporaryOrder();
       t2.setOrderId(1047);
-      t2.setSampleId(13315);
+      t2.setSampleId("13315");
       t2.setName("Lib. Frag. Size (mean, bp)");
       t2.setValue("246");
 
       TemporaryOrder t3 = new TemporaryOrder();
       t3.setOrderId(1047);
-      t3.setSampleId(13315);
+      t3.setSampleId("13315");
       t3.setName("Read Length");
       t3.setValue("75x35");
 
       TemporaryOrder t4 = new TemporaryOrder();
       t4.setOrderId(1047);
-      t4.setSampleId(13315);
+      t4.setSampleId("13315");
       t4.setName("Reference");
       t4.setValue("Human hg19");
 
@@ -206,13 +206,13 @@ public class GsleClientTest {
       List<TemporaryOrder> temporaries = Lists.newArrayList();
       TemporaryOrder t0 = new TemporaryOrder();
       t0.setOrderId(2222);
-      t0.setSampleId(22111);
+      t0.setSampleId("22111");
       t0.setName("Lib. Frag. Size (mean, bp)");
       t0.setValue("252");
 
       TemporaryOrder t1 = new TemporaryOrder();
       t1.setOrderId(3333);
-      t1.setSampleId(33111);
+      t1.setSampleId("33111");
       t1.setName("Read Length");
       t1.setValue("75x35");
 

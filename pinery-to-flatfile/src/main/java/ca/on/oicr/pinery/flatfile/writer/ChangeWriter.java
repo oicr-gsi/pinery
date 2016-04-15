@@ -21,7 +21,7 @@ public class ChangeWriter extends Writer {
     ArrayList<Change> changes = new ArrayList<>();
     
     for (ChangeLogDto changeLog : changeLogs) {
-      Integer sampleId = changeLog.getSampleId();
+      String sampleId = changeLog.getSampleId();
       for (ChangeDto change : changeLog.getChanges()) {
         changes.add(new Change(sampleId, change));
       }
@@ -56,15 +56,15 @@ public class ChangeWriter extends Writer {
   
   private static class Change {
     
-    private final Integer sampleId;
+    private final String sampleId;
     private final ChangeDto change;
     
-    public Change(Integer sampleId, ChangeDto change) {
+    public Change(String sampleId, ChangeDto change) {
       this.sampleId = sampleId;
       this.change = change;
     }
     
-    public int getSampleId() {
+    public String getSampleId() {
       return sampleId;
     }
     
