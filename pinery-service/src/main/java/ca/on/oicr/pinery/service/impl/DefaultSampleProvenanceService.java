@@ -69,7 +69,7 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
             }
         }
 
-        Multimap<Integer, OrderSample> orderSampleById = HashMultimap.create();
+        Multimap<String, OrderSample> orderSampleById = HashMultimap.create();
         for (Order order : lims.getOrders()) {
             for (OrderSample orderSample : order.getSamples()) {
                 orderSampleById.put(orderSample.getId(), orderSample);
@@ -77,7 +77,7 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
         }
 
         List<Sample> samples = lims.getSamples(null, null, null, null, null);
-        Map<Integer, Sample> samplesById = new HashMap<>();
+        Map<String, Sample> samplesById = new HashMap<>();
         for (Sample sample : samples) {
             if (samplesById.put(sample.getId(), sample) != null) {
                 log.warn("Duplicate Sample id: " + sample.getId());
@@ -110,7 +110,7 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
                     sp.setSampleProject(projectByName.get(sample.getProject()));
 
                     Set<Sample> parentSamples = new LinkedHashSet<>();
-                    for (Integer id : sampleHierarchy.getAncestorSampleIds(sample.getId())) {
+                    for (String id : sampleHierarchy.getAncestorSampleIds(sample.getId())) {
                         parentSamples.add(samplesById.get(id));
                     }
                     sp.setParentSamples(parentSamples);
@@ -125,12 +125,12 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
 
     private class SampleHierarchy {
 
-        private final Multimap<Integer, Integer> sampleParents;
+        private final Multimap<String, String> sampleParents;
 
         public SampleHierarchy(List<Sample> samples) {
             sampleParents = HashMultimap.create();
             for (Sample sample : samples) {
-                Set<Integer> parentIds = sample.getParents();
+                Set<String> parentIds = sample.getParents();
                 if (parentIds == null) {
                     parentIds = Collections.EMPTY_SET;
                 }
@@ -138,12 +138,12 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
             }
         }
 
-        private Set<Integer> getAncestorSampleIds(Integer id) {
-            Set<Integer> ancestors = new LinkedHashSet<>();
-            Queue<Integer> queue = new LinkedList<>();
+        private Set<String> getAncestorSampleIds(String id) {
+            Set<String> ancestors = new LinkedHashSet<>();
+            Queue<String> queue = new LinkedList<>();
             queue.addAll(sampleParents.get(id));
             while (!queue.isEmpty()) {
-                Integer parent = queue.remove();
+                String parent = queue.remove();
                 ancestors.add(parent);
                 queue.addAll(sampleParents.get(parent));
             }

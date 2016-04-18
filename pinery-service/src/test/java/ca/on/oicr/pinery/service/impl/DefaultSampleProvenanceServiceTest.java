@@ -19,6 +19,7 @@ import ca.on.oicr.ws.dto.Dtos;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.joda.time.DateTime;
@@ -64,12 +65,12 @@ public class DefaultSampleProvenanceServiceTest {
         sample.setName("TEST_SAMPLE");
         sample.setProject("TEST_PROJECT");
         sample.setAttributes(Collections.EMPTY_SET);
-        sample.setId(1);
+        sample.setId("1");
         sample.setModified(DateTime.parse("2015-01-01T00:00:00.000Z").toDate());
         samples.add(sample);
 
         runSample = new DefaultRunSample();
-        runSample.setId(1);
+        runSample.setId("1");
         runSample.setAttributes(Collections.EMPTY_SET);
 
         lane = new DefaultRunPosition();
@@ -165,7 +166,7 @@ public class DefaultSampleProvenanceServiceTest {
         String parentExpected = "PARENT_SAMPLE";
         Sample parentSample = new DefaultSample();
         parentSample.setName(parentExpected);
-        parentSample.setId(2);
+        parentSample.setId("2");
         parentSample.setAttributes(Collections.EMPTY_SET);
         samples.add(parentSample);
         sample.setParents(Sets.newHashSet(parentSample.getId()));
@@ -178,7 +179,7 @@ public class DefaultSampleProvenanceServiceTest {
         String rootExpected = "ROOT_SAMPLE";
         Sample rootSample = new DefaultSample();
         rootSample.setName(rootExpected);
-        rootSample.setId(3);
+        rootSample.setId("3");
         rootSample.setAttributes(Collections.EMPTY_SET);
         samples.add(rootSample);
         parentSample.setParents(Sets.newHashSet(rootSample.getId()));
@@ -198,13 +199,13 @@ public class DefaultSampleProvenanceServiceTest {
 
         Sample p1 = new DefaultSample();
         p1.setName(parent1);
-        p1.setId(10);
+        p1.setId("10");
         p1.setAttributes(Collections.EMPTY_SET);
         samples.add(p1);
 
         Sample p2 = new DefaultSample();
         p2.setName(parent2);
-        p2.setId(11);
+        p2.setId("11");
         p2.setAttributes(Collections.EMPTY_SET);
         samples.add(p2);
 
@@ -212,7 +213,7 @@ public class DefaultSampleProvenanceServiceTest {
 
         Sample r = new DefaultSample();
         r.setName(root);
-        r.setId(12);
+        r.setId("12");
         r.setAttributes(Collections.EMPTY_SET);
         samples.add(r);
         p1.setParents(Sets.newHashSet(r.getId()));
@@ -231,13 +232,13 @@ public class DefaultSampleProvenanceServiceTest {
 
         Sample r1 = new DefaultSample();
         r1.setName(root1);
-        r1.setId(10);
+        r1.setId("10");
         r1.setAttributes(Collections.EMPTY_SET);
         samples.add(r1);
 
         Sample r2 = new DefaultSample();
         r2.setName(root2);
-        r2.setId(11);
+        r2.setId("11");
         r2.setAttributes(Collections.EMPTY_SET);
         samples.add(r2);
 
