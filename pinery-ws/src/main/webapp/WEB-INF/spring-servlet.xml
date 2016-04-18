@@ -46,4 +46,8 @@
       <import resource="classpath:miso-config.xml"/>
    </beans>
 
+   <beans profile="mock">
+       <import resource="classpath:mock-config.xml"/>
+   </beans>
+
 </beans>

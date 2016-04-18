@@ -45,6 +45,32 @@
 			<artifactId>joda-time</artifactId>
 			<version>${joda-time-version}</version>
 		</dependency>
+                <dependency>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                    <version>2.6.3</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                    <version>2.6.3</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                    <version>2.6.3</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.fasterxml.jackson.datatype</groupId>
+                    <artifactId>jackson-datatype-joda</artifactId>
+                    <version>2.6.3</version>
+                </dependency>
+                <dependency>
+                    <groupId>commons-configuration</groupId>
+                    <artifactId>commons-configuration</artifactId>
+                    <version>1.10</version>
+                </dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -64,9 +90,100 @@
             <classifier>full</classifier>
             <scope>test</scope>
          </dependency>
-	</dependencies>
+         
+<!--         <dependency>
+             <groupId>org.springframework</groupId>
+             <artifactId>spring-test</artifactId>
+             <version>3.2.15.RELEASE</version>
+             <scope>test</scope>
+         </dependency>
+         <dependency>
+             <groupId>com.jayway.jsonpath</groupId>
+             <artifactId>json-path-assert</artifactId>
+             <version>0.8.1</version>
+             <scope>test</scope>
+         </dependency>
+	 <dependency>
+	  <groupId>ca.on.oicr</groupId>
+	  <artifactId>pinery-service</artifactId>
+	  <version>2.0-SNAPSHOT</version>
+	  <scope>test</scope>
+	  <type>jar</type>
+	 </dependency>-->
+         <dependency>
+             <groupId>ca.on.oicr</groupId>
+             <artifactId>pinery-ws</artifactId>
+             <version>2.0-SNAPSHOT</version>
+             <scope>test</scope>
+             <type>war</type>
+         </dependency>
+         
+                 <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.3.0.M1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>9.3.0.M1</version>
+             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jsp</artifactId>
+            <version>9.3.0.M1</version>
+             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jndi</artifactId>
+            <version>9.3.0.M1</version>
+             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+            <version>9.3.0.M1</version>
+             <scope>test</scope>
+        </dependency>
+         
+        </dependencies>
 
 	<build>
+            <testResources>
+                <testResource>
+                    <directory>src/test/resources</directory>
+                    <filtering>true</filtering>
+                    <includes>
+                        <include>test.properties</include>
+                    </includes>
+                </testResource>
+                <testResource>
+                    <directory>src/test/resources</directory>
+                    <filtering>false</filtering>
+                    <excludes>
+                        <exclude>test.properties</exclude>
+                    </excludes>
+                </testResource>
+                <testResource>
+                    <directory>src/it/resources</directory>
+                    <filtering>true</filtering>
+                    <includes>
+                        <include>test-flatfile.properties</include>
+                        <include>test-context.xml</include>
+                    </includes>
+                </testResource>
+                <testResource>
+                    <directory>src/it/resources</directory>
+                    <filtering>false</filtering>
+                    <excludes>
+                        <exclude>test-flatfile.properties</exclude>
+                        <exclude>test-context.xml</exclude>
+                    </excludes>
+                </testResource>
+            </testResources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -77,26 +194,84 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-dependency-plugin</artifactId>
+                            <version>2.10</version>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>properties</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19</version>
-                <configuration>
-                    <testNGArtifactName>none:none</testNGArtifactName>
-                </configuration>
-            </plugin>
+                <version>2.19.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>2.19.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>           
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.19</version>
-                <configuration>
-                    <testNGArtifactName>none:none</testNGArtifactName>
-                </configuration>
+                <version>2.19.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>2.19.1</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <goals>
                             <goal>integration-test</goal>
                             <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>8888</port>
+                    <path>/</path>
+                    <contextFile>${project.build.testOutputDirectory}/test-context.xml</contextFile>
+                    <webapps>
+                        <webapp>
+                            <groupId>ca.on.oicr</groupId>
+                            <artifactId>pinery-ws</artifactId>
+                            <version>2.0-SNAPSHOT</version>
+                            <type>war</type>
+                            <asWebapp>true</asWebapp>
+                        </webapp>
+                    </webapps>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>start-tomcat</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run-war</goal>
+                        </goals>
+                        <configuration>
+                            <fork>true</fork>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-tomcat</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>shutdown</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -119,7 +294,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>           
 		</plugins>
 		<pluginManagement>
 		  <plugins>

@@ -59,7 +59,7 @@ public class SampleClientIT {
 	public void getAllFilteredByTime() throws HttpResponseException {
 		DateTime before = new DateTime(KNOWN_SAMPLE_CREATE_DATE);
 		before = before.plusHours(1);
-		DateTime after = before.minusHours(2);
+		DateTime after = before.minusDays(32);
 		
 		List<SampleDto> samples = pinery.getSample().allFiltered(
 				new SamplesFilter()
@@ -67,7 +67,7 @@ public class SampleClientIT {
 					.withDateAfter(after)
 				);
 		
-		assertTrue(samples.size() == 8);
+		assertTrue(samples.size() == 2);
 		assertKnownSampleInList(samples);
 	}
 	
@@ -76,7 +76,7 @@ public class SampleClientIT {
 		List<SampleDto> samples = pinery.getSample().allFiltered(
 				new SamplesFilter()
 					.withArchived(KNOWN_SAMPLE_ARCHIVED)
-					.withTypes(Arrays.asList(KNOWN_SAMPLE_TYPE, "mRNA"))
+					.withTypes(Arrays.asList(KNOWN_SAMPLE_TYPE, "Illumina PE Library"))
 				);
 		
 		assertKnownSampleInList(samples);

@@ -39,12 +39,12 @@
             <artifactId>swagger-jaxrs</artifactId>
         </dependency>
         <dependency>
-           <groupId>org.springframework</groupId>
-           <artifactId>spring-webmvc</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
         </dependency>
         <dependency>
-           <groupId>javax.servlet</groupId>
-           <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -52,14 +52,54 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-           <groupId>org.hamcrest</groupId>
-           <artifactId>hamcrest-library</artifactId>
-           <scope>test</scope>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-           <groupId>org.mockito</groupId>
-           <artifactId>mockito-all</artifactId>
-           <scope>test</scope>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>ca.on.oicr.gsi</groupId>
+            <artifactId>provenance-api</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path-assert</artifactId>
+            <version>0.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>4.2.0.Final</version>
         </dependency>
     </dependencies>
     <build>
@@ -83,20 +123,20 @@
         
         <!-- copy maven properties into project.properties -->
         <resources>
-           <resource>
-              <directory>src/main/resources</directory>
-              <filtering>true</filtering>
-              <includes>
-                 <include>project.properties</include>
-              </includes>
-           </resource>
-           <resource>
-              <directory>src/main/resources</directory>
-              <filtering>false</filtering>
-              <excludes>
-                 <exclude>project.properties</exclude>
-              </excludes>
-           </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>project.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>project.properties</exclude>
+                </excludes>
+            </resource>
         </resources>
     </build>
 </project>

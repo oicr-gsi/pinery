@@ -1,5 +1,7 @@
 package ca.on.oicr.pinery.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import java.io.Closeable;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -40,6 +42,7 @@ public class PineryClient implements Closeable {
 	private InstrumentClient instruments;
 	private InstrumentModelClient instrumentModels;
 	private OrderClient orders;
+        private SampleProvenanceClient sampleProvenance;
 	
 	/**
 	 * Creates a new PineryClient to communicate with the Pinery web service at the specified URL. Note that 
@@ -64,7 +67,11 @@ public class PineryClient implements Closeable {
 		this.pineryBaseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
 		this.client = ignoreHttpsWarnings ? PineryClient.getInsecureClient() : PineryClient.getSecureClient();
 		// Register provider manually because it Was not registering automatically in dependent projects
-		this.client.register(ResteasyJackson2Provider.class);
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.registerModule(new JodaModule());
+                ResteasyJackson2Provider provider = new ResteasyJackson2Provider();
+                provider.setMapper(objectMapper);
+		this.client.register(provider);
 		this.open = true;
 	}
 	
@@ -224,6 +231,17 @@ public class PineryClient implements Closeable {
 		if (orders == null) orders = new OrderClient(this);
 		return orders;
 	}
+        
+        /**
+	 * @return an SampleProvenanceClient to be used for retrieving SampleProvenance resources from this Pinery client.
+	 */
+        public SampleProvenanceClient getSampleProvenance() {
+                checkIfOpen();
+                if(sampleProvenance == null) {
+                    sampleProvenance = new SampleProvenanceClient(this);
+                }
+                return sampleProvenance;
+        }
 
 	public boolean isOpen() {
 		return open;
@@ -257,6 +275,7 @@ public class PineryClient implements Closeable {
 			instruments = null;
 			instrumentModels = null;
 			orders = null;
+                        sampleProvenance = null;
 		}
 	}
 	

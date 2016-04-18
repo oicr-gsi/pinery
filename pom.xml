@@ -21,7 +21,7 @@
       <mockito.version>1.10.19</mockito.version>
       <commons-lang.version>2.6</commons-lang.version>
       <postgresql.version>9.1-901.jdbc3</postgresql.version>
-      <guava.version>11.0.2</guava.version>
+      <guava.version>19.0</guava.version>
       <mysql.version>5.1.21</mysql.version>
       <slf4j.version>1.6.6</slf4j.version>
       <log4j.version>1.2.16</log4j.version>
@@ -30,6 +30,7 @@
       <jetty-maven-plugin.version>9.3.7.v20160115</jetty-maven-plugin.version>
       <findbugs-maven-plugin.version>2.5.2</findbugs-maven-plugin.version>
       <maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
+      <provenance.version>1.0-SNAPSHOT</provenance.version>
    </properties>
 
    <scm>
@@ -128,9 +129,24 @@
             <version>${project.version}</version>
          </dependency>
          <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
+             <groupId>com.fasterxml.jackson.core</groupId>
+             <artifactId>jackson-core</artifactId>
+             <version>${jackson.version}</version>
+         </dependency>
+         <dependency>
+             <groupId>com.fasterxml.jackson.core</groupId>
+             <artifactId>jackson-databind</artifactId>
+             <version>${jackson.version}</version>
+         </dependency>
+         <dependency>
+             <groupId>com.fasterxml.jackson.datatype</groupId>
+             <artifactId>jackson-datatype-joda</artifactId>
+             <version>${jackson.version}</version>
+         </dependency>
+         <dependency>
+             <groupId>com.fasterxml.jackson.core</groupId>
+             <artifactId>jackson-annotations</artifactId>
+             <version>${jackson.version}</version>
          </dependency>
 
          <dependency>
@@ -261,6 +277,12 @@
             <version>1.5.4</version>
          </dependency>
          
+         <dependency>
+             <groupId>ca.on.oicr.gsi</groupId>
+             <artifactId>provenance-api</artifactId>
+             <version>${provenance.version}</version>
+         </dependency>
+         
       </dependencies>
    </dependencyManagement>
 
@@ -365,7 +387,7 @@
       <repository>
          <id>seqware.sourceforge.net</id>
          <name>SeqWare Maven Repository</name>
-         <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</url>
+         <url>https://seqwaremaven.oicr.on.ca/artifactory/seqware-release</url>
          <releases>
             <enabled>true</enabled>
          </releases>
@@ -376,7 +398,7 @@
       <repository>
          <id>snapshot.seqware.sourceforge.net</id>
          <name>SeqWare Snapshot Maven Repository</name>
-         <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-snapshot</url>
+         <url>https://seqwaremaven.oicr.on.ca/artifactory/seqware-snapshot</url>
          <releases>
             <enabled>false</enabled>
          </releases>
@@ -387,13 +409,35 @@
       <repository>
          <id>dependencies.seqware.sourceforge.net</id>
          <name>SeqWare Dependencies Maven Repository</name>
-         <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-dependencies</url>
+         <url>https://seqwaremaven.oicr.on.ca/artifactory/seqware-dependencies</url>
          <releases>
             <enabled>true</enabled>
          </releases>
          <snapshots>
             <enabled>false</enabled>
          </snapshots>
+      </repository>
+      <repository>
+          <id>dependencies.gsi</id>
+          <name>GSI Dependencies Maven Snapshot Repository</name>
+          <url>https://seqwaremaven.oicr.on.ca/artifactory/gsi-dependencies</url>
+          <releases>
+              <enabled>true</enabled>
+          </releases>
+          <snapshots>
+              <enabled>false</enabled>
+          </snapshots>
+      </repository>
+      <repository>
+          <id>snapshots.gsi</id>
+          <name>GSI Snapshots Maven Snapshot Repository</name>
+          <url>https://seqwaremaven.oicr.on.ca/artifactory/gsi-snapshots</url>
+          <releases>
+              <enabled>false</enabled>
+          </releases>
+          <snapshots>
+              <enabled>true</enabled>
+          </snapshots>
       </repository>
       <repository>
          <id>repository.jboss.org-public</id>
