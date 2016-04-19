@@ -19,10 +19,11 @@ public class DefaultRun implements Run {
    private Integer createdById;
    private Integer instrumentId;
    private String instrumentName;
+   private String readLength;
    private Date startDate;
    private Date completionDate;
-   protected Date modified;
-   protected Integer modifiedById;
+   private Date modified;
+   private Integer modifiedById;
 
    @Override
    public String getState() {
@@ -168,14 +169,25 @@ public class DefaultRun implements Run {
   }
 
   @Override
+  public String getReadLength() {
+    return readLength;
+  }
+
+  @Override
+  public void setReadLength(String readLength) {
+    this.readLength = readLength;
+  }
+
+  @Override
   public String toString() {
     return "DefaultRun [state=" + state + ", name=" + name + ", barcode="
         + barcode + ", barcodeTwo=" + barcodeTwo + ", sample=" + sample
         + ", createdByUrl=" + createdByUrl + ", createdDate=" + createdDate
         + ", id=" + id + ", createdById=" + createdById + ", instrumentId="
-        + instrumentId + ", instrumentName=" + instrumentName + ", startDate="
-        + startDate + ", completionDate=" + completionDate + ", modified=" + modified
-        + ", modifiedById=" + modifiedById + "]";
+        + instrumentId + ", instrumentName=" + instrumentName + ", readLength="
+        + readLength + ", startDate=" + startDate + ", completionDate="
+        + completionDate + ", modified=" + modified + ", modifiedById="
+        + modifiedById + "]";
   }
 
   @Override
@@ -186,12 +198,13 @@ public class DefaultRun implements Run {
     result = prime * result
         + ((barcodeTwo == null) ? 0 : barcodeTwo.hashCode());
     result = prime * result
+        + ((completionDate == null) ? 0 : completionDate.hashCode());
+    result = prime * result
         + ((createdById == null) ? 0 : createdById.hashCode());
     result = prime * result
         + ((createdByUrl == null) ? 0 : createdByUrl.hashCode());
     result = prime * result
         + ((createdDate == null) ? 0 : createdDate.hashCode());
-    result = prime * result + ((completionDate == null) ? 0 : completionDate.hashCode());
     result = prime * result + ((id == null) ? 0 : id.hashCode());
     result = prime * result
         + ((instrumentId == null) ? 0 : instrumentId.hashCode());
@@ -201,6 +214,8 @@ public class DefaultRun implements Run {
     result = prime * result
         + ((modifiedById == null) ? 0 : modifiedById.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
+    result = prime * result
+        + ((readLength == null) ? 0 : readLength.hashCode());
     result = prime * result + ((sample == null) ? 0 : sample.hashCode());
     result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
     result = prime * result + ((state == null) ? 0 : state.hashCode());
@@ -228,6 +243,12 @@ public class DefaultRun implements Run {
     }
     else if (!barcodeTwo.equals(other.barcodeTwo))
       return false;
+    if (completionDate == null) {
+      if (other.completionDate != null)
+        return false;
+    }
+    else if (!completionDate.equals(other.completionDate))
+      return false;
     if (createdById == null) {
       if (other.createdById != null)
         return false;
@@ -245,12 +266,6 @@ public class DefaultRun implements Run {
         return false;
     }
     else if (!createdDate.equals(other.createdDate))
-      return false;
-    if (completionDate == null) {
-      if (other.completionDate != null)
-        return false;
-    }
-    else if (!completionDate.equals(other.completionDate))
       return false;
     if (id == null) {
       if (other.id != null)
@@ -287,6 +302,12 @@ public class DefaultRun implements Run {
         return false;
     }
     else if (!name.equals(other.name))
+      return false;
+    if (readLength == null) {
+      if (other.readLength != null)
+        return false;
+    }
+    else if (!readLength.equals(other.readLength))
       return false;
     if (sample == null) {
       if (other.sample != null)
