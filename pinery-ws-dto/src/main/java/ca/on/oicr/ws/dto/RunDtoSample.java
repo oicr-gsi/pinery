@@ -1,5 +1,7 @@
 package ca.on.oicr.ws.dto;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,6 +13,7 @@ public class RunDtoSample {
    private String barcodeTwo;
    private String id;
    private String url;
+   private Set<AttributeDto> attributes;
 
    public String getId() {
      return id;
@@ -45,10 +48,20 @@ public class RunDtoSample {
       this.barcodeTwo = barcodeTwo;
    }
 
+   public Set<AttributeDto> getAttributes() {
+      return attributes;
+   }
+
+   public void setAttributes(Set<AttributeDto> attributes) {
+      this.attributes = attributes;
+   }
+
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
+    result = prime * result
+        + ((attributes == null) ? 0 : attributes.hashCode());
     result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
     result = prime * result
         + ((barcodeTwo == null) ? 0 : barcodeTwo.hashCode());
@@ -65,6 +78,12 @@ public class RunDtoSample {
     if (getClass() != obj.getClass())
       return false;
     RunDtoSample other = (RunDtoSample) obj;
+    if (attributes == null) {
+      if (other.attributes != null)
+        return false;
+    }
+    else if (!attributes.equals(other.attributes))
+      return false;
     if (barcode == null) {
       if (other.barcode != null)
         return false;
@@ -89,7 +108,7 @@ public class RunDtoSample {
   @Override
   public String toString() {
     return "RunDtoSample [barcode=" + barcode + ", barcodeTwo=" + barcodeTwo
-        + ", id=" + id + ", url=" + url + ", hashCode()=" + hashCode() + "]";
+        + ", id=" + id + ", url=" + url + ", attributes=" + attributes + "]";
   }
 
 }

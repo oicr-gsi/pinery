@@ -331,6 +331,7 @@ public final class Dtos {
       if (from.getCompletionDate() != null) {
         dto.setCompletionDate(dateTimeFormatter.print(from.getCompletionDate().getTime()));
       }
+      dto.setReadLength(from.getReadLength());
       return dto;
    }
 
@@ -366,6 +367,9 @@ public final class Dtos {
    public static RunDtoSample asDto3(RunSample from) {
       RunDtoSample dto = new RunDtoSample();
       dto.setId(from.getId());
+      if (from.getAttributes() != null && !from.getAttributes().isEmpty()) {
+         dto.setAttributes(asDto(from.getAttributes()));
+      }
       if (!StringUtils.isBlank(from.getBarcode())) {
          dto.setBarcode(from.getBarcode());
       }
