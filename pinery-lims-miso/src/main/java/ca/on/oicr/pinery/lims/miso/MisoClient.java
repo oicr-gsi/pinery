@@ -12,6 +12,8 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -49,6 +51,8 @@ import ca.on.oicr.pinery.lims.DefaultUser;
 import ca.on.oicr.pinery.lims.miso.MisoClient.SampleRowMapper.AttributeKey;
 
 public class MisoClient implements Lims {
+  
+  private static final Logger log = LoggerFactory.getLogger(MisoClient.class);
   
   private static final String MISO_SAMPLE_ID_PREFIX = "SAM";
   private static final String MISO_LIBRARY_ID_PREFIX = "LIB";
@@ -1115,7 +1119,18 @@ public class MisoClient implements Lims {
       }
     }
     
+    private static final String SAMPLE_TYPE_UNKNOWN = "Unknown";
+    
     public static String mapSampleType(String platformName, String libraryType) {
+      if (platformName == null) {
+        log.debug("Cannot determine SampleType due to null platformName");
+        return SAMPLE_TYPE_UNKNOWN;
+      }
+      if (libraryType == null) {
+        log.debug("Cannot determine SampleType due to null libraryType");
+        return SAMPLE_TYPE_UNKNOWN;
+      }
+      
       switch (platformName) {
       case PLATFORM_ILLUMINA:
         switch (libraryType) {
@@ -1130,10 +1145,12 @@ public class MisoClient implements Lims {
         case LIBRARY_TYPE_WHOLE_TRANSCRIPTOME:
           return IlluminaSampleType.WT.getKey();
         default:
-          throw new RuntimeException("Unexpected LibraryType: " + libraryType + ", Cannot determine Sample Type");
+          log.debug("Unexpected LibraryType: " + libraryType + ", Cannot determine Sample Type");
+          return SAMPLE_TYPE_UNKNOWN;
         }
       default:
-        throw new RuntimeException("Unknown platform: " + platformName + ". Cannot determine Sample Type");
+        log.debug("Unknown platform: " + platformName + ". Cannot determine Sample Type");
+        return SAMPLE_TYPE_UNKNOWN;
       }
     }
     
