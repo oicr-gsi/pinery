@@ -33,6 +33,10 @@
         <constructor-arg value="ca.on.oicr.pinery.service.RunService"/>
     </bean>
     
+    <bean id="laneProvenanceService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="ca.on.oicr.pinery.service.LaneProvenanceService"/>
+    </bean>
+    
     <bean id="sampleProvenanceService" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="ca.on.oicr.pinery.service.SampleProvenanceService"/>
     </bean>
