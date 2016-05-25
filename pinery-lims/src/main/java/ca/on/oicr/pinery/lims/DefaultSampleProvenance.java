@@ -273,8 +273,9 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
         if (sequencerRun != null) {
             lastModified = ObjectUtils.max(lastModified,
-                    getDateTimeNullSafe(sequencerRun.getCreatedDate()));
-            //TODO: sequencerRun.getModifiedDate() does not exist
+                    getDateTimeNullSafe(sequencerRun.getCreatedDate()),
+                    getDateTimeNullSafe(sequencerRun.getCompletionDate()),
+                    getDateTimeNullSafe(sequencerRun.getModified()));
         }
         if (lane != null) {
             //
