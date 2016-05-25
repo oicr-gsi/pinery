@@ -43,6 +43,7 @@ public class PineryClient implements Closeable {
 	private InstrumentModelClient instrumentModels;
 	private OrderClient orders;
         private SampleProvenanceClient sampleProvenance;
+        private LaneProvenanceClient laneProvenance;
 	
 	/**
 	 * Creates a new PineryClient to communicate with the Pinery web service at the specified URL. Note that 
@@ -243,6 +244,17 @@ public class PineryClient implements Closeable {
                 return sampleProvenance;
         }
 
+        /**
+	 * @return an LaneProvenanceClient to be used for retrieving LaneProvenance resources from this Pinery client.
+	 */
+        public LaneProvenanceClient getLaneProvenance() {
+                checkIfOpen();
+                if(laneProvenance == null) {
+                    laneProvenance = new LaneProvenanceClient(this);
+                }
+                return laneProvenance;
+        }
+
 	public boolean isOpen() {
 		return open;
 	}
@@ -276,6 +288,7 @@ public class PineryClient implements Closeable {
 			instrumentModels = null;
 			orders = null;
                         sampleProvenance = null;
+                        laneProvenance = null;
 		}
 	}
 	

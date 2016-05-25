@@ -1,5 +1,6 @@
 package ca.on.oicr.ws.dto;
 
+import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -471,13 +472,31 @@ public final class Dtos {
         }
         return dto;
     }
-    
-    public static List<SampleProvenanceDto> asDto(Collection<SampleProvenance> from) {
+
+    public static List<SampleProvenanceDto> sampleProvenanceCollectionAsDto(Collection<SampleProvenance> from) {
         List<SampleProvenanceDto> result = new ArrayList<>();
         for (SampleProvenance sp : from) {
             result.add(asDto(sp));
         }
         return result;
     }
-    
+
+    public static LaneProvenanceDto asDto(LaneProvenance from) {
+        LaneProvenanceDto dto = new LaneProvenanceDto();
+        try {
+            BeanUtils.copyProperties(dto, from);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+        return dto;
+    }
+
+    public static List<LaneProvenanceDto> laneProvenanceCollectionAsDto(Collection<LaneProvenance> from) {
+        List<LaneProvenanceDto> result = new ArrayList<>();
+        for (LaneProvenance lp : from) {
+            result.add(asDto(lp));
+        }
+        return result;
+    }
+
 }
