@@ -64,4 +64,9 @@ public interface Run {
    public Integer getModifiedById();
 
    public void setModifiedById(Integer modifiedById);
+   
+   public String getRunDirectory();
+   
+   public void setRunDirectory(String runDirectory);
+   
 }

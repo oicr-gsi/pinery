@@ -27,6 +27,7 @@ public class RunDto {
    private Integer modifiedById;
    private String modifiedByUrl;
    private String modifiedDate;
+   private String runDirectory;
 
    public String getState() {
       return state;
@@ -184,6 +185,15 @@ public class RunDto {
     this.modifiedDate = modifiedDate;
   }
 
+  @JsonProperty("run_directory")
+  public String getRunDirectory() {
+    return runDirectory;
+  }
+
+  public void setRunDirectory(String runDirectory) {
+    this.runDirectory = runDirectory;
+  }
+
   @Override
   public String toString() {
     return "RunDto [state=" + state + ", name=" + name + ", barcode=" + barcode
@@ -193,7 +203,7 @@ public class RunDto {
         + ", instrumentId=" + instrumentId + ", instrumentUrl=" + instrumentUrl
         + ", startDate=" + startDate + ", completionDate=" + completionDate
         + ", modifiedById=" + modifiedById + ", modifiedByUrl=" + modifiedByUrl
-        + ", modifiedDate=" + modifiedDate + "]";
+        + ", modifiedDate=" + modifiedDate + ", runDirectory=" + runDirectory + "]";
   }
 
   @Override
@@ -218,6 +228,7 @@ public class RunDto {
         + ((readLength == null) ? 0 : readLength.hashCode());
     result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
     result = prime * result + ((state == null) ? 0 : state.hashCode());
+    result = prime * result + ((runDirectory == null) ? 0 : runDirectory.hashCode());
     return result;
   }
 
@@ -301,6 +312,12 @@ public class RunDto {
         return false;
     }
     else if (!state.equals(other.state))
+      return false;
+    if (runDirectory == null) {
+      if (other.runDirectory != null)
+        return false;
+    }
+    else if (!runDirectory.equals(other.runDirectory))
       return false;
     return true;
   }

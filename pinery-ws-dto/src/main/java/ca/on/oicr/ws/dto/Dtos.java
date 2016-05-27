@@ -1,14 +1,19 @@
 package ca.on.oicr.ws.dto;
 
-import ca.on.oicr.gsi.provenance.model.LaneProvenance;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
+import ca.on.oicr.gsi.provenance.model.LaneProvenance;
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Change;
@@ -29,12 +34,6 @@ import ca.on.oicr.pinery.api.User;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
-import ca.on.oicr.gsi.provenance.model.SampleProvenance;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import org.apache.commons.beanutils.BeanUtils;
 
 /**
  * Methods to convert between domain objects and dtos.
@@ -333,6 +332,7 @@ public final class Dtos {
         dto.setCompletionDate(dateTimeFormatter.print(from.getCompletionDate().getTime()));
       }
       dto.setReadLength(from.getReadLength());
+      dto.setRunDirectory(from.getRunDirectory());
       return dto;
    }
 

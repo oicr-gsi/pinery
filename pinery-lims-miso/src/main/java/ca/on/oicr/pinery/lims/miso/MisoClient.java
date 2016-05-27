@@ -103,7 +103,7 @@ public class MisoClient implements Lims {
   
   // Run queries
   private static final String queryAllRuns = "SELECT DISTINCT r.alias, r.sequencerReference_sequencerReferenceId AS instrumentId, " +
-      "r.runId, st.health, st.startDate, st.completionDate, spc.identificationBarcode, createLog.userId, " +
+      "r.runId, r.filePath, st.health, st.startDate, st.completionDate, spc.identificationBarcode, createLog.userId, " +
       "createLog.changeTime, updateLog.userId, updateLog.changeTime, sp.paired paired, sp.readLength read_length " +
       "FROM Run AS r " +
       "LEFT JOIN Status AS st ON st.statusId = r.status_statusId " +
@@ -794,6 +794,7 @@ public class MisoClient implements Lims {
       r.setStartDate(rs.getDate("startDate"));
       r.setCompletionDate(rs.getDate("completionDate"));
       r.setReadLength(AttributeKey.READ_LENGTH.extractStringValueFrom(rs));
+      r.setRunDirectory(rs.getString("filePath"));
       
       return r;
     }
