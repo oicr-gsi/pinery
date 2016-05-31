@@ -102,26 +102,21 @@ public class MisoClient implements Lims {
   private static final String queryUserById = queryAllUsers + " WHERE u.userId = ?";
   
   // Run queries
-  private static final String queryAllRuns = "SELECT r.alias, r.sequencerReference_sequencerReferenceId AS instrumentId, r.runId, " +
-      "st.health, st.startDate, st.completionDate, spc.identificationBarcode, createLog.userId, createLog.changeTime, " +
-      "updateLog.userId, updateLog.changeTime, sp.paired paired, sp.readLength read_length " +
+  private static final String queryAllRuns = "SELECT DISTINCT r.alias, r.sequencerReference_sequencerReferenceId AS instrumentId, " +
+      "r.runId, st.health, st.startDate, st.completionDate, spc.identificationBarcode, createLog.userId, " +
+      "createLog.changeTime, updateLog.userId, updateLog.changeTime, sp.paired paired, sp.readLength read_length " +
       "FROM Run AS r " +
-      "JOIN Status AS st ON st.statusId = r.status_statusId " +
-      "JOIN SequencingParameters AS sp ON sp.parametersId = r.sequencingParameters_parametersId " +
-      "JOIN Run_SequencerPartitionContainer AS rscp ON rscp.Run_runId = r.runId " +
-      "JOIN SequencerPartitionContainer AS spc ON spc.containerId = rscp.containers_containerId " +
-      "JOIN (" +
-        "SELECT runId, userId, changeTime FROM RunChangeLog WHERE changeTime IN (" +
-          "SELECT MIN(changeTime) AS changeTime FROM RunChangeLog GROUP BY runId" +
-        ")" +
-      ") createLog ON createLog.runId = r.runId " +
-      "JOIN (" +
-        "SELECT runId, userId, changeTime FROM RunChangeLog WHERE changeTime IN (" +
-          "SELECT MAX(changeTime) AS changeTime FROM RunChangeLog GROUP BY runId" +
-        ")" +
-      ") updateLog ON updateLog.runId = r.runId";
-  private static final String queryRunById = queryAllRuns + " WHERE r.runId = ?";
-  private static final String queryRunByName = queryAllRuns + " WHERE r.alias = ?";
+      "LEFT JOIN Status AS st ON st.statusId = r.status_statusId " +
+      "LEFT JOIN SequencingParameters AS sp ON sp.parametersId = r.sequencingParameters_parametersId " +
+      "LEFT JOIN Run_SequencerPartitionContainer AS rscp ON rscp.Run_runId = r.runId " +
+      "LEFT JOIN SequencerPartitionContainer AS spc ON spc.containerId = rscp.containers_containerId " +
+      "LEFT JOIN RunChangeLog AS createLog ON createLog.runId = r.runId " +
+      "LEFT JOIN RunChangeLog AS rcl1 ON rcl1.runId = createLog.runId AND createLog.changeTime > rcl1.changeTime " +
+      "LEFT JOIN RunChangeLog AS updateLog ON updateLog.runId = r.runId " +
+      "LEFT JOIN RunChangeLog AS rcl2 ON rcl2.runId = updateLog.runId AND updateLog.changeTime < rcl2.changeTime " +
+      "WHERE rcl1.runId IS NULL AND rcl2.runId IS NULL";
+  private static final String queryRunById = queryAllRuns + " AND r.runId = ?";
+  private static final String queryRunByName = queryAllRuns + " AND r.alias = ?";
   
   // RunPosition queries
   private static final String queryAllRunPositions = "SELECT p.partitionId, p.partitionNumber, r_spc.Run_runId " +
@@ -163,7 +158,7 @@ public class MisoClient implements Lims {
       "sai.updatedBy modifiedById, s.identificationBarcode tubeBarcode, s.volume volume, sai.concentration concentration, " +
       "s.locationBarcode storageLocation, kd.name kitName, kd.description kitDescription, s.receivedDate receive_date, " +
       "i.externalName external_name, tor.alias tissue_origin, tm.alias tissue_preparation, sa.region tissue_region, sa.tubeId tube_id, " +
-      "sa.strStatus str_result, NULL group_id, NULL group_id_description, sp.alias purpose, qubit.results qubit_concentration, " +
+      "sa.strStatus str_result, sa.groupId group_id, sa.groupDescription group_id_description, sp.alias purpose, qubit.results qubit_concentration, " +
       "nanodrop.results nanodrop_concentration, NULL barcode, NULL barcode_two, qpcr.results qpcr_percentage_human, " +
       "s.qcPassed qcPassed, box.locationBarcode boxLocation, box.alias boxAlias, pos.row boxRow, pos.column boxColumn, " +
       "NULL paired, NULL read_length, NULL targeted_resequencing " +
@@ -199,8 +194,8 @@ public class MisoClient implements Lims {
       "p.alias project, lai.archived archived, lai.creationDate created, lai.createdBy createdById, lai.lastUpdated modified, " +
       "lai.updatedBy modifiedById, l.identificationBarcode tubeBarcode, l.volume volume, l.concentration concentration, " +
       "l.locationBarcode storageLocation, kd.name kitName, kd.description kitDescription, NULL receive_date, NULL external_name, " +
-      "tor.alias tissue_origin, NULL tissue_preparation, NULL tissue_region, NULL tube_id, NULL str_result, sg.groupId group_id, " +
-      "sg.description group_id_description, NULL purpose, qubit.results qubit_concentration, NULL nanodrop_concentration, " +
+      "tor.alias tissue_origin, NULL tissue_preparation, NULL tissue_region, NULL tube_id, NULL str_result, lai.groupId group_id, " +
+      "lai.groupDescription group_id_description, NULL purpose, qubit.results qubit_concentration, NULL nanodrop_concentration, " +
       "bc1.sequence barcode, bc2.sequence barcode_two, NULL qpcr_percentage_human, l.qcPassed qcPassed, " +
       "box.locationBarcode boxLocation, box.alias boxAlias, pos.row boxRow, pos.column boxColumn, NULL paired, NULL readLength, " +
       "NULL targeted_resequencing " +
@@ -211,7 +206,6 @@ public class MisoClient implements Lims {
       "LEFT JOIN TissueType tt ON tt.tissueTypeId = lai.tissueTypeId " +
       "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId " +
       "LEFT JOIN TissueOrigin tor ON tor.tissueOriginId = lai.tissueOriginId " +
-      "LEFT JOIN SampleGroup sg ON sg.sampleGroupId = lai.sampleGroupId " +
       "LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType " +
       "LEFT JOIN ( " +
         "SELECT library_libraryId, results FROM LibraryQC JOIN QCType ON QCType.qcTypeId = LibraryQC.qcMethod " +
