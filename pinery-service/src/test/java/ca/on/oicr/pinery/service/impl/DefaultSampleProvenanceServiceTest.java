@@ -1,5 +1,22 @@
 package ca.on.oicr.pinery.service.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Lims;
@@ -16,20 +33,9 @@ import ca.on.oicr.pinery.lims.DefaultSample;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
 import ca.on.oicr.ws.dto.Dtos;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import org.joda.time.DateTime;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import static org.mockito.Mockito.when;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  *
@@ -63,14 +69,14 @@ public class DefaultSampleProvenanceServiceTest {
         sample = new DefaultSample();
         sample.setName("TEST_SAMPLE");
         sample.setProject("TEST_PROJECT");
-        sample.setAttributes(Collections.EMPTY_SET);
+        sample.setAttributes(Collections.<Attribute> emptySet());
         sample.setId("1");
         sample.setModified(DateTime.parse("2015-01-01T00:00:00.000Z").toDate());
         samples.add(sample);
 
         runSample = new DefaultRunSample();
         runSample.setId("1");
-        runSample.setAttributes(Collections.EMPTY_SET);
+        runSample.setAttributes(Collections.<Attribute> emptySet());
 
         lane = new DefaultRunPosition();
         lane.setPosition(1);
@@ -202,7 +208,7 @@ public class DefaultSampleProvenanceServiceTest {
         Sample parentSample = new DefaultSample();
         parentSample.setName(parentExpected);
         parentSample.setId("2");
-        parentSample.setAttributes(Collections.EMPTY_SET);
+        parentSample.setAttributes(Collections.<Attribute> emptySet());
         samples.add(parentSample);
         sample.setParents(Sets.newHashSet(parentSample.getId()));
 
@@ -215,7 +221,7 @@ public class DefaultSampleProvenanceServiceTest {
         Sample rootSample = new DefaultSample();
         rootSample.setName(rootExpected);
         rootSample.setId("3");
-        rootSample.setAttributes(Collections.EMPTY_SET);
+        rootSample.setAttributes(Collections.<Attribute> emptySet());
         samples.add(rootSample);
         parentSample.setParents(Sets.newHashSet(rootSample.getId()));
 
@@ -235,13 +241,13 @@ public class DefaultSampleProvenanceServiceTest {
         Sample p1 = new DefaultSample();
         p1.setName(parent1);
         p1.setId("10");
-        p1.setAttributes(Collections.EMPTY_SET);
+        p1.setAttributes(Collections.<Attribute> emptySet());
         samples.add(p1);
 
         Sample p2 = new DefaultSample();
         p2.setName(parent2);
         p2.setId("11");
-        p2.setAttributes(Collections.EMPTY_SET);
+        p2.setAttributes(Collections.<Attribute> emptySet());
         samples.add(p2);
 
         sample.setParents(Sets.newHashSet(p1.getId(), p2.getId()));
@@ -249,14 +255,15 @@ public class DefaultSampleProvenanceServiceTest {
         Sample r = new DefaultSample();
         r.setName(root);
         r.setId("12");
-        r.setAttributes(Collections.EMPTY_SET);
+        r.setAttributes(Collections.<Attribute> emptySet());
         samples.add(r);
         p1.setParents(Sets.newHashSet(r.getId()));
         p2.setParents(Sets.newHashSet(r.getId()));
 
         SampleProvenance afterParent = Dtos.asDto(getSampleProvenanceById("1_1_1"));
         assertEquals(root, afterParent.getRootSampleName());
-        assertEquals(parent1 + ":" + parent2 + ":" + root, afterParent.getParentSampleName());
+        assertTrue((parent1 + ":" + parent2 + ":" + root).equals(afterParent.getParentSampleName())
+            || (parent2 + ":" + parent1 + ":" + root).equals(afterParent.getParentSampleName()));
         assertNotEquals(before.getVersion(), afterParent.getVersion());
     }
 
@@ -268,20 +275,22 @@ public class DefaultSampleProvenanceServiceTest {
         Sample r1 = new DefaultSample();
         r1.setName(root1);
         r1.setId("10");
-        r1.setAttributes(Collections.EMPTY_SET);
+        r1.setAttributes(Collections.<Attribute> emptySet());
         samples.add(r1);
 
         Sample r2 = new DefaultSample();
         r2.setName(root2);
         r2.setId("11");
-        r2.setAttributes(Collections.EMPTY_SET);
+        r2.setAttributes(Collections.<Attribute> emptySet());
         samples.add(r2);
 
         sample.setParents(Sets.newHashSet(r1.getId(), r2.getId()));
 
         SampleProvenance afterParent = Dtos.asDto(getSampleProvenanceById("1_1_1"));
-        assertEquals(root2, afterParent.getRootSampleName());
-        assertEquals(root1 + ":" + root2, afterParent.getParentSampleName());
+        assertTrue(root2.equals(afterParent.getRootSampleName())
+            || root1.equals(afterParent.getRootSampleName()));
+        assertTrue((root1 + ":" + root2).equals(afterParent.getParentSampleName())
+            || (root2 + ":" + root1).equals(afterParent.getParentSampleName()));
         assertNotEquals(before.getVersion(), afterParent.getVersion());
     }
 
