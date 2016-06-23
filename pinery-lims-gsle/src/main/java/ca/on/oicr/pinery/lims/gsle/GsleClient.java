@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBException;
 
@@ -1056,6 +1058,7 @@ public class GsleClient implements Lims {
       map.put("modified_by", "modifiedByIdString");
       map.put("modified_at", "modifiedDateString");
       map.put("completed_at", "completionDateString");
+      map.put("path", "runDirectory");
 
       strat.setColumnMapping(map);
 
@@ -1064,6 +1067,7 @@ public class GsleClient implements Lims {
 
       List<Run> runs = Lists.newArrayList();
       for (Run defaultRun : gsleRun) {
+         fixRunDirectory(defaultRun);
          runs.add(defaultRun);
       }
 
@@ -1085,6 +1089,18 @@ public class GsleClient implements Lims {
       }
 
       return runs;
+   }
+   
+   /**
+    * Truncates result file path to get run directory. Run directory is expected to end with "/" + run.getName() + "/"
+    * and if the run directory does not match this, it is set to null instead
+    * 
+    * @param run the run to fix runDirectory for. The run is mutated by this call
+    */
+   private void fixRunDirectory(Run run) {
+      Pattern p = Pattern.compile("^((/.*)?/" + run.getName() + "/).*");
+      Matcher m = p.matcher(run.getRunDirectory());
+      run.setRunDirectory(m.matches() ? m.group(1) : null);
    }
 
    public List<TemporaryRun> createMapRun(Reader reader) throws IOException {

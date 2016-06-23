@@ -464,6 +464,7 @@ SELECT gir.run_id AS id
     ,gir.completed_at
     ,mod.modified_by
     ,mod.modified_at
+    ,file.path
 FROM ga_instrument_run gir
 INNER JOIN ga_instrument_run_state girs ON (gir.STATE = girs.instrument_run_state_id)
 LEFT JOIN instrument i ON (gir.instrument_id = i.instr_id)
@@ -483,6 +484,7 @@ LEFT JOIN (
     WHERE t2.modified_at IS NULL AND t1.modified_at IS NOT NULL
     GROUP BY t1.run_id, t1.modified_at, t1.modified_by
 ) mod ON mod.run_id = gir.run_id
+LEFT JOIN ng_result_file_set file ON (file.run_id = gir.run_id)
 WHERE gir.run_id = ?
 
 -- Name: /pinery/sequencerrun
@@ -500,6 +502,7 @@ SELECT gir.run_id AS id
     ,gir.completed_at
     ,mod.modified_by
     ,mod.modified_at
+    ,file.path
 FROM ga_instrument_run gir
 INNER JOIN ga_instrument_run_state girs ON (gir.STATE = girs.instrument_run_state_id)
 LEFT JOIN instrument i ON (gir.instrument_id = i.instr_id)
@@ -519,6 +522,7 @@ LEFT JOIN (
     WHERE t2.modified_at IS NULL AND t1.modified_at IS NOT NULL
     GROUP BY t1.run_id, t1.modified_at, t1.modified_by
 ) mod ON mod.run_id = gir.run_id
+LEFT JOIN ng_result_file_set file ON (file.run_id = gir.run_id)
 WHERE gir.NAME = ?
 
 -- Name: /pinery/sequencerruns
@@ -526,16 +530,17 @@ WHERE gir.NAME = ?
 -- Application Properties: runsList
 
 SELECT gir.run_id AS id
-	,gir.NAME
-	,gir.barcode
-	,i.instr_id
-	,i.NAME AS instrument_name
-	,girs.label AS STATE
-	,gir.created_by
-	,gir.created_at
+    ,gir.NAME
+    ,gir.barcode 
+    ,i.instr_id
+    ,i.NAME AS instrument_name
+    ,girs.label AS STATE
+    ,gir.created_by
+    ,gir.created_at
     ,gir.completed_at
     ,mod.modified_by
     ,mod.modified_at
+    ,file.path
 FROM ga_instrument_run gir
 INNER JOIN ga_instrument_run_state girs ON (gir.STATE = girs.instrument_run_state_id)
 LEFT JOIN instrument i ON (gir.instrument_id = i.instr_id)
@@ -555,6 +560,7 @@ LEFT JOIN (
     WHERE t2.modified_at IS NULL AND t1.modified_at IS NOT NULL
     GROUP BY t1.run_id, t1.modified_at, t1.modified_by
 ) mod ON mod.run_id = gir.run_id
+LEFT JOIN ng_result_file_set file ON (file.run_id = gir.run_id)
 
 -- Name: /pinery/user/{id}
 -- Description: LIMS API samples query

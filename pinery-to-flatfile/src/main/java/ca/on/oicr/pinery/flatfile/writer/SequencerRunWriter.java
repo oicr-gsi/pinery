@@ -23,6 +23,7 @@ public class SequencerRunWriter extends Writer {
     "instrumentName",
     "state",
     "barcode",
+    "runDirectory",
     "positions"
   };
   
@@ -59,6 +60,7 @@ public class SequencerRunWriter extends Writer {
         run.getInstrumentName(),
         run.getState(),
         run.getBarcode(),
+        run.getRunDirectory(),
         getPositionsString(run)
     };
     

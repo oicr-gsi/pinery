@@ -24,6 +24,7 @@ public class DefaultRun implements Run {
    private Date completionDate;
    private Date modified;
    private Integer modifiedById;
+   private String runDirectory;
 
    @Override
    public String getState() {
@@ -179,6 +180,16 @@ public class DefaultRun implements Run {
   }
 
   @Override
+  public String getRunDirectory() {
+    return runDirectory;
+  }
+
+  @Override
+  public void setRunDirectory(String runDirectory) {
+    this.runDirectory = runDirectory;
+  }
+
+  @Override
   public String toString() {
     return "DefaultRun [state=" + state + ", name=" + name + ", barcode="
         + barcode + ", barcodeTwo=" + barcodeTwo + ", sample=" + sample
@@ -187,7 +198,7 @@ public class DefaultRun implements Run {
         + instrumentId + ", instrumentName=" + instrumentName + ", readLength="
         + readLength + ", startDate=" + startDate + ", completionDate="
         + completionDate + ", modified=" + modified + ", modifiedById="
-        + modifiedById + "]";
+        + modifiedById + ", runDirectory=" + runDirectory + "]";
   }
 
   @Override
@@ -219,6 +230,7 @@ public class DefaultRun implements Run {
     result = prime * result + ((sample == null) ? 0 : sample.hashCode());
     result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
     result = prime * result + ((state == null) ? 0 : state.hashCode());
+    result = prime * result + ((runDirectory == null) ? 0 : runDirectory.hashCode());
     return result;
   }
 
@@ -326,6 +338,12 @@ public class DefaultRun implements Run {
         return false;
     }
     else if (!state.equals(other.state))
+      return false;
+    if (runDirectory == null) {
+      if (other.runDirectory != null)
+        return false;
+    }
+    else if (!runDirectory.equals(other.runDirectory))
       return false;
     return true;
   }
