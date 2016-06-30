@@ -149,7 +149,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
         //collect all run sample attributes
         attrsAll.putAll(processSampleAttributes(runSample));
-        
+
         //collect additional sample fields as attributes
         if (sequencerRun.getId() != null && lane.getPosition() != null) {
             attrsAll.put("run_id_and_position", sequencerRun.getId() + "_" + lane.getPosition());
@@ -243,6 +243,11 @@ public class DefaultSampleProvenance implements SampleProvenance {
     }
 
     @Override
+    public Boolean getSkip() {
+        return false;
+    }
+
+    @Override
     public String getSampleProvenanceId() {
         return sequencerRun.getId() + "_" + lane.getPosition() + "_" + sample.getId();
     }
@@ -320,6 +325,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
                 + "laneNumber=" + getLaneNumber() + ", "
                 + "laneAttributes=" + getLaneAttributes() + ", "
                 + "iusTag=" + getIusTag() + ", "
+                + "skip=" + getSkip() + ", "
                 + "sampleProvenanceId=" + getSampleProvenanceId() + ", "
                 + "version=" + getVersion() + ", "
                 + "lastModified=" + getLastModified()
@@ -332,7 +338,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
         if (sample == null || sample.getAttributes() == null) {
             return attrs;
         }
-        
+
         for (Attribute attribute : sample.getAttributes()) {
             attrs.put(attribute.getName(), attribute.getValue());
         }

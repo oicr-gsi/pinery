@@ -88,6 +88,11 @@ public class DefaultLaneProvenance implements LaneProvenance {
     }
 
     @Override
+    public Boolean getSkip() {
+        return false;
+    }
+
+    @Override
     public String getLaneProvenanceId() {
         return sequencerRun.getId() + "_" + lane.getPosition();
     }
@@ -135,6 +140,7 @@ public class DefaultLaneProvenance implements LaneProvenance {
                 + "sequencerRunPlatformModel=" + getSequencerRunPlatformModel() + ", "
                 + "laneNumber=" + getLaneNumber() + ", "
                 + "laneAttributes=" + getLaneAttributes() + ", "
+                + "skip=" + getSkip() + ", "
                 + "laneProvenanceId=" + getLaneProvenanceId() + ", "
                 + "version=" + getVersion() + ", "
                 + "lastModified=" + getLastModified()

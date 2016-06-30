@@ -25,6 +25,7 @@ public class SampleProvenanceDto implements SampleProvenance {
     private String laneNumber;
     private Map<String, Set<String>> laneAttributes;
     private String iusTag;
+    private Boolean skip;
     private String sampleProvenanceId;
     private String version;
 
@@ -136,6 +137,15 @@ public class SampleProvenanceDto implements SampleProvenance {
 
     public void setIusTag(String iusTag) {
         this.iusTag = iusTag;
+    }
+
+    @Override
+    public Boolean getSkip() {
+        return skip;
+    }
+
+    public void setSkip(Boolean skip) {
+        this.skip = skip;
     }
 
     @Override
