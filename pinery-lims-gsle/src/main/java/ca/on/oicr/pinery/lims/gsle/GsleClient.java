@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -284,7 +285,8 @@ public class GsleClient implements Lims {
             result.put(attribute.getId(), Sets.<Attribute> newHashSet());
          }
          // Calling barcodeFilter method
-         result.get(attribute.getId()).add(barcodeFilter(attribute));
+         Set<Attribute> sampleAttributes = result.get(attribute.getId());
+         filterAndAddAttribute(attribute, sampleAttributes);
       }
       return result;
    }
@@ -1648,21 +1650,34 @@ public class GsleClient implements Lims {
 
    }
 
-   public Attribute barcodeFilter(Attribute attr) {
-
+  /**
+   * Performs additional processing on the attribute if necessary, then adds it to the collection
+   * 
+   * @param attr the {@link Attribute} to add
+   * @param attributes the collection to add attr to after processing
+   */
+  public void filterAndAddAttribute(Attribute attr, Collection<Attribute> attributes) {
+      // Only barcodes are handled differently
       if (attr.getName().equals("Barcode") || attr.getName().equals("Barcode Two")) {
+         Attribute nameAttr = new DefaultAttribute();
+         nameAttr.setName(attr.getName() + " Name");
          String name = attr.getValue();
 
          if (barcodeMap.size() == 0) {
             getBarcode();
          }
-
          String barcode = barcodeMap.get(name);
 
          if (barcode != null) {
-            attr.setValue(barcode);
+           attr.setValue(barcode);
+           attributes.add(attr);
+           nameAttr.setValue(name);
+           attributes.add(nameAttr);
          }
+      } else {
+        // non-barcode field
+        attributes.add(attr);
+        return;
       }
-      return attr;
    }
 }
