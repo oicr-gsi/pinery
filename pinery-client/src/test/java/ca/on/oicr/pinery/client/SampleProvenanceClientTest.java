@@ -40,7 +40,9 @@ public class SampleProvenanceClientTest {
         List<SampleProvenanceDto> results = client.all();
         assertEquals(2, results.size());
         assertEquals("111", results.get(0).getSampleProvenanceId());
+        assertEquals("111", results.get(0).getProvenanceId());
         assertEquals("222", results.get(1).getSampleProvenanceId());
+        assertEquals("222", results.get(1).getProvenanceId());
     }
 
     @Test

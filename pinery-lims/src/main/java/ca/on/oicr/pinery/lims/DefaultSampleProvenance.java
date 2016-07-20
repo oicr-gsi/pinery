@@ -254,6 +254,11 @@ public class DefaultSampleProvenance implements SampleProvenance {
     }
 
     @Override
+    public String getProvenanceId() {
+        return getSampleProvenanceId();
+    }
+
+    @Override
     public String getVersion() {
         StringBuilder sb = new StringBuilder();
         sb.append(getStudyTitle());

@@ -1,6 +1,7 @@
 package ca.on.oicr.ws.dto;
 
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -155,6 +156,12 @@ public class SampleProvenanceDto implements SampleProvenance {
 
     public void setSampleProvenanceId(String sampleProvenanceId) {
         this.sampleProvenanceId = sampleProvenanceId;
+    }
+    
+    @JsonIgnore
+    @Override
+    public String getProvenanceId() {
+        return sampleProvenanceId;
     }
 
     @Override

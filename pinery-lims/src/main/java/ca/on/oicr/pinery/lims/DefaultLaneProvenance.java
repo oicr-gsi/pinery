@@ -96,6 +96,11 @@ public class DefaultLaneProvenance implements LaneProvenance {
     public String getLaneProvenanceId() {
         return sequencerRun.getId() + "_" + lane.getPosition();
     }
+    
+    @Override
+    public String getProvenanceId() {
+        return getLaneProvenanceId();
+    }
 
     @Override
     public String getVersion() {

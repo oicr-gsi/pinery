@@ -40,7 +40,9 @@ public class LaneProvenanceClientTest {
         List<LaneProvenanceDto> results = client.all();
         assertEquals(2, results.size());
         assertEquals("1_1", results.get(0).getLaneProvenanceId());
+        assertEquals("1_1", results.get(0).getProvenanceId());
         assertEquals("1_2", results.get(1).getLaneProvenanceId());
+        assertEquals("1_2", results.get(1).getProvenanceId());
     }
 
     @Test

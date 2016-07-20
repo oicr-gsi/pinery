@@ -1,6 +1,7 @@
 package ca.on.oicr.ws.dto;
 
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -84,6 +85,12 @@ public class LaneProvenanceDto implements LaneProvenance {
 
     public void setLaneProvenanceId(String laneProvenanceId) {
         this.laneProvenanceId = laneProvenanceId;
+    }
+    
+    @JsonIgnore
+    @Override
+    public String getProvenanceId() {
+        return laneProvenanceId;
     }
 
     @Override
