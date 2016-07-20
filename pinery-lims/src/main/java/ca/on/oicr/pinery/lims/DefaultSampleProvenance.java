@@ -14,15 +14,16 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimaps;
-import com.google.common.collect.SetMultimap;
+import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.hash.Hashing;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -86,10 +87,10 @@ public class DefaultSampleProvenance implements SampleProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getStudyAttributes() {
-        SetMultimap attrs = TreeMultimap.create();
+    public SortedMap<String, SortedSet<String>> getStudyAttributes() {
+        SortedSetMultimap attrs = TreeMultimap.create();
         //sampleProject.getAttributes();
-        return Multimaps.asMap(attrs);
+        return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }
 
     @Override
@@ -124,15 +125,15 @@ public class DefaultSampleProvenance implements SampleProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getSampleAttributes() {
+    public SortedMap<String, SortedSet<String>> getSampleAttributes() {
         //use SampleAttribute toString as "key" value
         return getSampleAttributes(true);
     }
 
-    private Map<String, Set<String>> getSampleAttributes(boolean useEnumToString) {
+    private SortedMap<String, SortedSet<String>> getSampleAttributes(boolean useEnumToString) {
 
         //collect all parent sample attributes
-        SetMultimap<String, String> attrsAll = TreeMultimap.create();
+        SortedSetMultimap<String, String> attrsAll = TreeMultimap.create();
         if (parentSamples != null) {
 
             for (Sample parentSample : parentSamples) {
@@ -159,10 +160,10 @@ public class DefaultSampleProvenance implements SampleProvenance {
         }
 
         //remap sample attribute key names and filter (or allow) unknown attributes
-        SetMultimap<String, String> attrsRemappedAndFiltered = TreeMultimap.create();
+        SortedSetMultimap<String, String> attrsRemappedAndFiltered = TreeMultimap.create();
         for (String key : attrsAll.keySet()) {
             SampleAttribute sampleAttributeKey = SampleAttribute.fromString(key);
-            Set<String> values = attrsAll.get(key);
+            SortedSet<String> values = attrsAll.get(key);
             if (sampleAttributeKey != null) {
                 // sample attribute key is known
                 if (useEnumToString) {
@@ -179,7 +180,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
             }
         }
 
-        return Multimaps.asMap(attrsRemappedAndFiltered);
+        return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrsRemappedAndFiltered);
     }
 
     @Override
@@ -192,12 +193,12 @@ public class DefaultSampleProvenance implements SampleProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getSequencerRunAttributes() {
-        SetMultimap attrs = TreeMultimap.create();
+    public SortedMap<String, SortedSet<String>> getSequencerRunAttributes() {
+        SortedSetMultimap attrs = TreeMultimap.create();
         if (instrument != null) {
             attrs.put("instrument_name", instrument.getName());
         }
-        return Multimaps.asMap(attrs);
+        return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }
 
     @Override
@@ -219,10 +220,10 @@ public class DefaultSampleProvenance implements SampleProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getLaneAttributes() {
-        SetMultimap attrs = TreeMultimap.create();
+    public SortedMap<String, SortedSet<String>> getLaneAttributes() {
+        SortedSetMultimap attrs = TreeMultimap.create();
         //lane.getAttributes();
-        return Multimaps.asMap(attrs);
+        return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }
 
     @Override

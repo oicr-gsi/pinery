@@ -1,8 +1,8 @@
 package ca.on.oicr.ws.dto;
 
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
-import java.util.Map;
-import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.joda.time.DateTime;
@@ -14,16 +14,16 @@ import org.joda.time.DateTime;
 public class SampleProvenanceDto implements SampleProvenance {
 
     private String studyTitle;
-    private Map<String, Set<String>> studyAttributes;
+    private SortedMap<String, SortedSet<String>> studyAttributes;
     private String rootSampleName;
     private String parentSampleName;
     private String sampleName;
-    private Map<String, Set<String>> sampleAttributes;
+    private SortedMap<String, SortedSet<String>> sampleAttributes;
     private String sequencerRunName;
-    private Map<String, Set<String>> sequencerRunAttributes;
+    private SortedMap<String, SortedSet<String>> sequencerRunAttributes;
     private String sequencerRunPlatformModel;
     private String laneNumber;
-    private Map<String, Set<String>> laneAttributes;
+    private SortedMap<String, SortedSet<String>> laneAttributes;
     private String iusTag;
     private Boolean skip;
     private String sampleProvenanceId;
@@ -41,11 +41,11 @@ public class SampleProvenanceDto implements SampleProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getStudyAttributes() {
+    public SortedMap<String, SortedSet<String>> getStudyAttributes() {
         return studyAttributes;
     }
 
-    public void setStudyAttributes(Map<String, Set<String>> studyAttributes) {
+    public void setStudyAttributes(SortedMap<String, SortedSet<String>> studyAttributes) {
         this.studyAttributes = studyAttributes;
     }
 
@@ -77,11 +77,11 @@ public class SampleProvenanceDto implements SampleProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getSampleAttributes() {
+    public SortedMap<String, SortedSet<String>> getSampleAttributes() {
         return sampleAttributes;
     }
 
-    public void setSampleAttributes(Map<String, Set<String>> sampleAttributes) {
+    public void setSampleAttributes(SortedMap<String, SortedSet<String>> sampleAttributes) {
         this.sampleAttributes = sampleAttributes;
     }
 
@@ -95,11 +95,11 @@ public class SampleProvenanceDto implements SampleProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getSequencerRunAttributes() {
+    public SortedMap<String, SortedSet<String>> getSequencerRunAttributes() {
         return sequencerRunAttributes;
     }
 
-    public void setSequencerRunAttributes(Map<String, Set<String>> sequencerRunAttributes) {
+    public void setSequencerRunAttributes(SortedMap<String, SortedSet<String>> sequencerRunAttributes) {
         this.sequencerRunAttributes = sequencerRunAttributes;
     }
 
@@ -122,11 +122,11 @@ public class SampleProvenanceDto implements SampleProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getLaneAttributes() {
+    public SortedMap<String, SortedSet<String>> getLaneAttributes() {
         return laneAttributes;
     }
 
-    public void setLaneAttributes(Map<String, Set<String>> laneAttributes) {
+    public void setLaneAttributes(SortedMap<String, SortedSet<String>> laneAttributes) {
         this.laneAttributes = laneAttributes;
     }
 

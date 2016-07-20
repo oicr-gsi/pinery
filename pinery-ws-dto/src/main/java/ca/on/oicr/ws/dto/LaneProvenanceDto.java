@@ -1,8 +1,8 @@
 package ca.on.oicr.ws.dto;
 
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
-import java.util.Map;
-import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.joda.time.DateTime;
@@ -14,10 +14,10 @@ import org.joda.time.DateTime;
 public class LaneProvenanceDto implements LaneProvenance {
 
     private String sequencerRunName;
-    private Map<String, Set<String>> sequencerRunAttributes;
+    private SortedMap<String, SortedSet<String>> sequencerRunAttributes;
     private String sequencerRunPlatformModel;
     private String laneNumber;
-    private Map<String, Set<String>> laneAttributes;
+    private SortedMap<String, SortedSet<String>> laneAttributes;
     private Boolean skip;
     private String laneProvenanceId;
     private String version;
@@ -33,11 +33,11 @@ public class LaneProvenanceDto implements LaneProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getSequencerRunAttributes() {
+    public SortedMap<String, SortedSet<String>> getSequencerRunAttributes() {
         return sequencerRunAttributes;
     }
 
-    public void setSequencerRunAttributes(Map<String, Set<String>> sequencerRunAttributes) {
+    public void setSequencerRunAttributes(SortedMap<String, SortedSet<String>> sequencerRunAttributes) {
         this.sequencerRunAttributes = sequencerRunAttributes;
     }
 
@@ -60,11 +60,11 @@ public class LaneProvenanceDto implements LaneProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getLaneAttributes() {
+    public SortedMap<String, SortedSet<String>> getLaneAttributes() {
         return laneAttributes;
     }
 
-    public void setLaneAttributes(Map<String, Set<String>> laneAttributes) {
+    public void setLaneAttributes(SortedMap<String, SortedSet<String>> laneAttributes) {
         this.laneAttributes = laneAttributes;
     }
 
