@@ -29,8 +29,8 @@ public class SampleProvenanceDto implements SampleProvenance {
     private Boolean skip;
     private String sampleProvenanceId;
     private String version;
-
     private DateTime lastModified;
+    private DateTime createdDate;
 
     @Override
     public String getStudyTitle() {
@@ -180,6 +180,15 @@ public class SampleProvenanceDto implements SampleProvenance {
 
     public void setLastModified(DateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    @Override
+    public DateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(DateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     @Override

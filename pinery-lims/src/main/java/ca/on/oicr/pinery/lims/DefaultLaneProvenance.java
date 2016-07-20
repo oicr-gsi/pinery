@@ -138,6 +138,26 @@ public class DefaultLaneProvenance implements LaneProvenance {
     }
 
     @Override
+    public DateTime getCreatedDate() {
+        DateTime lastModified = null;
+
+        if (sequencerRun != null) {
+            lastModified = ObjectUtils.min(lastModified,
+                    getDateTimeNullSafe(sequencerRun.getCreatedDate()));
+        }
+        if (lane != null) {
+//            lastModified = ObjectUtils.min(lastModified,
+//                    getDateTimeNullSafe(lane.getCreatedDate()));
+        }
+
+        if (lastModified == null) {
+            return null;
+        } else {
+            return lastModified.toDateTime(DateTimeZone.UTC);
+        }
+    }
+
+    @Override
     public String toString() {
         return "SampleProvenance{"
                 + "sequencerRunName=" + getSequencerRunName() + ", "
@@ -148,7 +168,8 @@ public class DefaultLaneProvenance implements LaneProvenance {
                 + "skip=" + getSkip() + ", "
                 + "laneProvenanceId=" + getLaneProvenanceId() + ", "
                 + "version=" + getVersion() + ", "
-                + "lastModified=" + getLastModified()
+                + "lastModified=" + getLastModified() + ", "
+                + "createdDate=" + getCreatedDate()
                 + '}';
     }
 

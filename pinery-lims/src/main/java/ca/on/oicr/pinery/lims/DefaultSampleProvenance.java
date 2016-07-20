@@ -317,6 +317,26 @@ public class DefaultSampleProvenance implements SampleProvenance {
     }
 
     @Override
+    public DateTime getCreatedDate() {
+        DateTime lastModified = null;
+
+        if (sequencerRun != null) {
+            lastModified = ObjectUtils.min(lastModified,
+                    getDateTimeNullSafe(sequencerRun.getCreatedDate()));
+        }
+        if (lane != null) {
+//            lastModified = ObjectUtils.min(lastModified,
+//                    getDateTimeNullSafe(lane.getCreatedDate()));
+        }
+
+        if (lastModified == null) {
+            return null;
+        } else {
+            return lastModified.toDateTime(DateTimeZone.UTC);
+        }
+    }
+
+    @Override
     public String toString() {
         return "SampleProvenance{"
                 + "studyTitle=" + getStudyTitle() + ", "
@@ -334,7 +354,8 @@ public class DefaultSampleProvenance implements SampleProvenance {
                 + "skip=" + getSkip() + ", "
                 + "sampleProvenanceId=" + getSampleProvenanceId() + ", "
                 + "version=" + getVersion() + ", "
-                + "lastModified=" + getLastModified()
+                + "lastModified=" + getLastModified() + ", "
+                + "createdDate=" + getCreatedDate()
                 + '}';
     }
 

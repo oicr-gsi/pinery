@@ -23,6 +23,7 @@ public class LaneProvenanceDto implements LaneProvenance {
     private String laneProvenanceId;
     private String version;
     private DateTime lastModified;
+    private DateTime createdDate;
 
     @Override
     public String getSequencerRunName() {
@@ -109,6 +110,15 @@ public class LaneProvenanceDto implements LaneProvenance {
 
     public void setLastModified(DateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    @Override
+    public DateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(DateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     @Override
