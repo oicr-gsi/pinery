@@ -7,12 +7,12 @@ import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.RunPosition;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Multimaps;
-import com.google.common.collect.SetMultimap;
+import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.hash.Hashing;
 import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -54,12 +54,12 @@ public class DefaultLaneProvenance implements LaneProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getSequencerRunAttributes() {
-        SetMultimap attrs = TreeMultimap.create();
+    public SortedMap<String, SortedSet<String>> getSequencerRunAttributes() {
+        SortedSetMultimap<String, String> attrs = TreeMultimap.create();
         if (instrument != null) {
             attrs.put("instrument_name", instrument.getName());
         }
-        return Multimaps.asMap(attrs);
+        return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }
 
     @Override
@@ -81,15 +81,25 @@ public class DefaultLaneProvenance implements LaneProvenance {
     }
 
     @Override
-    public Map<String, Set<String>> getLaneAttributes() {
-        SetMultimap attrs = TreeMultimap.create();
+    public SortedMap<String, SortedSet<String>> getLaneAttributes() {
+        SortedSetMultimap attrs = TreeMultimap.create();
         //lane.getAttributes();
-        return Multimaps.asMap(attrs);
+        return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
+    }
+
+    @Override
+    public Boolean getSkip() {
+        return false;
     }
 
     @Override
     public String getLaneProvenanceId() {
         return sequencerRun.getId() + "_" + lane.getPosition();
+    }
+    
+    @Override
+    public String getProvenanceId() {
+        return getLaneProvenanceId();
     }
 
     @Override
@@ -128,6 +138,26 @@ public class DefaultLaneProvenance implements LaneProvenance {
     }
 
     @Override
+    public DateTime getCreatedDate() {
+        DateTime lastModified = null;
+
+        if (sequencerRun != null) {
+            lastModified = ObjectUtils.min(lastModified,
+                    getDateTimeNullSafe(sequencerRun.getCreatedDate()));
+        }
+        if (lane != null) {
+//            lastModified = ObjectUtils.min(lastModified,
+//                    getDateTimeNullSafe(lane.getCreatedDate()));
+        }
+
+        if (lastModified == null) {
+            return null;
+        } else {
+            return lastModified.toDateTime(DateTimeZone.UTC);
+        }
+    }
+
+    @Override
     public String toString() {
         return "SampleProvenance{"
                 + "sequencerRunName=" + getSequencerRunName() + ", "
@@ -135,9 +165,11 @@ public class DefaultLaneProvenance implements LaneProvenance {
                 + "sequencerRunPlatformModel=" + getSequencerRunPlatformModel() + ", "
                 + "laneNumber=" + getLaneNumber() + ", "
                 + "laneAttributes=" + getLaneAttributes() + ", "
+                + "skip=" + getSkip() + ", "
                 + "laneProvenanceId=" + getLaneProvenanceId() + ", "
                 + "version=" + getVersion() + ", "
-                + "lastModified=" + getLastModified()
+                + "lastModified=" + getLastModified() + ", "
+                + "createdDate=" + getCreatedDate()
                 + '}';
     }
 
