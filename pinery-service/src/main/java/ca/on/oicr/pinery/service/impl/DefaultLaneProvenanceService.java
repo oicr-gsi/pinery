@@ -56,6 +56,7 @@ public class DefaultLaneProvenanceService implements LaneProvenanceService {
             Instrument instrument = instrumentById.get(sequencerRun.getInstrumentId());
             InstrumentModel instrumentModel = instrument == null ? null : instrumentModelById.get(instrument.getModelId());
 
+            if(sequencerRun.getSamples() != null) {
             for (RunPosition lane : sequencerRun.getSamples()) {
                 DefaultLaneProvenance lp = new DefaultLaneProvenance();
                 lp.setLane(lane);
@@ -63,6 +64,7 @@ public class DefaultLaneProvenanceService implements LaneProvenanceService {
                 lp.setInstrument(instrument);
                 lp.setInstrumentModel(instrumentModel);
                 lps.add(lp);
+            }
             }
         }
 
