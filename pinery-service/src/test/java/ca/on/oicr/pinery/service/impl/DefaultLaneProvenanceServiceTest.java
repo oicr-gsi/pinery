@@ -12,6 +12,7 @@ import ca.on.oicr.pinery.lims.DefaultRun;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.service.LaneProvenanceService;
 import ca.on.oicr.ws.dto.Dtos;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.joda.time.DateTime;
@@ -84,6 +85,12 @@ public class DefaultLaneProvenanceServiceTest {
 
         //modification date should not change the version
         assertEquals(before.getVersion(), after.getVersion());
+
+        //set sequencer run "run_dir"
+        run.setRunDirectory("/tmp/SR_001/");
+        after = Dtos.asDto(getLaneProvenanceById("1_1"));
+        assertEquals("/tmp/SR_001/", Iterables.getOnlyElement(after.getSequencerRunAttributes().get("run_dir")));
+        assertNotEquals(before.getVersion(), after.getVersion());
 
         //set sequencer run to being completed
         DateTime completionDate = DateTime.parse("2016-01-07T00:00:00.000Z");
