@@ -62,14 +62,15 @@ public class LaneProvenanceClientIT {
 
     @Test
     public void testGetSequencerRunAttributes() {
+        System.out.println("testGetSequencerRunAttributes");
         for (LaneProvenance lp : lps) {
             System.out.println(lp.getLaneProvenanceId() + " = " + lp.getSequencerRunAttributes());
         }
-        assertEquals("{instrument_name=[h001]}", lpById.get("1_1").getSequencerRunAttributes().toString());
-        assertEquals("{instrument_name=[h001]}", lpById.get("1_2").getSequencerRunAttributes().toString());
-        assertEquals("{instrument_name=[h002]}", lpById.get("2_1").getSequencerRunAttributes().toString());
-        assertEquals("{instrument_name=[h002]}", lpById.get("2_2").getSequencerRunAttributes().toString());
-        assertEquals("{instrument_name=[h002]}", lpById.get("3_5").getSequencerRunAttributes().toString());
+        assertEquals("{instrument_name=[h001], run_dir=[/test/dir/1]}", lpById.get("1_1").getSequencerRunAttributes().toString());
+        assertEquals("{instrument_name=[h001], run_dir=[/test/dir/1]}", lpById.get("1_2").getSequencerRunAttributes().toString());
+        assertEquals("{instrument_name=[h002], run_dir=[/test/dir/2]}", lpById.get("2_1").getSequencerRunAttributes().toString());
+        assertEquals("{instrument_name=[h002], run_dir=[/test/dir/2]}", lpById.get("2_2").getSequencerRunAttributes().toString());
+        assertEquals("{instrument_name=[h002], run_dir=[/test/dir/3]}", lpById.get("3_5").getSequencerRunAttributes().toString());
     }
 
     @Test
@@ -101,6 +102,7 @@ public class LaneProvenanceClientIT {
 
     @Test
     public void checkLastModified() {
+        System.out.println("checkLastModified");
         for (LaneProvenance lp : lps) {
             System.out.println(lp.getLaneProvenanceId() + " = " + lp.getLastModified());
         }
@@ -112,15 +114,29 @@ public class LaneProvenanceClientIT {
     }
 
     @Test
+    public void checkCreatedDate() {
+        System.out.println("checkCreatedDate");
+        for (LaneProvenance lp : lps) {
+            System.out.println(lp.getLaneProvenanceId() + " = " + lp.getCreatedDate());
+        }
+        assertEquals(DateTime.parse("2015-07-11T14:51:36.000Z"), lpById.get("1_1").getCreatedDate());
+        assertEquals(DateTime.parse("2015-07-11T14:51:36.000Z"), lpById.get("1_2").getCreatedDate());
+        assertEquals(DateTime.parse("2015-07-11T14:51:36.000Z"), lpById.get("2_1").getCreatedDate());
+        assertEquals(DateTime.parse("2015-07-11T14:51:36.000Z"), lpById.get("2_2").getCreatedDate());
+        assertEquals(DateTime.parse("2016-03-01T20:00:00.000Z"), lpById.get("3_5").getCreatedDate());
+    }
+
+    @Test
     public void checkVersion() throws HttpResponseException {
+        System.out.println("checkVersion");
         for (LaneProvenance lp : lps) {
             System.out.println(lp.getLaneProvenanceId() + " = " + lp.getVersion());
         }
-        assertEquals("eb7daffa04c0670261cd2526da42c65c92f2de352927e3bdb0a35d0df9e5a8fd", lpById.get("1_1").getVersion());
-        assertEquals("ff5b845d470f9f1c96cb85bdb9424206aeec17016cc6809ef602da9ea5cc9896", lpById.get("1_2").getVersion());
-        assertEquals("2cd37abf28f063187387631ae1f5bac71f23588286e67e0df7225f7a5e4712aa", lpById.get("2_1").getVersion());
-        assertEquals("a9121dcb119c60665087e5808a357e6a99791d1172146afcdbebf9b167e7642a", lpById.get("2_2").getVersion());
-        assertEquals("1fe648ec704433a3a2f7e5602ba12092532fba9188c0048dde620ff42f34a87c", lpById.get("3_5").getVersion());
+        assertEquals("70691852aa766abb4ede87f894a04e10c2a57d25a7eb3808812c8928ae2876bd", lpById.get("1_1").getVersion());
+        assertEquals("3a27d752bb54af8217a52c39c4603f3a6a17104e368f41fedac646d508d49be5", lpById.get("1_2").getVersion());
+        assertEquals("23eed4bcd729321b0cd9486f0043f8ee6f80dbf693720263893aae099189a864", lpById.get("2_1").getVersion());
+        assertEquals("91ec88c5a449da1e9826ac00f59bb4b790b168f1bd9817d0776201008c92b727", lpById.get("2_2").getVersion());
+        assertEquals("174d643a3c3b1c4cf4e5e6befa2221410dbeadf6583f4dd05485788e94d6577e", lpById.get("3_5").getVersion());
     }
 
 }

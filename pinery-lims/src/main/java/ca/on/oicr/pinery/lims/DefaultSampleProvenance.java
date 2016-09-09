@@ -318,21 +318,22 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     @Override
     public DateTime getCreatedDate() {
-        DateTime lastModified = null;
+        DateTime createdDate = null;
 
         if (sequencerRun != null) {
-            lastModified = ObjectUtils.min(lastModified,
-                    getDateTimeNullSafe(sequencerRun.getCreatedDate()));
+            createdDate = ObjectUtils.min(createdDate,
+                    //completion date is used as this is the first date that this provenance object is ready for processing
+                    getDateTimeNullSafe(sequencerRun.getCompletionDate()));
         }
         if (lane != null) {
 //            lastModified = ObjectUtils.min(lastModified,
 //                    getDateTimeNullSafe(lane.getCreatedDate()));
         }
 
-        if (lastModified == null) {
+        if (createdDate == null) {
             return null;
         } else {
-            return lastModified.toDateTime(DateTimeZone.UTC);
+            return createdDate.toDateTime(DateTimeZone.UTC);
         }
     }
 

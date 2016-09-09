@@ -4,7 +4,7 @@
     <parent>
         <artifactId>pinery</artifactId>
         <groupId>ca.on.oicr</groupId>
-        <version>2.0-SNAPSHOT</version>
+        <version>2.0-rc1</version>
     </parent>
     <artifactId>pinery-lims</artifactId>
     <name>pinery-lims</name>
@@ -38,14 +38,14 @@
     </dependencies>
     
     <build>
-    	<plugins>
-    		<plugin>
-    			<groupId>org.codehaus.mojo</groupId>
-    			<artifactId>findbugs-maven-plugin</artifactId>
-    			<configuration>
-   					<excludeFilterFile>src/main/resources/findbugs-exclude.xml</excludeFilterFile>
-    			</configuration>
-    		</plugin>
-    	</plugins>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <configuration>
+                    <excludeFilterFile>src/main/resources/findbugs-exclude.xml</excludeFilterFile>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

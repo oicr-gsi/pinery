@@ -59,6 +59,9 @@ public class DefaultLaneProvenance implements LaneProvenance {
         if (instrument != null) {
             attrs.put("instrument_name", instrument.getName());
         }
+        if (sequencerRun != null && sequencerRun.getRunDirectory() != null) {
+            attrs.put("run_dir", sequencerRun.getRunDirectory());
+        }
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }
 
@@ -96,7 +99,7 @@ public class DefaultLaneProvenance implements LaneProvenance {
     public String getLaneProvenanceId() {
         return sequencerRun.getId() + "_" + lane.getPosition();
     }
-    
+
     @Override
     public String getProvenanceId() {
         return getLaneProvenanceId();
@@ -139,21 +142,22 @@ public class DefaultLaneProvenance implements LaneProvenance {
 
     @Override
     public DateTime getCreatedDate() {
-        DateTime lastModified = null;
+        DateTime createdDate = null;
 
         if (sequencerRun != null) {
-            lastModified = ObjectUtils.min(lastModified,
-                    getDateTimeNullSafe(sequencerRun.getCreatedDate()));
+            createdDate = ObjectUtils.min(createdDate,
+                    //completion date is used as this is the first date that this provenance object is ready for processing
+                    getDateTimeNullSafe(sequencerRun.getCompletionDate()));
         }
         if (lane != null) {
 //            lastModified = ObjectUtils.min(lastModified,
 //                    getDateTimeNullSafe(lane.getCreatedDate()));
         }
 
-        if (lastModified == null) {
+        if (createdDate == null) {
             return null;
         } else {
-            return lastModified.toDateTime(DateTimeZone.UTC);
+            return createdDate.toDateTime(DateTimeZone.UTC);
         }
     }
 
