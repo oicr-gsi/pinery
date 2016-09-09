@@ -80,21 +80,35 @@ public class DefaultLaneProvenanceServiceTest {
 
         LaneProvenance after = Dtos.asDto(getLaneProvenanceById("1_1"));
         assertEquals(expectedDate, after.getLastModified());
+        assertNull(after.getCreatedDate());
 
         //modification date should not change the version
         assertEquals(before.getVersion(), after.getVersion());
+
+        //set sequencer run to being completed
+        DateTime completionDate = DateTime.parse("2016-01-07T00:00:00.000Z");
+        run.setCompletionDate(completionDate.toDate());
+        after = Dtos.asDto(getLaneProvenanceById("1_1"));
+        assertEquals(completionDate, after.getCreatedDate());
     }
 
-    //@Test
+    //@Test - skipped because lane does not have a "modified" setter
     public void changeLaneLastModified() {
         DateTime expectedDate = DateTime.parse("2016-01-01T00:00:00.000Z");
         //lane.setModified(expectedDate.toDate());
 
         LaneProvenance after = Dtos.asDto(getLaneProvenanceById("1_1"));
         assertEquals(expectedDate, after.getLastModified());
+        assertNull(after.getCreatedDate());
 
         //modification date should not change the version
         assertEquals(before.getVersion(), after.getVersion());
+
+        //set sequencer run to being completed
+        DateTime completionDate = DateTime.parse("2016-01-07T00:00:00.000Z");
+        run.setCompletionDate(completionDate.toDate());
+        after = Dtos.asDto(getLaneProvenanceById("1_1"));
+        assertEquals(completionDate, after.getCreatedDate());
     }
 
     private LaneProvenance getLaneProvenanceById(String laneProvenanceId) {

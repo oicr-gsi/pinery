@@ -36,6 +36,7 @@ import ca.on.oicr.ws.dto.Dtos;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import static org.junit.Assert.assertNull;
 
 /**
  *
@@ -57,6 +58,7 @@ public class DefaultSampleProvenanceServiceTest {
     RunSample runSample;
     RunPosition lane;
     Run run;
+    DateTime runCompletionDate = DateTime.parse("2014-01-01T00:00:00.000Z");
     SampleProvenance before;
 
     @Before
@@ -86,6 +88,7 @@ public class DefaultSampleProvenanceServiceTest {
         run.setId(1);
         run.setName("ABC_123");
         run.setSample(Sets.newHashSet(lane));
+        run.setCompletionDate(runCompletionDate.toDate());
 
         when(lims.getSampleProjects()).thenReturn(Lists.newArrayList(project));
         when(lims.getSamples(null, null, null, null, null)).thenReturn(samples);
@@ -101,6 +104,7 @@ public class DefaultSampleProvenanceServiceTest {
 
         SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
         assertEquals(expectedDate, after.getLastModified());
+        assertEquals(runCompletionDate, after.getCreatedDate());
 
         //modification date should not change the version
         assertEquals(before.getVersion(), after.getVersion());
@@ -113,6 +117,7 @@ public class DefaultSampleProvenanceServiceTest {
 
         SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
         assertEquals(expectedDate, after.getLastModified());
+        assertEquals(runCompletionDate, after.getCreatedDate());
 
         //modification date should not change the version
         assertEquals(before.getVersion(), after.getVersion());
@@ -125,6 +130,7 @@ public class DefaultSampleProvenanceServiceTest {
 
         SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
         assertEquals(expectedDate, after.getLastModified());
+        assertEquals(runCompletionDate, after.getCreatedDate());
 
         //modification date should not change the version
         assertEquals(before.getVersion(), after.getVersion());
@@ -137,6 +143,7 @@ public class DefaultSampleProvenanceServiceTest {
 
         SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
         assertEquals(expectedDate, after.getLastModified());
+        assertEquals(runCompletionDate, after.getCreatedDate());
 
         //modification date should not change the version
         assertEquals(before.getVersion(), after.getVersion());
@@ -150,6 +157,7 @@ public class DefaultSampleProvenanceServiceTest {
         SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
         assertEquals(expected, after.getSampleName());
         assertNotEquals(before.getVersion(), after.getVersion());
+        assertEquals(runCompletionDate, after.getCreatedDate());
     }
 
     @Test
