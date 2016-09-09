@@ -40,9 +40,9 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
     Logger log = LoggerFactory.getLogger(DefaultSampleProvenanceService.class);
 
     private Lims lims;
-    
+
     @Autowired
-    public DefaultSampleProvenanceService(Lims lims){
+    public DefaultSampleProvenanceService(Lims lims) {
         this.lims = lims;
     }
 
@@ -102,23 +102,24 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
                 for (RunSample runSample : lane.getRunSample()) {
 
                     Sample sample = samplesById.get(runSample.getId());
+                    if (sample != null) {
+                        DefaultSampleProvenance sp = new DefaultSampleProvenance();
+                        sp.setSample(sample);
+                        sp.setRunSample(runSample);
+                        sp.setLane(lane);
+                        sp.setSequencerRun(sequencerRun);
+                        sp.setInstrument(instrument);
+                        sp.setInstrumentModel(instrumentModel);
+                        sp.setSampleProject(projectByName.get(sample.getProject()));
 
-                    DefaultSampleProvenance sp = new DefaultSampleProvenance();
-                    sp.setSample(sample);
-                    sp.setRunSample(runSample);
-                    sp.setLane(lane);
-                    sp.setSequencerRun(sequencerRun);
-                    sp.setInstrument(instrument);
-                    sp.setInstrumentModel(instrumentModel);
-                    sp.setSampleProject(projectByName.get(sample.getProject()));
+                        Set<Sample> parentSamples = new LinkedHashSet<>();
+                        for (String id : sampleHierarchy.getAncestorSampleIds(sample.getId())) {
+                            parentSamples.add(samplesById.get(id));
+                        }
+                        sp.setParentSamples(parentSamples);
 
-                    Set<Sample> parentSamples = new LinkedHashSet<>();
-                    for (String id : sampleHierarchy.getAncestorSampleIds(sample.getId())) {
-                        parentSamples.add(samplesById.get(id));
+                        sps.add(sp);
                     }
-                    sp.setParentSamples(parentSamples);
-
-                    sps.add(sp);
                 }
                 }
             }
