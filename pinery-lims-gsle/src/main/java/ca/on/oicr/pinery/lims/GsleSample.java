@@ -29,7 +29,7 @@ public class GsleSample extends DefaultSample {
     */
    @Override
    public String getProject() {
-      Pattern pattern = Pattern.compile("^([A-Z]{3,5})_.*$");
+      Pattern pattern = Pattern.compile("^([A-Z0-9]{3,5})_.*$");
       Matcher matcher = pattern.matcher(getName());
       if (matcher.find()) {
          return matcher.group(1);
