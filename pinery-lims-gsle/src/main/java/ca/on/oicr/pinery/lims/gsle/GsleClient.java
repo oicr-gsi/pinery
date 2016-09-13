@@ -1069,7 +1069,7 @@ public class GsleClient implements Lims {
 
       List<Run> runs = Lists.newArrayList();
       for (Run defaultRun : gsleRun) {
-         fixRunDirectory(defaultRun);
+         defaultRun.setRunDirectory(fixRunDirectory(defaultRun.getName(),defaultRun.getRunDirectory()));
          runs.add(defaultRun);
       }
 
@@ -1093,17 +1093,20 @@ public class GsleClient implements Lims {
       return runs;
    }
    
-   /**
-    * Truncates result file path to get run directory. Run directory is expected to end with "/" + run.getName() + "/"
-    * and if the run directory does not match this, it is set to null instead
-    * 
-    * @param run the run to fix runDirectory for. The run is mutated by this call
-    */
-   private void fixRunDirectory(Run run) {
-      Pattern p = Pattern.compile("^((/.*)?/" + run.getName() + "/).*");
-      Matcher m = p.matcher(run.getRunDirectory());
-      run.setRunDirectory(m.matches() ? m.group(1) : null);
-   }
+    /**
+     * Truncates result file path to get run directory. Run directory is expected to end with "/" + run.getName() + "/"
+     * and if the run directory does not match this, it is set to null instead
+     *
+     * @param runName the run name use in run directory path matching
+     * @param runDir  the run directory path
+     *
+     * @return runDir
+     */
+    public static String fixRunDirectory(String runName, String runDir) {
+        Pattern p = Pattern.compile("^((/.*)?/" + runName + ")(/.*)?$");
+        Matcher m = p.matcher(runDir);
+        return m.matches() ? m.group(1) : null;
+    }
 
    public List<TemporaryRun> createMapRun(Reader reader) throws IOException {
 
