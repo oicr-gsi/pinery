@@ -25,6 +25,7 @@
         <mysql.version>5.1.21</mysql.version>
         <slf4j.version>1.6.6</slf4j.version>
         <log4j.version>1.2.16</log4j.version>
+        <log4j-core.version>2.6.2</log4j-core.version>
         <joda-time.version>2.1</joda-time.version>
         <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>9.3.7.v20160115</jetty-maven-plugin.version>
@@ -84,6 +85,11 @@
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
                 <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j-core.version}</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>
