@@ -5,3 +5,5 @@ bin
 .settings
 *.swp
 pinery.log
+nb-configuration.xml
+
