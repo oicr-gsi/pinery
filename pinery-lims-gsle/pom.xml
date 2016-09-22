@@ -4,7 +4,7 @@
     <parent>
         <artifactId>pinery</artifactId>
         <groupId>ca.on.oicr</groupId>
-        <version>2.0-rc1</version>
+        <version>2.0-rc2</version>
     </parent>
     <artifactId>pinery-lims-gsle</artifactId>
     <name>pinery-gsle</name>
@@ -69,9 +69,8 @@
             <artifactId>resteasy-spring</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.sf.opencsv</groupId>
+            <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>2.3</version>
         </dependency>
         <dependency>
             <groupId>ca.on.oicr</groupId>

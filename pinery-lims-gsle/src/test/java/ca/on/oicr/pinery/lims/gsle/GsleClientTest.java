@@ -21,6 +21,7 @@ import ca.on.oicr.pinery.lims.DefaultAttribute;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
+import static org.hamcrest.Matchers.nullValue;
 
 public class GsleClientTest {
 
@@ -242,6 +243,16 @@ public class GsleClientTest {
       Table<Integer, Integer, Set<RunSample>> table = sut.positionMapGenerator(get_temporary_list_test_input_four());
 
       assertThat("Number of samples in run 13312", table.get(3333, 2).size(), is(1));
+   }
+   
+   @Test
+   public void test_fix_directory() {
+       assertThat(GsleClient.fixRunDirectory("151202_D00331_0148_BC863AANXX", "/tmp/151202_D00331_0148_BC863AANXX"), is("/tmp/151202_D00331_0148_BC863AANXX"));
+       assertThat(GsleClient.fixRunDirectory("151202_D00331_0148_BC863AANXX", "/tmp/151202_D00331_0148_BC863AANXX/jsonReport"), is("/tmp/151202_D00331_0148_BC863AANXX"));
+       assertThat(GsleClient.fixRunDirectory("151202_D00331_0148_BC863AANXX", "/151202_D00331_0148_BC863AANXX/jsonReport"), is("/151202_D00331_0148_BC863AANXX"));
+       assertThat(GsleClient.fixRunDirectory("151202_D00331_0148_BC863AANXX", "/tmp/missing/jsonReport"), is(nullValue()));
+       assertThat(GsleClient.fixRunDirectory("missing", "/tmp/151202_D00331_0148_BC863AANXX/jsonReport"), is(nullValue()));
+       assertThat(GsleClient.fixRunDirectory("151202_D00331_0148_BC863AANXX", "/tmp/151202_D00331_0148_BC863AANXX_fail/jsonReport"), is(nullValue()));
    }
 
    /**
