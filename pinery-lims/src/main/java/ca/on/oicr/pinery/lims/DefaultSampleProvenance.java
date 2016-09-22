@@ -25,6 +25,8 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -33,6 +35,8 @@ import org.joda.time.DateTimeZone;
  * @author mlaszloffy
  */
 public class DefaultSampleProvenance implements SampleProvenance {
+
+    private final Logger log = LogManager.getLogger(DefaultSampleProvenance.class);
 
     private Instrument instrument;
     private InstrumentModel instrumentModel;
@@ -176,7 +180,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
                 attrsRemappedAndFiltered.putAll(key, values);
             } else {
                 // sample attribute key is unknown and not allowed
-                System.out.println("Key is filtered");
+                log.debug("Unknown sample attribute key = [{}], sample provenance id = [{}]", key, getSampleProvenanceId());
             }
         }
 
