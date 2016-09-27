@@ -89,14 +89,14 @@ public class MisoClient implements Lims {
       "LEFT JOIN (\n" + 
       "        SELECT library_libraryId\n" + 
       "                ,sequence\n" + 
-      "        FROM Library_TagBarcode ltb\n" + 
-      "        INNER JOIN TagBarcodes AS tb ON tb.tagId = ltb.barcode_barcodeId AND tb.position = 1\n" + 
+      "        FROM Library_Index ltb\n" + 
+      "        INNER JOIN Indices AS tb ON tb.indexId = ltb.index_indexId AND tb.position = 1\n" + 
       "        ) bc1 ON bc1.library_libraryId = lib.libraryId\n" + 
       "LEFT JOIN (\n" + 
       "        SELECT library_libraryId\n" + 
       "                ,sequence\n" + 
-      "        FROM Library_TagBarcode ltb\n" + 
-      "        INNER JOIN TagBarcodes AS tb ON tb.tagId = ltb.barcode_barcodeId AND tb.position = 2\n" + 
+      "        FROM Library_Index ltb\n" + 
+      "        INNER JOIN Indices AS tb ON tb.indexId = ltb.index_indexId AND tb.position = 2\n" + 
       "        ) bc2 ON bc2.library_libraryId = lib.libraryId";
   private static final String queryOrderSamplesByOrderId = queryAllOrderSamples + " WHERE poolOrderId = ?";
 
@@ -134,11 +134,11 @@ public class MisoClient implements Lims {
       "AND ele.pool_poolId = pool.poolId " + "JOIN LibraryDilution ld ON ld.dilutionId = ele.elementId "
       + "JOIN Library l ON l.libraryId = ld.library_libraryId "
       + "LEFT JOIN TargetedResequencing tr ON tr.targetedResequencingId = ld.targetedResequencingId " + "LEFT JOIN ( "
-      + "SELECT library_libraryId, sequence FROM Library_TagBarcode "
-      + "JOIN TagBarcodes ON TagBarcodes.tagId = Library_TagBarcode.barcode_barcodeId "
-      + "WHERE name NOT LIKE 'N5%' AND name NOT LIKE 'S5%' " + ") bc1 ON bc1.library_libraryId = l.libraryId " + "LEFT JOIN ( "
-      + "SELECT library_libraryId, sequence FROM Library_TagBarcode "
-      + "JOIN TagBarcodes ON TagBarcodes.tagId = Library_TagBarcode.barcode_barcodeId " + "WHERE name LIKE 'N5%' OR name LIKE 'S5%' "
+      + "SELECT library_libraryId, sequence FROM Library_Index "
+      + "JOIN Indices ON Indices.indexId = Library_Index.index_indexId "
+      + "WHERE position = 1 " + ") bc1 ON bc1.library_libraryId = l.libraryId " + "LEFT JOIN ( "
+      + "SELECT library_libraryId, sequence FROM Library_Index "
+      + "JOIN Indices ON Indices.indexId = Library_Index.index_indexId " + "WHERE position = 2 "
       + ") bc2 ON bc2.library_libraryId = l.libraryId";
   private static final String queryRunSamplesByRunId = queryAllRunSamples
       + " JOIN SequencerPartitionContainer_Partition spcp ON spcp.partitions_partitionId = part.partitionId"
@@ -161,7 +161,7 @@ public class MisoClient implements Lims {
       + "        ,qpcr.results qpcr_percentage_human\n" + "        ,s.qcPassed qcPassed\n" + "        ,box.locationBarcode boxLocation\n"
       + "        ,box.alias boxAlias\n" + "        ,pos.row boxRow\n" + "        ,pos.COLUMN boxColumn\n" + "        ,NULL paired\n"
       + "        ,NULL read_length\n" + "        ,NULL targeted_resequencing\n" + "FROM Sample s\n"
-      + "LEFT JOIN SampleAdditionalInfo sai ON sai.sampleId = s.sampleId\n" + "LEFT JOIN Sample parent ON parent.sampleId = sai.parentId\n"
+      + "LEFT JOIN DetailedSample sai ON sai.sampleId = s.sampleId\n" + "LEFT JOIN Sample parent ON parent.sampleId = sai.parentId\n"
       + "LEFT JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId\n" + "LEFT JOIN Project p ON p.projectId = s.project_projectId\n"
       + "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = sai.kitDescriptorId\n" + "LEFT JOIN Identity i ON i.sampleId = s.sampleId\n"
       + "\n" + "\n" + "LEFT JOIN SampleAliquot sa ON sa.sampleId = sai.sampleId\n"
@@ -202,18 +202,18 @@ public class MisoClient implements Lims {
       + "LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + "LEFT JOIN (\n" + "        SELECT library_libraryId\n"
       + "                ,results\n" + "        FROM LibraryQC\n" + "        INNER JOIN QCType ON QCType.qcTypeId = LibraryQC.qcMethod\n"
       + "        WHERE QCType.NAME = 'QuBit'\n" + "        ) qubit ON qubit.library_libraryId = l.libraryId\n" + "LEFT JOIN (\n"
-      + "        SELECT library_libraryId\n" + "                ,sequence\n" + "        FROM Library_TagBarcode\n"
-      + "        INNER JOIN TagBarcodes ON TagBarcodes.tagId = Library_TagBarcode.barcode_barcodeId\n"
-      + "        WHERE NAME NOT LIKE 'N5%'\n" + "                AND NAME NOT LIKE 'S5%'\n"
+      + "        SELECT library_libraryId\n" + "                ,sequence\n" + "        FROM Library_Index\n"
+      + "        INNER JOIN Indices ON Indices.indexId = Library_Index.index_indexId\n"
+      + "        WHERE position = 1\n"
       + "        ) bc1 ON bc1.library_libraryId = l.libraryId\n" + "LEFT JOIN (\n" + "        SELECT library_libraryId\n"
-      + "                ,sequence\n" + "        FROM Library_TagBarcode\n"
-      + "        INNER JOIN TagBarcodes ON TagBarcodes.tagId = Library_TagBarcode.barcode_barcodeId\n" + "        WHERE NAME LIKE 'N5%'\n"
-      + "                OR NAME LIKE 'S5%'\n" + "        ) bc2 ON bc2.library_libraryId = l.libraryId\n"
+      + "                ,sequence\n" + "        FROM Library_Index\n"
+      + "        INNER JOIN Indices ON Indices.indexId = Library_Index.index_indexId\n"
+      + "                WHERE position = 2\n" + "        ) bc2 ON bc2.library_libraryId = l.libraryId\n"
       + "LEFT JOIN BoxPosition pos ON pos.boxPositionId = l.boxPositionId\n" + "LEFT JOIN Box box ON box.boxId = pos.boxId";
   private static final String querySampleById = "SELECT * FROM (" + queryAllSamples + ") combined " + "WHERE id = ?";
 
   private static final String querySampleChildIdsBySampleId = "SELECT child.name id " + "FROM Sample child "
-      + "JOIN SampleAdditionalInfo csai ON csai.sampleId = child.sampleId " + "JOIN Sample parent ON parent.sampleId = csai.parentId "
+      + "JOIN DetailedSample csai ON csai.sampleId = child.sampleId " + "JOIN Sample parent ON parent.sampleId = csai.parentId "
       + "WHERE parent.name = ? " + "UNION ALL " + "SELECT child.name id " + "FROM Library child "
       + "JOIN Sample parent ON parent.sampleId = child.sample_sampleId " + "WHERE parent.name = ?";
 
@@ -222,7 +222,7 @@ public class MisoClient implements Lims {
       + "        ,NULL sampleType_description\n" + "        ,COUNT(*) count\n" + "        ,COUNT(CASE \n"
       + "                        WHEN sai.archived = true\n" + "                                THEN sai.archived\n"
       + "                        END) archivedCount\n" + "        ,MIN(scl.creationDate) earliest\n"
-      + "        ,MAX(scl.lastUpdated) latest\n" + "FROM SampleAdditionalInfo sai\n"
+      + "        ,MAX(scl.lastUpdated) latest\n" + "FROM DetailedSample sai\n"
       + "INNER JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId\n"
       + "INNER JOIN (SELECT sampleId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from SampleChangeLog GROUP BY sampleId) scl ON sai.sampleId = scl.sampleId\n"
       + "GROUP BY sai.sampleClassId\n" + "\n" + "UNION ALL\n" + "\n" + "SELECT NULL NAME\n"
@@ -240,7 +240,7 @@ public class MisoClient implements Lims {
       + "                        WHEN archived = true\n" + "                                THEN archived\n"
       + "                        END) archivedCount\n" + "        ,MIN(created) earliest\n" + "        ,MAX(updated) latest\n" + "FROM (\n"
       + "        SELECT sp.alias NAME\n" + "                ,sai.archived archived\n" + "                ,scl.creationDate created\n"
-      + "                ,scl.lastUpdated updated\n" + "        FROM SampleAdditionalInfo sai\n"
+      + "                ,scl.lastUpdated updated\n" + "        FROM DetailedSample sai\n"
       + "        INNER JOIN Sample s ON s.sampleId = sai.sampleId\n"
       + "        INNER JOIN Project sp ON sp.projectId = s.project_projectId\n"
       + "        INNER JOIN (SELECT sampleId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from SampleChangeLog GROUP BY sampleId) scl ON s.sampleId = scl.sampleId\n"
@@ -887,33 +887,41 @@ public class MisoClient implements Lims {
           return rs.getDate(getSqlKey()) == null ? null : rs.getDate(getSqlKey()).toString();
         }
       },
-      EXTERNAL_NAME("external_name", "External Name"), TISSUE_ORIGIN("tissue_origin", "Tissue Origin"), TISSUE_PREPARATION(
-          "tissue_preparation", "Tissue Preparation"), TISSUE_REGION("tissue_region", "Region"), TUBE_ID("tube_id",
-              "Tube Id"), GROUP_ID("group_id", "Group ID"), GROUP_DESCRIPTION("group_id_description",
-                  "Group Description"), PURPOSE("purpose", "Purpose"), STR_RESULT("str_result", "STR") {
-                    @Override
-                    public String extractStringValueFrom(ResultSet rs) throws SQLException {
-                      String str = rs.getString(getSqlKey());
-                      return str == null ? null : StrStatus.valueOf(str).getValue();
-                    }
-                  },
-      QPCR_PERCENTAGE_HUMAN("qpcr_percentage_human", "qPCR %"), QUBIT_CONCENTRATION("qubit_concentration",
-          "Qubit (ng/uL)"), NANODROP_CONCENTRATION("nanodrop_concentration", "Nanodrop (ng/uL)"), BARCODE("barcode",
-              "Barcode"), BARCODE_TWO("barcode_two", "Barcode Two"), READ_LENGTH("read_length", "Read Length") {
-                private static final String PAIRED_KEY = "paired";
+      EXTERNAL_NAME("external_name", "External Name"),
+      TISSUE_ORIGIN("tissue_origin", "Tissue Origin"),
+      TISSUE_PREPARATION("tissue_preparation", "Tissue Preparation"),
+      TISSUE_REGION("tissue_region", "Region"),
+      TUBE_ID("tube_id", "Tube Id"),
+      GROUP_ID("group_id", "Group ID"),
+      GROUP_DESCRIPTION("group_id_description","Group Description"),
+      PURPOSE("purpose", "Purpose"),
+      STR_RESULT("str_result", "STR") {
+        @Override
+        public String extractStringValueFrom(ResultSet rs) throws SQLException {
+          String str = rs.getString(getSqlKey());
+          return str == null ? null : StrStatus.valueOf(str).getValue();
+        }
+      },
+      QPCR_PERCENTAGE_HUMAN("qpcr_percentage_human", "qPCR %"),
+      QUBIT_CONCENTRATION("qubit_concentration", "Qubit (ng/uL)"),
+      NANODROP_CONCENTRATION("nanodrop_concentration", "Nanodrop (ng/uL)"),
+      BARCODE("barcode", "Barcode"),
+      BARCODE_TWO("barcode_two", "Barcode Two"),
+      READ_LENGTH("read_length", "Read Length") {
+        private static final String PAIRED_KEY = "paired";
 
-                @Override
-                public String extractStringValueFrom(ResultSet rs) throws SQLException {
-                  boolean paired = rs.getBoolean(PAIRED_KEY);
-                  if (!rs.wasNull()) {
-                    int readLength = rs.getInt(READ_LENGTH.getSqlKey());
-                    if (!rs.wasNull()) {
-                      return (paired ? "2x" : "1x") + readLength;
-                    }
-                  }
-                  return null;
-                }
-              },
+        @Override
+        public String extractStringValueFrom(ResultSet rs) throws SQLException {
+          boolean paired = rs.getBoolean(PAIRED_KEY);
+          if (!rs.wasNull()) {
+            int readLength = rs.getInt(READ_LENGTH.getSqlKey());
+            if (!rs.wasNull()) {
+              return (paired ? "2x" : "1x") + readLength;
+            }
+          }
+          return null;
+        }
+      },
       TARGETED_RESEQUENCING("targeted_resequencing", "Targeted Resequencing");
 
       private final String sqlKey;
