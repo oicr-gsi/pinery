@@ -17,6 +17,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -71,11 +72,11 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
 
         Multimap<String, OrderSample> orderSampleById = HashMultimap.create();
         for (Order order : lims.getOrders()) {
-          if(order.getSamples() != null) {
-            for (OrderSample orderSample : order.getSamples()) {
-                orderSampleById.put(orderSample.getId(), orderSample);
+            if (order.getSamples() != null) {
+                for (OrderSample orderSample : order.getSamples()) {
+                    orderSampleById.put(orderSample.getId(), orderSample);
+                }
             }
-          }
         }
 
         List<Sample> samples = lims.getSamples(null, null, null, null, null);
@@ -96,36 +97,41 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
             Instrument instrument = instrumentById.get(sequencerRun.getInstrumentId());
             InstrumentModel instrumentModel = instrument == null ? null : instrumentModelById.get(instrument.getModelId());
 
-            if(sequencerRun.getSamples() != null) {
-            for (RunPosition lane : sequencerRun.getSamples()) {
-                if(lane.getRunSample() != null) {
-                for (RunSample runSample : lane.getRunSample()) {
+            if (sequencerRun.getSamples() != null) {
+                for (RunPosition lane : sequencerRun.getSamples()) {
+                    if (lane.getRunSample() != null) {
+                        for (RunSample runSample : lane.getRunSample()) {
 
-                    Sample sample = samplesById.get(runSample.getId());
-                    if (sample != null) {
-                        DefaultSampleProvenance sp = new DefaultSampleProvenance();
-                        sp.setSample(sample);
-                        sp.setRunSample(runSample);
-                        sp.setLane(lane);
-                        sp.setSequencerRun(sequencerRun);
-                        sp.setInstrument(instrument);
-                        sp.setInstrumentModel(instrumentModel);
-                        sp.setSampleProject(projectByName.get(sample.getProject()));
+                            Sample sample = samplesById.get(runSample.getId());
+                            if (sample != null) {
+                                DefaultSampleProvenance sp = new DefaultSampleProvenance();
+                                sp.setSample(sample);
+                                sp.setRunSample(runSample);
+                                sp.setLane(lane);
+                                sp.setSequencerRun(sequencerRun);
+                                sp.setInstrument(instrument);
+                                sp.setInstrumentModel(instrumentModel);
+                                sp.setSampleProject(projectByName.get(sample.getProject()));
 
-                        Set<Sample> parentSamples = new LinkedHashSet<>();
-                        for (String id : sampleHierarchy.getAncestorSampleIds(sample.getId())) {
-                            parentSamples.add(samplesById.get(id));
+                                Set<Sample> parentSamples = new LinkedHashSet<>();
+                                for (String id : sampleHierarchy.getAncestorSampleIds(sample.getId())) {
+                                    parentSamples.add(samplesById.get(id));
+                                }
+                                sp.setParentSamples(parentSamples);
+
+                                sps.add(sp);
+                            }
                         }
-                        sp.setParentSamples(parentSamples);
-
-                        sps.add(sp);
                     }
                 }
-                }
-            }
             }
         }
-
+        Collections.sort(sps, new Comparator<SampleProvenance>() {
+            @Override
+            public int compare(SampleProvenance o1, SampleProvenance o2) {
+                return o1.getSampleProvenanceId().compareTo(o2.getSampleProvenanceId());
+            }
+        });
         return sps;
     }
 
