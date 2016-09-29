@@ -57,6 +57,7 @@ public class MisoClient implements Lims {
   private static final String MISO_SAMPLE_ID_PREFIX = "SAM";
   private static final String MISO_LIBRARY_ID_PREFIX = "LIB";
 
+  // @formatter:off
   // InstrumentModel queries
   private static final String queryAllModels = "SELECT p.platformId, p.instrumentModel " + "FROM Platform as p";
   private static final String queryModelById = queryAllModels + " WHERE p.platformId = ?";
@@ -146,70 +147,173 @@ public class MisoClient implements Lims {
       + " JOIN Run_SequencerPartitionContainer rcpc ON rcpc.containers_containerId = spc.containerId" + " WHERE rcpc.Run_runId = ?";
 
   // Sample queries
-  private static final String queryAllSamples = "SELECT DISTINCT s.alias NAME\n" + "        ,s.description description\n"
-      + "        ,s.NAME id\n" + "        ,parent.NAME parentId\n" + "        ,sc.alias sampleType\n"
-      + "        ,NULL sampleType_platform\n" + "        ,NULL sampleType_description\n" + "        ,tt.alias tissueType\n"
-      + "        ,p.alias project\n" + "        ,sai.archived archived\n" + "        ,scl.creationDate created\n"
-      + "        ,sclcu.userId createdById\n" + "        ,scl.lastUpdated modified\n" + "        ,scluu.userId modifiedById\n"
-      + "        ,s.identificationBarcode tubeBarcode\n" + "        ,s.volume volume\n" + "        ,ss.concentration concentration\n"
-      + "        ,s.locationBarcode storageLocation\n" + "        ,kd.NAME kitName\n" + "        ,kd.description kitDescription\n"
-      + "        ,s.receivedDate receive_date\n" + "        ,i.externalName external_name\n" + "        ,tor.alias tissue_origin\n"
-      + "        ,tm.alias tissue_preparation\n" + "        ,st.region tissue_region\n" + "        ,st.tubeNumber tube_id\n"
-      + "        ,ss.strStatus str_result\n" + "        ,sai.groupId group_id\n" + "        ,sai.groupDescription group_id_description\n"
-      + "        ,sp.alias purpose\n" + "        ,qubit.results qubit_concentration\n"
-      + "        ,nanodrop.results nanodrop_concentration\n" + "        ,NULL barcode\n" + "        ,NULL barcode_two\n"
-      + "        ,qpcr.results qpcr_percentage_human\n" + "        ,s.qcPassed qcPassed\n" + "        ,box.locationBarcode boxLocation\n"
-      + "        ,box.alias boxAlias\n" + "        ,pos.row boxRow\n" + "        ,pos.COLUMN boxColumn\n" + "        ,NULL paired\n"
-      + "        ,NULL read_length\n" + "        ,NULL targeted_resequencing\n" + "FROM Sample s\n"
-      + "LEFT JOIN DetailedSample sai ON sai.sampleId = s.sampleId\n" + "LEFT JOIN Sample parent ON parent.sampleId = sai.parentId\n"
-      + "LEFT JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId\n" + "LEFT JOIN Project p ON p.projectId = s.project_projectId\n"
-      + "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = sai.kitDescriptorId\n" + "LEFT JOIN Identity i ON i.sampleId = s.sampleId\n"
-      + "\n" + "\n" + "LEFT JOIN SampleAliquot sa ON sa.sampleId = sai.sampleId\n"
-      + "LEFT JOIN SamplePurpose sp ON sp.samplePurposeId = sa.samplePurposeId\n"
-      + "LEFT JOIN SampleTissue st ON st.sampleId = s.sampleId\n" + "LEFT JOIN TissueType tt ON tt.tissueTypeId = st.tissueTypeId\n"
-      + "LEFT JOIN TissueOrigin tor ON tor.tissueOriginId = st.tissueOriginId\n"
-      + "LEFT JOIN TissueMaterial tm ON tm.tissueMaterialId = st.tissueMaterialId\n" + "\n"
-      + "LEFT JOIN (SELECT sampleId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from SampleChangeLog GROUP BY sampleId) scl ON sai.sampleId = scl.sampleId\n"
-      + "LEFT JOIN (SELECT userId, sampleId FROM SampleChangeLog scl1 WHERE changeTime = (SELECT MIN(scl2.changeTime) FROM SampleChangeLog scl2 where scl1.sampleId = scl2.sampleId)) sclcu ON sai.sampleId = sclcu.sampleId\n"
-      + "LEFT JOIN (SELECT userId, sampleId  FROM SampleChangeLog scl1 WHERE changeTime = (SELECT MAX(scl2.changeTime) FROM SampleChangeLog scl2 where scl1.sampleId = scl2.sampleId)) scluu ON sai.sampleId = scluu.sampleId\n"
-      + "LEFT JOIN SampleStock ss ON sai.sampleId = ss.sampleId\n" + "\n" + "LEFT JOIN (\n" + "        SELECT sample_sampleId\n"
-      + "                ,results\n" + "        FROM SampleQC\n" + "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n"
-      + "        WHERE QCType.NAME = 'QuBit'\n" + "        ) qubit ON qubit.sample_sampleId = s.sampleId\n" + "LEFT JOIN (\n"
-      + "        SELECT sample_sampleId\n" + "                ,results\n" + "        FROM SampleQC\n"
-      + "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n" + "        WHERE QCType.NAME = 'Nanodrop'\n"
-      + "        ) nanodrop ON nanodrop.sample_sampleId = s.sampleId\n" + "LEFT JOIN (\n" + "        SELECT sample_sampleId\n"
-      + "                ,results\n" + "        FROM SampleQC\n" + "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n"
-      + "        WHERE QCType.NAME = 'Human qPCR'\n" + "        ) qpcr ON qpcr.sample_sampleId = s.sampleId\n"
-      + "LEFT JOIN BoxPosition pos ON pos.boxPositionId = s.boxPositionId\n" + "LEFT JOIN Box box ON box.boxId = pos.boxId\n" + "\n"
-      + "UNION ALL\n" + "\n" + "SELECT l.alias NAME\n" + "        ,l.description description\n" + "        ,l.NAME id\n"
-      + "        ,parent.NAME parentId\n" + "        ,NULL sampleType\n" + "        ,lt.platformType sampleType_platform\n"
-      + "        ,lt.description sampleType_description\n" + "        ,NULL tissueType\n" + "        ,p.alias project\n"
-      + "        ,lai.archived archived\n" + "        ,lai.creationDate created\n" + "        ,lai.createdBy createdById\n"
-      + "        ,lai.lastUpdated modified\n" + "        ,lai.updatedBy modifiedById\n" + "        ,l.identificationBarcode tubeBarcode\n"
-      + "        ,l.volume volume\n" + "        ,l.concentration concentration\n" + "        ,l.locationBarcode storageLocation\n"
-      + "        ,kd.NAME kitName\n" + "        ,kd.description kitDescription\n" + "        ,NULL receive_date\n"
-      + "        ,NULL external_name\n" + "        ,NULL tissue_origin\n" + "        ,NULL tissue_preparation\n"
-      + "        ,NULL tissue_region\n" + "        ,NULL tube_id\n" + "        ,NULL str_result\n" + "        ,NULL group_id\n"
-      + "        ,NULL group_id_description\n" + "        ,NULL purpose\n" + "        ,qubit.results qubit_concentration\n"
-      + "        ,NULL nanodrop_concentration\n" + "        ,bc1.sequence barcode\n" + "        ,bc2.sequence barcode_two\n"
-      + "        ,NULL qpcr_percentage_human\n" + "        ,l.qcPassed qcPassed\n" + "        ,box.locationBarcode boxLocation\n"
-      + "        ,box.alias boxAlias\n" + "        ,pos.row boxRow\n" + "        ,pos.COLUMN boxColumn\n" + "        ,NULL paired\n"
-      + "        ,NULL readLength\n" + "        ,NULL targeted_resequencing\n" + "FROM Library l\n"
-      + "LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId\n"
-      + "LEFT JOIN Project p ON p.projectId = parent.project_projectId\n"
-      + "LEFT JOIN LibraryAdditionalInfo lai ON lai.libraryId = l.libraryId\n" + "\n"
-      + "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId\n" + "\n"
-      + "LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + "LEFT JOIN (\n" + "        SELECT library_libraryId\n"
-      + "                ,results\n" + "        FROM LibraryQC\n" + "        INNER JOIN QCType ON QCType.qcTypeId = LibraryQC.qcMethod\n"
-      + "        WHERE QCType.NAME = 'QuBit'\n" + "        ) qubit ON qubit.library_libraryId = l.libraryId\n" + "LEFT JOIN (\n"
-      + "        SELECT library_libraryId\n" + "                ,sequence\n" + "        FROM Library_Index\n"
-      + "        INNER JOIN Indices ON Indices.indexId = Library_Index.index_indexId\n"
-      + "        WHERE position = 1\n"
-      + "        ) bc1 ON bc1.library_libraryId = l.libraryId\n" + "LEFT JOIN (\n" + "        SELECT library_libraryId\n"
-      + "                ,sequence\n" + "        FROM Library_Index\n"
-      + "        INNER JOIN Indices ON Indices.indexId = Library_Index.index_indexId\n"
-      + "                WHERE position = 2\n" + "        ) bc2 ON bc2.library_libraryId = l.libraryId\n"
-      + "LEFT JOIN BoxPosition pos ON pos.boxPositionId = l.boxPositionId\n" + "LEFT JOIN Box box ON box.boxId = pos.boxId";
+  private static final String queryAllSamples = "SELECT DISTINCT s.alias NAME\n" + 
+      "        ,s.description description\n" + 
+      "        ,s.NAME id\n" + 
+      "        ,parent.NAME parentId\n" + 
+      "        ,sc.alias sampleType\n" + 
+      "        ,NULL sampleType_platform\n" + 
+      "        ,NULL sampleType_description\n" + 
+      "        ,tt.alias tissueType\n" + 
+      "        ,p.alias project\n" + 
+      "        ,sai.archived archived\n" + 
+      "        ,scl.creationDate created\n" + 
+      "        ,sclcu.userId createdById\n" + 
+      "        ,scl.lastUpdated modified\n" + 
+      "        ,scluu.userId modifiedById\n" + 
+      "        ,s.identificationBarcode tubeBarcode\n" + 
+      "        ,s.volume volume\n" + 
+      "        ,ss.concentration concentration\n" + 
+      "        ,s.locationBarcode storageLocation\n" + 
+      "        ,kd.NAME kitName\n" + 
+      "        ,kd.description kitDescription\n" + 
+      "        ,s.receivedDate receive_date\n" + 
+      "        ,i.externalName external_name\n" + 
+      "        ,tor.alias tissue_origin\n" + 
+      "        ,tm.alias tissue_preparation\n" + 
+      "        ,st.region tissue_region\n" + 
+      "        ,st.tubeNumber tube_id\n" + 
+      "        ,ss.strStatus str_result\n" + 
+      "        ,sai.groupId group_id\n" + 
+      "        ,sai.groupDescription group_id_description\n" + 
+      "        ,sp.alias purpose\n" + 
+      "        ,qubit.results qubit_concentration\n" + 
+      "        ,nanodrop.results nanodrop_concentration\n" + 
+      "        ,NULL barcode\n" + 
+      "        ,NULL barcode_two\n" + 
+      "        ,qpcr.results qpcr_percentage_human\n" + 
+      "        ,s.qcPassed qcPassed\n" + 
+      "        ,qpd.description qcPassedDetail\n" + 
+      "        ,box.locationBarcode boxLocation\n" + 
+      "        ,box.alias boxAlias\n" + 
+      "        ,pos.row boxRow\n" + 
+      "        ,pos.COLUMN boxColumn\n" + 
+      "        ,NULL paired\n" + 
+      "        ,NULL read_length\n" + 
+      "        ,NULL targeted_resequencing\n" + 
+      "FROM Sample s\n" + 
+      "LEFT JOIN DetailedSample sai ON sai.sampleId = s.sampleId\n" + 
+      "LEFT JOIN QcPassedDetail qpd ON qpd.qcPassedDetailId = sai.qcPassedDetailId\n" + 
+      "LEFT JOIN Sample parent ON parent.sampleId = sai.parentId\n" + 
+      "LEFT JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId\n" + 
+      "LEFT JOIN Project p ON p.projectId = s.project_projectId\n" + 
+      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = sai.kitDescriptorId\n" + 
+      "LEFT JOIN Identity i ON i.sampleId = s.sampleId\n" + 
+      "\n" + 
+      "\n" + 
+      "LEFT JOIN SampleAliquot sa ON sa.sampleId = sai.sampleId\n" + 
+      "LEFT JOIN SamplePurpose sp ON sp.samplePurposeId = sa.samplePurposeId\n" + 
+      "LEFT JOIN SampleTissue st ON st.sampleId = s.sampleId\n" + 
+      "LEFT JOIN TissueType tt ON tt.tissueTypeId = st.tissueTypeId\n" + 
+      "LEFT JOIN TissueOrigin tor ON tor.tissueOriginId = st.tissueOriginId\n" + 
+      "LEFT JOIN TissueMaterial tm ON tm.tissueMaterialId = st.tissueMaterialId\n" + 
+      "\n" + 
+      "LEFT JOIN (SELECT sampleId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from SampleChangeLog GROUP BY sampleId) scl ON sai.sampleId = scl.sampleId\n" + 
+      "LEFT JOIN (SELECT userId, sampleId FROM SampleChangeLog scl1 WHERE changeTime = (SELECT MIN(scl2.changeTime) FROM SampleChangeLog scl2 where scl1.sampleId = scl2.sampleId)) sclcu ON sai.sampleId = sclcu.sampleId\n" + 
+      "LEFT JOIN (SELECT userId, sampleId  FROM SampleChangeLog scl1 WHERE changeTime = (SELECT MAX(scl2.changeTime) FROM SampleChangeLog scl2 where scl1.sampleId = scl2.sampleId)) scluu ON sai.sampleId = scluu.sampleId\n" + 
+      "LEFT JOIN SampleStock ss ON sai.sampleId = ss.sampleId\n" + 
+      "\n" + 
+      "LEFT JOIN (\n" + 
+      "        SELECT sample_sampleId\n" + 
+      "                ,results\n" + 
+      "        FROM SampleQC\n" + 
+      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n" + 
+      "        WHERE QCType.NAME = 'QuBit'\n" + 
+      "        ) qubit ON qubit.sample_sampleId = s.sampleId\n" + 
+      "LEFT JOIN (\n" + 
+      "        SELECT sample_sampleId\n" + 
+      "                ,results\n" + 
+      "        FROM SampleQC\n" + 
+      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n" + 
+      "        WHERE QCType.NAME = 'Nanodrop'\n" + 
+      "        ) nanodrop ON nanodrop.sample_sampleId = s.sampleId\n" + 
+      "LEFT JOIN (\n" + 
+      "        SELECT sample_sampleId\n" + 
+      "                ,results\n" + 
+      "        FROM SampleQC\n" + 
+      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n" + 
+      "        WHERE QCType.NAME = 'Human qPCR'\n" + 
+      "        ) qpcr ON qpcr.sample_sampleId = s.sampleId\n" + 
+      "LEFT JOIN BoxPosition pos ON pos.boxPositionId = s.boxPositionId\n" + 
+      "LEFT JOIN Box box ON box.boxId = pos.boxId\n" + 
+      "\n" + 
+      "UNION ALL\n" + 
+      "\n" + 
+      "SELECT l.alias NAME\n" + 
+      "        ,l.description description\n" + 
+      "        ,l.NAME id\n" + 
+      "        ,parent.NAME parentId\n" + 
+      "        ,NULL sampleType\n" + 
+      "        ,lt.platformType sampleType_platform\n" + 
+      "        ,lt.description sampleType_description\n" + 
+      "        ,NULL tissueType\n" + 
+      "        ,p.alias project\n" + 
+      "        ,lai.archived archived\n" + 
+      "        ,lai.creationDate created\n" + 
+      "        ,lai.createdBy createdById\n" + 
+      "        ,lai.lastUpdated modified\n" + 
+      "        ,lai.updatedBy modifiedById\n" + 
+      "        ,l.identificationBarcode tubeBarcode\n" + 
+      "        ,l.volume volume\n" + 
+      "        ,l.concentration concentration\n" + 
+      "        ,l.locationBarcode storageLocation\n" + 
+      "        ,kd.NAME kitName\n" + 
+      "        ,kd.description kitDescription\n" + 
+      "        ,NULL receive_date\n" + 
+      "        ,NULL external_name\n" + 
+      "        ,NULL tissue_origin\n" + 
+      "        ,NULL tissue_preparation\n" + 
+      "        ,NULL tissue_region\n" + 
+      "        ,NULL tube_id\n" + 
+      "        ,NULL str_result\n" + 
+      "        ,NULL group_id\n" + 
+      "        ,NULL group_id_description\n" + 
+      "        ,NULL purpose\n" + 
+      "        ,qubit.results qubit_concentration\n" + 
+      "        ,NULL nanodrop_concentration\n" + 
+      "        ,bc1.sequence barcode\n" + 
+      "        ,bc2.sequence barcode_two\n" + 
+      "        ,NULL qpcr_percentage_human\n" + 
+      "        ,l.qcPassed qcPassed\n" + 
+      "        ,NULL qcPassedDetail\n" + 
+      "        ,box.locationBarcode boxLocation\n" + 
+      "        ,box.alias boxAlias\n" + 
+      "        ,pos.row boxRow\n" + 
+      "        ,pos.COLUMN boxColumn\n" + 
+      "        ,NULL paired\n" + 
+      "        ,NULL readLength\n" + 
+      "        ,NULL targeted_resequencing\n" + 
+      "FROM Library l\n" + 
+      "LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId\n" + 
+      "LEFT JOIN Project p ON p.projectId = parent.project_projectId\n" + 
+      "LEFT JOIN LibraryAdditionalInfo lai ON lai.libraryId = l.libraryId\n" + 
+      "\n" + 
+      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId\n" + 
+      "\n" + 
+      "LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + 
+      "LEFT JOIN (\n" + 
+      "        SELECT library_libraryId\n" + 
+      "                ,results\n" + 
+      "        FROM LibraryQC\n" + 
+      "        INNER JOIN QCType ON QCType.qcTypeId = LibraryQC.qcMethod\n" + 
+      "        WHERE QCType.NAME = 'QuBit'\n" + 
+      "        ) qubit ON qubit.library_libraryId = l.libraryId\n" + 
+      "LEFT JOIN (\n" + 
+      "        SELECT library_libraryId\n" + 
+      "                ,sequence\n" + 
+      "        FROM Library_Index\n" + 
+      "        INNER JOIN Indices ON Indices.indexId = Library_Index.index_indexId\n" + 
+      "        WHERE position = 1\n" + 
+      "        ) bc1 ON bc1.library_libraryId = l.libraryId\n" + 
+      "LEFT JOIN (\n" + 
+      "        SELECT library_libraryId\n" + 
+      "                ,sequence\n" + 
+      "        FROM Library_Index\n" + 
+      "        INNER JOIN Indices ON Indices.indexId = Library_Index.index_indexId\n" + 
+      "                WHERE position = 2\n" + 
+      "        ) bc2 ON bc2.library_libraryId = l.libraryId\n" + 
+      "LEFT JOIN BoxPosition pos ON pos.boxPositionId = l.boxPositionId\n" + 
+      "LEFT JOIN Box box ON box.boxId = pos.boxId";
   private static final String querySampleById = "SELECT * FROM (" + queryAllSamples + ") combined " + "WHERE id = ?";
 
   private static final String querySampleChildIdsBySampleId = "SELECT child.name id " + "FROM Sample child "
@@ -259,6 +363,7 @@ public class MisoClient implements Lims {
       + "JOIN Library l ON l.libraryId = lcl.libraryId";
   private static final String querySampleChangeLogById = "SELECT * FROM (" + queryAllSampleChangeLogs + ") combined "
       + "WHERE sampleId = ?";
+  // @formatter:on
 
   private final RowMapper<Instrument> instrumentMapper = new InstrumentMapper();
   private final RowMapper<InstrumentModel> modelMapper = new InstrumentModelRowMapper();
@@ -794,8 +899,6 @@ public class MisoClient implements Lims {
 
   public static class SampleRowMapper implements RowMapper<Sample> {
 
-    private static final String SAMPLE_STATUS_NAME = "Ready";
-    private static final String SAMPLE_STATUS_UNKNOWN = "Unknown";
     private static final String SAMPLE_STATUS_READY = "Ready";
     private static final String SAMPLE_STATUS_NOT_READY = "Not Ready";
 
@@ -846,9 +949,10 @@ public class MisoClient implements Lims {
         s.setAttributes(atts);
       }
       Boolean qcPassed = rs.getBoolean("qcPassed");
+      String qcPassedDetail = rs.getString("qcPassedDetail");
       Status status = new DefaultStatus();
-      status.setName(SAMPLE_STATUS_NAME);
-      status.setState(rs.wasNull() ? SAMPLE_STATUS_UNKNOWN : (qcPassed ? SAMPLE_STATUS_READY : SAMPLE_STATUS_NOT_READY));
+      status.setState((qcPassed == null || !qcPassed) ? SAMPLE_STATUS_NOT_READY : SAMPLE_STATUS_READY);
+      status.setName(qcPassedDetail == null ? status.getState() : qcPassedDetail);
       s.setStatus(status);
 
       return s;
