@@ -3,6 +3,7 @@ package ca.on.oicr.pinery.flatfile.writer;
 import java.util.List;
 
 import ca.on.oicr.ws.dto.UserDto;
+import java.util.Objects;
 
 public class UserWriter extends Writer {
   
@@ -43,7 +44,7 @@ public class UserWriter extends Writer {
     UserDto user = users.get(row);
     
     String[] data = {
-        user.getId().toString(),
+        Objects.toString(user.getId(), ""),
         user.getTitle(),
         user.getFirstname(),
         user.getLastname(),
@@ -51,11 +52,11 @@ public class UserWriter extends Writer {
         user.getPhone(),
         user.getEmail(),
         user.getComment(),
-        user.getArchived().toString(),
+        Objects.toString(user.getArchived(), ""),
         user.getCreatedDate(),
-        user.getCreatedById().toString(),
+        Objects.toString(user.getCreatedById(), ""),
         user.getModifiedDate(),
-        user.getModifiedById().toString()
+        Objects.toString(user.getModifiedById(), "")
     };
     
     return data;
