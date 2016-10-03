@@ -84,8 +84,10 @@ public class SequencerRunWriter extends Writer {
   
   private static String getPositionSamplesString(RunDtoPosition pos) {
     ArrayStringBuilder sb = new ArrayStringBuilder();
-    for (RunDtoSample sample : pos.getSamples()) {
-      sb.append(getPositionSampleString(sample));
+    if (pos.getSamples() != null) {
+        for (RunDtoSample sample : pos.getSamples()) {
+            sb.append(getPositionSampleString(sample));
+        }
     }
     return sb.toString();
   }
