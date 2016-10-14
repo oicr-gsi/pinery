@@ -183,7 +183,7 @@ public class MisoClient implements Lims {
       "        ,NULL barcode_two\n" + 
       "        ,qpcr.results qpcr_percentage_human\n" + 
       "        ,s.qcPassed qcPassed\n" + 
-      "        ,qpd.description qcPassedDetail\n" + 
+      "        ,qpd.description detailedQcStatus\n" + 
       "        ,box.locationBarcode boxLocation\n" + 
       "        ,box.alias boxAlias\n" + 
       "        ,pos.row boxRow\n" + 
@@ -193,7 +193,7 @@ public class MisoClient implements Lims {
       "        ,NULL targeted_resequencing\n" + 
       "FROM Sample s\n" + 
       "LEFT JOIN DetailedSample sai ON sai.sampleId = s.sampleId\n" + 
-      "LEFT JOIN QcPassedDetail qpd ON qpd.qcPassedDetailId = sai.qcPassedDetailId\n" + 
+      "LEFT JOIN DetailedQcStatus qpd ON qpd.detailedQcStatusId = sai.detailedQcStatusId\n" + 
       "LEFT JOIN Sample parent ON parent.sampleId = sai.parentId\n" + 
       "LEFT JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId\n" + 
       "LEFT JOIN Project p ON p.projectId = s.project_projectId\n" + 
@@ -275,7 +275,7 @@ public class MisoClient implements Lims {
       "        ,bc2.sequence barcode_two\n" + 
       "        ,NULL qpcr_percentage_human\n" + 
       "        ,l.qcPassed qcPassed\n" + 
-      "        ,NULL qcPassedDetail\n" + 
+      "        ,NULL detailedQcStatus\n" + 
       "        ,box.locationBarcode boxLocation\n" + 
       "        ,box.alias boxAlias\n" + 
       "        ,pos.row boxRow\n" + 
@@ -949,10 +949,10 @@ public class MisoClient implements Lims {
         s.setAttributes(atts);
       }
       Boolean qcPassed = rs.getBoolean("qcPassed");
-      String qcPassedDetail = rs.getString("qcPassedDetail");
+      String detailedQcStatus = rs.getString("detailedQcStatus");
       Status status = new DefaultStatus();
       status.setState((qcPassed == null || !qcPassed) ? SAMPLE_STATUS_NOT_READY : SAMPLE_STATUS_READY);
-      status.setName(qcPassedDetail == null ? status.getState() : qcPassedDetail);
+      status.setName(detailedQcStatus == null ? status.getState() : detailedQcStatus);
       s.setStatus(status);
 
       return s;
