@@ -165,8 +165,8 @@ public class MisoClient implements Lims {
       "        ,s.volume volume\n" + 
       "        ,ss.concentration concentration\n" + 
       "        ,s.locationBarcode storageLocation\n" + 
-      "        ,kd.NAME kitName\n" + 
-      "        ,kd.description kitDescription\n" + 
+      "        ,NULL kitName\n" + 
+      "        ,NULL kitDescription\n" + 
       "        ,s.receivedDate receive_date\n" + 
       "        ,i.externalName external_name\n" + 
       "        ,tor.alias tissue_origin\n" + 
@@ -197,7 +197,6 @@ public class MisoClient implements Lims {
       "LEFT JOIN Sample parent ON parent.sampleId = sai.parentId\n" + 
       "LEFT JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId\n" + 
       "LEFT JOIN Project p ON p.projectId = s.project_projectId\n" + 
-      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = sai.kitDescriptorId\n" + 
       "LEFT JOIN Identity i ON i.sampleId = s.sampleId\n" + 
       "\n" + 
       "\n" + 
