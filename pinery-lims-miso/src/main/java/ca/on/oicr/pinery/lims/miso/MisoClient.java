@@ -155,7 +155,7 @@ public class MisoClient implements Lims {
       "        ,NULL sampleType_platform\n" + 
       "        ,NULL sampleType_description\n" + 
       "        ,tt.alias tissueType\n" + 
-      "        ,p.alias project\n" + 
+      "        ,p.shortName project\n" + 
       "        ,sai.archived archived\n" + 
       "        ,scl.creationDate created\n" + 
       "        ,sclcu.userId createdById\n" + 
@@ -246,7 +246,7 @@ public class MisoClient implements Lims {
       "        ,lt.platformType sampleType_platform\n" + 
       "        ,lt.description sampleType_description\n" + 
       "        ,NULL tissueType\n" + 
-      "        ,p.alias project\n" + 
+      "        ,p.shortName project\n" + 
       "        ,lai.archived archived\n" + 
       "        ,lai.creationDate created\n" + 
       "        ,lai.createdBy createdById\n" + 
@@ -342,12 +342,12 @@ public class MisoClient implements Lims {
   private static final String queryAllSampleProjects = "SELECT NAME\n" + "        ,COUNT(*) count\n" + "        ,COUNT(CASE \n"
       + "                        WHEN archived = true\n" + "                                THEN archived\n"
       + "                        END) archivedCount\n" + "        ,MIN(created) earliest\n" + "        ,MAX(updated) latest\n" + "FROM (\n"
-      + "        SELECT sp.alias NAME\n" + "                ,sai.archived archived\n" + "                ,scl.creationDate created\n"
+      + "        SELECT sp.shortName NAME\n" + "                ,sai.archived archived\n" + "                ,scl.creationDate created\n"
       + "                ,scl.lastUpdated updated\n" + "        FROM DetailedSample sai\n"
       + "        INNER JOIN Sample s ON s.sampleId = sai.sampleId\n"
       + "        INNER JOIN Project sp ON sp.projectId = s.project_projectId\n"
       + "        INNER JOIN (SELECT sampleId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from SampleChangeLog GROUP BY sampleId) scl ON s.sampleId = scl.sampleId\n"
-      + "        \n" + "        UNION ALL\n" + "        \n" + "        SELECT lp.alias NAME\n" + "                ,lai.archived archived\n"
+      + "        \n" + "        UNION ALL\n" + "        \n" + "        SELECT lp.shortName NAME\n" + "                ,lai.archived archived\n"
       + "                ,lcl.creationDate created\n" + "                ,lcl.lastUpdated updated\n"
       + "        FROM LibraryAdditionalInfo lai\n" + "        INNER JOIN Library l ON l.libraryId = lai.libraryId\n"
       + "        INNER JOIN Sample ls ON l.sample_sampleId = ls.sampleId\n"
