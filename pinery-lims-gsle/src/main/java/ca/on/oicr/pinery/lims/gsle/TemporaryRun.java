@@ -63,10 +63,14 @@ public class TemporaryRun {
 
    public void setPositionString(String positionString) {
       if (positionString != null) {
-         try {
-            setPosition(Integer.parseInt(positionString));
-         } catch (NumberFormatException e) {
-            setPosition(-999);
+         if(positionString.equals("1,1")) {
+             setPosition(1);
+         } else {
+             try {
+                 setPosition(Integer.parseInt(positionString));
+             } catch (NumberFormatException e) {
+                 setPosition(-999);
+             }
          }
       }
    }
