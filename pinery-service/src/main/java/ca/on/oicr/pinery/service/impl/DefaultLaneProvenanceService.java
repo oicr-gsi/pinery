@@ -8,12 +8,13 @@ import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.lims.DefaultLaneProvenance;
 import ca.on.oicr.pinery.service.LaneProvenanceService;
+import ca.on.oicr.pinery.service.util.LimsProvenanceComparator;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,13 +54,17 @@ public class DefaultLaneProvenanceService implements LaneProvenanceService {
 
         //iterate over all sequencer runs -> lanes to build sample provenance
         List<LaneProvenance> lps = new ArrayList<>();
-        for (Run sequencerRun : lims.getRuns()) {
+        List<Run> sequencerRuns = lims.getRuns();
+        for (Run sequencerRun : sequencerRuns) {
 
             Instrument instrument = instrumentById.get(sequencerRun.getInstrumentId());
             InstrumentModel instrumentModel = instrument == null ? null : instrumentModelById.get(instrument.getModelId());
 
-            if (sequencerRun.getSamples() != null) {
-                for (RunPosition lane : sequencerRun.getSamples()) {
+            Set<RunPosition> lanes = sequencerRun.getSamples();
+            if (lanes == null || lanes.isEmpty()) {
+                log.warn("Run [{}] does not have any lanes", sequencerRun.getName());
+            } else {
+                for (RunPosition lane : lanes) {
                     DefaultLaneProvenance lp = new DefaultLaneProvenance();
                     lp.setLane(lane);
                     lp.setSequencerRun(sequencerRun);
@@ -69,12 +74,8 @@ public class DefaultLaneProvenanceService implements LaneProvenanceService {
                 }
             }
         }
-        Collections.sort(lps, new Comparator<LaneProvenance>() {
-            @Override
-            public int compare(LaneProvenance o1, LaneProvenance o2) {
-                return o1.getLaneProvenanceId().compareTo(o2.getLaneProvenanceId());
-            }
-        });
+
+        Collections.sort(lps, new LimsProvenanceComparator());
         return lps;
     }
 }
