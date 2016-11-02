@@ -68,6 +68,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
+import java.nio.file.Paths;
 
 public class GsleClient implements Lims {
 
@@ -104,6 +105,7 @@ public class GsleClient implements Lims {
    private String instrumentModelInstrumentList;
    private String instrumentSingle;
    private String sampleIdSingle;
+   private String defaultRunDirectoryBaseDir;
 
    public void setSampleIdSingle(String sampleIdSingle) {
       this.sampleIdSingle = sampleIdSingle;
@@ -208,6 +210,10 @@ public class GsleClient implements Lims {
    public void setUrl(String url) {
       this.url = url;
    }
+
+    public void setDefaultRunDirectoryBaseDir(String defaultRunDirectoryBaseDir) {
+        this.defaultRunDirectoryBaseDir = defaultRunDirectoryBaseDir;
+    }
 
    private List<Sample> getSamples() {
       return getSamples(null, null, null, null, null);
@@ -1069,7 +1075,17 @@ public class GsleClient implements Lims {
 
       List<Run> runs = Lists.newArrayList();
       for (Run defaultRun : gsleRun) {
-         defaultRun.setRunDirectory(fixRunDirectory(defaultRun.getName(),defaultRun.getRunDirectory()));
+         if(defaultRun.getRunDirectory() == null || defaultRun.getRunDirectory().isEmpty()) {
+             if (!StringUtils.isEmpty(defaultRun.getInstrumentName())
+                     && !StringUtils.isEmpty(defaultRun.getName())
+                     && !StringUtils.isEmpty(defaultRunDirectoryBaseDir)) {
+                 defaultRun.setRunDirectory(
+                         Paths.get(defaultRunDirectoryBaseDir, defaultRun.getInstrumentName(), defaultRun.getName())
+                                 .toAbsolutePath().toString());
+             }
+         } else {
+             defaultRun.setRunDirectory(fixRunDirectory(defaultRun.getName(), defaultRun.getRunDirectory()));
+         }
          runs.add(defaultRun);
       }
 

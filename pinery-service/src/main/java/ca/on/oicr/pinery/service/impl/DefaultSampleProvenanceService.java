@@ -13,11 +13,11 @@ import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.lims.DefaultSampleProvenance;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
+import ca.on.oicr.pinery.service.util.LimsProvenanceComparator;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -126,12 +126,8 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
                 }
             }
         }
-        Collections.sort(sps, new Comparator<SampleProvenance>() {
-            @Override
-            public int compare(SampleProvenance o1, SampleProvenance o2) {
-                return o1.getSampleProvenanceId().compareTo(o2.getSampleProvenanceId());
-            }
-        });
+
+        Collections.sort(sps, new LimsProvenanceComparator());
         return sps;
     }
 
