@@ -56,6 +56,7 @@ public class MisoClient implements Lims {
 
   private static final String MISO_SAMPLE_ID_PREFIX = "SAM";
   private static final String MISO_LIBRARY_ID_PREFIX = "LIB";
+  private static final String MISO_DILUTION_ID_PREFIX = "LDI";
 
   // @formatter:off
   // InstrumentModel queries
@@ -498,15 +499,15 @@ public class MisoClient implements Lims {
     if (id != null && id.length() > 3) {
       try {
         Integer.parseInt(id.substring(3, id.length()));
-        String idType = id.substring(0, 3);
-        if (idType.equals(MISO_SAMPLE_ID_PREFIX) || idType.equals(MISO_LIBRARY_ID_PREFIX)) {
+        switch (id.substring(0, 3)) {
+        case MISO_SAMPLE_ID_PREFIX: case MISO_LIBRARY_ID_PREFIX: case MISO_DILUTION_ID_PREFIX:
           return;
         }
       } catch (NumberFormatException e) {
         // Ignore; will end up throwing IllegalArgumentException below
       }
     }
-    throw new IllegalArgumentException("ID '" + id + "' is not in expected format (e.g. SAM12 or LIB345)");
+    throw new IllegalArgumentException("ID '" + id + "' is not in expected format (e.g. SAM12, LIB345, or LDI78)");
   }
 
   @Override
