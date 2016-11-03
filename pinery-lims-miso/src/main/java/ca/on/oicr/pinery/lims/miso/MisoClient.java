@@ -168,6 +168,7 @@ public class MisoClient implements Lims {
       "        ,s.locationBarcode storageLocation\n" + 
       "        ,NULL kitName\n" + 
       "        ,NULL kitDescription\n" + 
+      "        ,NULL library_design_code\n" +
       "        ,s.receivedDate receive_date\n" + 
       "        ,i.externalName external_name\n" + 
       "        ,tor.alias tissue_origin\n" + 
@@ -261,6 +262,7 @@ public class MisoClient implements Lims {
       "        ,l.locationBarcode storageLocation\n" + 
       "        ,kd.NAME kitName\n" + 
       "        ,kd.description kitDescription\n" + 
+      "        ,ldc.code library_design_code\n" +
       "        ,NULL receive_date\n" + 
       "        ,NULL external_name\n" + 
       "        ,NULL tissue_origin\n" + 
@@ -294,6 +296,7 @@ public class MisoClient implements Lims {
       "\n" + 
       "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId\n" + 
       "\n" + 
+      "LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId\n" + "\n" +
       "LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + 
       "LEFT JOIN (\n" + 
       "        SELECT library_libraryId\n" + 
@@ -341,6 +344,7 @@ public class MisoClient implements Lims {
       "        ,NULL storageLocation\n" + 
       "        ,NULL kitName\n" + 
       "        ,NULL kitDescription\n" + 
+      "        ,NULL library_design_code\n" +
       "        ,NULL receive_date\n" + 
       "        ,NULL external_name\n" + 
       "        ,NULL tissue_origin\n" + 
@@ -1121,7 +1125,8 @@ public class MisoClient implements Lims {
           return null;
         }
       },
-      TARGETED_RESEQUENCING("targeted_resequencing", "Targeted Resequencing");
+      TARGETED_RESEQUENCING("targeted_resequencing", "Targeted Resequencing"), 
+      SOURCE_TEMPLATE_TYPE("library_design_code", "Source Template Type");
 
       private final String sqlKey;
       private final String attributeKey;
