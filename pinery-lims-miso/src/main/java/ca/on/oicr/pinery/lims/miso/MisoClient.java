@@ -1338,7 +1338,7 @@ public class MisoClient implements Lims {
         case MISO_TYPE_DILUTION:
           return sType.getDilutionType();
         default:
-          log.debug("Unexpected MISO type: " + platformName + ". Cannot determine Sample Type");
+          log.debug("Unexpected MISO type: " + misoType + ". Cannot determine Sample Type");
           return SAMPLE_TYPE_UNKNOWN;
         }
       default:
