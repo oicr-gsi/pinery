@@ -111,6 +111,7 @@ public final class Dtos {
         }
         dto.setChildren(children);
       }
+      dto.setPreMigrationId(from.getPreMigrationId());
       return dto;
    }
 

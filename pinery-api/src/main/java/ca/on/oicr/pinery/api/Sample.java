@@ -88,4 +88,8 @@ public interface Sample {
 	public Integer getModifiedById();
 
 	public void setModifiedById(Integer modifiedById);
+	
+	public Long getPreMigrationId();
+	
+	public void setPreMigrationId(Long preMigrationId);
 }
