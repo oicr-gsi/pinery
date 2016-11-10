@@ -26,6 +26,9 @@ public class OrderClientIT {
 	private static String KNOWN_ORDER_SAMPLE_ID;
 	private static String KNOWN_ORDER_SAMPLE_ATTRIBUTE_NAME;
 	private static String KNOWN_ORDER_SAMPLE_ATTRIBUTE_VALUE;
+        private static String KNOWN_ORDER_BARCODE;
+        private static String KNOWN_ORDER_BARCODE_TWO;
+
 	
 	@BeforeClass
   public static void setup() throws FileNotFoundException, IOException {
@@ -37,6 +40,9 @@ public class OrderClientIT {
     KNOWN_ORDER_SAMPLE_ID = props.get("it.order.sampleId");
     KNOWN_ORDER_SAMPLE_ATTRIBUTE_NAME = props.get("it.order.sample.attribute.name");
     KNOWN_ORDER_SAMPLE_ATTRIBUTE_VALUE = props.get("it.order.sample.attribute.value");
+    KNOWN_ORDER_BARCODE = props.get("it.order.barcode");
+    KNOWN_ORDER_BARCODE_TWO = props.get("it.order.barcodeTwo");
+
 	}
 	
 	@AfterClass
@@ -73,6 +79,9 @@ public class OrderClientIT {
 		boolean sampleAttributeFound = false;
 		for (OrderDtoSample sample : samples) {
 			if (KNOWN_ORDER_SAMPLE_ID.equals(sample.getId())) {
+                                assertEquals(KNOWN_ORDER_BARCODE, sample.getBarcode());
+                                assertEquals(KNOWN_ORDER_BARCODE_TWO, sample.getBarcodeTwo());
+                            
 				Set<AttributeDto> attributes = sample.getAttributes();
 				for (AttributeDto attribute : attributes) {
 					if (KNOWN_ORDER_SAMPLE_ATTRIBUTE_NAME.equals(attribute.getName())) {
