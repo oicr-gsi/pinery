@@ -155,10 +155,6 @@ public class DefaultSampleProvenance implements SampleProvenance {
                 for (Entry<String, Collection<String>> e : processSampleAttributes(parentSample).asMap().entrySet()) {
                     attrsAll.replaceValues(e.getKey(), e.getValue());
                 }
-
-                if (parentSample.getPreparationKit() != null) {
-                    attrsAll.put("Preparation Kit", parentSample.getPreparationKit().getName());
-                }
             }
         }
 
@@ -393,6 +389,10 @@ public class DefaultSampleProvenance implements SampleProvenance {
             for (Attribute attribute : sample.getAttributes()) {
                 attrs.put(attribute.getName(), attribute.getValue());
             }
+        }
+
+        if (sample.getPreparationKit() != null) {
+            attrs.put("Preparation Kit", sample.getPreparationKit().getName());
         }
 
         //Geospiza sample type is gDNA - recategorize the "Tissue Type" to the correct attribute name of "Tissue Preparation"
