@@ -113,13 +113,13 @@ public class SampleProvenanceClientIT {
                 spById.get("1_2_3").getSampleAttributes().toString());
         assertEquals("{geo_organism=[Homo sapiens], geo_run_id_and_position=[2_1], geo_template_type=[Illumina PE Library], geo_tissue_origin=[nn], geo_tissue_type=[n]}",
                 spById.get("2_1_2").getSampleAttributes().toString());
-        assertEquals("{geo_organism=[Homo sapiens], geo_run_id_and_position=[2_1], geo_template_type=[Illumina PE Library], geo_tissue_origin=[nn], geo_tissue_type=[n]}",
+        assertEquals("{geo_organism=[Homo sapiens], geo_run_id_and_position=[2_1], geo_targeted_resequencing=[Illumina TruSeq Exome], geo_template_type=[Illumina PE Library], geo_tissue_origin=[nn], geo_tissue_type=[n]}",
                 spById.get("2_1_3").getSampleAttributes().toString());
         assertEquals("{geo_organism=[Homo sapiens], geo_run_id_and_position=[2_2], geo_template_type=[Illumina PE Library], geo_tissue_origin=[nn], geo_tissue_type=[n]}",
                 spById.get("2_2_4").getSampleAttributes().toString());
-        assertEquals("{geo_organism=[Homo sapiens], geo_run_id_and_position=[2_2], geo_template_type=[Illumina PE Library], geo_tissue_origin=[nn], geo_tissue_type=[n]}",
+        assertEquals("{geo_organism=[Homo sapiens], geo_run_id_and_position=[2_2], geo_targeted_resequencing=[Illumina TruSeq Exome], geo_template_type=[Illumina PE Library], geo_tissue_origin=[nn], geo_tissue_type=[n]}",
                 spById.get("2_2_5").getSampleAttributes().toString());
-        assertEquals("{geo_library_source_template_type=[WG], geo_organism=[Homo sapiens], geo_prep_kit=[Kit 1], geo_run_id_and_position=[3_5], geo_template_type=[Illumina PE Library], geo_tissue_origin=[Ly], geo_tissue_type=[R]}",
+        assertEquals("{geo_library_source_template_type=[WG], geo_organism=[Homo sapiens], geo_prep_kit=[Kit 1], geo_run_id_and_position=[3_5], geo_targeted_resequencing=[Illumina TruSeq Exome], geo_template_type=[Illumina PE Library], geo_tissue_origin=[Ly], geo_tissue_type=[R]}",
                 spById.get("3_5_8").getSampleAttributes().toString());
     }
 
@@ -187,9 +187,9 @@ public class SampleProvenanceClientIT {
         assertEquals("NoIndex", spById.get("1_2_3").getIusTag());
         assertEquals("AAAAAAA", spById.get("2_1_2").getIusTag());
         assertEquals("GGGGGGG", spById.get("2_1_3").getIusTag());
-        assertEquals("AAAAAAA-GGGGGGG", spById.get("2_2_4").getIusTag());
+        assertEquals("NoIndex", spById.get("2_2_4").getIusTag());
         assertEquals("CCCCCCC-TTTTTTT", spById.get("2_2_5").getIusTag());
-        assertEquals("NoIndex", spById.get("3_5_8").getIusTag());
+        assertEquals("AATTCCGG", spById.get("3_5_8").getIusTag());
     }
 
     @Test
@@ -211,10 +211,10 @@ public class SampleProvenanceClientIT {
         assertEquals("97933ede20adf7225665b74d537879d1eff1ccdeae10bdda89cd5ee56781b4e0", spById.get("1_1_2").getVersion());
         assertEquals("95af0b5218f441a3652f65c12201d25bd8b7bc32f13ba938cd2800d914bbfecf", spById.get("1_2_3").getVersion());
         assertEquals("58a4077e5dddebeb9a7cddfe5ebf172f2306e9d2a6061c64812ef6495b51530f", spById.get("2_1_2").getVersion());
-        assertEquals("a40c5a1e752d4738947f2404274af8f45c01072d3ad42f472af9ca62b32988ad", spById.get("2_1_3").getVersion());
-        assertEquals("637b3f50363ea87c29c01378ca4d27a80169209fc59eedb3902647dd7f6e508c", spById.get("2_2_4").getVersion());
-        assertEquals("2bfc8dcd227c3ec2598878f5191df778d6e9c663e835a3eb0e0da0c4d195ebbd", spById.get("2_2_5").getVersion());
-        assertEquals("fc8be46310e51f9dcb6d40d70b9ba58697e841fc73142c62d9888f09d548f85d", spById.get("3_5_8").getVersion());
+        assertEquals("617456f0d043e37417bee1a0dc822dc1aae8c4ec5b954b3e3e385848bf2e607c", spById.get("2_1_3").getVersion());
+        assertEquals("d1c2f3e8090e4d9b36a9b9aa08d50c6a5d8118ab962442e6c6a92f0af0d454d7", spById.get("2_2_4").getVersion());
+        assertEquals("9f5c0db94eee58926693429fca60da399bedb97280a3f3c582d8ec8a8ff0d600", spById.get("2_2_5").getVersion());
+        assertEquals("d85524f6601351a2896bcc06ead576eb0bdebdfedb9678c256d4395a54cf36ac", spById.get("3_5_8").getVersion());
     }
 
 }

@@ -19,8 +19,12 @@ import com.google.common.collect.TreeMultimap;
 import com.google.common.hash.Hashing;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -46,6 +50,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
     private Sample sample;
     private SampleProject sampleProject;
     private Set<Sample> parentSamples;
+    private Map<SampleAttribute, Set<String>> additionalSampleAttributes = Collections.EMPTY_MAP;
 
     private final boolean ALLOW_UNKNOWN_ATTRIBUTES = false;
 
@@ -79,6 +84,10 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     public void setSampleProject(SampleProject sampleProject) {
         this.sampleProject = sampleProject;
+    }
+
+    public void setAdditionalSampleAttributes(Map<SampleAttribute, Set<String>> additionalSampleAttributes) {
+        this.additionalSampleAttributes = additionalSampleAttributes;
     }
 
     @Override
@@ -161,6 +170,11 @@ public class DefaultSampleProvenance implements SampleProvenance {
         }
         if (sample.getSampleType() != null) {
             attrsAll.put(SampleAttribute.SAMPLE_TYPE.toString(), sample.getSampleType());
+        }
+
+        //add additional sample attributes
+        for (Entry<SampleAttribute, Set<String>> e : additionalSampleAttributes.entrySet()) {
+            attrsAll.putAll(e.getKey().toString(), e.getValue());
         }
 
         //remap sample attribute key names and filter (or allow) unknown attributes
