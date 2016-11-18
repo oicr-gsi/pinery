@@ -1098,7 +1098,19 @@ public class MisoClient implements Lims {
       TUBE_ID("tube_id", "Tube Id"),
       GROUP_ID("group_id", "Group ID"),
       GROUP_DESCRIPTION("group_id_description","Group Description"),
-      PURPOSE("purpose", "Purpose"),
+      PURPOSE("purpose", "Purpose") {
+        @Override
+        public String extractStringValueFrom(ResultSet rs) throws SQLException {
+          String str = rs.getString(getSqlKey());
+          if (str == null) {
+            String type = rs.getString("sampleType");
+            if (type != null && type.matches(".* \\(stock\\)$")) {
+              str = "Stock";
+            }
+          }
+          return str;
+        }
+      },
       STR_RESULT("str_result", "STR") {
         @Override
         public String extractStringValueFrom(ResultSet rs) throws SQLException {
