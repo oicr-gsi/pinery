@@ -1092,6 +1092,7 @@ public class MisoClient implements Lims {
       },
       EXTERNAL_NAME("external_name", "External Name"),
       TISSUE_ORIGIN("tissue_origin", "Tissue Origin"),
+      TISSUE_TYPE("tissueType", "Tissue Type"),
       TISSUE_PREPARATION("tissue_preparation", "Tissue Preparation"),
       TISSUE_REGION("tissue_region", "Region"),
       TUBE_ID("tube_id", "Tube Id"),
