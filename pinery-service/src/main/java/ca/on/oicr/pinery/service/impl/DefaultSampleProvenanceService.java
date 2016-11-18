@@ -1,6 +1,7 @@
 package ca.on.oicr.pinery.service.impl;
 
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
+import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Lims;
@@ -12,12 +13,15 @@ import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.lims.DefaultSampleProvenance;
+import ca.on.oicr.pinery.lims.SampleAttribute;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
+import ca.on.oicr.pinery.service.util.LimsProvenanceComparator;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -70,11 +74,29 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
             }
         }
 
-        Multimap<String, OrderSample> orderSampleById = HashMultimap.create();
+        //See GP-960 - get sample targeted resequencing from orders
+        Map<String, String> sampleTargetedRequencingTypeFromSampleIdAndBarcode = new HashMap<>();
         for (Order order : lims.getOrders()) {
             if (order.getSamples() != null) {
                 for (OrderSample orderSample : order.getSamples()) {
-                    orderSampleById.put(orderSample.getId(), orderSample);
+                    for (Attribute attr : orderSample.getAttributes()) {
+                        SampleAttribute sa = SampleAttribute.fromString(attr.getName());
+                        if (SampleAttribute.TARGETED_RESEQUENCING == sa) {
+                            String key = orderSample.getId() + orderSample.getBarcode() + orderSample.getBarcodeTwo();
+                            if (sampleTargetedRequencingTypeFromSampleIdAndBarcode.containsKey(key)) {
+                                if (sampleTargetedRequencingTypeFromSampleIdAndBarcode.get(key).equals(attr.getValue())) {
+                                    //current and new target resequencing match
+                                } else {
+                                    //unable to determine the targeted resequencing type for the sample
+                                    sampleTargetedRequencingTypeFromSampleIdAndBarcode.put(key, "TARGETED RESEQUENCING CONFLICT DETECTED");
+                                    log.warn("{} conflict detected for sample id: {}",
+                                            SampleAttribute.TARGETED_RESEQUENCING.name(), orderSample.getId());
+                                }
+                            } else {
+                                sampleTargetedRequencingTypeFromSampleIdAndBarcode.put(key, attr.getValue());
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -113,7 +135,14 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
                                 sp.setInstrumentModel(instrumentModel);
                                 sp.setSampleProject(projectByName.get(sample.getProject()));
 
-                                Set<Sample> parentSamples = new LinkedHashSet<>();
+                                //special handling of target resequencing type, as this attribute is currently not stored in sample or run sample attrs
+                                String targetedResequencing = sampleTargetedRequencingTypeFromSampleIdAndBarcode.get(runSample.getId() + runSample.getBarcode() + runSample.getBarcodeTwo());
+                                if (targetedResequencing != null && !"No Target".equals(targetedResequencing)) {
+                                    sp.setAdditionalSampleAttributes(
+                                            ImmutableMap.<SampleAttribute, Set<String>>of(SampleAttribute.TARGETED_RESEQUENCING, ImmutableSet.of(targetedResequencing)));
+                                }
+
+                                LinkedHashSet<Sample> parentSamples = new LinkedHashSet<>();
                                 for (String id : sampleHierarchy.getAncestorSampleIds(sample.getId())) {
                                     parentSamples.add(samplesById.get(id));
                                 }
@@ -126,12 +155,8 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
                 }
             }
         }
-        Collections.sort(sps, new Comparator<SampleProvenance>() {
-            @Override
-            public int compare(SampleProvenance o1, SampleProvenance o2) {
-                return o1.getSampleProvenanceId().compareTo(o2.getSampleProvenanceId());
-            }
-        });
+
+        Collections.sort(sps, new LimsProvenanceComparator());
         return sps;
     }
 

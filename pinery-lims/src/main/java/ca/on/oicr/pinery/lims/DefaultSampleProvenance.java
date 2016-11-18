@@ -13,14 +13,19 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.hash.Hashing;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -45,7 +50,8 @@ public class DefaultSampleProvenance implements SampleProvenance {
     private RunSample runSample;
     private Sample sample;
     private SampleProject sampleProject;
-    private Set<Sample> parentSamples;
+    private Collection<Sample> parentSamples;
+    private Map<SampleAttribute, Set<String>> additionalSampleAttributes = Collections.EMPTY_MAP;
 
     private final boolean ALLOW_UNKNOWN_ATTRIBUTES = false;
 
@@ -57,7 +63,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
         this.instrumentModel = instrumentModel;
     }
 
-    public void setParentSamples(Set<Sample> parentSamples) {
+    public void setParentSamples(Collection<Sample> parentSamples) {
         this.parentSamples = parentSamples;
     }
 
@@ -79,6 +85,10 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     public void setSampleProject(SampleProject sampleProject) {
         this.sampleProject = sampleProject;
+    }
+
+    public void setAdditionalSampleAttributes(Map<SampleAttribute, Set<String>> additionalSampleAttributes) {
+        this.additionalSampleAttributes = additionalSampleAttributes;
     }
 
     @Override
@@ -115,7 +125,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
             for (Sample s : parentSamples) {
                 parentSampleNames.add(s.getName());
             }
-            return Joiner.on(":").join(parentSampleNames);
+            return Joiner.on(":").skipNulls().join(parentSampleNames);
         }
     }
 
@@ -140,20 +150,23 @@ public class DefaultSampleProvenance implements SampleProvenance {
         SortedSetMultimap<String, String> attrsAll = TreeMultimap.create();
         if (parentSamples != null) {
 
-            for (Sample parentSample : parentSamples) {
-                attrsAll.putAll(processSampleAttributes(parentSample));
-
-                if (parentSample.getPreparationKit() != null) {
-                    attrsAll.put("Preparation Kit", parentSample.getPreparationKit().getName());
+            //parentSamples is ordered - reserse the order to get ancestors
+            for (Sample parentSample : Lists.reverse(Lists.newArrayList(parentSamples))) {
+                for (Entry<String, Collection<String>> e : processSampleAttributes(parentSample).asMap().entrySet()) {
+                    attrsAll.replaceValues(e.getKey(), e.getValue());
                 }
             }
         }
 
         //collect all sample attributes
-        attrsAll.putAll(processSampleAttributes(sample));
+        for (Entry<String, Collection<String>> e : processSampleAttributes(sample).asMap().entrySet()) {
+            attrsAll.replaceValues(e.getKey(), e.getValue());
+        }
 
         //collect all run sample attributes
-        attrsAll.putAll(processSampleAttributes(runSample));
+        for (Entry<String, Collection<String>> e : processSampleAttributes(runSample).asMap().entrySet()) {
+            attrsAll.replaceValues(e.getKey(), e.getValue());
+        }
 
         //collect additional sample fields as attributes
         if (sequencerRun.getId() != null && lane.getPosition() != null) {
@@ -161,6 +174,11 @@ public class DefaultSampleProvenance implements SampleProvenance {
         }
         if (sample.getSampleType() != null) {
             attrsAll.put(SampleAttribute.SAMPLE_TYPE.toString(), sample.getSampleType());
+        }
+
+        //add additional sample attributes
+        for (Entry<SampleAttribute, Set<String>> e : additionalSampleAttributes.entrySet()) {
+            attrsAll.putAll(e.getKey().toString(), e.getValue());
         }
 
         //remap sample attribute key names and filter (or allow) unknown attributes
@@ -367,12 +385,14 @@ public class DefaultSampleProvenance implements SampleProvenance {
     private HashMultimap<String, String> processSampleAttributes(Sample sample) {
         HashMultimap<String, String> attrs = HashMultimap.create();
 
-        if (sample == null || sample.getAttributes() == null) {
-            return attrs;
+        if (sample.getAttributes() != null) {
+            for (Attribute attribute : sample.getAttributes()) {
+                attrs.put(attribute.getName(), attribute.getValue());
+            }
         }
 
-        for (Attribute attribute : sample.getAttributes()) {
-            attrs.put(attribute.getName(), attribute.getValue());
+        if (sample.getPreparationKit() != null) {
+            attrs.put("Preparation Kit", sample.getPreparationKit().getName());
         }
 
         //Geospiza sample type is gDNA - recategorize the "Tissue Type" to the correct attribute name of "Tissue Preparation"

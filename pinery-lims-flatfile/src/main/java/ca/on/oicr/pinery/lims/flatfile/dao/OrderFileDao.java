@@ -55,7 +55,7 @@ public class OrderFileDao implements OrderDao {
         
         sample.setId(sampleMap.get("id"));
         if (sampleMap.containsKey("barcode")) sample.setBarcode(ModelUtils.nullIfEmpty(sampleMap.get("barcode")));
-        if (sampleMap.containsKey("barcodeTwo")) sample.setBarcode(ModelUtils.nullIfEmpty(sampleMap.get("barcodeTwo")));
+        if (sampleMap.containsKey("barcodeTwo")) sample.setBarcodeTwo(ModelUtils.nullIfEmpty(sampleMap.get("barcodeTwo")));
         Map<String, String> attributeMap = DaoUtils.parseKeyValuePairs(sampleMap.get("attributes"));
         
         Set<Attribute> attributes = new HashSet<>();

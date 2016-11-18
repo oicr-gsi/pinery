@@ -131,6 +131,7 @@ public class DefaultSample implements Sample {
    protected String storageLocation;
    protected PreparationKit preparationKit;
    protected Status status;
+   protected Long preMigrationId;
 
    public Status getOrCreateStatus() {
       if (status == null) {
@@ -355,5 +356,15 @@ public class DefaultSample implements Sample {
    public void setModifiedById(Integer modifiedById) {
       this.modifiedById = modifiedById;
    }
+
+  @Override
+  public Long getPreMigrationId() {
+    return preMigrationId;
+  }
+
+  @Override
+  public void setPreMigrationId(Long preMigrationId) {
+    this.preMigrationId = preMigrationId;
+  }
 
 }

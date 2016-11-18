@@ -31,6 +31,7 @@ public class SampleDto {
    private StatusDto status;
    private Set<SampleReferenceDto> children;
    private Set<SampleReferenceDto> parents;
+   private Long preMigrationId;
 
    public String getUrl() {
       return url;
@@ -301,5 +302,14 @@ public class SampleDto {
             + ", concentration=" + concentration + ", storageLocation=" + storageLocation + ", createdDate=" + createdDate 
             + ", createdById=" + createdById + ", modifiedDate=" + modifiedDate + ", modifiedById=" + modifiedById + ", id=" 
             + id + ", archived=" + archived + ", projectName=" + projectName + ", sampleType=" + sampleType + ", status=" + status + "]";
+   }
+
+   @JsonProperty("premigration_id")
+   public Long getPreMigrationId() {
+      return preMigrationId;
+   }
+
+   public void setPreMigrationId(Long preMigrationId) {
+      this.preMigrationId = preMigrationId;
    }
 }

@@ -20,12 +20,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Lims;
+import ca.on.oicr.pinery.api.Order;
+import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.lims.DefaultAttribute;
+import ca.on.oicr.pinery.lims.DefaultOrder;
+import ca.on.oicr.pinery.lims.DefaultOrderSample;
 import ca.on.oicr.pinery.lims.DefaultRun;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
@@ -33,10 +37,10 @@ import ca.on.oicr.pinery.lims.DefaultSample;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
 import ca.on.oicr.ws.dto.Dtos;
+import com.google.common.collect.ImmutableSet;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import static org.junit.Assert.assertNull;
 
 /**
  *
@@ -54,12 +58,17 @@ public class DefaultSampleProvenanceServiceTest {
 
     List<Sample> samples;
     SampleProject project;
+    Sample parentSample;
     Sample sample;
     RunSample runSample;
     RunPosition lane;
     Run run;
+    OrderSample orderSample;
+    Order order;
     DateTime runCompletionDate = DateTime.parse("2014-01-01T00:00:00.000Z");
     SampleProvenance before;
+
+    private final String sampleId = "1";
 
     @Before
     public void setup() {
@@ -68,17 +77,27 @@ public class DefaultSampleProvenanceServiceTest {
         project = new DefaultSampleProject();
         project.setName("TEST_PROJECT");
 
+        String parentSampleId = "2";
+        parentSample = new DefaultSample();
+        parentSample.setAttributes(Collections.<Attribute>emptySet());
+        parentSample.setId(parentSampleId);
+        samples.add(parentSample);
+
         sample = new DefaultSample();
-        sample.setName("TEST_SAMPLE");
         sample.setProject("TEST_PROJECT");
-        sample.setAttributes(Collections.<Attribute> emptySet());
-        sample.setId("1");
+        sample.setName("TEST_SAMPLE");
+        sample.setAttributes(Collections.<Attribute>emptySet());
+        sample.setId(sampleId);
         sample.setModified(DateTime.parse("2015-01-01T00:00:00.000Z").toDate());
         samples.add(sample);
 
+        parentSample.setChildren(ImmutableSet.of(sampleId));
+        sample.setParents(ImmutableSet.of(parentSampleId));
+
         runSample = new DefaultRunSample();
-        runSample.setId("1");
-        runSample.setAttributes(Collections.<Attribute> emptySet());
+        runSample.setId(sampleId);
+        runSample.setBarcode("ATCGATCG");
+        runSample.setAttributes(Collections.<Attribute>emptySet());
 
         lane = new DefaultRunPosition();
         lane.setPosition(1);
@@ -90,10 +109,18 @@ public class DefaultSampleProvenanceServiceTest {
         run.setSample(Sets.newHashSet(lane));
         run.setCompletionDate(runCompletionDate.toDate());
 
+        orderSample = new DefaultOrderSample();
+        orderSample.setId(sampleId);
+        orderSample.setBarcode("ATCGATCG");
+        orderSample.setAttributes(Collections.<Attribute>emptySet());
+
+        order = new DefaultOrder();
+        order.setSample(ImmutableSet.of(orderSample));
+
         when(lims.getSampleProjects()).thenReturn(Lists.newArrayList(project));
         when(lims.getSamples(null, null, null, null, null)).thenReturn(samples);
         when(lims.getRuns()).thenReturn(Lists.newArrayList(run));
-
+        when(lims.getOrders()).thenReturn(Lists.newArrayList(order));
         before = Dtos.asDto(getSampleProvenanceById("1_1_1"));
     }
 
@@ -213,10 +240,10 @@ public class DefaultSampleProvenanceServiceTest {
     @Test
     public void testVersionCalculate_sampleHierarchyChange() {
         String parentExpected = "PARENT_SAMPLE";
-        Sample parentSample = new DefaultSample();
+        parentSample = new DefaultSample();
         parentSample.setName(parentExpected);
         parentSample.setId("2");
-        parentSample.setAttributes(Collections.<Attribute> emptySet());
+        parentSample.setAttributes(Collections.<Attribute>emptySet());
         samples.add(parentSample);
         sample.setParents(Sets.newHashSet(parentSample.getId()));
 
@@ -229,7 +256,7 @@ public class DefaultSampleProvenanceServiceTest {
         Sample rootSample = new DefaultSample();
         rootSample.setName(rootExpected);
         rootSample.setId("3");
-        rootSample.setAttributes(Collections.<Attribute> emptySet());
+        rootSample.setAttributes(Collections.<Attribute>emptySet());
         samples.add(rootSample);
         parentSample.setParents(Sets.newHashSet(rootSample.getId()));
 
@@ -249,13 +276,13 @@ public class DefaultSampleProvenanceServiceTest {
         Sample p1 = new DefaultSample();
         p1.setName(parent1);
         p1.setId("10");
-        p1.setAttributes(Collections.<Attribute> emptySet());
+        p1.setAttributes(Collections.<Attribute>emptySet());
         samples.add(p1);
 
         Sample p2 = new DefaultSample();
         p2.setName(parent2);
         p2.setId("11");
-        p2.setAttributes(Collections.<Attribute> emptySet());
+        p2.setAttributes(Collections.<Attribute>emptySet());
         samples.add(p2);
 
         sample.setParents(Sets.newHashSet(p1.getId(), p2.getId()));
@@ -263,7 +290,7 @@ public class DefaultSampleProvenanceServiceTest {
         Sample r = new DefaultSample();
         r.setName(root);
         r.setId("12");
-        r.setAttributes(Collections.<Attribute> emptySet());
+        r.setAttributes(Collections.<Attribute>emptySet());
         samples.add(r);
         p1.setParents(Sets.newHashSet(r.getId()));
         p2.setParents(Sets.newHashSet(r.getId()));
@@ -271,7 +298,7 @@ public class DefaultSampleProvenanceServiceTest {
         SampleProvenance afterParent = Dtos.asDto(getSampleProvenanceById("1_1_1"));
         assertEquals(root, afterParent.getRootSampleName());
         assertTrue((parent1 + ":" + parent2 + ":" + root).equals(afterParent.getParentSampleName())
-            || (parent2 + ":" + parent1 + ":" + root).equals(afterParent.getParentSampleName()));
+                || (parent2 + ":" + parent1 + ":" + root).equals(afterParent.getParentSampleName()));
         assertNotEquals(before.getVersion(), afterParent.getVersion());
     }
 
@@ -283,22 +310,22 @@ public class DefaultSampleProvenanceServiceTest {
         Sample r1 = new DefaultSample();
         r1.setName(root1);
         r1.setId("10");
-        r1.setAttributes(Collections.<Attribute> emptySet());
+        r1.setAttributes(Collections.<Attribute>emptySet());
         samples.add(r1);
 
         Sample r2 = new DefaultSample();
         r2.setName(root2);
         r2.setId("11");
-        r2.setAttributes(Collections.<Attribute> emptySet());
+        r2.setAttributes(Collections.<Attribute>emptySet());
         samples.add(r2);
 
         sample.setParents(Sets.newHashSet(r1.getId(), r2.getId()));
 
         SampleProvenance afterParent = Dtos.asDto(getSampleProvenanceById("1_1_1"));
         assertTrue(root2.equals(afterParent.getRootSampleName())
-            || root1.equals(afterParent.getRootSampleName()));
+                || root1.equals(afterParent.getRootSampleName()));
         assertTrue((root1 + ":" + root2).equals(afterParent.getParentSampleName())
-            || (root2 + ":" + root1).equals(afterParent.getParentSampleName()));
+                || (root2 + ":" + root1).equals(afterParent.getParentSampleName()));
         assertNotEquals(before.getVersion(), afterParent.getVersion());
     }
 
@@ -352,6 +379,40 @@ public class DefaultSampleProvenanceServiceTest {
 
         //Immaterial attribute change, versions should NOT change
         assertEquals(before.getVersion(), after.getVersion());
+    }
+
+    @Test
+    public void testTargetResequencingOrderSampleAttribute() {
+        assertEquals("{geo_run_id_and_position=[1_1]}", before.getSampleAttributes().toString());
+
+        Attribute a = new DefaultAttribute();
+        a.setName("Targeted Resequencing");
+        a.setValue("123");
+        orderSample.setAttributes(Sets.newHashSet(a));
+
+        SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
+        assertEquals("{geo_run_id_and_position=[1_1], geo_targeted_resequencing=[123]}", after.getSampleAttributes().toString());
+        assertNotEquals(before.getVersion(), after.getVersion());
+    }
+
+    @Test
+    public void testSampleAttributeOverrides() {
+        Attribute attr1 = new DefaultAttribute();
+        attr1.setName("Tissue Type");
+        attr1.setValue("Blood");
+
+        Attribute attr2 = new DefaultAttribute();
+        attr2.setName("Tissue Origin");
+        attr2.setValue("R");
+        parentSample.setAttributes(ImmutableSet.of(attr1, attr2));
+
+        Attribute childAttribute = new DefaultAttribute();
+        childAttribute.setName("Tissue Type");
+        childAttribute.setValue("Ly");
+        sample.setAttributes(ImmutableSet.of(childAttribute));
+
+        SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
+        assertEquals("{geo_run_id_and_position=[1_1], geo_tissue_origin=[R], geo_tissue_type=[Ly]}", after.getSampleAttributes().toString());
     }
 
     private SampleProvenance getSampleProvenanceById(String sampleProvenanceId) {

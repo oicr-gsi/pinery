@@ -56,6 +56,7 @@ public class MisoClient implements Lims {
 
   private static final String MISO_SAMPLE_ID_PREFIX = "SAM";
   private static final String MISO_LIBRARY_ID_PREFIX = "LIB";
+  private static final String MISO_DILUTION_ID_PREFIX = "LDI";
 
   // @formatter:off
   // InstrumentModel queries
@@ -147,7 +148,7 @@ public class MisoClient implements Lims {
       + " JOIN Run_SequencerPartitionContainer rcpc ON rcpc.containers_containerId = spc.containerId" + " WHERE rcpc.Run_runId = ?";
 
   // Sample queries
-  private static final String queryAllSamples = "SELECT DISTINCT s.alias NAME\n" + 
+  private static final String queryAllSamples = "SELECT s.alias NAME\n" + 
       "        ,s.description description\n" + 
       "        ,s.NAME id\n" + 
       "        ,parent.NAME parentId\n" + 
@@ -155,7 +156,7 @@ public class MisoClient implements Lims {
       "        ,NULL sampleType_platform\n" + 
       "        ,NULL sampleType_description\n" + 
       "        ,tt.alias tissueType\n" + 
-      "        ,p.alias project\n" + 
+      "        ,p.shortName project\n" + 
       "        ,sai.archived archived\n" + 
       "        ,scl.creationDate created\n" + 
       "        ,sclcu.userId createdById\n" + 
@@ -165,8 +166,9 @@ public class MisoClient implements Lims {
       "        ,s.volume volume\n" + 
       "        ,ss.concentration concentration\n" + 
       "        ,s.locationBarcode storageLocation\n" + 
-      "        ,kd.NAME kitName\n" + 
-      "        ,kd.description kitDescription\n" + 
+      "        ,NULL kitName\n" + 
+      "        ,NULL kitDescription\n" + 
+      "        ,NULL library_design_code\n" +
       "        ,s.receivedDate receive_date\n" + 
       "        ,i.externalName external_name\n" + 
       "        ,tor.alias tissue_origin\n" + 
@@ -191,13 +193,14 @@ public class MisoClient implements Lims {
       "        ,NULL paired\n" + 
       "        ,NULL read_length\n" + 
       "        ,NULL targeted_resequencing\n" + 
+      "        ,'Sample' miso_type\n" + 
+      "        ,sai.preMigrationId premigration_id\n" + 
       "FROM Sample s\n" + 
       "LEFT JOIN DetailedSample sai ON sai.sampleId = s.sampleId\n" + 
       "LEFT JOIN DetailedQcStatus qpd ON qpd.detailedQcStatusId = sai.detailedQcStatusId\n" + 
       "LEFT JOIN Sample parent ON parent.sampleId = sai.parentId\n" + 
       "LEFT JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId\n" + 
       "LEFT JOIN Project p ON p.projectId = s.project_projectId\n" + 
-      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = sai.kitDescriptorId\n" + 
       "LEFT JOIN Identity i ON i.sampleId = s.sampleId\n" + 
       "\n" + 
       "\n" + 
@@ -237,7 +240,7 @@ public class MisoClient implements Lims {
       "LEFT JOIN BoxPosition pos ON pos.boxPositionId = s.boxPositionId\n" + 
       "LEFT JOIN Box box ON box.boxId = pos.boxId\n" + 
       "\n" + 
-      "UNION ALL\n" + 
+      "UNION\n" + 
       "\n" + 
       "SELECT l.alias NAME\n" + 
       "        ,l.description description\n" + 
@@ -247,7 +250,7 @@ public class MisoClient implements Lims {
       "        ,lt.platformType sampleType_platform\n" + 
       "        ,lt.description sampleType_description\n" + 
       "        ,NULL tissueType\n" + 
-      "        ,p.alias project\n" + 
+      "        ,p.shortName project\n" + 
       "        ,lai.archived archived\n" + 
       "        ,lai.creationDate created\n" + 
       "        ,lai.createdBy createdById\n" + 
@@ -259,6 +262,7 @@ public class MisoClient implements Lims {
       "        ,l.locationBarcode storageLocation\n" + 
       "        ,kd.NAME kitName\n" + 
       "        ,kd.description kitDescription\n" + 
+      "        ,ldc.code library_design_code\n" +
       "        ,NULL receive_date\n" + 
       "        ,NULL external_name\n" + 
       "        ,NULL tissue_origin\n" + 
@@ -283,6 +287,8 @@ public class MisoClient implements Lims {
       "        ,NULL paired\n" + 
       "        ,NULL readLength\n" + 
       "        ,NULL targeted_resequencing\n" + 
+      "        ,'Library' miso_type\n" + 
+      "        ,lai.preMigrationId premigration_id\n" + 
       "FROM Library l\n" + 
       "LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId\n" + 
       "LEFT JOIN Project p ON p.projectId = parent.project_projectId\n" + 
@@ -290,6 +296,7 @@ public class MisoClient implements Lims {
       "\n" + 
       "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId\n" + 
       "\n" + 
+      "LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId\n" + "\n" +
       "LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + 
       "LEFT JOIN (\n" + 
       "        SELECT library_libraryId\n" + 
@@ -313,7 +320,62 @@ public class MisoClient implements Lims {
       "                WHERE position = 2\n" + 
       "        ) bc2 ON bc2.library_libraryId = l.libraryId\n" + 
       "LEFT JOIN BoxPosition pos ON pos.boxPositionId = l.boxPositionId\n" + 
-      "LEFT JOIN Box box ON box.boxId = pos.boxId";
+      "LEFT JOIN Box box ON box.boxId = pos.boxId\n" + 
+      "\n" + 
+      "UNION\n" + 
+      "\n" + 
+      "SELECT parent.alias name\n" + 
+      "        ,NULL description\n" + 
+      "        ,d.NAME id\n" + 
+      "        ,parent.name parentId\n" + 
+      "        ,NULL sampleType\n" + 
+      "        ,lt.platformType sampleType_platform\n" + 
+      "        ,lt.description sampleType_description\n" + 
+      "        ,NULL tissueType\n" + 
+      "        ,p.shortName project\n" + 
+      "        ,0 archived\n" + 
+      "        ,d.creationDate created\n" + 
+      "        ,NULL createdById\n" + 
+      "        ,d.lastUpdated modified\n" + 
+      "        ,NULL modifiedById\n" + 
+      "        ,d.identificationBarcode tubeBarcode\n" + 
+      "        ,NULL volume\n" + 
+      "        ,d.concentration concentration\n" + 
+      "        ,NULL storageLocation\n" + 
+      "        ,NULL kitName\n" + 
+      "        ,NULL kitDescription\n" + 
+      "        ,NULL library_design_code\n" +
+      "        ,NULL receive_date\n" + 
+      "        ,NULL external_name\n" + 
+      "        ,NULL tissue_origin\n" + 
+      "        ,NULL tissue_preparation\n" + 
+      "        ,NULL tissue_region\n" + 
+      "        ,NULL tube_id\n" + 
+      "        ,NULL str_result\n" + 
+      "        ,NULL group_id\n" + 
+      "        ,NULL group_id_description\n" + 
+      "        ,NULL purpose\n" + 
+      "        ,NULL qubit_concentration\n" + 
+      "        ,NULL nanodrop_concentration\n" + 
+      "        ,NULL barcode\n" + 
+      "        ,NULL barcode_two\n" + 
+      "        ,NULL qpcr_percentage_human\n" + 
+      "        ,1 qcPassed\n" + 
+      "        ,NULL detailedQcStatus\n" + 
+      "        ,NULL boxLocation\n" + 
+      "        ,NULL boxAlias\n" + 
+      "        ,NULL boxRow\n" + 
+      "        ,NULL boxColumn\n" + 
+      "        ,NULL paired\n" + 
+      "        ,NULL readLength\n" + 
+      "        ,NULL targeted_resequencing\n" + 
+      "        ,'Dilution' miso_type\n" + 
+      "        ,d.preMigrationId premigration_id\n" + 
+      "FROM LibraryDilution d\n" + 
+      "JOIN Library parent ON parent.libraryId = d.library_libraryId\n" + 
+      "JOIN LibraryType lt ON lt.libraryTypeId = parent.libraryType\n" + 
+      "JOIN Sample s ON s.sampleId = parent.sample_sampleId\n" + 
+      "JOIN Project p ON p.projectId = s.project_projectId";
   private static final String querySampleById = "SELECT * FROM (" + queryAllSamples + ") combined " + "WHERE id = ?";
 
   private static final String querySampleChildIdsBySampleId = "SELECT child.name id " + "FROM Sample child "
@@ -322,33 +384,66 @@ public class MisoClient implements Lims {
       + "JOIN Sample parent ON parent.sampleId = child.sample_sampleId " + "WHERE parent.name = ?";
 
   // SampleType (MISO SampleClass and Library) queries
-  private static final String queryAllSampleTypes = "SELECT sc.alias NAME\n" + "        ,NULL sampleType_platform\n"
-      + "        ,NULL sampleType_description\n" + "        ,COUNT(*) count\n" + "        ,COUNT(CASE \n"
-      + "                        WHEN sai.archived = true\n" + "                                THEN sai.archived\n"
-      + "                        END) archivedCount\n" + "        ,MIN(scl.creationDate) earliest\n"
-      + "        ,MAX(scl.lastUpdated) latest\n" + "FROM DetailedSample sai\n"
-      + "INNER JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId\n"
-      + "INNER JOIN (SELECT sampleId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from SampleChangeLog GROUP BY sampleId) scl ON sai.sampleId = scl.sampleId\n"
-      + "GROUP BY sai.sampleClassId\n" + "\n" + "UNION ALL\n" + "\n" + "SELECT NULL NAME\n"
-      + "        ,lt.platformType sampleType_platform\n" + "        ,lt.description sampleType_description\n" + "        ,COUNT(*) count\n"
-      + "        ,COUNT(CASE \n" + "                        WHEN lai.archived = true\n"
-      + "                                THEN lai.archived\n" + "                        END) archivedCount\n"
-      + "        ,MIN(lcl.creationDate) earliest\n" + "        ,MAX(lcl.lastUpdated) latest\n" + "FROM Library l\n"
-      + "INNER JOIN LibraryAdditionalInfo lai ON lai.libraryId = l.libraryId\n"
-      + "INNER JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n"
-      + "INNER JOIN (SELECT libraryId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from LibraryChangeLog GROUP BY libraryId) lcl ON l.libraryId = lcl.libraryId\n"
-      + "GROUP BY l.libraryType";
+  private static final String queryAllSampleTypes = "SELECT sc.alias NAME\n" + 
+      "        ,'Sample' miso_type\n" + 
+      "        ,NULL sampleType_platform\n" + 
+      "        ,NULL sampleType_description\n" + 
+      "        ,COUNT(*) count\n" + 
+      "        ,COUNT(CASE WHEN sai.archived = true THEN sai.archived END) archivedCount\n" + 
+      "        ,MIN(scl.creationDate) earliest\n" + 
+      "        ,MAX(scl.lastUpdated) latest\n" + 
+      "FROM DetailedSample sai\n" + 
+      "JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId\n" + 
+      "JOIN (\n" + 
+      "        SELECT sampleId, MAX(changeTime) lastUpdated, MIN(changeTime) creationDate \n" + 
+      "        FROM SampleChangeLog GROUP BY sampleId\n" + 
+      "        ) scl ON sai.sampleId = scl.sampleId\n" + 
+      "GROUP BY sai.sampleClassId\n" + 
+      "\n" + 
+      "UNION\n" + 
+      "\n" + 
+      "SELECT NULL NAME\n" + 
+      "        ,'Library' miso_type\n" + 
+      "        ,lt.platformType sampleType_platform\n" + 
+      "        ,lt.description sampleType_description\n" + 
+      "        ,COUNT(*) count\n" + 
+      "        ,COUNT(CASE WHEN lai.archived = true THEN lai.archived END) archivedCount\n" + 
+      "        ,MIN(lcl.creationDate) earliest\n" + 
+      "        ,MAX(lcl.lastUpdated) latest\n" + 
+      "FROM Library l\n" + 
+      "JOIN LibraryAdditionalInfo lai ON lai.libraryId = l.libraryId\n" + 
+      "JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + 
+      "JOIN (\n" + 
+      "        SELECT libraryId, MAX(changeTime) lastUpdated, MIN(changeTime) creationDate\n" + 
+      "        FROM LibraryChangeLog GROUP BY libraryId\n" + 
+      "        ) lcl ON l.libraryId = lcl.libraryId\n" + 
+      "GROUP BY l.libraryType\n" + 
+      "\n" + 
+      "UNION\n" + 
+      "\n" + 
+      "SELECT NULL NAME\n" + 
+      "        ,'Dilution' miso_type\n" + 
+      "        ,lt.platformType sampleType_platform\n" + 
+      "        ,lt.description sampleType_description\n" + 
+      "        ,COUNT(*) count\n" + 
+      "        ,0 archivedCount\n" + 
+      "        ,MIN(d.creationDate) earliest\n" + 
+      "        ,MAX(d.lastUpdated) latest\n" + 
+      "FROM LibraryDilution d\n" + 
+      "JOIN Library l ON l.libraryId = d.library_libraryId\n" + 
+      "JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + 
+      "GROUP BY l.libraryType";
 
   // SampleProject queries
   private static final String queryAllSampleProjects = "SELECT NAME\n" + "        ,COUNT(*) count\n" + "        ,COUNT(CASE \n"
       + "                        WHEN archived = true\n" + "                                THEN archived\n"
       + "                        END) archivedCount\n" + "        ,MIN(created) earliest\n" + "        ,MAX(updated) latest\n" + "FROM (\n"
-      + "        SELECT sp.alias NAME\n" + "                ,sai.archived archived\n" + "                ,scl.creationDate created\n"
+      + "        SELECT sp.shortName NAME\n" + "                ,sai.archived archived\n" + "                ,scl.creationDate created\n"
       + "                ,scl.lastUpdated updated\n" + "        FROM DetailedSample sai\n"
       + "        INNER JOIN Sample s ON s.sampleId = sai.sampleId\n"
       + "        INNER JOIN Project sp ON sp.projectId = s.project_projectId\n"
       + "        INNER JOIN (SELECT sampleId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from SampleChangeLog GROUP BY sampleId) scl ON s.sampleId = scl.sampleId\n"
-      + "        \n" + "        UNION ALL\n" + "        \n" + "        SELECT lp.alias NAME\n" + "                ,lai.archived archived\n"
+      + "        \n" + "        UNION ALL\n" + "        \n" + "        SELECT lp.shortName NAME\n" + "                ,lai.archived archived\n"
       + "                ,lcl.creationDate created\n" + "                ,lcl.lastUpdated updated\n"
       + "        FROM LibraryAdditionalInfo lai\n" + "        INNER JOIN Library l ON l.libraryId = lai.libraryId\n"
       + "        INNER JOIN Sample ls ON l.sample_sampleId = ls.sampleId\n"
@@ -408,15 +503,15 @@ public class MisoClient implements Lims {
     if (id != null && id.length() > 3) {
       try {
         Integer.parseInt(id.substring(3, id.length()));
-        String idType = id.substring(0, 3);
-        if (idType.equals(MISO_SAMPLE_ID_PREFIX) || idType.equals(MISO_LIBRARY_ID_PREFIX)) {
+        switch (id.substring(0, 3)) {
+        case MISO_SAMPLE_ID_PREFIX: case MISO_LIBRARY_ID_PREFIX: case MISO_DILUTION_ID_PREFIX:
           return;
         }
       } catch (NumberFormatException e) {
         // Ignore; will end up throwing IllegalArgumentException below
       }
     }
-    throw new IllegalArgumentException("ID '" + id + "' is not in expected format (e.g. SAM12 or LIB345)");
+    throw new IllegalArgumentException("ID '" + id + "' is not in expected format (e.g. SAM12, LIB345, or LDI78)");
   }
 
   @Override
@@ -919,7 +1014,8 @@ public class MisoClient implements Lims {
       if (rs.getString("sampleType") != null) {
         s.setSampleType(rs.getString("sampleType"));
       } else {
-        s.setSampleType(TypeRowMapper.mapSampleType(rs.getString("sampleType_platform"), rs.getString("sampleType_description")));
+        s.setSampleType(TypeRowMapper.mapSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
+            rs.getString("sampleType_description")));
       }
       s.setTissueType(rs.getString("tissueType"));
       s.setProject(rs.getString("project"));
@@ -930,6 +1026,7 @@ public class MisoClient implements Lims {
       s.setModifiedById(rs.getInt("modifiedById"));
       s.setTubeBarcode(rs.getString("tubeBarcode"));
       s.setVolume(rs.getFloat("volume"));
+      if (rs.wasNull()) s.setVolume(null);
       s.setConcentration(rs.getFloat("concentration"));
       s.setStorageLocation(extractStorageLocation(rs));
       PreparationKit kit = new DefaultPreparationKit();
@@ -954,6 +1051,8 @@ public class MisoClient implements Lims {
       status.setState((qcPassed == null || !qcPassed) ? SAMPLE_STATUS_NOT_READY : SAMPLE_STATUS_READY);
       status.setName(detailedQcStatus == null ? status.getState() : detailedQcStatus);
       s.setStatus(status);
+      s.setPreMigrationId(rs.getLong("premigration_id"));
+      if (rs.wasNull()) s.setPreMigrationId(null);
 
       return s;
     }
@@ -993,6 +1092,7 @@ public class MisoClient implements Lims {
       },
       EXTERNAL_NAME("external_name", "External Name"),
       TISSUE_ORIGIN("tissue_origin", "Tissue Origin"),
+      TISSUE_TYPE("tissueType", "Tissue Type"),
       TISSUE_PREPARATION("tissue_preparation", "Tissue Preparation"),
       TISSUE_REGION("tissue_region", "Region"),
       TUBE_ID("tube_id", "Tube Id"),
@@ -1026,7 +1126,8 @@ public class MisoClient implements Lims {
           return null;
         }
       },
-      TARGETED_RESEQUENCING("targeted_resequencing", "Targeted Resequencing");
+      TARGETED_RESEQUENCING("targeted_resequencing", "Targeted Resequencing"), 
+      SOURCE_TEMPLATE_TYPE("library_design_code", "Source Template Type");
 
       private final String sqlKey;
       private final String attributeKey;
@@ -1155,7 +1256,8 @@ public class MisoClient implements Lims {
 
       t.setName(rs.getString("name"));
       if (t.getName() == null) {
-        t.setName(TypeRowMapper.mapSampleType(rs.getString("sampleType_platform"), rs.getString("sampleType_description")));
+        t.setName(TypeRowMapper.mapSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
+            rs.getString("sampleType_description")));
       }
       t.setCount(rs.getInt("count"));
       t.setArchivedCount(rs.getInt("archivedCount"));
@@ -1164,6 +1266,9 @@ public class MisoClient implements Lims {
 
       return t;
     }
+    
+    private static final String MISO_TYPE_LIBRARY = "Library";
+    private static final String MISO_TYPE_DILUTION = "Dilution";
 
     private static final String PLATFORM_ILLUMINA = "Illumina";
 
@@ -1175,23 +1280,32 @@ public class MisoClient implements Lims {
 
     public static enum IlluminaSampleType {
 
-      SE("Illumina SE Library"), PE("Illumina PE Library"), SM_RNA("Illumina smRNA Library"), M_RNA("Illumina mRNA Library"), WT(
-          "Illumina WT Library");
+      SE("Illumina SE Library", "Illumina SE Library Seq"),
+      PE("Illumina PE Library", "Illumina PE Library Seq"),
+      SM_RNA("Illumina smRNA Library", "Illumina smRNA Library Seq"),
+      M_RNA("Illumina mRNA Library", "Illumina mRNA Library Seq"),
+      WT("Illumina WT Library", "Illumina WT Library Seq");
 
-      private final String key;
+      private final String libraryType;
+      private final String dilutionType;
 
-      private IlluminaSampleType(String key) {
-        this.key = key;
+      private IlluminaSampleType(String libraryType, String dilutionType) {
+        this.libraryType = libraryType;
+        this.dilutionType = dilutionType;
       }
 
-      public String getKey() {
-        return key;
+      public String getLibraryType() {
+        return libraryType;
+      }
+      
+      public String getDilutionType() {
+        return dilutionType;
       }
     }
 
     private static final String SAMPLE_TYPE_UNKNOWN = "Unknown";
 
-    public static String mapSampleType(String platformName, String libraryType) {
+    public static String mapSampleType(String misoType, String platformName, String libraryType) {
       if (platformName == null) {
         log.debug("Cannot determine SampleType due to null platformName");
         return SAMPLE_TYPE_UNKNOWN;
@@ -1203,19 +1317,34 @@ public class MisoClient implements Lims {
 
       switch (platformName) {
       case PLATFORM_ILLUMINA:
+        IlluminaSampleType sType = null;
         switch (libraryType) {
         case LIBRARY_TYPE_MRNA:
-          return IlluminaSampleType.M_RNA.getKey();
+          sType = IlluminaSampleType.M_RNA;
+          break;
         case LIBRARY_TYPE_PAIRED_END:
-          return IlluminaSampleType.PE.getKey();
+          sType = IlluminaSampleType.PE;
+          break;
         case LIBRARY_TYPE_SMALL_RNA:
-          return IlluminaSampleType.SM_RNA.getKey();
+          sType = IlluminaSampleType.SM_RNA;
+          break;
         case LIBRARY_TYPE_SINGLE_END:
-          return IlluminaSampleType.SE.getKey();
+          sType = IlluminaSampleType.SE;
+          break;
         case LIBRARY_TYPE_WHOLE_TRANSCRIPTOME:
-          return IlluminaSampleType.WT.getKey();
+          sType = IlluminaSampleType.WT;
+          break;
         default:
           log.debug("Unexpected LibraryType: " + libraryType + ", Cannot determine Sample Type");
+          return SAMPLE_TYPE_UNKNOWN;
+        }
+        switch (misoType) {
+        case MISO_TYPE_LIBRARY:
+          return sType.getLibraryType();
+        case MISO_TYPE_DILUTION:
+          return sType.getDilutionType();
+        default:
+          log.debug("Unexpected MISO type: " + misoType + ". Cannot determine Sample Type");
           return SAMPLE_TYPE_UNKNOWN;
         }
       default:

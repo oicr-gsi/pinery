@@ -47,10 +47,12 @@ public class Main {
       
     } catch (HttpResponseException e) {
       System.out.println("Error retrieving data from Pinery service at " + args[0]);
-      e.printStackTrace();
+      e.printStackTrace(System.out);
+      System.exit(1);
     } catch (IOException e) {
       System.out.println("Error writing to file");
-      e.printStackTrace();
+      e.printStackTrace(System.out);
+      System.exit(1);
     }
   }
   

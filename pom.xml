@@ -13,8 +13,7 @@
         <github.user>seqprodbio</github.user>
         <github.repo>pinery</github.repo>
         
-        <provenance.version>1.0-rc3</provenance.version>
-
+        <provenance.version>1.0-rc4</provenance.version>
         <jackson.version>2.6.3</jackson.version>
         <spring.version>3.2.15.RELEASE</spring.version>
         <resteasy.version>3.0.13.Final</resteasy.version>
@@ -66,7 +65,7 @@
     <artifactId>pinery</artifactId>
     <packaging>pom</packaging>
     <groupId>ca.on.oicr</groupId>
-    <version>2.0-rc4</version>
+    <version>2.0-rc5</version>
 
     <modules>
         <module>pinery-api</module>
