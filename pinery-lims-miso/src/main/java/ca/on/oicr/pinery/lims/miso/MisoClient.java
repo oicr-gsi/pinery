@@ -336,7 +336,7 @@ public class MisoClient implements Lims {
       "        ,NULL tissueType\n" + 
       "        ,p.shortName project\n" + 
       "        ,0 archived\n" + 
-      "        ,d.creationDate created\n" + 
+      "        ,CONVERT(d.creationDate, DATETIME) created\n" + 
       "        ,NULL createdById\n" + 
       "        ,d.lastUpdated modified\n" + 
       "        ,NULL modifiedById\n" + 
