@@ -195,6 +195,7 @@ public class MisoClient implements Lims {
       "        ,NULL targeted_sequencing\n" + 
       "        ,'Sample' miso_type\n" + 
       "        ,sai.preMigrationId premigration_id\n" + 
+      "        ,s.scientificName organism\n" + 
       "FROM Sample s\n" + 
       "LEFT JOIN DetailedSample sai ON sai.sampleId = s.sampleId\n" + 
       "LEFT JOIN DetailedQcStatus qpd ON qpd.detailedQcStatusId = sai.detailedQcStatusId\n" + 
@@ -289,6 +290,7 @@ public class MisoClient implements Lims {
       "        ,NULL targeted_sequencing\n" + 
       "        ,'Library' miso_type\n" + 
       "        ,lai.preMigrationId premigration_id\n" + 
+      "        ,NULL organism\n" + 
       "FROM Library l\n" + 
       "LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId\n" + 
       "LEFT JOIN Project p ON p.projectId = parent.project_projectId\n" + 
@@ -371,6 +373,7 @@ public class MisoClient implements Lims {
       "        ,NULL targeted_sequencing\n" + 
       "        ,'Dilution' miso_type\n" + 
       "        ,d.preMigrationId premigration_id\n" + 
+      "        ,NULL organism\n" + 
       "FROM LibraryDilution d\n" + 
       "JOIN Library parent ON parent.libraryId = d.library_libraryId\n" + 
       "JOIN LibraryType lt ON lt.libraryTypeId = parent.libraryType\n" + 
@@ -1098,6 +1101,7 @@ public class MisoClient implements Lims {
       TUBE_ID("tube_id", "Tube Id"),
       GROUP_ID("group_id", "Group ID"),
       GROUP_DESCRIPTION("group_id_description","Group Description"),
+      ORGANISM("organism", "Organism"),
       PURPOSE("purpose", "Purpose") {
         @Override
         public String extractStringValueFrom(ResultSet rs) throws SQLException {
