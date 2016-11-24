@@ -1015,7 +1015,7 @@ public class MisoClient implements Lims {
       }
       ;
       if (rs.getString("sampleType") != null) {
-        s.setSampleType(rs.getString("sampleType"));
+        s.setSampleType(rs.getString("sampleType").replace(" (stock)", "").replace(" (aliquot)", ""));
       } else {
         s.setSampleType(TypeRowMapper.mapSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
             rs.getString("sampleType_description")));
