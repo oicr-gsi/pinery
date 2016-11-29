@@ -79,14 +79,14 @@ public class MisoClient implements Lims {
       "        ,bc2.sequence barcode_two\n" + 
       "        ,sp.paired paired\n" + 
       "        ,sp.readLength read_length\n" + 
-      "        ,tr.alias targeted_resequencing\n" + 
+      "        ,tr.alias targeted_sequencing\n" + 
       "FROM PoolOrder o\n" + 
       "LEFT JOIN SequencingParameters sp ON sp.parametersId = o.parametersId\n" + 
       "LEFT JOIN Pool p ON p.poolId = o.poolId\n" + 
       "INNER JOIN Pool_Elements pe ON pe.elementType = 'uk.ac.bbsrc.tgac.miso.core.data.impl.LibraryDilution'\n" + 
       "        AND pe.pool_poolId = p.poolId\n" + 
       "LEFT JOIN LibraryDilution ld ON ld.dilutionId = pe.elementId\n" + 
-      "LEFT JOIN TargetedResequencing tr ON tr.targetedResequencingId = ld.targetedResequencingId\n" + 
+      "LEFT JOIN TargetedSequencing tr ON tr.targetedSequencingId = ld.targetedSequencingId\n" + 
       "LEFT JOIN Library lib ON lib.libraryId = ld.library_libraryId\n" + 
       "LEFT JOIN (\n" + 
       "        SELECT library_libraryId\n" + 
@@ -130,12 +130,12 @@ public class MisoClient implements Lims {
 
   // RunSample queries
   private static final String queryAllRunSamples = "SELECT part.partitionId, l.name libraryId, bc1.sequence barcode, "
-      + "bc2.sequence barcode_two, tr.alias targeted_resequencing " + "FROM _Partition part "
+      + "bc2.sequence barcode_two, tr.alias targeted_sequencing " + "FROM _Partition part "
       + "JOIN Pool pool ON pool.poolId = part.pool_poolId "
       + "JOIN Pool_Elements ele ON ele.elementType='uk.ac.bbsrc.tgac.miso.core.data.impl.LibraryDilution'" + // scary
       "AND ele.pool_poolId = pool.poolId " + "JOIN LibraryDilution ld ON ld.dilutionId = ele.elementId "
       + "JOIN Library l ON l.libraryId = ld.library_libraryId "
-      + "LEFT JOIN TargetedResequencing tr ON tr.targetedResequencingId = ld.targetedResequencingId " + "LEFT JOIN ( "
+      + "LEFT JOIN TargetedSequencing tr ON tr.targetedSequencingId = ld.targetedSequencingId " + "LEFT JOIN ( "
       + "SELECT library_libraryId, sequence FROM Library_Index "
       + "JOIN Indices ON Indices.indexId = Library_Index.index_indexId "
       + "WHERE position = 1 " + ") bc1 ON bc1.library_libraryId = l.libraryId " + "LEFT JOIN ( "
@@ -192,7 +192,7 @@ public class MisoClient implements Lims {
       "        ,pos.COLUMN boxColumn\n" + 
       "        ,NULL paired\n" + 
       "        ,NULL read_length\n" + 
-      "        ,NULL targeted_resequencing\n" + 
+      "        ,NULL targeted_sequencing\n" + 
       "        ,'Sample' miso_type\n" + 
       "        ,sai.preMigrationId premigration_id\n" + 
       "FROM Sample s\n" + 
@@ -286,7 +286,7 @@ public class MisoClient implements Lims {
       "        ,pos.COLUMN boxColumn\n" + 
       "        ,NULL paired\n" + 
       "        ,NULL readLength\n" + 
-      "        ,NULL targeted_resequencing\n" + 
+      "        ,NULL targeted_sequencing\n" + 
       "        ,'Library' miso_type\n" + 
       "        ,lai.preMigrationId premigration_id\n" + 
       "FROM Library l\n" + 
@@ -368,7 +368,7 @@ public class MisoClient implements Lims {
       "        ,NULL boxColumn\n" + 
       "        ,NULL paired\n" + 
       "        ,NULL readLength\n" + 
-      "        ,NULL targeted_resequencing\n" + 
+      "        ,NULL targeted_sequencing\n" + 
       "        ,'Dilution' miso_type\n" + 
       "        ,d.preMigrationId premigration_id\n" + 
       "FROM LibraryDilution d\n" + 
@@ -1126,7 +1126,7 @@ public class MisoClient implements Lims {
           return null;
         }
       },
-      TARGETED_RESEQUENCING("targeted_resequencing", "Targeted Resequencing"), 
+      TARGETED_RESEQUENCING("targeted_sequencing", "Targeted Sequencing"), 
       SOURCE_TEMPLATE_TYPE("library_design_code", "Source Template Type");
 
       private final String sqlKey;
