@@ -1126,7 +1126,7 @@ public class MisoClient implements Lims {
           return null;
         }
       },
-      TARGETED_RESEQUENCING("targeted_sequencing", "Targeted Sequencing"), 
+      TARGETED_RESEQUENCING("targeted_sequencing", "Targeted Resequencing"), 
       SOURCE_TEMPLATE_TYPE("library_design_code", "Source Template Type");
 
       private final String sqlKey;
