@@ -29,7 +29,7 @@ public enum SampleAttribute {
     SAMPLE_RECEIVE_DATE("geo_receive_date", "Receive Date"),
     EXTERNAL_NAME("geo_external_name", "External Name"),
     TUBE_ID("geo_tube_id", "Tube ID"),
-    TARGETED_RESEQUENCING("geo_targeted_resequencing", "Targeted Resequencing", "Targeted Sequencing"),
+    TARGETED_RESEQUENCING("geo_targeted_resequencing", "Targeted Resequencing"),
     PURPOSE("geo_purpose", "Purpose"),
     QPCR_PERCENTAGE_HUMAN("geo_qpcr_percentage_human", "qPCR %");
 
