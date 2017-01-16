@@ -174,7 +174,7 @@ public class MisoClient implements Lims {
       "        ,tor.alias tissue_origin\n" + 
       "        ,tm.alias tissue_preparation\n" + 
       "        ,st.region tissue_region\n" + 
-      "        ,st.tubeNumber tube_id\n" + 
+      "        ,st.externalInstituteIdentifier tube_id\n" + 
       "        ,ss.strStatus str_result\n" + 
       "        ,sai.groupId group_id\n" + 
       "        ,sai.groupDescription group_id_description\n" + 
