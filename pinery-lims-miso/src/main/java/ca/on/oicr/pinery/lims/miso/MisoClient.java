@@ -293,7 +293,7 @@ public class MisoClient implements Lims {
       "FROM Library l\n" + 
       "LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId\n" + 
       "LEFT JOIN Project p ON p.projectId = parent.project_projectId\n" + 
-      "LEFT JOIN LibraryAdditionalInfo lai ON lai.libraryId = l.libraryId\n" + 
+      "LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId\n" +
       "\n" + 
       "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId\n" + 
       "\n" + 
@@ -421,7 +421,7 @@ public class MisoClient implements Lims {
       "        ,MIN(lcl.creationDate) earliest\n" + 
       "        ,MAX(lcl.lastUpdated) latest\n" + 
       "FROM Library l\n" + 
-      "JOIN LibraryAdditionalInfo lai ON lai.libraryId = l.libraryId\n" + 
+      "JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId\n" +
       "JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + 
       "JOIN (\n" + 
       "        SELECT libraryId, MAX(changeTime) lastUpdated, MIN(changeTime) creationDate\n" + 
@@ -455,7 +455,7 @@ public class MisoClient implements Lims {
       + "        INNER JOIN (SELECT sampleId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from SampleChangeLog GROUP BY sampleId) scl ON s.sampleId = scl.sampleId\n"
       + "        \n" + "        UNION ALL\n" + "        \n" + "        SELECT lp.shortName NAME\n" + "                ,lai.archived archived\n"
       + "                ,lcl.creationDate created\n" + "                ,lcl.lastUpdated updated\n"
-      + "        FROM LibraryAdditionalInfo lai\n" + "        INNER JOIN Library l ON l.libraryId = lai.libraryId\n"
+      + "        FROM DetailedLibrary lai\n" + "        INNER JOIN Library l ON l.libraryId = lai.libraryId\n"
       + "        INNER JOIN Sample ls ON l.sample_sampleId = ls.sampleId\n"
       + "        INNER JOIN Project lp ON lp.projectId = ls.project_projectId\n"
       + "        INNER JOIN (SELECT libraryId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from LibraryChangeLog GROUP BY libraryId) lcl ON l.libraryId = lcl.libraryId\n"
