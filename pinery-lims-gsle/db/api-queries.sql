@@ -91,56 +91,44 @@ FROM instrument
 -- Description: LIMS API order query
 -- Application Properties: orderSingle
 
-SELECT DISTINCT order_id AS id
-	,oo.created_by
-	,oo.created_at
-	,oo.modified_by
-	,oo.modified_at
-	,s.label AS STATUS
-	,lg.lg_name AS project
-	,obsc.label AS platform
+SELECT DISTINCT oo.order_id AS id
+    ,oo.created_by
+    ,oo.created_at
+    ,oo.modified_by
+    ,oo.modified_at
+    ,s.label AS STATUS
+    ,lg.lg_name AS project
+    ,obsc.label AS platform
 FROM om_order oo
-	,STATUS s
-	,lab_group lg
-	,om_order_form OF
-	,om_custom_data ocd
-	,om_order_form_field ooff
-	,om_bfield_selection_choice obsc
-WHERE oo.status_id = s.status_id
-	AND oo.lab_group_id = lg.lab_group_id
-	AND oo.order_form_id = OF.order_form_id
-	AND ocd.form_field_id = ooff.form_field_id
-	AND ocd.data = obsc.choice_id
-	AND ooff.display_label LIKE 'Platform'
-	AND ooff.order_form_id = oo.order_form_id
-	AND order_id = ?
+JOIN STATUS s ON oo.status_id = s.status_id
+JOIN lab_group lg ON oo.lab_group_id = lg.lab_group_id
+JOIN om_order_form OF ON oo.order_form_id = OF.order_form_id
+LEFT JOIN om_order_form_field ooff ON ooff.order_form_id = oo.order_form_id
+    AND ooff.display_label LIKE 'Platform'
+LEFT JOIN om_custom_data ocd ON ocd.form_field_id = ooff.form_field_id
+LEFT JOIN om_bfield_selection_choice obsc ON ocd.data = obsc.choice_id
+WHERE oo.order_id = ?
 
 -- Name: /pinery/orders
 -- Description: LIMS API orders query
 -- Application Properties: ordersList
 
-SELECT DISTINCT order_id AS id
-	,oo.created_by
-	,oo.created_at
-	,oo.modified_by
-	,oo.modified_at
-	,s.label AS STATUS
-	,lg.lg_name AS project
-	,obsc.label AS platform
+SELECT DISTINCT oo.order_id AS id
+    ,oo.created_by
+    ,oo.created_at
+    ,oo.modified_by
+    ,oo.modified_at
+    ,s.label AS STATUS
+    ,lg.lg_name AS project
+    ,obsc.label AS platform
 FROM om_order oo
-	,STATUS s
-	,lab_group lg
-	,om_order_form OF
-	,om_custom_data ocd
-	,om_order_form_field ooff
-	,om_bfield_selection_choice obsc
-WHERE oo.status_id = s.status_id
-	AND oo.lab_group_id = lg.lab_group_id
-	AND oo.order_form_id = OF.order_form_id
-	AND ocd.form_field_id = ooff.form_field_id
-	AND ocd.data = obsc.choice_id
-	AND ooff.display_label LIKE 'Platform'
-	AND ooff.order_form_id = oo.order_form_id
+JOIN STATUS s ON oo.status_id = s.status_id
+JOIN lab_group lg ON oo.lab_group_id = lg.lab_group_id
+JOIN om_order_form OF ON oo.order_form_id = OF.order_form_id
+LEFT JOIN om_order_form_field ooff ON ooff.order_form_id = oo.order_form_id
+    AND ooff.display_label LIKE 'Platform'
+LEFT JOIN om_custom_data ocd ON ocd.form_field_id = ooff.form_field_id
+LEFT JOIN om_bfield_selection_choice obsc ON ocd.data = obsc.choice_id
 
 -- Name: /pinery/ordersample/{id}
 -- Description: LIMS API order sample query
