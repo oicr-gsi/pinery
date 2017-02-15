@@ -12,8 +12,6 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -49,10 +47,9 @@ import ca.on.oicr.pinery.lims.DefaultStatus;
 import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.DefaultUser;
 import ca.on.oicr.pinery.lims.miso.MisoClient.SampleRowMapper.AttributeKey;
+import ca.on.oicr.pinery.lims.miso.converters.NonSampleTypeConverter;
 
 public class MisoClient implements Lims {
-
-  private static final Logger log = LoggerFactory.getLogger(MisoClient.class);
 
   private static final String MISO_SAMPLE_ID_PREFIX = "SAM";
   private static final String MISO_LIBRARY_ID_PREFIX = "LIB";
@@ -346,7 +343,7 @@ public class MisoClient implements Lims {
       "        ,NULL storageLocation\n" + 
       "        ,NULL kitName\n" + 
       "        ,NULL kitDescription\n" + 
-      "        ,NULL library_design_code\n" +
+      "        ,ldc.code library_design_code\n" +
       "        ,NULL receive_date\n" + 
       "        ,NULL external_name\n" + 
       "        ,NULL tissue_origin\n" + 
@@ -377,6 +374,8 @@ public class MisoClient implements Lims {
       "FROM LibraryDilution d\n" + 
       "JOIN Library parent ON parent.libraryId = d.library_libraryId\n" + 
       "JOIN LibraryType lt ON lt.libraryTypeId = parent.libraryType\n" + 
+      "LEFT JOIN DetailedLibrary lai ON lai.libraryId = parent.libraryId\n" +
+      "LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId\n" +
       "JOIN Sample s ON s.sampleId = parent.sample_sampleId\n" + 
       "JOIN Project p ON p.projectId = s.project_projectId";
   private static final String querySampleById = "SELECT * FROM (" + queryAllSamples + ") combined " + "WHERE id = ?";
@@ -1017,8 +1016,8 @@ public class MisoClient implements Lims {
       if (rs.getString("sampleType") != null) {
         s.setSampleType(rs.getString("sampleType").replace(" (stock)", "").replace(" (aliquot)", ""));
       } else {
-        s.setSampleType(TypeRowMapper.mapSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
-            rs.getString("sampleType_description")));
+        s.setSampleType(NonSampleTypeConverter.getNonSampleSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
+            rs.getString("sampleType_description"), rs.getString("library_design_code")));
       }
       s.setTissueType(rs.getString("tissueType"));
       s.setProject(rs.getString("project"));
@@ -1272,8 +1271,8 @@ public class MisoClient implements Lims {
 
       t.setName(rs.getString("name"));
       if (t.getName() == null) {
-        t.setName(TypeRowMapper.mapSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
-            rs.getString("sampleType_description")));
+        t.setName(NonSampleTypeConverter.getNonSampleSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
+            rs.getString("sampleType_description"), rs.getString("library_design_code")));
       }
       t.setCount(rs.getInt("count"));
       t.setArchivedCount(rs.getInt("archivedCount"));
@@ -1281,92 +1280,6 @@ public class MisoClient implements Lims {
       t.setLatest(rs.getTimestamp("latest"));
 
       return t;
-    }
-    
-    private static final String MISO_TYPE_LIBRARY = "Library";
-    private static final String MISO_TYPE_DILUTION = "Dilution";
-
-    private static final String PLATFORM_ILLUMINA = "Illumina";
-
-    private static final String LIBRARY_TYPE_MRNA = "mRNA Seq";
-    private static final String LIBRARY_TYPE_PAIRED_END = "Paired End";
-    private static final String LIBRARY_TYPE_SMALL_RNA = "Small RNA";
-    private static final String LIBRARY_TYPE_SINGLE_END = "Single End";
-    private static final String LIBRARY_TYPE_WHOLE_TRANSCRIPTOME = "Whole Transcriptome";
-
-    public static enum IlluminaSampleType {
-
-      SE("Illumina SE Library", "Illumina SE Library Seq"),
-      PE("Illumina PE Library", "Illumina PE Library Seq"),
-      SM_RNA("Illumina smRNA Library", "Illumina smRNA Library Seq"),
-      M_RNA("Illumina mRNA Library", "Illumina mRNA Library Seq"),
-      WT("Illumina WT Library", "Illumina WT Library Seq");
-
-      private final String libraryType;
-      private final String dilutionType;
-
-      private IlluminaSampleType(String libraryType, String dilutionType) {
-        this.libraryType = libraryType;
-        this.dilutionType = dilutionType;
-      }
-
-      public String getLibraryType() {
-        return libraryType;
-      }
-      
-      public String getDilutionType() {
-        return dilutionType;
-      }
-    }
-
-    private static final String SAMPLE_TYPE_UNKNOWN = "Unknown";
-
-    public static String mapSampleType(String misoType, String platformName, String libraryType) {
-      if (platformName == null) {
-        log.debug("Cannot determine SampleType due to null platformName");
-        return SAMPLE_TYPE_UNKNOWN;
-      }
-      if (libraryType == null) {
-        log.debug("Cannot determine SampleType due to null libraryType");
-        return SAMPLE_TYPE_UNKNOWN;
-      }
-
-      switch (platformName) {
-      case PLATFORM_ILLUMINA:
-        IlluminaSampleType sType = null;
-        switch (libraryType) {
-        case LIBRARY_TYPE_MRNA:
-          sType = IlluminaSampleType.M_RNA;
-          break;
-        case LIBRARY_TYPE_PAIRED_END:
-          sType = IlluminaSampleType.PE;
-          break;
-        case LIBRARY_TYPE_SMALL_RNA:
-          sType = IlluminaSampleType.SM_RNA;
-          break;
-        case LIBRARY_TYPE_SINGLE_END:
-          sType = IlluminaSampleType.SE;
-          break;
-        case LIBRARY_TYPE_WHOLE_TRANSCRIPTOME:
-          sType = IlluminaSampleType.WT;
-          break;
-        default:
-          log.debug("Unexpected LibraryType: " + libraryType + ", Cannot determine Sample Type");
-          return SAMPLE_TYPE_UNKNOWN;
-        }
-        switch (misoType) {
-        case MISO_TYPE_LIBRARY:
-          return sType.getLibraryType();
-        case MISO_TYPE_DILUTION:
-          return sType.getDilutionType();
-        default:
-          log.debug("Unexpected MISO type: " + misoType + ". Cannot determine Sample Type");
-          return SAMPLE_TYPE_UNKNOWN;
-        }
-      default:
-        log.debug("Unknown platform: " + platformName + ". Cannot determine Sample Type");
-        return SAMPLE_TYPE_UNKNOWN;
-      }
     }
 
   }
