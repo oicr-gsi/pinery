@@ -83,9 +83,8 @@ public class MisoClient implements Lims {
       "FROM PoolOrder o\n" + 
       "LEFT JOIN SequencingParameters sp ON sp.parametersId = o.parametersId\n" + 
       "LEFT JOIN Pool p ON p.poolId = o.poolId\n" + 
-      "INNER JOIN Pool_Elements pe ON pe.elementType = 'uk.ac.bbsrc.tgac.miso.core.data.impl.LibraryDilution'\n" + 
-      "        AND pe.pool_poolId = p.poolId\n" + 
-      "LEFT JOIN LibraryDilution ld ON ld.dilutionId = pe.elementId\n" + 
+      "LEFT JOIN Pool_Dilution pe ON pe.pool_poolId = p.poolId\n" + 
+      "LEFT JOIN LibraryDilution ld ON ld.dilutionId = pe.dilution_dilutionId\n" + 
       "LEFT JOIN TargetedSequencing tr ON tr.targetedSequencingId = ld.targetedSequencingId\n" + 
       "LEFT JOIN Library lib ON lib.libraryId = ld.library_libraryId\n" + 
       "LEFT JOIN (\n" + 
@@ -129,11 +128,12 @@ public class MisoClient implements Lims {
   private static final String queryRunPositionsByRunId = queryAllRunPositions + " WHERE r_spc.Run_runId = ?";
 
   // RunSample queries
-  private static final String queryAllRunSamples = "SELECT part.partitionId, l.name libraryId, bc1.sequence barcode, "
-      + "bc2.sequence barcode_two, tr.alias targeted_sequencing " + "FROM _Partition part "
+  private static final String queryAllRunSamples = "SELECT part.partitionId, ld.name dilutionId, bc1.sequence barcode, "
+      + "bc2.sequence barcode_two, tr.alias targeted_sequencing "
+      + "FROM _Partition part "
       + "JOIN Pool pool ON pool.poolId = part.pool_poolId "
-      + "JOIN Pool_Elements ele ON ele.elementType='uk.ac.bbsrc.tgac.miso.core.data.impl.LibraryDilution'" + // scary
-      "AND ele.pool_poolId = pool.poolId " + "JOIN LibraryDilution ld ON ld.dilutionId = ele.elementId "
+      + "JOIN Pool_Dilution ele ON ele.pool_poolId = pool.poolId "
+      + "JOIN LibraryDilution ld ON ld.dilutionId = ele.dilution_dilutionId "
       + "JOIN Library l ON l.libraryId = ld.library_libraryId "
       + "LEFT JOIN TargetedSequencing tr ON tr.targetedSequencingId = ld.targetedSequencingId " + "LEFT JOIN ( "
       + "SELECT library_libraryId, sequence FROM Library_Index "
@@ -188,8 +188,7 @@ public class MisoClient implements Lims {
       "        ,qpd.description detailedQcStatus\n" + 
       "        ,box.locationBarcode boxLocation\n" + 
       "        ,box.alias boxAlias\n" + 
-      "        ,pos.row boxRow\n" + 
-      "        ,pos.COLUMN boxColumn\n" + 
+      "        ,pos.position boxPosition\n" + 
       "        ,NULL paired\n" + 
       "        ,NULL read_length\n" + 
       "        ,NULL targeted_sequencing\n" + 
@@ -238,7 +237,8 @@ public class MisoClient implements Lims {
       "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n" + 
       "        WHERE QCType.NAME = 'Human qPCR'\n" + 
       "        ) qpcr ON qpcr.sample_sampleId = s.sampleId\n" + 
-      "LEFT JOIN BoxPosition pos ON pos.boxPositionId = s.boxPositionId\n" + 
+      "LEFT JOIN BoxPosition pos ON pos.targetId = s.sampleId\n" + 
+      "        AND pos.targetType LIKE 'Sample%'\n" +
       "LEFT JOIN Box box ON box.boxId = pos.boxId\n" + 
       "\n" + 
       "UNION\n" + 
@@ -253,10 +253,10 @@ public class MisoClient implements Lims {
       "        ,NULL tissueType\n" + 
       "        ,p.shortName project\n" + 
       "        ,lai.archived archived\n" + 
-      "        ,lai.creationDate created\n" + 
-      "        ,lai.createdBy createdById\n" + 
-      "        ,lai.lastUpdated modified\n" + 
-      "        ,lai.updatedBy modifiedById\n" + 
+      "        ,l.creationDate created\n" + 
+      "        ,lclcu.userId createdById\n" + 
+      "        ,lcl.lastUpdated modified\n" + 
+      "        ,lcluu.userId modifiedById\n" + 
       "        ,l.identificationBarcode tubeBarcode\n" + 
       "        ,l.volume volume\n" + 
       "        ,l.concentration concentration\n" + 
@@ -283,8 +283,7 @@ public class MisoClient implements Lims {
       "        ,NULL detailedQcStatus\n" + 
       "        ,box.locationBarcode boxLocation\n" + 
       "        ,box.alias boxAlias\n" + 
-      "        ,pos.row boxRow\n" + 
-      "        ,pos.COLUMN boxColumn\n" + 
+      "        ,pos.position boxPosition\n" + 
       "        ,NULL paired\n" + 
       "        ,NULL readLength\n" + 
       "        ,NULL targeted_sequencing\n" + 
@@ -321,8 +320,17 @@ public class MisoClient implements Lims {
       "        INNER JOIN Indices ON Indices.indexId = Library_Index.index_indexId\n" + 
       "                WHERE position = 2\n" + 
       "        ) bc2 ON bc2.library_libraryId = l.libraryId\n" + 
-      "LEFT JOIN BoxPosition pos ON pos.boxPositionId = l.boxPositionId\n" + 
+      "LEFT JOIN BoxPosition pos ON pos.targetId = l.libraryId\n" + 
+      "        AND pos.targetType LIKE 'Library%'\n" +
       "LEFT JOIN Box box ON box.boxId = pos.boxId\n" + 
+      "LEFT JOIN (SELECT libraryId, MAX(changeTime) as lastUpdated from LibraryChangeLog GROUP BY libraryId) lcl\n" +
+      "        ON lai.libraryId = lcl.libraryId\n" +
+      "LEFT JOIN (SELECT userId, libraryId FROM LibraryChangeLog lcl1 WHERE changeTime = (\n" +
+      "        SELECT MIN(lcl2.changeTime) FROM LibraryChangeLog lcl2 where lcl1.libraryId = lcl2.libraryId)\n" +
+      ") lclcu ON lai.libraryId = lclcu.libraryId\n" + 
+      "LEFT JOIN (SELECT userId, libraryId  FROM LibraryChangeLog lcl1 WHERE changeTime = (\n" +
+      "        SELECT MAX(lcl2.changeTime) FROM LibraryChangeLog lcl2 where lcl1.libraryId = lcl2.libraryId)\n" +
+      ") lcluu ON lai.libraryId = lcluu.libraryId\n" + 
       "\n" + 
       "UNION\n" + 
       "\n" + 
@@ -366,8 +374,7 @@ public class MisoClient implements Lims {
       "        ,NULL detailedQcStatus\n" + 
       "        ,NULL boxLocation\n" + 
       "        ,NULL boxAlias\n" + 
-      "        ,NULL boxRow\n" + 
-      "        ,NULL boxColumn\n" + 
+      "        ,NULL boxPosition\n" + 
       "        ,NULL paired\n" + 
       "        ,NULL readLength\n" + 
       "        ,NULL targeted_sequencing\n" + 
@@ -1065,14 +1072,13 @@ public class MisoClient implements Lims {
       if (boxAlias == null) return null;
 
       String boxLocation = rs.getString("boxLocation");
-      int boxRow = rs.getInt("boxRow");
-      int boxColumn = rs.getInt("boxColumn");
+      String boxPosition = rs.getString("boxPosition");
 
       StringBuilder sb = new StringBuilder();
       if (boxLocation != null && !boxLocation.isEmpty()) {
         sb.append(boxLocation).append(", ");
       }
-      sb.append(boxAlias).append(", ").append(toRowChar(boxRow)).append(boxColumn + 1);
+      sb.append(boxAlias).append(", ").append(boxPosition);
 
       return sb.toString();
     }
@@ -1217,7 +1223,7 @@ public class MisoClient implements Lims {
     public MisoRunSample mapRow(ResultSet rs, int rowNum) throws SQLException {
       MisoRunSample s = new MisoRunSample();
 
-      s.setId(rs.getString("libraryId"));
+      s.setId(rs.getString("dilutionId"));
       s.setPartitionId(rs.getInt("partitionId"));
       s.setBarcode(AttributeKey.BARCODE.extractStringValueFrom(rs));
       s.setBarcodeTwo(AttributeKey.BARCODE_TWO.extractStringValueFrom(rs));
