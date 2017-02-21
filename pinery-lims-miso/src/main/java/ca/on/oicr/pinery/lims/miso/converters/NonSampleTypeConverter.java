@@ -10,7 +10,7 @@ public class NonSampleTypeConverter {
   private static final String MISO_TYPE_LIBRARY = "Library";
   private static final String MISO_TYPE_DILUTION = "Dilution";
 
-  private static final String PLATFORM_ILLUMINA = "Illumina";
+  private static final String PLATFORM_ILLUMINA = "ILLUMINA";
   
   private static final String LIBRARY_TYPE_MRNA = "mRNA Seq";
   private static final String LIBRARY_TYPE_PAIRED_END = "Paired End";
