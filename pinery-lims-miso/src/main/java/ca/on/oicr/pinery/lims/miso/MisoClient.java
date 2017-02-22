@@ -119,7 +119,10 @@ public class MisoClient implements Lims {
   private static final String queryRunByName = queryAllRuns + " AND r.alias = ?";
 
   // RunPosition queries
-  private static final String queryAllRunPositions = "SELECT p.partitionId, p.partitionNumber, r_spc.Run_runId " + "FROM _Partition AS p "
+  private static final String queryAllRunPositions = "SELECT p.partitionId, p.partitionNumber, r_spc.Run_runId, pool.alias AS pool_name, "
+      + "pool.identificationBarcode AS pool_barcode, pool.description AS pool_description "
+      + "FROM _Partition AS p "
+      + "JOIN Pool pool ON pool.poolId = p.pool_poolId "
       + "JOIN SequencerPartitionContainer_Partition AS spc_p ON spc_p.partitions_partitionId = p.partitionId "
       + "JOIN Run_SequencerPartitionContainer AS r_spc ON r_spc.containers_containerId = spc_p.container_containerId";
   private static final String queryRunPositionsByRunId = queryAllRunPositions + " WHERE r_spc.Run_runId = ?";
@@ -250,7 +253,7 @@ public class MisoClient implements Lims {
       "        ,NULL tissueType\n" + 
       "        ,p.shortName project\n" + 
       "        ,lai.archived archived\n" + 
-      "        ,l.creationDate created\n" + 
+      "        ,lcl.creationDate created\n" + 
       "        ,lclcu.userId createdById\n" + 
       "        ,lcl.lastUpdated modified\n" + 
       "        ,lcluu.userId modifiedById\n" + 
@@ -320,7 +323,7 @@ public class MisoClient implements Lims {
       "LEFT JOIN BoxPosition pos ON pos.targetId = l.libraryId\n" + 
       "        AND pos.targetType LIKE 'Library%'\n" +
       "LEFT JOIN Box box ON box.boxId = pos.boxId\n" + 
-      "LEFT JOIN (SELECT libraryId, MAX(changeTime) as lastUpdated from LibraryChangeLog GROUP BY libraryId) lcl\n" +
+      "LEFT JOIN (SELECT libraryId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from LibraryChangeLog GROUP BY libraryId) lcl\n" +
       "        ON lai.libraryId = lcl.libraryId\n" +
       "LEFT JOIN (SELECT userId, libraryId FROM LibraryChangeLog lcl1 WHERE changeTime = (\n" +
       "        SELECT MIN(lcl2.changeTime) FROM LibraryChangeLog lcl2 where lcl1.libraryId = lcl2.libraryId)\n" +
@@ -995,6 +998,9 @@ public class MisoClient implements Lims {
       p.setPosition(rs.getInt("partitionNumber"));
       p.setRunId(rs.getInt("Run_runId"));
       p.setPartitionId(rs.getInt("partitionId"));
+      p.setPoolName(rs.getString("pool_name"));
+      p.setPoolDescription(rs.getString("pool_description"));
+      p.setPoolBarcode(rs.getString("pool_barcode"));
 
       return p;
     }

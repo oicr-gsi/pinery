@@ -565,3 +565,14 @@ WHERE fu.user_id = ?
 
 SELECT *
 FROM finch_user
+
+-- Name: /pinery/worksets
+-- Description: List all workset dilution (X Library Seq) templates including workset data
+-- Application Properties: worksets
+
+SELECT ws.workset_id AS workset_id, ws.label AS name, ws.barcode AS barcode, ws.description AS description, link.template_id AS template_id
+FROM ga_template_workset ws
+JOIN ga_template_workset_template link ON link.workset_id = ws.workset_id
+JOIN ga_template t ON t.template_id = link.template_id
+JOIN ga_template_type tt ON tt.type_id = t.type_id
+WHERE tt.label LIKE '% Seq'

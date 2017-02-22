@@ -348,10 +348,10 @@ public final class Dtos {
 
    public static RunDtoPosition asDto(RunPosition from) {
       RunDtoPosition dto = new RunDtoPosition();
-
-      if (from.getPosition() != null) {
-         dto.setPosition(from.getPosition());
-      }
+      dto.setPosition(from.getPosition());
+      dto.setPoolName(from.getPoolName());
+      dto.setPoolBarcode(from.getPoolBarcode());
+      dto.setPoolDescription(from.getPoolDescription());
       if (from.getRunSample() != null && !from.getRunSample().isEmpty()) {
          dto.setSamples(asDto3(from.getRunSample()));
       }

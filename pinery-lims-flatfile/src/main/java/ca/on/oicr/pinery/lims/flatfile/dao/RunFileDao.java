@@ -62,6 +62,9 @@ public class RunFileDao implements RunDao {
         Map<String, String> map = DaoUtils.parseKeyValuePairs(positionString);
         RunPosition pos = new DefaultRunPosition();
         pos.setPosition(Integer.parseInt(map.get("position")));
+        pos.setPoolName(map.get("poolName"));
+        pos.setPoolBarcode(map.get("poolBarcode"));
+        pos.setPoolDescription(map.get("poolDescription"));
         pos.setRunSample(parseRunSamples(map.get("samples")));
         positions.add(pos);
       }
