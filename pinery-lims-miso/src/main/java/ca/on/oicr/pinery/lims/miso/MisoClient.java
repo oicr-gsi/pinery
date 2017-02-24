@@ -164,7 +164,7 @@ public class MisoClient implements Lims {
       "        ,scluu.userId modifiedById\n" + 
       "        ,s.identificationBarcode tubeBarcode\n" + 
       "        ,s.volume volume\n" + 
-      "        ,ss.concentration concentration\n" + 
+      "        ,sai.concentration concentration\n" + 
       "        ,s.locationBarcode storageLocation\n" + 
       "        ,NULL kitName\n" + 
       "        ,NULL kitDescription\n" + 
@@ -1043,6 +1043,7 @@ public class MisoClient implements Lims {
       s.setVolume(rs.getFloat("volume"));
       if (rs.wasNull()) s.setVolume(null);
       s.setConcentration(rs.getFloat("concentration"));
+      if (rs.wasNull()) s.setConcentration(null);
       s.setStorageLocation(extractStorageLocation(rs));
       PreparationKit kit = new DefaultPreparationKit();
       kit.setName(rs.getString("kitName"));
