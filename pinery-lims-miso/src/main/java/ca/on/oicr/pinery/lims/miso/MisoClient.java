@@ -349,7 +349,7 @@ public class MisoClient implements Lims {
       "        ,d.lastUpdated modified\n" + 
       "        ,NULL modifiedById\n" + 
       "        ,d.identificationBarcode tubeBarcode\n" + 
-      "        ,NULL volume\n" + 
+      "        ,d.volume volume\n" + 
       "        ,d.concentration concentration\n" + 
       "        ,NULL storageLocation\n" + 
       "        ,NULL kitName\n" + 
