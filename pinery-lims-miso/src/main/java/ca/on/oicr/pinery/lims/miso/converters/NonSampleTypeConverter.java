@@ -55,10 +55,9 @@ public class NonSampleTypeConverter {
    * @param misoType "Library" or "Dilution"
    * @param platformName MISO LibraryType platformType
    * @param libraryType MISO LibraryType description
-   * @param libraryDesignCode two-letter design code
    * @return The Pinery SampleType String that corresponds to the parameters given, or "Unknown" if it cannot be determined
    */
-  public static String getNonSampleSampleType(String misoType, String platformName, String libraryType, String libraryDesignCode) {
+  public static String getNonSampleSampleType(String misoType, String platformName, String libraryType) {
     if (platformName == null) {
       log.debug("Cannot determine SampleType due to null platformName");
       return SAMPLE_TYPE_UNKNOWN;
@@ -67,56 +66,38 @@ public class NonSampleTypeConverter {
     switch (platformName) {
     case PLATFORM_ILLUMINA:
       IlluminaSampleType sType = null;
-      if (libraryDesignCode != null) {
-        switch (libraryDesignCode) {
-        case "WT":
-          sType = IlluminaSampleType.WT;
-          break;
-        case "MR":
-          sType = IlluminaSampleType.M_RNA;
-          break;
-        case "SM":
-          sType = IlluminaSampleType.SM_RNA;
-          break;
-        case "TR":
-          sType = IlluminaSampleType.TOTAL_RNA;
-          break;
-        }
+      if (libraryType == null) {
+        log.debug("Cannot determine SampleType due to null libraryType");
+        return SAMPLE_TYPE_UNKNOWN;
       }
       
-      if (sType == null) {
-        if (libraryType == null) {
-          log.debug("Cannot determine SampleType due to null libraryType");
-          return SAMPLE_TYPE_UNKNOWN;
-        }
-        
-        switch (libraryType) {
-        case LIBRARY_TYPE_MRNA:
-          sType = IlluminaSampleType.M_RNA;
-          break;
-        case LIBRARY_TYPE_PAIRED_END:
-          sType = IlluminaSampleType.PE;
-          break;
-        case LIBRARY_TYPE_SMALL_RNA:
-          sType = IlluminaSampleType.SM_RNA;
-          break;
-        case LIBRARY_TYPE_SINGLE_END:
-          sType = IlluminaSampleType.SE;
-          break;
-        case LIBRARY_TYPE_WHOLE_TRANSCRIPTOME:
-          sType = IlluminaSampleType.WT;
-          break;
-        case LIBRARY_TYPE_MATE_PAIR:
-          sType = IlluminaSampleType.MP;
-          break;
-        case LIBRARY_TYPE_TOTAL_RNA:
-          sType = IlluminaSampleType.TOTAL_RNA;
-          break;
-        default:
-          log.debug("Unexpected LibraryType: " + libraryType + ", Cannot determine Sample Type");
-          return SAMPLE_TYPE_UNKNOWN;
-        }
+      switch (libraryType) {
+      case LIBRARY_TYPE_MRNA:
+        sType = IlluminaSampleType.M_RNA;
+        break;
+      case LIBRARY_TYPE_PAIRED_END:
+        sType = IlluminaSampleType.PE;
+        break;
+      case LIBRARY_TYPE_SMALL_RNA:
+        sType = IlluminaSampleType.SM_RNA;
+        break;
+      case LIBRARY_TYPE_SINGLE_END:
+        sType = IlluminaSampleType.SE;
+        break;
+      case LIBRARY_TYPE_WHOLE_TRANSCRIPTOME:
+        sType = IlluminaSampleType.WT;
+        break;
+      case LIBRARY_TYPE_MATE_PAIR:
+        sType = IlluminaSampleType.MP;
+        break;
+      case LIBRARY_TYPE_TOTAL_RNA:
+        sType = IlluminaSampleType.TOTAL_RNA;
+        break;
+      default:
+        log.debug("Unexpected LibraryType: " + libraryType + ", Cannot determine Sample Type");
+        return SAMPLE_TYPE_UNKNOWN;
       }
+      
       switch (misoType) {
       case MISO_TYPE_LIBRARY:
         return sType.getLibraryType();

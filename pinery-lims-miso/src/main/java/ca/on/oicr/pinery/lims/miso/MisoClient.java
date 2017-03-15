@@ -1024,7 +1024,7 @@ public class MisoClient implements Lims {
         s.setSampleType(rs.getString("sampleType").replace(" (stock)", "").replace(" (aliquot)", ""));
       } else {
         s.setSampleType(NonSampleTypeConverter.getNonSampleSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
-            rs.getString("sampleType_description"), rs.getString("library_design_code")));
+            rs.getString("sampleType_description")));
       }
       s.setTissueType(rs.getString("tissueType"));
       s.setProject(rs.getString("project"));
@@ -1279,7 +1279,7 @@ public class MisoClient implements Lims {
       t.setName(rs.getString("name"));
       if (t.getName() == null) {
         t.setName(NonSampleTypeConverter.getNonSampleSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
-            rs.getString("sampleType_description"), null));
+            rs.getString("sampleType_description")));
       }
       t.setCount(rs.getInt("count"));
       t.setArchivedCount(rs.getInt("archivedCount"));
