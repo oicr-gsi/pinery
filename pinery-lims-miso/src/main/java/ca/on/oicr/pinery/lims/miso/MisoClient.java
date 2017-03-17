@@ -125,7 +125,7 @@ public class MisoClient implements Lims {
   private static final String queryRunPositionsByRunId = queryAllRunPositions + " WHERE r_spc.Run_runId = ?";
 
   // RunSample queries
-  private static final String queryAllRunSamples = "SELECT part.partitionId, ld.name dilutionId, bc1.sequence barcode, "
+  private static final String queryAllRunSamples = "SELECT part.partitionId, l.name libraryId, bc1.sequence barcode, "
       + "bc2.sequence barcode_two, tr.alias targeted_sequencing "
       + "FROM _Partition part "
       + "JOIN Pool pool ON pool.poolId = part.pool_poolId "
@@ -1223,7 +1223,7 @@ public class MisoClient implements Lims {
     public MisoRunSample mapRow(ResultSet rs, int rowNum) throws SQLException {
       MisoRunSample s = new MisoRunSample();
 
-      s.setId(rs.getString("dilutionId"));
+      s.setId(rs.getString("libraryId"));
       s.setPartitionId(rs.getInt("partitionId"));
       s.setBarcode(AttributeKey.BARCODE.extractStringValueFrom(rs));
       s.setBarcodeTwo(AttributeKey.BARCODE_TWO.extractStringValueFrom(rs));
