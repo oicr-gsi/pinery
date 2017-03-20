@@ -3,9 +3,9 @@ package ca.on.oicr.pinery.lims.miso.converters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NonSampleTypeConverter {
+public class SampleTypeConverter {
   
-  private static final Logger log = LoggerFactory.getLogger(NonSampleTypeConverter.class);
+  private static final Logger log = LoggerFactory.getLogger(SampleTypeConverter.class);
 
   private static final String MISO_TYPE_LIBRARY = "Library";
   private static final String MISO_TYPE_DILUTION = "Dilution";
@@ -48,6 +48,19 @@ public class NonSampleTypeConverter {
   }
 
   private static final String SAMPLE_TYPE_UNKNOWN = "Unknown";
+  
+  /**
+   * Translates a MISO Sample Class to a Pinery Sample Type
+   * 
+   * @param misoType SampleClass alias from MISO
+   * @return the corresponding Pinery Sample Type String
+   */
+  public static String getSampleType(String misoSampleClass) {
+    return misoSampleClass
+        .replace(" (stock)", "")
+        .replace(" (aliquot)", "")
+        .replace("LCM Tube", "LCM Tubes");
+  }
 
   /**
    * Determines the correct Pinery Sample Type to assign to a MISO Library of Library Dilution
