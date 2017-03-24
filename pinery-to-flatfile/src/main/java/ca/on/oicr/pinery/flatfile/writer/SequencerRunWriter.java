@@ -4,6 +4,7 @@ import java.util.List;
 
 import ca.on.oicr.pinery.flatfile.util.ArrayStringBuilder;
 import ca.on.oicr.pinery.flatfile.util.KeyValueStringBuilder;
+import ca.on.oicr.ws.dto.AttributeDto;
 import ca.on.oicr.ws.dto.RunDto;
 import ca.on.oicr.ws.dto.RunDtoPosition;
 import ca.on.oicr.ws.dto.RunDtoSample;
@@ -101,7 +102,18 @@ public class SequencerRunWriter extends Writer {
     sb.append("id", sample.getId());
     if (sample.getBarcode() != null) sb.append("barcode", sample.getBarcode());
     if (sample.getBarcodeTwo() != null) sb.append("barcodeTwo", sample.getBarcodeTwo());
+    if (sample.getAttributes() != null && !sample.getAttributes().isEmpty()) {
+      sb.append("attributes", getPositionSampleAttributesString(sample));
+    }
     
+    return sb.toString();
+  }
+  
+  private static String getPositionSampleAttributesString(RunDtoSample sample) {
+    KeyValueStringBuilder sb = new KeyValueStringBuilder();
+    for (AttributeDto att : sample.getAttributes()) {
+      sb.append(att.getName(), att.getValue());
+    }
     return sb.toString();
   }
 
