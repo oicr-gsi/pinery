@@ -253,7 +253,7 @@ public class MisoClient implements Lims {
       "        ,NULL tissueType\n" + 
       "        ,p.shortName project\n" + 
       "        ,lai.archived archived\n" + 
-      "        ,lcl.creationDate created\n" + 
+      "        ,l.creationDate created\n" + 
       "        ,lclcu.userId createdById\n" + 
       "        ,lcl.lastUpdated modified\n" + 
       "        ,lcluu.userId modifiedById\n" + 
@@ -323,7 +323,7 @@ public class MisoClient implements Lims {
       "LEFT JOIN BoxPosition pos ON pos.targetId = l.libraryId\n" + 
       "        AND pos.targetType LIKE 'Library%'\n" +
       "LEFT JOIN Box box ON box.boxId = pos.boxId\n" + 
-      "LEFT JOIN (SELECT libraryId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from LibraryChangeLog GROUP BY libraryId) lcl\n" +
+      "LEFT JOIN (SELECT libraryId, MAX(changeTime) as lastUpdated FROM LibraryChangeLog GROUP BY libraryId) lcl\n" +
       "        ON lai.libraryId = lcl.libraryId\n" +
       "LEFT JOIN (SELECT userId, libraryId FROM LibraryChangeLog lcl1 WHERE changeTime = (\n" +
       "        SELECT MIN(lcl2.changeTime) FROM LibraryChangeLog lcl2 where lcl1.libraryId = lcl2.libraryId)\n" +
@@ -420,13 +420,13 @@ public class MisoClient implements Lims {
       "        ,lt.description sampleType_description\n" + 
       "        ,COUNT(*) count\n" + 
       "        ,COUNT(CASE WHEN lai.archived = true THEN lai.archived END) archivedCount\n" + 
-      "        ,MIN(lcl.creationDate) earliest\n" + 
+      "        ,MIN(l.creationDate) earliest\n" + 
       "        ,MAX(lcl.lastUpdated) latest\n" + 
       "FROM Library l\n" + 
       "JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId\n" +
       "JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + 
       "JOIN (\n" + 
-      "        SELECT libraryId, MAX(changeTime) lastUpdated, MIN(changeTime) creationDate\n" + 
+      "        SELECT libraryId, MAX(changeTime) lastUpdated\n" + 
       "        FROM LibraryChangeLog GROUP BY libraryId\n" + 
       "        ) lcl ON l.libraryId = lcl.libraryId\n" + 
       "GROUP BY l.libraryType\n" + 
