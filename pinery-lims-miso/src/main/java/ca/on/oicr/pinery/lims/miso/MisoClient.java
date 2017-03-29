@@ -47,7 +47,7 @@ import ca.on.oicr.pinery.lims.DefaultStatus;
 import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.DefaultUser;
 import ca.on.oicr.pinery.lims.miso.MisoClient.SampleRowMapper.AttributeKey;
-import ca.on.oicr.pinery.lims.miso.converters.NonSampleTypeConverter;
+import ca.on.oicr.pinery.lims.miso.converters.SampleTypeConverter;
 
 public class MisoClient implements Lims {
 
@@ -1027,9 +1027,9 @@ public class MisoClient implements Lims {
       }
       ;
       if (rs.getString("sampleType") != null) {
-        s.setSampleType(rs.getString("sampleType").replace(" (stock)", "").replace(" (aliquot)", ""));
+        s.setSampleType(SampleTypeConverter.getSampleType(rs.getString("sampleType")));
       } else {
-        s.setSampleType(NonSampleTypeConverter.getNonSampleSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
+        s.setSampleType(SampleTypeConverter.getNonSampleSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
             rs.getString("sampleType_description")));
       }
       s.setTissueType(rs.getString("tissueType"));
@@ -1284,7 +1284,7 @@ public class MisoClient implements Lims {
 
       t.setName(rs.getString("name"));
       if (t.getName() == null) {
-        t.setName(NonSampleTypeConverter.getNonSampleSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
+        t.setName(SampleTypeConverter.getNonSampleSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
             rs.getString("sampleType_description")));
       }
       t.setCount(rs.getInt("count"));
