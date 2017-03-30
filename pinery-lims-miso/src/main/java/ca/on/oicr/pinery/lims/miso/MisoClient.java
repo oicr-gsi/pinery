@@ -251,7 +251,7 @@ public class MisoClient implements Lims {
       "        ,lt.platformType sampleType_platform\n" + 
       "        ,lt.description sampleType_description\n" + 
       "        ,NULL tissueType\n" + 
-      "        ,p.shortName project\n" + 
+      "        ,LEFT(l.alias, LOCATE('_', l.alias)-1) project\n" + 
       "        ,lai.archived archived\n" + 
       "        ,l.creationDate created\n" + 
       "        ,lclcu.userId createdById\n" + 
@@ -292,7 +292,6 @@ public class MisoClient implements Lims {
       "        ,NULL organism\n" + 
       "FROM Library l\n" + 
       "LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId\n" + 
-      "LEFT JOIN Project p ON p.projectId = parent.project_projectId\n" + 
       "LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId\n" +
       "\n" + 
       "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId\n" + 
@@ -342,7 +341,7 @@ public class MisoClient implements Lims {
       "        ,lt.platformType sampleType_platform\n" + 
       "        ,lt.description sampleType_description\n" + 
       "        ,NULL tissueType\n" + 
-      "        ,p.shortName project\n" + 
+      "        ,LEFT(parent.alias, LOCATE('_', parent.alias)-1) project\n" + 
       "        ,0 archived\n" + 
       "        ,CONVERT(d.creationDate, DATETIME) created\n" + 
       "        ,NULL createdById\n" + 
@@ -385,9 +384,7 @@ public class MisoClient implements Lims {
       "JOIN Library parent ON parent.libraryId = d.library_libraryId\n" + 
       "JOIN LibraryType lt ON lt.libraryTypeId = parent.libraryType\n" + 
       "LEFT JOIN DetailedLibrary lai ON lai.libraryId = parent.libraryId\n" +
-      "LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId\n" +
-      "JOIN Sample s ON s.sampleId = parent.sample_sampleId\n" + 
-      "JOIN Project p ON p.projectId = s.project_projectId";
+      "LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId";
   private static final String querySampleById = "SELECT * FROM (" + queryAllSamples + ") combined " + "WHERE id = ?";
 
   private static final String querySampleChildIdsBySampleId = "SELECT child.name id " + "FROM Sample child "
