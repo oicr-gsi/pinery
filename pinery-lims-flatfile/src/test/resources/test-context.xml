@@ -25,6 +25,7 @@
    <bean id="runDao" class="ca.on.oicr.pinery.lims.flatfile.dao.RunFileDao"/>
    <bean id="sampleDao" class="ca.on.oicr.pinery.lims.flatfile.dao.SampleFileDao"/>
    <bean id="userDao" class="ca.on.oicr.pinery.lims.flatfile.dao.UserFileDao"/>
+   <bean id="boxDao" class="ca.on.oicr.pinery.lims.flatfile.dao.BoxFileDao"/>
    
    <bean id="flatfileClient" class="ca.on.oicr.pinery.lims.flatfile.FlatfileClient"/>
    

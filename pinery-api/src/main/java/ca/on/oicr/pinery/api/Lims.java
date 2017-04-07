@@ -50,5 +50,7 @@ public interface Lims {
    public Instrument getInstrument(Integer instrumentId);
 
    public List<Instrument> getInstrumentModelInstrument(Integer id);
+   
+   public List<Box> getBoxes();
 
 }

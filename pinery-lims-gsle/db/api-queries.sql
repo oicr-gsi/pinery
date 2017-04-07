@@ -576,3 +576,26 @@ JOIN ga_template_workset_template link ON link.workset_id = ws.workset_id
 JOIN ga_template t ON t.template_id = link.template_id
 JOIN ga_template_type tt ON tt.type_id = t.type_id
 WHERE tt.label LIKE '% Seq'
+
+-- Name: /pinery/boxes
+-- Description: List all box positions with box detail
+-- Application Properties: boxes
+
+SELECT pi.obj_id AS template_id,
+  cpos.y AS y,
+  cpos.x AS x,
+  c.container_id AS container_id,
+  c.name AS container_name,
+  c.location_str AS container_location,
+  ct.label AS container_type,
+  cp.value AS container_description
+FROM ga_template t
+JOIN pitem pi ON pi.obj_id = t.template_id
+JOIN cpos ON cpos.cpos_id = pi.cpos_id
+JOIN container c ON c.container_id = cpos.container_id
+JOIN container_type ct
+  ON ct.type_id = c.type_id
+  AND ct.label IN ('Matrix Box', 'Storage Box')
+LEFT JOIN container_prop cp
+  ON cp.container_id = c.container_id
+  AND cp.key = 'description'

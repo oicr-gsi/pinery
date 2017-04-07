@@ -43,6 +43,9 @@ public class Main {
       System.out.println("Writing orders file...");
       converter.convertOrders("orders" + suffix + ".tsv");
       
+      System.out.println("Writing boxes file...");
+      converter.convertBoxes("boxes" + suffix + ".tsv");
+      
       System.out.println("Finished writing all files.");
       
     } catch (HttpResponseException e) {
