@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.Box;
 import ca.on.oicr.pinery.api.Change;
 import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.Instrument;
@@ -48,6 +49,8 @@ import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.DefaultUser;
 import ca.on.oicr.pinery.lims.miso.MisoClient.SampleRowMapper.AttributeKey;
 import ca.on.oicr.pinery.lims.miso.converters.SampleTypeConverter;
+
+import com.google.common.collect.Lists;
 
 public class MisoClient implements Lims {
 
@@ -467,6 +470,13 @@ public class MisoClient implements Lims {
       + "JOIN Library l ON l.libraryId = lcl.libraryId";
   private static final String querySampleChangeLogById = "SELECT * FROM (" + queryAllSampleChangeLogs + ") combined "
       + "WHERE sampleId = ?";
+  
+  // Box queries
+  private static final String queryAllBoxes = "SELECT bp.targetId, bp.targetType, bp.position, bp.boxId, b.alias, b.locationBarcode, "
+      + "b.description, bs.rows, bs.columns "
+      + "FROM BoxPosition bp "
+      + "JOIN Box b ON b.boxId = bp.boxId "
+      + "JOIN BoxSize bs ON bs.boxSizeId = b.boxSizeId";
   // @formatter:on
 
   private final RowMapper<Instrument> instrumentMapper = new InstrumentMapper();
@@ -887,6 +897,21 @@ public class MisoClient implements Lims {
   @Override
   public List<Instrument> getInstrumentModelInstrument(Integer id) {
     return template.query(queryInstrumentsByModelId, new Object[] { id }, instrumentMapper);
+  }
+
+  @Override
+  public List<Box> getBoxes() {
+    List<MisoBoxPosition> temps = template.query(queryAllBoxes, boxPositionRowMapper);
+    Map<Long, Box> boxes = new HashMap<>();
+    for (MisoBoxPosition temp : temps) {
+      Box box = boxes.get(temp.getId());
+      if (box == null) {
+        box = temp.getBox();
+        boxes.put(box.getId(), box);
+      }
+      box.getPositions().add(temp.getBoxPosition());
+    }
+    return Lists.newArrayList(boxes.values());
   }
 
   private static class InstrumentMapper implements RowMapper<Instrument> {
@@ -1335,5 +1360,23 @@ public class MisoClient implements Lims {
     }
 
   }
+  
+  private static final RowMapper<MisoBoxPosition> boxPositionRowMapper = new RowMapper<MisoBoxPosition>() {
+
+    @Override
+    public MisoBoxPosition mapRow(ResultSet rs, int rowNum) throws SQLException {
+      MisoBoxPosition pos = new MisoBoxPosition();
+      pos.setId(rs.getLong("boxId"));
+      pos.setName(rs.getString("alias"));
+      pos.setDescription(rs.getString("description"));
+      pos.setLocation(rs.getString("locationBarcode"));
+      pos.setRows(rs.getInt("rows"));
+      pos.setColumns(rs.getInt("columns"));
+      pos.setPosition(rs.getString("position"));
+      pos.setSampleId(rs.getString("targetType"), rs.getLong("targetId"));
+      return pos;
+    }
+    
+  };
 
 }

@@ -29,6 +29,7 @@ import org.xml.sax.SAXException;
 
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.Box;
 import ca.on.oicr.pinery.api.Change;
 import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.Instrument;
@@ -108,7 +109,12 @@ public class GsleClient implements Lims {
    private String instrumentSingle;
    private String sampleIdSingle;
    private String worksetsList;
+   private String boxesList;
    private String defaultRunDirectoryBaseDir;
+   
+   public void setBoxesList(String boxesList) {
+     this.boxesList = boxesList;
+   }
    
    public void setWorksetsList(String worksetsList) {
      this.worksetsList = worksetsList;
@@ -1751,6 +1757,59 @@ public class GsleClient implements Lims {
       addRunWorksetData(run, worksets);
     }
   }
+  
+  @Override
+  public List<Box> getBoxes() {
+    String url = getBaseUrl(boxesList).toString();
+
+    try {
+       ClientRequest request = new ClientRequest(url);
+       request.accept("text/plain");
+       ClientResponse<String> response = request.get(String.class);
+
+       if (response.getStatus() != 200) {
+          throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+       }
+       BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+       return getBoxes(br);
+    } catch (Exception e) {
+       System.out.println(e);
+       e.printStackTrace(System.out);
+    }
+    return Lists.newArrayList();
+  }
+  
+  private List<Box> getBoxes(Reader reader) {
+    CSVReader csvReader = new CSVReader(reader, '\t');
+    HeaderColumnNameTranslateMappingStrategy<TemporaryBoxPosition> strat = new 
+        HeaderColumnNameTranslateMappingStrategy<TemporaryBoxPosition>();
+    strat.setType(TemporaryBoxPosition.class);
+    Map<String, String> map = Maps.newHashMap();
+    map.put("template_id", "sampleId");
+    map.put("x", "x");
+    map.put("y", "y");
+    map.put("container_id", "idString");
+    map.put("container_name", "name");
+    map.put("container_location", "location");
+    map.put("container_type", "containerType");
+    map.put("container_description", "description");
+    strat.setColumnMapping(map);
+
+    CsvToBean<TemporaryBoxPosition> csvToBean = new CsvToBean<>();
+    List<TemporaryBoxPosition> tempPositions = csvToBean.parse(strat, csvReader);
+    
+    Map<Long, Box> boxesById = new HashMap<>();
+    for (TemporaryBoxPosition temp : tempPositions) {
+      Box box = boxesById.get(temp.getId());
+      if (box == null) {
+        box = temp.getBox();
+        boxesById.put(box.getId(), box);
+      }
+      box.getPositions().add(temp.getBoxPosition());
+    }
+    
+    return Lists.newArrayList(boxesById.values());
+ }
 
    @VisibleForTesting
    void setBarcodeMap(Map<String, String> map) {
