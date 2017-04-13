@@ -54,6 +54,8 @@ public class MisoBoxPosition extends DefaultBox implements BoxPosition {
       return "SAM";
     } else if (targetType.startsWith("Library")) {
       return "LIB";
+    } else if ("Dilution".equals(targetType)) {
+      return "LDI";
     } else {
       throw new IllegalArgumentException("TargetType does not seem to be a Sample, Library, or Pool");
     }
