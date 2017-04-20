@@ -164,11 +164,7 @@ public class SampleFileDao implements SampleDao {
   private JdbcTemplate template;
   
   public static void validateSampleId(String sampleId) {
-    try {
-      Integer.parseInt(sampleId);
-    } catch (NumberFormatException e) {
-      throw new IllegalArgumentException("Sample ID " + sampleId + " is invalid. Must be an integer"); 
-    }
+    //because flatfiles could be from any LIMS, don't bother to perform validation
   }
   
   @Override
