@@ -45,19 +45,21 @@ SELECT s.alias NAME
         ,'Sample' miso_type 
         ,sai.preMigrationId premigration_id 
         ,s.scientificName organism 
+        ,subp.alias subproject
 FROM Sample s 
 LEFT JOIN DetailedSample sai ON sai.sampleId = s.sampleId 
 LEFT JOIN DetailedQcStatus qpd ON qpd.detailedQcStatusId = sai.detailedQcStatusId 
 LEFT JOIN Sample parent ON parent.sampleId = sai.parentId 
 LEFT JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId 
 LEFT JOIN Project p ON p.projectId = s.project_projectId 
+LEFT JOIN Subproject subp ON subp.subprojectId = sai.subprojectId 
 LEFT JOIN Identity i ON i.sampleId = s.sampleId 
  
  
 LEFT JOIN SampleAliquot sa ON sa.sampleId = sai.sampleId 
 LEFT JOIN SamplePurpose sp ON sp.samplePurposeId = sa.samplePurposeId 
 LEFT JOIN SampleTissue st ON st.sampleId = s.sampleId 
-LEFT JOIN TissueType tt ON tt.tissueTypeId = st.tissueTypeId 
+LEFT JOIN TissueType tt ON tt.tissueTypeId = st.tissueTypeId
 LEFT JOIN TissueOrigin tor ON tor.tissueOriginId = st.tissueOriginId 
 LEFT JOIN TissueMaterial tm ON tm.tissueMaterialId = st.tissueMaterialId 
  
@@ -140,6 +142,7 @@ SELECT l.alias NAME
         ,'Library' miso_type 
         ,lai.preMigrationId premigration_id 
         ,NULL organism 
+        ,NULL subproject
 FROM Library l 
 LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId 
 LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId 
@@ -230,6 +233,7 @@ SELECT parent.alias name
         ,'Dilution' miso_type 
         ,d.preMigrationId premigration_id 
         ,NULL organism 
+        ,NULL subproject
 FROM LibraryDilution d 
 JOIN Library parent ON parent.libraryId = d.library_libraryId 
 JOIN LibraryType lt ON lt.libraryTypeId = parent.libraryType 
