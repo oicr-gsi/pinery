@@ -41,6 +41,7 @@
         <hibernate-validator.version>4.2.0.Final</hibernate-validator.version>
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
         <surefire-junit47.version>2.19.1</surefire-junit47.version>
+        <commons-io.version>2.5</commons-io.version>
         
         <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>9.3.7.v20160115</jetty-maven-plugin.version>
@@ -363,6 +364,11 @@
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
                 <version>${commons-beanutils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
             </dependency>
 
             <dependency>
