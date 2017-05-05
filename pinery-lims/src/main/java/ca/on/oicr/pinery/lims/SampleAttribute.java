@@ -31,7 +31,8 @@ public enum SampleAttribute {
     TUBE_ID("geo_tube_id", "Tube ID"),
     TARGETED_RESEQUENCING("geo_targeted_resequencing", "Targeted Resequencing"),
     PURPOSE("geo_purpose", "Purpose"),
-    QPCR_PERCENTAGE_HUMAN("geo_qpcr_percentage_human", "qPCR %");
+    QPCR_PERCENTAGE_HUMAN("geo_qpcr_percentage_human", "qPCR %"),
+    SUBPROJECT("subproject", "Subproject");
 
     private final Set<String> in;
     private final String out;
