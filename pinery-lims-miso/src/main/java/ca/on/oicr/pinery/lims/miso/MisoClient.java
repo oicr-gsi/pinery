@@ -71,9 +71,9 @@ public class MisoClient implements Lims {
   private static final String queryInstrumentsByModelId = queryAllInstruments + " WHERE sr.platformId = ?";
 
   // Order queries
-  private static final String queryAllOrders = getResourceAsString("/queryAllOrders.sql");
+  private static final String queryAllOrders = getResourceAsString("queryAllOrders.sql");
   private static final String queryOrderById = queryAllOrders + " WHERE poolOrderId = ?";
-  private static final String queryAllOrderSamples = getResourceAsString("/queryAllOrderSamples.sql");
+  private static final String queryAllOrderSamples = getResourceAsString("queryAllOrderSamples.sql");
   private static final String queryOrderSamplesByOrderId = queryAllOrderSamples + " WHERE poolOrderId = ?";
 
   // User queries
@@ -81,40 +81,40 @@ public class MisoClient implements Lims {
   private static final String queryUserById = queryAllUsers + " WHERE u.userId = ?";
 
   // Run queries
-  private static final String queryAllRuns = getResourceAsString("/queryAllRuns.sql");
+  private static final String queryAllRuns = getResourceAsString("queryAllRuns.sql");
   private static final String queryRunById = queryAllRuns + " AND r.runId = ?";
   private static final String queryRunByName = queryAllRuns + " AND r.alias = ?";
 
   // RunPosition queries
-  private static final String queryAllRunPositions = getResourceAsString("/queryAllRunPositions.sql");
+  private static final String queryAllRunPositions = getResourceAsString("queryAllRunPositions.sql");
   private static final String queryRunPositionsByRunId = queryAllRunPositions + " WHERE r_spc.Run_runId = ?";
 
   // RunSample queries
-  private static final String queryAllRunSamples = getResourceAsString("/queryAllRunSamples.sql");
+  private static final String queryAllRunSamples = getResourceAsString("queryAllRunSamples.sql");
   private static final String queryRunSamplesByRunId = queryAllRunSamples
       + " JOIN SequencerPartitionContainer_Partition spcp ON spcp.partitions_partitionId = part.partitionId"
       + " JOIN SequencerPartitionContainer spc ON spc.containerId = spcp.container_containerId"
       + " JOIN Run_SequencerPartitionContainer rcpc ON rcpc.containers_containerId = spc.containerId" + " WHERE rcpc.Run_runId = ?";
 
   // Sample queries
-  private static final String queryAllSamples = getResourceAsString("/queryAllSamples.sql");
+  private static final String queryAllSamples = getResourceAsString("queryAllSamples.sql");
   private static final String querySampleById = "SELECT * FROM (" + queryAllSamples + ") combined " + "WHERE id = ?";
 
-  private static final String querySampleChildIdsBySampleId = getResourceAsString("/querySampleChildIdsBySampleId.sql");
+  private static final String querySampleChildIdsBySampleId = getResourceAsString("querySampleChildIdsBySampleId.sql");
 
   // SampleType (MISO SampleClass and Library) queries
-  private static final String queryAllSampleTypes = getResourceAsString("/queryAllSampleTypes.sql");
+  private static final String queryAllSampleTypes = getResourceAsString("queryAllSampleTypes.sql");
 
   // SampleProject queries
-  private static final String queryAllSampleProjects = getResourceAsString("/queryAllSampleProjects.sql");
+  private static final String queryAllSampleProjects = getResourceAsString("queryAllSampleProjects.sql");
 
   // SampleChangeLog queries
-  private static final String queryAllSampleChangeLogs = getResourceAsString("/queryAllSampleChangeLogs.sql");
+  private static final String queryAllSampleChangeLogs = getResourceAsString("queryAllSampleChangeLogs.sql");
   private static final String querySampleChangeLogById = "SELECT * FROM (" + queryAllSampleChangeLogs + ") combined "
       + "WHERE sampleId = ?";
   
   // Box queries
-  private static final String queryAllBoxes = getResourceAsString("/queryAllBoxes.sql");
+  private static final String queryAllBoxes = getResourceAsString("queryAllBoxes.sql");
   // @formatter:on
 
   private final RowMapper<Instrument> instrumentMapper = new InstrumentMapper();
