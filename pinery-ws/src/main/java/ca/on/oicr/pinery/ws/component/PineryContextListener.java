@@ -1,6 +1,7 @@
 package ca.on.oicr.pinery.ws.component;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javax.management.MalformedObjectNameException;
 import javax.servlet.ServletContextEvent;
@@ -24,7 +25,10 @@ public class PineryContextListener implements ServletContextListener {
     // Export all JVM HotSpot stats to Prometheus
     DefaultExports.initialize();
     try {
-      new JmxCollector(event.getServletContext().getResource("classpath:tomcat-prometheus.yml").getFile()).register();
+      URL yamlConfig = event.getServletContext().getResource("classpath:tomcat-prometheus.yml");
+      if (yamlConfig != null) {
+        new JmxCollector(yamlConfig.getFile()).register();
+      }
     } catch (MalformedObjectNameException | IOException e) {
       log.error("Failed to load Prometheus configuration.", e);
     }
