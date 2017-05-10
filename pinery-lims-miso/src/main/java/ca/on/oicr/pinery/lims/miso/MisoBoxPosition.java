@@ -48,15 +48,16 @@ public class MisoBoxPosition extends DefaultBox implements BoxPosition {
   }
   
   private static String getIdPrefix(String targetType) {
-    if (targetType.equals("Pool")) {
+    switch (targetType) {
+    case "POOL":
       return "IPO";
-    } else if (targetType.startsWith("Sample")) {
+    case "SAMPLE":
       return "SAM";
-    } else if (targetType.startsWith("Library")) {
+    case "LIBRARY":
       return "LIB";
-    } else if ("Dilution".equals(targetType)) {
+    case "DILUTION":
       return "LDI";
-    } else {
+    default:
       throw new IllegalArgumentException("TargetType does not seem to be a Sample, Library, or Pool");
     }
   }
