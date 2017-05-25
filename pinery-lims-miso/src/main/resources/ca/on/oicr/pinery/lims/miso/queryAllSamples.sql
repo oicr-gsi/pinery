@@ -2,7 +2,7 @@ SELECT s.alias NAME
         ,s.description description 
         ,s.NAME id 
         ,parent.NAME parentId 
-        ,sc.alias sampleType 
+        ,COALESCE(tt.sampleTypeName, sc.alias) sampleType
         ,NULL sampleType_platform 
         ,NULL sampleType_description 
         ,tt.alias tissueType 
