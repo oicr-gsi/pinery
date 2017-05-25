@@ -148,7 +148,7 @@ public class MisoClient implements Lims {
       "        ,s.description description\n" + 
       "        ,s.NAME id\n" + 
       "        ,parent.NAME parentId\n" + 
-      "        ,sc.alias sampleType\n" + 
+      "        ,COALESCE(tt.sampleTypeName, sc.alias) sampleType\n" + 
       "        ,NULL sampleType_platform\n" + 
       "        ,NULL sampleType_description\n" + 
       "        ,tt.alias tissueType\n" + 
