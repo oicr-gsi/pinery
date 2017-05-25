@@ -104,9 +104,8 @@ public class MisoClient implements Lims {
 
   // Run queries
   private static final String queryAllRuns = "SELECT DISTINCT r.alias, r.sequencerReference_sequencerReferenceId AS instrumentId, "
-      + "r.runId, r.filePath, st.health, st.startDate, st.completionDate, spc.identificationBarcode, createLog.userId, "
+      + "r.runId, r.filePath, r.health, r.startDate, r.completionDate, spc.identificationBarcode, createLog.userId, "
       + "createLog.changeTime, updateLog.userId, updateLog.changeTime, sp.paired paired, sp.readLength read_length " + "FROM Run AS r "
-      + "LEFT JOIN Status AS st ON st.statusId = r.status_statusId "
       + "LEFT JOIN SequencingParameters AS sp ON sp.parametersId = r.sequencingParameters_parametersId "
       + "LEFT JOIN Run_SequencerPartitionContainer AS rscp ON rscp.Run_runId = r.runId "
       + "LEFT JOIN SequencerPartitionContainer AS spc ON spc.containerId = rscp.containers_containerId "
