@@ -19,6 +19,12 @@ public class ModelUtilsTest {
   }
   
   @Test
+  public void testConvertUtcToDateValid() {
+    Date date = ModelUtils.convertToDate("2015-12-02T15:34:00.000Z");
+    Assert.assertNotNull(date);
+  }
+
+  @Test
   public void testConvertToDateInvalid() {
     exception.expect(IllegalArgumentException.class);
     ModelUtils.convertToDate("Not a date");
