@@ -254,11 +254,11 @@ public class DefaultSampleProvenance implements SampleProvenance {
             return null;
         }
 
-        if (runSample.getBarcode() == null) {
+        if (runSample.getBarcode() == null || runSample.getBarcode().isEmpty()) {
             return "NoIndex";
         }
 
-        if (runSample.getBarcodeTwo() == null) {
+        if (runSample.getBarcodeTwo() == null || runSample.getBarcodeTwo().isEmpty()) {
             return runSample.getBarcode();
         } else {
             return runSample.getBarcode() + "-" + runSample.getBarcodeTwo();
