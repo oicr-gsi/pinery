@@ -59,7 +59,7 @@ public class DefaultLaneProvenance implements LaneProvenance {
         if (instrument != null) {
             attrs.put("instrument_name", instrument.getName());
         }
-        if (sequencerRun != null && sequencerRun.getRunDirectory() != null) {
+        if (sequencerRun != null && sequencerRun.getRunDirectory() != null && !sequencerRun.getRunDirectory().isEmpty()) {
             attrs.put("run_dir", sequencerRun.getRunDirectory());
         }
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
