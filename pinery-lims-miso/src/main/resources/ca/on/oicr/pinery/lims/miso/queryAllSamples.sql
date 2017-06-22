@@ -46,6 +46,7 @@ SELECT s.alias NAME
         ,sai.preMigrationId premigration_id 
         ,s.scientificName organism 
         ,subp.alias subproject
+        ,it.alias institute
 FROM Sample s 
 LEFT JOIN DetailedSample sai ON sai.sampleId = s.sampleId 
 LEFT JOIN DetailedQcStatus qpd ON qpd.detailedQcStatusId = sai.detailedQcStatusId 
@@ -61,8 +62,10 @@ LEFT JOIN SamplePurpose sp ON sp.samplePurposeId = sa.samplePurposeId
 LEFT JOIN SampleTissue st ON st.sampleId = s.sampleId 
 LEFT JOIN TissueType tt ON tt.tissueTypeId = st.tissueTypeId
 LEFT JOIN TissueOrigin tor ON tor.tissueOriginId = st.tissueOriginId 
-LEFT JOIN TissueMaterial tm ON tm.tissueMaterialId = st.tissueMaterialId 
- 
+LEFT JOIN TissueMaterial tm ON tm.tissueMaterialId = st.tissueMaterialId
+LEFT JOIN Lab la ON st.labId = la.labId
+LEFT JOIN Institute it ON la.instituteId = it.instituteId
+
 LEFT JOIN (SELECT sampleId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from SampleChangeLog GROUP BY sampleId) scl ON sai.sampleId = scl.sampleId 
 LEFT JOIN (SELECT userId, sampleId FROM SampleChangeLog scl1 WHERE changeTime = (SELECT MIN(scl2.changeTime) FROM SampleChangeLog scl2 where scl1.sampleId = scl2.sampleId)) sclcu ON sai.sampleId = sclcu.sampleId 
 LEFT JOIN (SELECT userId, sampleId  FROM SampleChangeLog scl1 WHERE changeTime = (SELECT MAX(scl2.changeTime) FROM SampleChangeLog scl2 where scl1.sampleId = scl2.sampleId)) scluu ON sai.sampleId = scluu.sampleId 
@@ -143,6 +146,7 @@ SELECT l.alias NAME
         ,lai.preMigrationId premigration_id 
         ,NULL organism 
         ,NULL subproject
+        ,NULL institute
 FROM Library l 
 LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId 
 LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId 
@@ -234,6 +238,7 @@ SELECT parent.alias name
         ,d.preMigrationId premigration_id 
         ,NULL organism 
         ,NULL subproject
+        ,NULL institute
 FROM LibraryDilution d 
 JOIN Library parent ON parent.libraryId = d.library_libraryId 
 JOIN LibraryType lt ON lt.libraryTypeId = parent.libraryType 

@@ -32,7 +32,8 @@ public enum SampleAttribute {
     TARGETED_RESEQUENCING("geo_targeted_resequencing", "Targeted Resequencing"),
     PURPOSE("geo_purpose", "Purpose"),
     QPCR_PERCENTAGE_HUMAN("geo_qpcr_percentage_human", "qPCR %"),
-    SUBPROJECT("subproject", "Subproject");
+    SUBPROJECT("subproject", "Subproject", "Sub-project"),
+    INSTITUTE("institute", "Institute");
 
     private final Set<String> in;
     private final String out;
