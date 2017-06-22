@@ -120,9 +120,7 @@ public final class Dtos {
    public static Set<AttributeDto> asDto(Set<Attribute> from) {
       Set<AttributeDto> dtoSet = Sets.newHashSet();
       for (Attribute attribute : from) {
-         if (!StringUtils.isBlank(attribute.getValue())) {
             dtoSet.add(asDto(attribute));
-         }
       }
       return dtoSet;
    }
