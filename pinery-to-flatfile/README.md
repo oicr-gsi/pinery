@@ -156,6 +156,7 @@ Contains all user data. Fields:
 #### boxes.tsv
 
 Contains all box data. Fields:
+
 | Field | Type | Notes |
 | ----- | ---- | ----- |
 | id | long | ID from LIMS |
