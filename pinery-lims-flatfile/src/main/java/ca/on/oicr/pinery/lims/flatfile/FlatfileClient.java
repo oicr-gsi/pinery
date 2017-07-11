@@ -143,5 +143,9 @@ public class FlatfileClient implements Lims {
   public List<Box> getBoxes() {
     return boxDao.getAllBoxes();
   }
-
+public void junkMethodIsJunk(String unusedParam) throws Exception {
+            if (true) {
+                            throw new Exception("this is garbage");
+                                }
+}
 }
