@@ -9,6 +9,9 @@ env: >
       MAVEN_SETTINGS="${TRAVIS_BUILD_DIR}/gsi-config"
       MAVEN_OPTS="-Xms1g -Xmx2g" 
 addons:
+    apt:
+        sources:
+        - oracle-java7-installer: 'ppa:webupd8team/java'
     sonarcloud:
         organization: "oicr-gsi"
         token:
@@ -19,8 +22,6 @@ addons:
 before_install:
 - git clone https://github.com/oicr-gsi/gsi-config.git "${MAVEN_SETTINGS}"
 - cp "${MAVEN_SETTINGS}/settings.xml" "${HOME}/.m2/settings.xml"
-- jdk_switcher use oraclejdk7
-- jdk_switcher home oraclejdk7
 - echo $JAVA_HOME
 - ls $JAVA_HOME
 
