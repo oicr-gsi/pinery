@@ -19,6 +19,9 @@ before_install:
 - git clone https://github.com/oicr-gsi/gsi-config.git "${MAVEN_SETTINGS}"
 - cp "${MAVEN_SETTINGS}/settings.xml" "${HOME}/.m2/settings.xml"
 
+before_script:
+- export TZ=EST
+
 script:
 - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
 
