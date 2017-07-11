@@ -2,16 +2,13 @@ language: java
 dist: trusty
 sudo: required
 jdk:
-- oraclejdk7
+- openjdk7
 git:
     depth: 3
 env: > 
       MAVEN_SETTINGS="${TRAVIS_BUILD_DIR}/gsi-config"
       MAVEN_OPTS="-Xms1g -Xmx2g" 
 addons:
-    apt:
-        sources:
-        - oracle-java7-installer: 'ppa:webupd8team/java'
     sonarcloud:
         organization: "oicr-gsi"
         token:
