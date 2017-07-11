@@ -26,7 +26,9 @@ before_script:
 - export TZ=EST
 
 script:
-- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+- mvn clean install
+- jdk_switcher use openjdk8  
+- mvn org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar
 
 cache:
     directories:
