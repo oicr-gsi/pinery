@@ -16,6 +16,8 @@ import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.Box;
+import ca.on.oicr.pinery.api.BoxPosition;
 import ca.on.oicr.pinery.api.Change;
 import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.Instrument;
@@ -118,9 +120,7 @@ public final class Dtos {
    public static Set<AttributeDto> asDto(Set<Attribute> from) {
       Set<AttributeDto> dtoSet = Sets.newHashSet();
       for (Attribute attribute : from) {
-         if (!StringUtils.isBlank(attribute.getValue())) {
             dtoSet.add(asDto(attribute));
-         }
       }
       return dtoSet;
    }
@@ -348,10 +348,10 @@ public final class Dtos {
 
    public static RunDtoPosition asDto(RunPosition from) {
       RunDtoPosition dto = new RunDtoPosition();
-
-      if (from.getPosition() != null) {
-         dto.setPosition(from.getPosition());
-      }
+      dto.setPosition(from.getPosition());
+      dto.setPoolName(from.getPoolName());
+      dto.setPoolBarcode(from.getPoolBarcode());
+      dto.setPoolDescription(from.getPoolDescription());
       if (from.getRunSample() != null && !from.getRunSample().isEmpty()) {
          dto.setSamples(asDto3(from.getRunSample()));
       }
@@ -498,6 +498,41 @@ public final class Dtos {
             result.add(asDto(lp));
         }
         return result;
+    }
+    
+    public static List<BoxDto> asDtoList(List<Box> fromList) {
+      List<BoxDto> toList = Lists.newArrayList();
+      for (Box from : fromList) {
+        toList.add(asDto(from));
+      }
+      return toList;
+    }
+    
+    public static BoxDto asDto(Box from) {
+      BoxDto to = new BoxDto();
+      to.setId(from.getId());
+      to.setName(from.getName());
+      to.setDescription(from.getDescription());
+      to.setLocation(from.getLocation());
+      to.setRows(from.getRows());
+      to.setColumns(from.getColumns());
+      to.setPositions(asDtoSet(from.getPositions()));
+      return to;
+    }
+    
+    public static Set<BoxPositionDto> asDtoSet(Set<BoxPosition> fromSet) {
+      Set<BoxPositionDto> toSet = Sets.newHashSet();
+      for (BoxPosition from : fromSet) {
+        toSet.add(asDto(from));
+      }
+      return toSet;
+    }
+    
+    public static BoxPositionDto asDto(BoxPosition from) {
+      BoxPositionDto to = new BoxPositionDto();
+      to.setPosition(from.getPosition());
+      to.setSampleId(from.getSampleId());
+      return to;
     }
 
 }

@@ -39,6 +39,8 @@
       <property name="instrumentModelInstrumentList" value="${gsle.instrumentModelInstrumentList}" />
       <property name="instrumentSingle" value="${gsle.instrumentSingle}" />
       <property name="sampleIdSingle" value="${gsle.sampleIdSingle}" />
+      <property name="worksetsList" value="${gsle.worksets}" />
+      <property name="boxesList" value="${gsle.boxes}" />
       <property name="defaultRunDirectoryBaseDir" value="${gsle.defaultRunDirectoryBaseDir}" />
    </bean>
 

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>pinery</artifactId>
         <groupId>ca.on.oicr</groupId>
-        <version>2.0-rc6</version>
+        <version>2.0-rc7-SNAPSHOT</version>
     </parent>
     <artifactId>pinery-ws</artifactId>
     <name>Pinery Webservice</name>
@@ -98,6 +98,23 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_hotspot</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_servlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus.jmx</groupId>
+            <artifactId>collector</artifactId>
         </dependency>
     </dependencies>
     <build>

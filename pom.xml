@@ -41,6 +41,9 @@
         <hibernate-validator.version>4.2.0.Final</hibernate-validator.version>
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
         <surefire-junit47.version>2.19.1</surefire-junit47.version>
+        <commons-io.version>2.5</commons-io.version>
+        <prometheus.version>0.0.21</prometheus.version>
+        <prometheus.jmx.version>0.9</prometheus.jmx.version>
         
         <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>9.3.7.v20160115</jetty-maven-plugin.version>
@@ -65,7 +68,7 @@
     <artifactId>pinery</artifactId>
     <packaging>pom</packaging>
     <groupId>ca.on.oicr</groupId>
-    <version>2.0-rc6</version>
+    <version>2.0-rc7-SNAPSHOT</version>
 
     <modules>
         <module>pinery-api</module>
@@ -278,6 +281,26 @@
                 <artifactId>csvjdbc</artifactId>
                 <version>${csvjdbc.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient</artifactId>
+                <version>${prometheus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient_hotspot</artifactId>
+                <version>${prometheus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient_servlet</artifactId>
+                <version>${prometheus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.prometheus.jmx</groupId>
+                <artifactId>collector</artifactId>
+                <version>${prometheus.jmx.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>junit</groupId>
@@ -363,6 +386,11 @@
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
                 <version>${commons-beanutils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
             </dependency>
 
             <dependency>

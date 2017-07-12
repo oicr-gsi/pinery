@@ -7,8 +7,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,11 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import com.opencsv.CSVReader;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.Box;
 import ca.on.oicr.pinery.api.Change;
 import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.Instrument;
@@ -61,6 +61,7 @@ import ca.on.oicr.pinery.lims.GsleSample;
 import ca.on.oicr.pinery.lims.GsleSampleChildren;
 import ca.on.oicr.pinery.lims.GsleSampleParents;
 import ca.on.oicr.pinery.lims.GsleUser;
+import ca.on.oicr.pinery.lims.Workset;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.HashBasedTable;
@@ -68,7 +69,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
-import java.nio.file.Paths;
+import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 public class GsleClient implements Lims {
 
@@ -105,7 +108,17 @@ public class GsleClient implements Lims {
    private String instrumentModelInstrumentList;
    private String instrumentSingle;
    private String sampleIdSingle;
+   private String worksetsList;
+   private String boxesList;
    private String defaultRunDirectoryBaseDir;
+   
+   public void setBoxesList(String boxesList) {
+     this.boxesList = boxesList;
+   }
+   
+   public void setWorksetsList(String worksetsList) {
+     this.worksetsList = worksetsList;
+   }
 
    public void setSampleIdSingle(String sampleIdSingle) {
       this.sampleIdSingle = sampleIdSingle;
@@ -1301,6 +1314,7 @@ public class GsleClient implements Lims {
          System.out.println(e);
          e.printStackTrace(System.out);
       }
+      addRunWorksetData(result, getWorksets());
       return result;
    }
 
@@ -1330,6 +1344,7 @@ public class GsleClient implements Lims {
          System.out.println(e);
          e.printStackTrace(System.out);
       }
+      addRunWorksetData(result, getWorksets());
       return result;
    }
    
@@ -1360,6 +1375,7 @@ public class GsleClient implements Lims {
        System.out.println(e);
        e.printStackTrace(System.out);
     }
+    addRunWorksetData(result, getWorksets());
     return result;
    }
 
@@ -1635,32 +1651,165 @@ public class GsleClient implements Lims {
 
    @Override
    public Instrument getInstrument(Integer instrumentId) {
-      Instrument result = null;
+     Instrument result = null;
 
-      StringBuilder url = getBaseUrl(instrumentSingle);
+     StringBuilder url = getBaseUrl(instrumentSingle);
 
-      url.append(";bind=");
-      url.append(instrumentId);
-      try {
-         ClientRequest request = new ClientRequest(url.toString());
-         request.accept("text/plain");
-         ClientResponse<String> response = request.get(String.class);
+     url.append(";bind=");
+     url.append(instrumentId);
+     try {
+        ClientRequest request = new ClientRequest(url.toString());
+        request.accept("text/plain");
+        ClientResponse<String> response = request.get(String.class);
 
-         if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-         }
-         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
-         List<Instrument> instruments = getInstruments(br);
-         if (instruments.size() == 1) {
-            result = instruments.get(0);
-         }
+        if (response.getStatus() != 200) {
+           throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+        List<Instrument> instruments = getInstruments(br);
+        if (instruments.size() == 1) {
+           result = instruments.get(0);
+        }
 
-      } catch (Exception e) {
-         System.out.println(e);
-         e.printStackTrace(System.out);
-      }
-      return result;
+     } catch (Exception e) {
+        System.out.println(e);
+        e.printStackTrace(System.out);
+     }
+     return result;
    }
+   
+   private List<Workset> getWorksets() {
+     List<Workset> result = Lists.newArrayList();
+
+     StringBuilder url = getBaseUrl(worksetsList);
+
+     try {
+        ClientRequest request = new ClientRequest(url.toString());
+        request.accept("text/plain");
+        ClientResponse<String> response = request.get(String.class);
+
+        if (response.getStatus() != 200) {
+           throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+        result = getWorksets(br);
+     } catch (Exception e) {
+        System.out.println(e);
+        e.printStackTrace(System.out);
+     }
+     return result;
+  }
+   
+  private List<Workset> getWorksets(Reader reader) {
+     CSVReader csvReader = new CSVReader(reader, '\t');
+     HeaderColumnNameTranslateMappingStrategy<TemporaryWorkset> strat = new HeaderColumnNameTranslateMappingStrategy<TemporaryWorkset>();
+     strat.setType(TemporaryWorkset.class);
+     Map<String, String> map = Maps.newHashMap();
+     map.put("workset_id", "id");
+     map.put("name", "name");
+     map.put("barcode", "barcode");
+     map.put("description", "description");
+     map.put("template_id", "sampleId");
+     strat.setColumnMapping(map);
+
+     CsvToBean<TemporaryWorkset> csvToBean = new CsvToBean<>();
+     List<TemporaryWorkset> tempWorksets = csvToBean.parse(strat, csvReader);
+     
+     Map<String, Workset> worksetsById = new HashMap<>();
+     for (TemporaryWorkset temp : tempWorksets) {
+       Workset ws = worksetsById.get(temp.getId());
+       if (ws == null) {
+         ws = temp.makeWorkset();
+         worksetsById.put(ws.getId(), ws);
+       } else {
+         ws.addSampleId(temp.getSampleId());
+       }
+     }
+     
+     return new ArrayList<>(worksetsById.values());
+  }
+  
+  private void addRunWorksetData(Run run, Collection<Workset> worksets) {
+    if (run.getSamples() == null) return;
+    for (RunPosition pos : run.getSamples()) {
+      if (pos.getRunSample() == null || pos.getRunSample().isEmpty()) continue;
+      for (Workset ws : worksets) {
+        if (ws.getSampleIds().size() != pos.getRunSample().size()) continue;
+        boolean foundAll = true;
+        for (RunSample sample : pos.getRunSample()) {
+          if (!ws.getSampleIds().contains(sample.getId())) {
+            foundAll = false;
+            break;
+          }
+        }
+        if (foundAll) {
+          pos.setPoolName(ws.getName());
+          pos.setPoolDescription(ws.getDescription());
+          pos.setPoolBarcode(ws.getBarcode());
+          break;
+        }
+      }
+    }
+  }
+  
+  private void addRunWorksetData(Collection<Run> runs, Collection<Workset> worksets) {
+    for (Run run : runs) {
+      addRunWorksetData(run, worksets);
+    }
+  }
+  
+  @Override
+  public List<Box> getBoxes() {
+    String url = getBaseUrl(boxesList).toString();
+
+    try {
+       ClientRequest request = new ClientRequest(url);
+       request.accept("text/plain");
+       ClientResponse<String> response = request.get(String.class);
+
+       if (response.getStatus() != 200) {
+          throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+       }
+       BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+       return getBoxes(br);
+    } catch (Exception e) {
+       System.out.println(e);
+       e.printStackTrace(System.out);
+    }
+    return Lists.newArrayList();
+  }
+  
+  private List<Box> getBoxes(Reader reader) {
+    CSVReader csvReader = new CSVReader(reader, '\t');
+    HeaderColumnNameTranslateMappingStrategy<TemporaryBoxPosition> strat = new 
+        HeaderColumnNameTranslateMappingStrategy<TemporaryBoxPosition>();
+    strat.setType(TemporaryBoxPosition.class);
+    Map<String, String> map = Maps.newHashMap();
+    map.put("template_id", "sampleId");
+    map.put("x", "x");
+    map.put("y", "y");
+    map.put("container_id", "idString");
+    map.put("container_name", "name");
+    map.put("container_location", "location");
+    map.put("container_type", "containerType");
+    map.put("container_description", "description");
+    strat.setColumnMapping(map);
+
+    CsvToBean<TemporaryBoxPosition> csvToBean = new CsvToBean<>();
+    List<TemporaryBoxPosition> tempPositions = csvToBean.parse(strat, csvReader);
+    
+    Map<Long, Box> boxesById = new HashMap<>();
+    for (TemporaryBoxPosition temp : tempPositions) {
+      Box box = boxesById.get(temp.getId());
+      if (box == null) {
+        box = temp.getBox();
+        boxesById.put(box.getId(), box);
+      }
+      box.getPositions().add(temp.getBoxPosition());
+    }
+    
+    return Lists.newArrayList(boxesById.values());
+ }
 
    @VisibleForTesting
    void setBarcodeMap(Map<String, String> map) {

@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.Box;
 import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
@@ -17,6 +18,7 @@ import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
+import ca.on.oicr.pinery.lims.flatfile.dao.BoxDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.ChangeDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.InstrumentDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.OrderDao;
@@ -38,6 +40,8 @@ public class FlatfileClient implements Lims {
   private UserDao userDao;
   @Autowired
   private ChangeDao changeDao;
+  @Autowired
+  private BoxDao boxDao;
 
   @Override
   public Sample getSample(String id) {
@@ -135,4 +139,13 @@ public class FlatfileClient implements Lims {
     return instrumentDao.getInstrumentModelInstruments(id);
   }
 
+  @Override
+  public List<Box> getBoxes() {
+    return boxDao.getAllBoxes();
+  }
+public void junkMethodIsJunk(String unusedParam) throws Exception {
+            if (true) {
+                            throw new Exception("this is garbage");
+                                }
+}
 }

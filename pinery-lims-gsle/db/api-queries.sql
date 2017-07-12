@@ -91,56 +91,44 @@ FROM instrument
 -- Description: LIMS API order query
 -- Application Properties: orderSingle
 
-SELECT DISTINCT order_id AS id
-	,oo.created_by
-	,oo.created_at
-	,oo.modified_by
-	,oo.modified_at
-	,s.label AS STATUS
-	,lg.lg_name AS project
-	,obsc.label AS platform
+SELECT DISTINCT oo.order_id AS id
+    ,oo.created_by
+    ,oo.created_at
+    ,oo.modified_by
+    ,oo.modified_at
+    ,s.label AS STATUS
+    ,lg.lg_name AS project
+    ,obsc.label AS platform
 FROM om_order oo
-	,STATUS s
-	,lab_group lg
-	,om_order_form OF
-	,om_custom_data ocd
-	,om_order_form_field ooff
-	,om_bfield_selection_choice obsc
-WHERE oo.status_id = s.status_id
-	AND oo.lab_group_id = lg.lab_group_id
-	AND oo.order_form_id = OF.order_form_id
-	AND ocd.form_field_id = ooff.form_field_id
-	AND ocd.data = obsc.choice_id
-	AND ooff.display_label LIKE 'Platform'
-	AND ooff.order_form_id = oo.order_form_id
-	AND order_id = ?
+JOIN STATUS s ON oo.status_id = s.status_id
+JOIN lab_group lg ON oo.lab_group_id = lg.lab_group_id
+JOIN om_order_form OF ON oo.order_form_id = OF.order_form_id
+LEFT JOIN om_order_form_field ooff ON ooff.order_form_id = oo.order_form_id
+    AND ooff.display_label LIKE 'Platform'
+LEFT JOIN om_custom_data ocd ON ocd.form_field_id = ooff.form_field_id
+LEFT JOIN om_bfield_selection_choice obsc ON ocd.data = obsc.choice_id
+WHERE oo.order_id = ?
 
 -- Name: /pinery/orders
 -- Description: LIMS API orders query
 -- Application Properties: ordersList
 
-SELECT DISTINCT order_id AS id
-	,oo.created_by
-	,oo.created_at
-	,oo.modified_by
-	,oo.modified_at
-	,s.label AS STATUS
-	,lg.lg_name AS project
-	,obsc.label AS platform
+SELECT DISTINCT oo.order_id AS id
+    ,oo.created_by
+    ,oo.created_at
+    ,oo.modified_by
+    ,oo.modified_at
+    ,s.label AS STATUS
+    ,lg.lg_name AS project
+    ,obsc.label AS platform
 FROM om_order oo
-	,STATUS s
-	,lab_group lg
-	,om_order_form OF
-	,om_custom_data ocd
-	,om_order_form_field ooff
-	,om_bfield_selection_choice obsc
-WHERE oo.status_id = s.status_id
-	AND oo.lab_group_id = lg.lab_group_id
-	AND oo.order_form_id = OF.order_form_id
-	AND ocd.form_field_id = ooff.form_field_id
-	AND ocd.data = obsc.choice_id
-	AND ooff.display_label LIKE 'Platform'
-	AND ooff.order_form_id = oo.order_form_id
+JOIN STATUS s ON oo.status_id = s.status_id
+JOIN lab_group lg ON oo.lab_group_id = lg.lab_group_id
+JOIN om_order_form OF ON oo.order_form_id = OF.order_form_id
+LEFT JOIN om_order_form_field ooff ON ooff.order_form_id = oo.order_form_id
+    AND ooff.display_label LIKE 'Platform'
+LEFT JOIN om_custom_data ocd ON ocd.form_field_id = ooff.form_field_id
+LEFT JOIN om_bfield_selection_choice obsc ON ocd.data = obsc.choice_id
 
 -- Name: /pinery/ordersample/{id}
 -- Description: LIMS API order sample query
@@ -577,3 +565,37 @@ WHERE fu.user_id = ?
 
 SELECT *
 FROM finch_user
+
+-- Name: /pinery/worksets
+-- Description: List all workset dilution (X Library Seq) templates including workset data
+-- Application Properties: worksets
+
+SELECT ws.workset_id AS workset_id, ws.label AS name, ws.barcode AS barcode, ws.description AS description, link.template_id AS template_id
+FROM ga_template_workset ws
+JOIN ga_template_workset_template link ON link.workset_id = ws.workset_id
+JOIN ga_template t ON t.template_id = link.template_id
+JOIN ga_template_type tt ON tt.type_id = t.type_id
+WHERE tt.label LIKE '% Seq'
+
+-- Name: /pinery/boxes
+-- Description: List all box positions with box detail
+-- Application Properties: boxes
+
+SELECT pi.obj_id AS template_id,
+  cpos.y AS y,
+  cpos.x AS x,
+  c.container_id AS container_id,
+  c.name AS container_name,
+  c.location_str AS container_location,
+  ct.label AS container_type,
+  cp.value AS container_description
+FROM ga_template t
+JOIN pitem pi ON pi.obj_id = t.template_id
+JOIN cpos ON cpos.cpos_id = pi.cpos_id
+JOIN container c ON c.container_id = cpos.container_id
+JOIN container_type ct
+  ON ct.type_id = c.type_id
+  AND ct.label IN ('Matrix Box', 'Storage Box')
+LEFT JOIN container_prop cp
+  ON cp.container_id = c.container_id
+  AND cp.key = 'description'
