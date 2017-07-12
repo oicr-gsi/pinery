@@ -16,7 +16,6 @@ addons:
         github_token:
             secure: "io9Q9cpmvUKSwwIDG9ND/PgNUPz8gr6CcE1u4NW4iWa/VXyJsM1ZbneNqJUdvu4jBKXWUbuELyluPcObgq6wCIiKLeJt8s1dEco/6EdazzI4q0CnNqknccAvgTpIOCv5Nu+onHu7wtGOPCVtsv7WTXR7RkMno0ZhckSgNwrXgkzGoIMH5KGukZqIiSgbRZqJbgflaryysVJAsP87JjVBeofjTQ2CFQnRgiUHRLPRZ9H8gGUEo5V2rpjQ6Ud7MVJ5WgKwx0vZ/qDnrrwWCH1qymqmU2KEUQP+Y/6rkbmb6PjQHV9IM6F2V1K+X40ysQxZHSqD26lOClmxVSCpdzI/gCevFERY0ph7fFcCi97RtGcqihYkCQ4s9ssI0Us911c/XN63Tov8BfKVArq2kzGJSsTFVNbfhyWSJTgU9kurDzX1K6DhyxO0trzDIYBmswi1vtq77o3Ozpg4InkLqZbisSUyiwrSVZzGO16qRcS8viC6EynxGotAJGffr9OFPqd3GCfcSAnVO5xC1gn1kWq8g0yIzrRqEXCdx+eXcD2PMbN8UXKnpDK77To/oh6ZEQ5lBTb1wcXYakzy2OIDcGqqB3EAd++iNTN6dCDKr6uiCt9FUzCzUACOmgvLFeWL9DiFR5hGXGDL0eycFdUod5JdE7TzLLxZIUvusV6VRKEJJZE="
         branches:
-        - master
         - 2.0-rc7
 
 before_install:
