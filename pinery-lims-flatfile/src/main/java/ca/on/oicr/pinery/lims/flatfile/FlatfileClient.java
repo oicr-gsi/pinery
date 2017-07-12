@@ -143,4 +143,5 @@ public class FlatfileClient implements Lims {
   public List<Box> getBoxes() {
     return boxDao.getAllBoxes();
   }
+
 }
