@@ -17,5 +17,6 @@ public class ProjectClient extends ResourceClient<SampleProjectDto> {
 	public List<SampleProjectDto> all() throws HttpResponseException {
 		return getResourceList("sample/projects");
 	}
-	
+    //TODO
+    //FIXME	
 }
