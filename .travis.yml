@@ -24,7 +24,7 @@ before_script:
 - export TZ=EST
 
 script:
-- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.verbose=true -Dsonar.scanner.dumpToFile=true
 
 cache:
     directories:
