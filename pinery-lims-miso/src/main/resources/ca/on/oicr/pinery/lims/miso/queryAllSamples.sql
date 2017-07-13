@@ -63,28 +63,52 @@ LEFT JOIN TissueOrigin tor ON tor.tissueOriginId = st.tissueOriginId
 LEFT JOIN TissueMaterial tm ON tm.tissueMaterialId = st.tissueMaterialId
 LEFT JOIN Lab la ON st.labId = la.labId
 LEFT JOIN Institute it ON la.instituteId = it.instituteId
-LEFT JOIN SampleStock ss ON sai.sampleId = ss.sampleId 
-LEFT JOIN ( 
-        SELECT sample_sampleId 
-                ,results 
-        FROM SampleQC 
-        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod 
-        WHERE QCType.NAME = 'QuBit' 
-        ) qubit ON qubit.sample_sampleId = s.sampleId 
-LEFT JOIN ( 
-        SELECT sample_sampleId 
-                ,results 
-        FROM SampleQC 
-        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod 
-        WHERE QCType.NAME = 'Nanodrop' 
-        ) nanodrop ON nanodrop.sample_sampleId = s.sampleId 
-LEFT JOIN ( 
-        SELECT sample_sampleId 
-                ,results 
-        FROM SampleQC 
-        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod 
-        WHERE QCType.NAME = 'Human qPCR' 
-        ) qpcr ON qpcr.sample_sampleId = s.sampleId 
+LEFT JOIN SampleStock ss ON sai.sampleId = ss.sampleId
+LEFT JOIN (
+	    SELECT sqc.sample_sampleId, MAX(sqc.qcId) AS qcId
+	    FROM (
+            SELECT sample_sampleId, qcMethod, MAX(qcDate) AS maxDate
+	        FROM SampleQC
+	        JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod
+	        WHERE QCType.name = 'Qubit'
+	        GROUP By sample_sampleId, qcMethod
+	        ) maxQubitDates
+	    JOIN SampleQC sqc ON sqc.sample_sampleId = maxQubitDates.sample_sampleId
+	        AND sqc.qcDate = maxQubitDates.maxDate
+	        AND sqc.qcMethod = maxQubitDates.qcMethod
+	    GROUP BY sqc.sample_sampleId
+		) newestQubit ON newestQubit.sample_sampleId = s.sampleId
+LEFT JOIN SampleQC qubit ON qubit.qcId = newestQubit.qcId
+LEFT JOIN (
+        SELECT sqc.sample_sampleId, MAX(sqc.qcId) AS qcId
+        FROM (
+            SELECT sample_sampleId, qcMethod, MAX(qcDate) AS maxDate
+            FROM SampleQC
+            JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod
+            WHERE QCType.name = 'Nanodrop'
+            GROUP By sample_sampleId, qcMethod
+            ) maxNanodropDates
+        JOIN SampleQC sqc ON sqc.sample_sampleId = maxNanodropDates.sample_sampleId
+            AND sqc.qcDate = maxNanodropDates.maxDate
+            AND sqc.qcMethod = maxNanodropDates.qcMethod
+        GROUP BY sqc.sample_sampleId
+        ) newestNanodrop ON newestNanodrop.sample_sampleId = s.sampleId
+LEFT JOIN SampleQC nanodrop ON nanodrop.qcId = newestNanodrop.qcId
+LEFT JOIN (
+        SELECT sqc.sample_sampleId, MAX(sqc.qcId) AS qcId
+        FROM (
+            SELECT sample_sampleId, qcMethod, MAX(qcDate) AS maxDate
+            FROM SampleQC
+            JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod
+            WHERE QCType.name = 'Human qPCR'
+            GROUP By sample_sampleId, qcMethod
+            ) maxQpcrDates
+        JOIN SampleQC sqc ON sqc.sample_sampleId = maxQpcrDates.sample_sampleId
+            AND sqc.qcDate = maxQpcrDates.maxDate
+            AND sqc.qcMethod = maxQpcrDates.qcMethod
+        GROUP BY sqc.sample_sampleId
+        ) newestQpcr ON newestQpcr.sample_sampleId = s.sampleId
+LEFT JOIN SampleQC qpcr ON qpcr.qcId = newestQpcr.qcId
 LEFT JOIN BoxPosition pos ON pos.targetId = s.sampleId 
         AND pos.targetType LIKE 'Sample%' 
 LEFT JOIN Box box ON box.boxId = pos.boxId 
@@ -145,14 +169,22 @@ LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId
 LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId
 LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId
 LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId
-LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType 
-LEFT JOIN ( 
-        SELECT library_libraryId 
-                ,results 
-        FROM LibraryQC 
-        INNER JOIN QCType ON QCType.qcTypeId = LibraryQC.qcMethod 
-        WHERE QCType.NAME = 'QuBit' 
-        ) qubit ON qubit.library_libraryId = l.libraryId 
+LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType
+LEFT JOIN (
+        SELECT lqc.library_libraryId, MAX(lqc.qcId) AS qcId
+        FROM (
+            SELECT library_libraryId, qcMethod, MAX(qcDate) AS maxDate
+            FROM LibraryQC
+            JOIN QCType ON QCType.qcTypeId = LibraryQC.qcMethod
+            WHERE QCType.name = 'Qubit'
+            GROUP By library_libraryId, qcMethod
+            ) maxQubitDates
+        JOIN LibraryQC lqc ON lqc.library_libraryId = maxQubitDates.library_libraryId
+            AND lqc.qcDate = maxQubitDates.maxDate
+            AND lqc.qcMethod = maxQubitDates.qcMethod
+        GROUP BY lqc.library_libraryId
+        ) newestQubit ON newestQubit.library_libraryId = l.libraryId
+LEFT JOIN LibraryQC qubit ON qubit.qcId = newestQubit.qcId
 LEFT JOIN ( 
         SELECT library_libraryId 
                 ,sequence 
