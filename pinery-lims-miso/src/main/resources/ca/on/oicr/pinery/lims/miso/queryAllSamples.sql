@@ -8,10 +8,10 @@ SELECT s.alias NAME
         ,tt.alias tissueType 
         ,p.shortName project 
         ,sai.archived archived 
-        ,scl.creationDate created 
-        ,sclcu.userId createdById 
-        ,scl.lastUpdated modified 
-        ,scluu.userId modifiedById 
+        ,s.created created 
+        ,s.creator createdById 
+        ,s.lastModified modified 
+        ,s.lastModifier modifiedById 
         ,s.identificationBarcode tubeBarcode 
         ,s.volume volume 
         ,sai.concentration concentration 
@@ -54,9 +54,7 @@ LEFT JOIN Sample parent ON parent.sampleId = sai.parentId
 LEFT JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId 
 LEFT JOIN Project p ON p.projectId = s.project_projectId 
 LEFT JOIN Subproject subp ON subp.subprojectId = sai.subprojectId 
-LEFT JOIN Identity i ON i.sampleId = s.sampleId 
- 
- 
+LEFT JOIN Identity i ON i.sampleId = s.sampleId  
 LEFT JOIN SampleAliquot sa ON sa.sampleId = sai.sampleId 
 LEFT JOIN SamplePurpose sp ON sp.samplePurposeId = sa.samplePurposeId 
 LEFT JOIN SampleTissue st ON st.sampleId = s.sampleId 
@@ -65,12 +63,7 @@ LEFT JOIN TissueOrigin tor ON tor.tissueOriginId = st.tissueOriginId
 LEFT JOIN TissueMaterial tm ON tm.tissueMaterialId = st.tissueMaterialId
 LEFT JOIN Lab la ON st.labId = la.labId
 LEFT JOIN Institute it ON la.instituteId = it.instituteId
-
-LEFT JOIN (SELECT sampleId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from SampleChangeLog GROUP BY sampleId) scl ON sai.sampleId = scl.sampleId 
-LEFT JOIN (SELECT userId, sampleId FROM SampleChangeLog scl1 WHERE changeTime = (SELECT MIN(scl2.changeTime) FROM SampleChangeLog scl2 where scl1.sampleId = scl2.sampleId)) sclcu ON sai.sampleId = sclcu.sampleId 
-LEFT JOIN (SELECT userId, sampleId  FROM SampleChangeLog scl1 WHERE changeTime = (SELECT MAX(scl2.changeTime) FROM SampleChangeLog scl2 where scl1.sampleId = scl2.sampleId)) scluu ON sai.sampleId = scluu.sampleId 
 LEFT JOIN SampleStock ss ON sai.sampleId = ss.sampleId 
- 
 LEFT JOIN ( 
         SELECT sample_sampleId 
                 ,results 
@@ -96,7 +89,7 @@ LEFT JOIN BoxPosition pos ON pos.targetId = s.sampleId
         AND pos.targetType LIKE 'Sample%' 
 LEFT JOIN Box box ON box.boxId = pos.boxId 
  
-UNION 
+UNION ALL
  
 SELECT l.alias NAME 
         ,l.description description 
@@ -109,9 +102,9 @@ SELECT l.alias NAME
         ,LEFT(l.alias, LOCATE('_', l.alias)-1) project 
         ,lai.archived archived 
         ,l.creationDate created 
-        ,lclcu.userId createdById 
-        ,lcl.lastUpdated modified 
-        ,lcluu.userId modifiedById 
+        ,l.creator createdById 
+        ,l.lastModified modified 
+        ,l.lastModifier modifiedById 
         ,l.identificationBarcode tubeBarcode 
         ,l.volume volume 
         ,l.concentration concentration 
@@ -148,12 +141,10 @@ SELECT l.alias NAME
         ,NULL subproject
         ,NULL institute
 FROM Library l 
-LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId 
-LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId 
- 
-LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId 
- 
-LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId  
+LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId
+LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId
+LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId
+LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId
 LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType 
 LEFT JOIN ( 
         SELECT library_libraryId 
@@ -178,17 +169,9 @@ LEFT JOIN (
         ) bc2 ON bc2.library_libraryId = l.libraryId 
 LEFT JOIN BoxPosition pos ON pos.targetId = l.libraryId 
         AND pos.targetType LIKE 'Library%' 
-LEFT JOIN Box box ON box.boxId = pos.boxId 
-LEFT JOIN (SELECT libraryId, MAX(changeTime) as lastUpdated FROM LibraryChangeLog GROUP BY libraryId) lcl 
-        ON lai.libraryId = lcl.libraryId 
-LEFT JOIN (SELECT userId, libraryId FROM LibraryChangeLog lcl1 WHERE changeTime = ( 
-        SELECT MIN(lcl2.changeTime) FROM LibraryChangeLog lcl2 where lcl1.libraryId = lcl2.libraryId) 
-) lclcu ON lai.libraryId = lclcu.libraryId 
-LEFT JOIN (SELECT userId, libraryId  FROM LibraryChangeLog lcl1 WHERE changeTime = ( 
-        SELECT MAX(lcl2.changeTime) FROM LibraryChangeLog lcl2 where lcl1.libraryId = lcl2.libraryId) 
-) lcluu ON lai.libraryId = lcluu.libraryId 
+LEFT JOIN Box box ON box.boxId = pos.boxId
  
-UNION 
+UNION ALL
  
 SELECT parent.alias name 
         ,NULL description 
@@ -203,7 +186,7 @@ SELECT parent.alias name
         ,CONVERT(d.creationDate, DATETIME) created 
         ,NULL createdById 
         ,d.lastUpdated modified 
-        ,NULL modifiedById 
+        ,d.lastModifier modifiedById 
         ,d.identificationBarcode tubeBarcode 
         ,d.volume volume 
         ,d.concentration concentration 
