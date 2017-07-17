@@ -8,10 +8,10 @@ SELECT s.alias NAME
         ,tt.alias tissueType 
         ,p.shortName project 
         ,sai.archived archived 
-        ,scl.creationDate created 
-        ,sclcu.userId createdById 
-        ,scl.lastUpdated modified 
-        ,scluu.userId modifiedById 
+        ,s.created created 
+        ,s.creator createdById 
+        ,s.lastModified modified 
+        ,s.lastModifier modifiedById 
         ,s.identificationBarcode tubeBarcode 
         ,s.volume volume 
         ,sai.concentration concentration 
@@ -54,9 +54,7 @@ LEFT JOIN Sample parent ON parent.sampleId = sai.parentId
 LEFT JOIN SampleClass sc ON sc.sampleClassId = sai.sampleClassId 
 LEFT JOIN Project p ON p.projectId = s.project_projectId 
 LEFT JOIN Subproject subp ON subp.subprojectId = sai.subprojectId 
-LEFT JOIN Identity i ON i.sampleId = s.sampleId 
- 
- 
+LEFT JOIN Identity i ON i.sampleId = s.sampleId  
 LEFT JOIN SampleAliquot sa ON sa.sampleId = sai.sampleId 
 LEFT JOIN SamplePurpose sp ON sp.samplePurposeId = sa.samplePurposeId 
 LEFT JOIN SampleTissue st ON st.sampleId = s.sampleId 
@@ -65,38 +63,57 @@ LEFT JOIN TissueOrigin tor ON tor.tissueOriginId = st.tissueOriginId
 LEFT JOIN TissueMaterial tm ON tm.tissueMaterialId = st.tissueMaterialId
 LEFT JOIN Lab la ON st.labId = la.labId
 LEFT JOIN Institute it ON la.instituteId = it.instituteId
-
-LEFT JOIN (SELECT sampleId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from SampleChangeLog GROUP BY sampleId) scl ON sai.sampleId = scl.sampleId 
-LEFT JOIN (SELECT userId, sampleId FROM SampleChangeLog scl1 WHERE changeTime = (SELECT MIN(scl2.changeTime) FROM SampleChangeLog scl2 where scl1.sampleId = scl2.sampleId)) sclcu ON sai.sampleId = sclcu.sampleId 
-LEFT JOIN (SELECT userId, sampleId  FROM SampleChangeLog scl1 WHERE changeTime = (SELECT MAX(scl2.changeTime) FROM SampleChangeLog scl2 where scl1.sampleId = scl2.sampleId)) scluu ON sai.sampleId = scluu.sampleId 
-LEFT JOIN SampleStock ss ON sai.sampleId = ss.sampleId 
- 
-LEFT JOIN ( 
-        SELECT sample_sampleId 
-                ,results 
-        FROM SampleQC 
-        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod 
-        WHERE QCType.NAME = 'QuBit' 
-        ) qubit ON qubit.sample_sampleId = s.sampleId 
-LEFT JOIN ( 
-        SELECT sample_sampleId 
-                ,results 
-        FROM SampleQC 
-        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod 
-        WHERE QCType.NAME = 'Nanodrop' 
-        ) nanodrop ON nanodrop.sample_sampleId = s.sampleId 
-LEFT JOIN ( 
-        SELECT sample_sampleId 
-                ,results 
-        FROM SampleQC 
-        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod 
-        WHERE QCType.NAME = 'Human qPCR' 
-        ) qpcr ON qpcr.sample_sampleId = s.sampleId 
+LEFT JOIN SampleStock ss ON sai.sampleId = ss.sampleId
+LEFT JOIN (
+	    SELECT sqc.sample_sampleId, MAX(sqc.qcId) AS qcId
+	    FROM (
+            SELECT sample_sampleId, qcMethod, MAX(qcDate) AS maxDate
+	        FROM SampleQC
+	        JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod
+	        WHERE QCType.name = 'Qubit'
+	        GROUP By sample_sampleId, qcMethod
+	        ) maxQubitDates
+	    JOIN SampleQC sqc ON sqc.sample_sampleId = maxQubitDates.sample_sampleId
+	        AND sqc.qcDate = maxQubitDates.maxDate
+	        AND sqc.qcMethod = maxQubitDates.qcMethod
+	    GROUP BY sqc.sample_sampleId
+		) newestQubit ON newestQubit.sample_sampleId = s.sampleId
+LEFT JOIN SampleQC qubit ON qubit.qcId = newestQubit.qcId
+LEFT JOIN (
+        SELECT sqc.sample_sampleId, MAX(sqc.qcId) AS qcId
+        FROM (
+            SELECT sample_sampleId, qcMethod, MAX(qcDate) AS maxDate
+            FROM SampleQC
+            JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod
+            WHERE QCType.name = 'Nanodrop'
+            GROUP By sample_sampleId, qcMethod
+            ) maxNanodropDates
+        JOIN SampleQC sqc ON sqc.sample_sampleId = maxNanodropDates.sample_sampleId
+            AND sqc.qcDate = maxNanodropDates.maxDate
+            AND sqc.qcMethod = maxNanodropDates.qcMethod
+        GROUP BY sqc.sample_sampleId
+        ) newestNanodrop ON newestNanodrop.sample_sampleId = s.sampleId
+LEFT JOIN SampleQC nanodrop ON nanodrop.qcId = newestNanodrop.qcId
+LEFT JOIN (
+        SELECT sqc.sample_sampleId, MAX(sqc.qcId) AS qcId
+        FROM (
+            SELECT sample_sampleId, qcMethod, MAX(qcDate) AS maxDate
+            FROM SampleQC
+            JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod
+            WHERE QCType.name = 'Human qPCR'
+            GROUP By sample_sampleId, qcMethod
+            ) maxQpcrDates
+        JOIN SampleQC sqc ON sqc.sample_sampleId = maxQpcrDates.sample_sampleId
+            AND sqc.qcDate = maxQpcrDates.maxDate
+            AND sqc.qcMethod = maxQpcrDates.qcMethod
+        GROUP BY sqc.sample_sampleId
+        ) newestQpcr ON newestQpcr.sample_sampleId = s.sampleId
+LEFT JOIN SampleQC qpcr ON qpcr.qcId = newestQpcr.qcId
 LEFT JOIN BoxPosition pos ON pos.targetId = s.sampleId 
         AND pos.targetType LIKE 'Sample%' 
 LEFT JOIN Box box ON box.boxId = pos.boxId 
  
-UNION 
+UNION ALL
  
 SELECT l.alias NAME 
         ,l.description description 
@@ -109,9 +126,9 @@ SELECT l.alias NAME
         ,LEFT(l.alias, LOCATE('_', l.alias)-1) project 
         ,lai.archived archived 
         ,l.creationDate created 
-        ,lclcu.userId createdById 
-        ,lcl.lastUpdated modified 
-        ,lcluu.userId modifiedById 
+        ,l.creator createdById 
+        ,l.lastModified modified 
+        ,l.lastModifier modifiedById 
         ,l.identificationBarcode tubeBarcode 
         ,l.volume volume 
         ,l.concentration concentration 
@@ -148,20 +165,26 @@ SELECT l.alias NAME
         ,NULL subproject
         ,NULL institute
 FROM Library l 
-LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId 
-LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId 
- 
-LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId 
- 
-LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId  
-LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType 
-LEFT JOIN ( 
-        SELECT library_libraryId 
-                ,results 
-        FROM LibraryQC 
-        INNER JOIN QCType ON QCType.qcTypeId = LibraryQC.qcMethod 
-        WHERE QCType.NAME = 'QuBit' 
-        ) qubit ON qubit.library_libraryId = l.libraryId 
+LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId
+LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId
+LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId
+LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId
+LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType
+LEFT JOIN (
+        SELECT lqc.library_libraryId, MAX(lqc.qcId) AS qcId
+        FROM (
+            SELECT library_libraryId, qcMethod, MAX(qcDate) AS maxDate
+            FROM LibraryQC
+            JOIN QCType ON QCType.qcTypeId = LibraryQC.qcMethod
+            WHERE QCType.name = 'Qubit'
+            GROUP By library_libraryId, qcMethod
+            ) maxQubitDates
+        JOIN LibraryQC lqc ON lqc.library_libraryId = maxQubitDates.library_libraryId
+            AND lqc.qcDate = maxQubitDates.maxDate
+            AND lqc.qcMethod = maxQubitDates.qcMethod
+        GROUP BY lqc.library_libraryId
+        ) newestQubit ON newestQubit.library_libraryId = l.libraryId
+LEFT JOIN LibraryQC qubit ON qubit.qcId = newestQubit.qcId
 LEFT JOIN ( 
         SELECT library_libraryId 
                 ,sequence 
@@ -178,17 +201,9 @@ LEFT JOIN (
         ) bc2 ON bc2.library_libraryId = l.libraryId 
 LEFT JOIN BoxPosition pos ON pos.targetId = l.libraryId 
         AND pos.targetType LIKE 'Library%' 
-LEFT JOIN Box box ON box.boxId = pos.boxId 
-LEFT JOIN (SELECT libraryId, MAX(changeTime) as lastUpdated FROM LibraryChangeLog GROUP BY libraryId) lcl 
-        ON lai.libraryId = lcl.libraryId 
-LEFT JOIN (SELECT userId, libraryId FROM LibraryChangeLog lcl1 WHERE changeTime = ( 
-        SELECT MIN(lcl2.changeTime) FROM LibraryChangeLog lcl2 where lcl1.libraryId = lcl2.libraryId) 
-) lclcu ON lai.libraryId = lclcu.libraryId 
-LEFT JOIN (SELECT userId, libraryId  FROM LibraryChangeLog lcl1 WHERE changeTime = ( 
-        SELECT MAX(lcl2.changeTime) FROM LibraryChangeLog lcl2 where lcl1.libraryId = lcl2.libraryId) 
-) lcluu ON lai.libraryId = lcluu.libraryId 
+LEFT JOIN Box box ON box.boxId = pos.boxId
  
-UNION 
+UNION ALL
  
 SELECT parent.alias name 
         ,NULL description 
@@ -203,7 +218,7 @@ SELECT parent.alias name
         ,CONVERT(d.creationDate, DATETIME) created 
         ,NULL createdById 
         ,d.lastUpdated modified 
-        ,NULL modifiedById 
+        ,d.lastModifier modifiedById 
         ,d.identificationBarcode tubeBarcode 
         ,d.volume volume 
         ,d.concentration concentration 
