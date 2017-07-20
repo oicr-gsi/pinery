@@ -3,6 +3,7 @@ SELECT s.alias NAME
         ,s.NAME id 
         ,parent.NAME parentId 
         ,COALESCE(tt.sampleTypeName, sc.alias) sampleType
+        ,sc.sampleCategory sample_category
         ,NULL sampleType_platform 
         ,NULL sampleType_description 
         ,tt.alias tissueType 
@@ -21,6 +22,7 @@ SELECT s.alias NAME
         ,NULL library_design_code 
         ,s.receivedDate receive_date 
         ,i.externalName external_name 
+        ,i.donorSex gender
         ,tor.alias tissue_origin 
         ,tm.alias tissue_preparation 
         ,st.region tissue_region 
@@ -120,6 +122,7 @@ SELECT l.alias NAME
         ,l.NAME id 
         ,parent.NAME parentId 
         ,NULL sampleType 
+        ,NULL sample_category
         ,lt.platformType sampleType_platform 
         ,lt.description sampleType_description 
         ,NULL tissueType 
@@ -138,6 +141,7 @@ SELECT l.alias NAME
         ,ldc.code library_design_code 
         ,NULL receive_date 
         ,NULL external_name 
+        ,NULL gender
         ,NULL tissue_origin 
         ,NULL tissue_preparation 
         ,NULL tissue_region 
@@ -210,6 +214,7 @@ SELECT parent.alias name
         ,d.NAME id 
         ,parent.name parentId 
         ,NULL sampleType 
+        ,NULL sample_category
         ,lt.platformType sampleType_platform 
         ,lt.description sampleType_description 
         ,NULL tissueType 
@@ -228,6 +233,7 @@ SELECT parent.alias name
         ,ldc.code library_design_code 
         ,NULL receive_date 
         ,NULL external_name 
+        ,NULL gender
         ,NULL tissue_origin 
         ,NULL tissue_preparation 
         ,NULL tissue_region 
