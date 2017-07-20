@@ -22,7 +22,7 @@ SELECT s.alias NAME
         ,NULL library_design_code 
         ,s.receivedDate receive_date 
         ,i.externalName external_name 
-        ,i.donorSex gender
+        ,i.donorSex sex
         ,tor.alias tissue_origin 
         ,tm.alias tissue_preparation 
         ,st.region tissue_region 
@@ -141,7 +141,7 @@ SELECT l.alias NAME
         ,ldc.code library_design_code 
         ,NULL receive_date 
         ,NULL external_name 
-        ,NULL gender
+        ,NULL sex
         ,NULL tissue_origin 
         ,NULL tissue_preparation 
         ,NULL tissue_region 
@@ -233,7 +233,7 @@ SELECT parent.alias name
         ,ldc.code library_design_code 
         ,NULL receive_date 
         ,NULL external_name 
-        ,NULL gender
+        ,NULL sex
         ,NULL tissue_origin 
         ,NULL tissue_preparation 
         ,NULL tissue_region 

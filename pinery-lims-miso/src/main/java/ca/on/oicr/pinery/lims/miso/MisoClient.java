@@ -768,7 +768,7 @@ public class MisoClient implements Lims {
         }
       },
       EXTERNAL_NAME("external_name", "External Name"),
-      GENDER("gender", "Gender") {
+      SEX("sex", "Sex") {
         @Override
         public String extractStringValueFrom(ResultSet rs) throws SQLException {
           String str = rs.getString(getSqlKey());
