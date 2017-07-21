@@ -1,5 +1,6 @@
 package ca.on.oicr.pinery.lims.miso;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -51,8 +54,6 @@ import ca.on.oicr.pinery.lims.miso.MisoClient.SampleRowMapper.AttributeKey;
 import ca.on.oicr.pinery.lims.miso.converters.SampleTypeConverter;
 
 import com.google.common.collect.Lists;
-import java.io.IOException;
-import org.apache.commons.io.IOUtils;
 
 public class MisoClient implements Lims {
 
@@ -759,6 +760,7 @@ public class MisoClient implements Lims {
      */
     public static enum AttributeKey {
 
+      SAMPLE_CATEGORY("sample_category", "Sample Category"),
       RECEIVE_DATE("receive_date", "Receive Date") {
         @Override
         public String extractStringValueFrom(ResultSet rs) throws SQLException {
@@ -766,6 +768,13 @@ public class MisoClient implements Lims {
         }
       },
       EXTERNAL_NAME("external_name", "External Name"),
+      SEX("sex", "Sex") {
+        @Override
+        public String extractStringValueFrom(ResultSet rs) throws SQLException {
+          String str = rs.getString(getSqlKey());
+          return WordUtils.capitalizeFully(str);
+        }
+      },
       TISSUE_ORIGIN("tissue_origin", "Tissue Origin"),
       TISSUE_TYPE("tissueType", "Tissue Type"),
       TISSUE_PREPARATION("tissue_preparation", "Tissue Preparation"),
