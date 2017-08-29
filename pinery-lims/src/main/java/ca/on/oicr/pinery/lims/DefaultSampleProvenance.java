@@ -176,11 +176,6 @@ public class DefaultSampleProvenance implements SampleProvenance {
             attrsAll.put(LimsAttribute.SAMPLE_TYPE.toString(), sample.getSampleType());
         }
 
-        //lane specific attributes
-        if (lane.getPoolName() != null && !lane.getPoolName().isEmpty()) {
-            attrsAll.put(LimsAttribute.POOL_NAME.toString(), lane.getPoolName());
-        }
-
         //add additional sample attributes
         for (Entry<LimsAttribute, Set<String>> e : additionalSampleAttributes.entrySet()) {
             attrsAll.putAll(e.getKey().toString(), e.getValue());
@@ -249,7 +244,11 @@ public class DefaultSampleProvenance implements SampleProvenance {
     @Override
     public SortedMap<String, SortedSet<String>> getLaneAttributes() {
         SortedSetMultimap attrs = TreeMultimap.create();
-        //lane.getAttributes();
+
+        if (lane.getPoolName() != null && !lane.getPoolName().isEmpty()) {
+            attrs.put(LimsAttribute.POOL_NAME.toString(), lane.getPoolName());
+        }
+
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }
 
