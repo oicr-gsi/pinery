@@ -36,25 +36,25 @@ public enum LimsAttribute {
     INSTITUTE("institute", "Institute"),
     POOL_NAME("pool_name", "Pool Name");
 
-    private final Set<String> in;
-    private final String out;
+    private final Set<String> inputTerms;
+    private final String outputTerm;
 
     static {
         validate();
     }
 
-    private LimsAttribute(String out, String... in) {
-        this.in = new HashSet<>(Arrays.asList(in));
-        this.out = out;
+    private LimsAttribute(String outputTerm, String... inputTerm) {
+        this.inputTerms = new HashSet<>(Arrays.asList(inputTerm));
+        this.outputTerm = outputTerm;
     }
 
     public static LimsAttribute fromString(String text) {
         if (text != null) {
             for (LimsAttribute sa : LimsAttribute.values()) {
-                if (sa.in.contains(text)) {
+                if (sa.inputTerms.contains(text)) {
                     return sa;
                 }
-                if (sa.out.contains(text)) {
+                if (sa.outputTerm.contains(text)) {
                     return sa;
                 }
             }
@@ -64,7 +64,7 @@ public enum LimsAttribute {
 
     @Override
     public String toString() {
-        return out;
+        return outputTerm;
     }
 
     public String asString(boolean useEnumToString) {
@@ -76,23 +76,23 @@ public enum LimsAttribute {
     }
 
     private static void validate() {
-        Set<String> ins = new HashSet<>();
-        Set<String> outs = new HashSet<>();
+        Set<String> allTerms = new HashSet<>();
+        Set<String> allOutputTerms = new HashSet<>();
         for (LimsAttribute la : LimsAttribute.values()) {
-            if (Sets.intersection(ins, la.in).isEmpty()) {
-                ins.addAll(la.in);
+            if (Sets.intersection(allTerms, la.inputTerms).isEmpty()) {
+                allTerms.addAll(la.inputTerms);
             } else {
-                throw new RuntimeException("Duplicate: [" + la.in.toString() + "]");
+                throw new IllegalArgumentException("Duplicate: [" + la.inputTerms.toString() + "]");
             }
-            if (!ins.contains(la.out)) {
-                ins.add(la.out);
+            if (!allTerms.contains(la.outputTerm)) {
+                allTerms.add(la.outputTerm);
             } else {
-                throw new RuntimeException("Duplicate: [" + la.out.toString() + "]");
+                throw new IllegalArgumentException("Duplicate: [" + la.outputTerm + "]");
             }
-            if (!outs.contains(la.out)) {
-                outs.add(la.out);
+            if (!allOutputTerms.contains(la.outputTerm)) {
+                allOutputTerms.add(la.outputTerm);
             } else {
-                throw new RuntimeException("Duplicate: [" + la.out + "]");
+                throw new IllegalArgumentException("Duplicate: [" + la.outputTerm + "]");
             }
         }
     }
