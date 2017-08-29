@@ -170,7 +170,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
         //collect additional sample fields as attributes
         if (sequencerRun.getId() != null && lane.getPosition() != null) {
-            attrsAll.put("run_id_and_position", sequencerRun.getId() + "_" + lane.getPosition());
+            attrsAll.put(LimsAttribute.RUN_ID_AND_POSITION.toString(), sequencerRun.getId() + "_" + lane.getPosition());
         }
         if (sample.getSampleType() != null) {
             attrsAll.put(LimsAttribute.SAMPLE_TYPE.toString(), sample.getSampleType());

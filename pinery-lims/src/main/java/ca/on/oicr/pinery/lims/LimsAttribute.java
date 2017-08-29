@@ -54,7 +54,7 @@ public enum LimsAttribute {
                 if (sa.inputTerms.contains(text)) {
                     return sa;
                 }
-                if (sa.outputTerm.contains(text)) {
+                if (sa.outputTerm.equals(text)) {
                     return sa;
                 }
             }
