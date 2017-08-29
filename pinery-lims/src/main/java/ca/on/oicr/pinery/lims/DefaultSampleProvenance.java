@@ -176,6 +176,11 @@ public class DefaultSampleProvenance implements SampleProvenance {
             attrsAll.put(SampleAttribute.SAMPLE_TYPE.toString(), sample.getSampleType());
         }
 
+        //lane specific attributes
+        if (lane.getPoolName() != null && !lane.getPoolName().isEmpty()) {
+            attrsAll.put(SampleAttribute.POOL_NAME.toString(), lane.getPoolName());
+        }
+
         //add additional sample attributes
         for (Entry<SampleAttribute, Set<String>> e : additionalSampleAttributes.entrySet()) {
             attrsAll.putAll(e.getKey().toString(), e.getValue());
