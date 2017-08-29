@@ -9,7 +9,7 @@ import java.util.Set;
  *
  * @author mlaszloffy
  */
-public enum SampleAttribute {
+public enum LimsAttribute {
     TISSUE_TYPE("geo_tissue_type", "Tissue Type"),
     TISSUE_ORIGIN("geo_tissue_origin", "Tissue Origin"),
     ORGANISM("geo_organism", "Organism"),
@@ -43,14 +43,14 @@ public enum SampleAttribute {
         validate();
     }
 
-    private SampleAttribute(String out, String... in) {
+    private LimsAttribute(String out, String... in) {
         this.in = new HashSet<>(Arrays.asList(in));
         this.out = out;
     }
 
-    public static SampleAttribute fromString(String text) {
+    public static LimsAttribute fromString(String text) {
         if (text != null) {
-            for (SampleAttribute sa : SampleAttribute.values()) {
+            for (LimsAttribute sa : LimsAttribute.values()) {
                 if (sa.in.contains(text)) {
                     return sa;
                 }
@@ -78,21 +78,21 @@ public enum SampleAttribute {
     private static void validate() {
         Set<String> ins = new HashSet<>();
         Set<String> outs = new HashSet<>();
-        for (SampleAttribute sa : SampleAttribute.values()) {
-            if (Sets.intersection(ins, sa.in).isEmpty()) {
-                ins.addAll(sa.in);
+        for (LimsAttribute la : LimsAttribute.values()) {
+            if (Sets.intersection(ins, la.in).isEmpty()) {
+                ins.addAll(la.in);
             } else {
-                throw new RuntimeException("Duplicate: [" + sa.in.toString() + "]");
+                throw new RuntimeException("Duplicate: [" + la.in.toString() + "]");
             }
-            if (!ins.contains(sa.out)) {
-                ins.add(sa.out);
+            if (!ins.contains(la.out)) {
+                ins.add(la.out);
             } else {
-                throw new RuntimeException("Duplicate: [" + sa.out.toString() + "]");
+                throw new RuntimeException("Duplicate: [" + la.out.toString() + "]");
             }
-            if (!outs.contains(sa.out)) {
-                outs.add(sa.out);
+            if (!outs.contains(la.out)) {
+                outs.add(la.out);
             } else {
-                throw new RuntimeException("Duplicate: [" + sa.out + "]");
+                throw new RuntimeException("Duplicate: [" + la.out + "]");
             }
         }
     }
