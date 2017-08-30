@@ -79,20 +79,20 @@ public enum LimsAttribute {
         Set<String> allTerms = new HashSet<>();
         Set<String> allOutputTerms = new HashSet<>();
         for (LimsAttribute la : LimsAttribute.values()) {
+
+            //check that there are no duplicate input terms
             if (Sets.intersection(allTerms, la.inputTerms).isEmpty()) {
                 allTerms.addAll(la.inputTerms);
             } else {
                 throw new IllegalArgumentException("Duplicate: [" + la.inputTerms.toString() + "]");
             }
-            if (!allTerms.contains(la.outputTerm)) {
-                allTerms.add(la.outputTerm);
-            } else {
+
+            //check that there are no duplicate output terms
+            if (allTerms.contains(la.outputTerm) || allOutputTerms.contains(la.outputTerm)) {
                 throw new IllegalArgumentException("Duplicate: [" + la.outputTerm + "]");
-            }
-            if (!allOutputTerms.contains(la.outputTerm)) {
+            } else {
                 allOutputTerms.add(la.outputTerm);
-            } else {
-                throw new IllegalArgumentException("Duplicate: [" + la.outputTerm + "]");
+                allTerms.add(la.outputTerm);
             }
         }
     }
