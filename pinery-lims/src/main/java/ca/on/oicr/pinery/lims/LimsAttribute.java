@@ -9,7 +9,7 @@ import java.util.Set;
  *
  * @author mlaszloffy
  */
-public enum SampleAttribute {
+public enum LimsAttribute {
     TISSUE_TYPE("geo_tissue_type", "Tissue Type"),
     TISSUE_ORIGIN("geo_tissue_origin", "Tissue Origin"),
     ORGANISM("geo_organism", "Organism"),
@@ -33,27 +33,28 @@ public enum SampleAttribute {
     PURPOSE("geo_purpose", "Purpose"),
     QPCR_PERCENTAGE_HUMAN("geo_qpcr_percentage_human", "qPCR %"),
     SUBPROJECT("subproject", "Subproject", "Sub-project"),
-    INSTITUTE("institute", "Institute");
+    INSTITUTE("institute", "Institute"),
+    POOL_NAME("pool_name", "Pool Name");
 
-    private final Set<String> in;
-    private final String out;
+    private final Set<String> inputTerms;
+    private final String outputTerm;
 
     static {
         validate();
     }
 
-    private SampleAttribute(String out, String... in) {
-        this.in = new HashSet<>(Arrays.asList(in));
-        this.out = out;
+    private LimsAttribute(String outputTerm, String... inputTerm) {
+        this.inputTerms = new HashSet<>(Arrays.asList(inputTerm));
+        this.outputTerm = outputTerm;
     }
 
-    public static SampleAttribute fromString(String text) {
+    public static LimsAttribute fromString(String text) {
         if (text != null) {
-            for (SampleAttribute sa : SampleAttribute.values()) {
-                if (sa.in.contains(text)) {
+            for (LimsAttribute sa : LimsAttribute.values()) {
+                if (sa.inputTerms.contains(text)) {
                     return sa;
                 }
-                if (sa.out.contains(text)) {
+                if (sa.outputTerm.equals(text)) {
                     return sa;
                 }
             }
@@ -63,7 +64,7 @@ public enum SampleAttribute {
 
     @Override
     public String toString() {
-        return out;
+        return outputTerm;
     }
 
     public String asString(boolean useEnumToString) {
@@ -75,23 +76,23 @@ public enum SampleAttribute {
     }
 
     private static void validate() {
-        Set<String> ins = new HashSet<>();
-        Set<String> outs = new HashSet<>();
-        for (SampleAttribute sa : SampleAttribute.values()) {
-            if (Sets.intersection(ins, sa.in).isEmpty()) {
-                ins.addAll(sa.in);
+        Set<String> allTerms = new HashSet<>();
+        Set<String> allOutputTerms = new HashSet<>();
+        for (LimsAttribute la : LimsAttribute.values()) {
+
+            //check that there are no duplicate input terms
+            if (Sets.intersection(allTerms, la.inputTerms).isEmpty()) {
+                allTerms.addAll(la.inputTerms);
             } else {
-                throw new RuntimeException("Duplicate: [" + sa.in.toString() + "]");
+                throw new IllegalArgumentException("Duplicate: [" + la.inputTerms.toString() + "]");
             }
-            if (!ins.contains(sa.out)) {
-                ins.add(sa.out);
+
+            //check that there are no duplicate output terms
+            if (allTerms.contains(la.outputTerm) || allOutputTerms.contains(la.outputTerm)) {
+                throw new IllegalArgumentException("Duplicate: [" + la.outputTerm + "]");
             } else {
-                throw new RuntimeException("Duplicate: [" + sa.out.toString() + "]");
-            }
-            if (!outs.contains(sa.out)) {
-                outs.add(sa.out);
-            } else {
-                throw new RuntimeException("Duplicate: [" + sa.out + "]");
+                allOutputTerms.add(la.outputTerm);
+                allTerms.add(la.outputTerm);
             }
         }
     }

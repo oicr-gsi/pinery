@@ -86,7 +86,11 @@ public class DefaultLaneProvenance implements LaneProvenance {
     @Override
     public SortedMap<String, SortedSet<String>> getLaneAttributes() {
         SortedSetMultimap attrs = TreeMultimap.create();
-        //lane.getAttributes();
+
+        if (lane.getPoolName() != null && !lane.getPoolName().isEmpty()) {
+            attrs.put(LimsAttribute.POOL_NAME.toString(), lane.getPoolName());
+        }
+
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }
 
