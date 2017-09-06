@@ -1,9 +1,10 @@
 package ca.on.oicr.pinery.lims;
 
-import com.google.common.collect.Sets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 /**
  *
@@ -28,7 +29,7 @@ public enum LimsAttribute {
     NANODROP_CONCENTRATION("geo_nanodrop_concentration", "Nanodrop (ng/uL)"),
     SAMPLE_RECEIVE_DATE("geo_receive_date", "Receive Date"),
     EXTERNAL_NAME("geo_external_name", "External Name"),
-    TUBE_ID("geo_tube_id", "Tube ID"),
+    TUBE_ID("geo_tube_id", "Tube Id", "Tube ID"),
     TARGETED_RESEQUENCING("geo_targeted_resequencing", "Targeted Resequencing"),
     PURPOSE("geo_purpose", "Purpose"),
     QPCR_PERCENTAGE_HUMAN("geo_qpcr_percentage_human", "qPCR %"),
