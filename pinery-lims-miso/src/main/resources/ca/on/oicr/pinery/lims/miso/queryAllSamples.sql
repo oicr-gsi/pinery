@@ -26,7 +26,7 @@ SELECT s.alias NAME
         ,tor.alias tissue_origin 
         ,tm.alias tissue_preparation 
         ,st.region tissue_region 
-        ,st.externalInstituteIdentifier tube_id 
+        ,st.secondaryIdentifier tube_id
         ,ss.strStatus str_result 
         ,sai.groupId group_id 
         ,sai.groupDescription group_id_description 
