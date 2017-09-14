@@ -216,21 +216,21 @@ public class MisoClient implements Lims {
       "        SELECT sample_sampleId\n" + 
       "                ,results\n" + 
       "        FROM SampleQC\n" + 
-      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n" + 
+      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.type\n" + 
       "        WHERE QCType.NAME = 'QuBit'\n" + 
       "        ) qubit ON qubit.sample_sampleId = s.sampleId\n" + 
       "LEFT JOIN (\n" + 
       "        SELECT sample_sampleId\n" + 
       "                ,results\n" + 
       "        FROM SampleQC\n" + 
-      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n" + 
+      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.type\n" + 
       "        WHERE QCType.NAME = 'Nanodrop'\n" + 
       "        ) nanodrop ON nanodrop.sample_sampleId = s.sampleId\n" + 
       "LEFT JOIN (\n" + 
       "        SELECT sample_sampleId\n" + 
       "                ,results\n" + 
       "        FROM SampleQC\n" + 
-      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n" + 
+      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.type\n" + 
       "        WHERE QCType.NAME = 'Human qPCR'\n" + 
       "        ) qpcr ON qpcr.sample_sampleId = s.sampleId\n" + 
       "LEFT JOIN BoxPosition pos ON pos.targetId = s.sampleId\n" + 
@@ -299,7 +299,7 @@ public class MisoClient implements Lims {
       "        SELECT library_libraryId\n" + 
       "                ,results\n" + 
       "        FROM LibraryQC\n" + 
-      "        INNER JOIN QCType ON QCType.qcTypeId = LibraryQC.qcMethod\n" + 
+      "        INNER JOIN QCType ON QCType.qcTypeId = LibraryQC.type\n" + 
       "        WHERE QCType.NAME = 'QuBit'\n" + 
       "        ) qubit ON qubit.library_libraryId = l.libraryId\n" + 
       "LEFT JOIN (\n" + 
