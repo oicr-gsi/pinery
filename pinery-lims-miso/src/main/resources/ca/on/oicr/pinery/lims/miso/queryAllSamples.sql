@@ -69,45 +69,45 @@ LEFT JOIN SampleStock ss ON sai.sampleId = ss.sampleId
 LEFT JOIN (
 	    SELECT sqc.sample_sampleId, MAX(sqc.qcId) AS qcId
 	    FROM (
-            SELECT sample_sampleId, qcMethod, MAX(qcDate) AS maxDate
+            SELECT sample_sampleId, type, MAX(date) AS maxDate
 	        FROM SampleQC
-	        JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod
+	        JOIN QCType ON QCType.qcTypeId = SampleQC.type
 	        WHERE QCType.name = 'Qubit'
-	        GROUP By sample_sampleId, qcMethod
+	        GROUP By sample_sampleId, type
 	        ) maxQubitDates
 	    JOIN SampleQC sqc ON sqc.sample_sampleId = maxQubitDates.sample_sampleId
-	        AND sqc.qcDate = maxQubitDates.maxDate
-	        AND sqc.qcMethod = maxQubitDates.qcMethod
+	        AND sqc.date = maxQubitDates.maxDate
+	        AND sqc.type = maxQubitDates.type
 	    GROUP BY sqc.sample_sampleId
 		) newestQubit ON newestQubit.sample_sampleId = s.sampleId
 LEFT JOIN SampleQC qubit ON qubit.qcId = newestQubit.qcId
 LEFT JOIN (
         SELECT sqc.sample_sampleId, MAX(sqc.qcId) AS qcId
         FROM (
-            SELECT sample_sampleId, qcMethod, MAX(qcDate) AS maxDate
+            SELECT sample_sampleId, type, MAX(date) AS maxDate
             FROM SampleQC
-            JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod
+            JOIN QCType ON QCType.qcTypeId = SampleQC.type
             WHERE QCType.name = 'Nanodrop'
-            GROUP By sample_sampleId, qcMethod
+            GROUP By sample_sampleId, type
             ) maxNanodropDates
         JOIN SampleQC sqc ON sqc.sample_sampleId = maxNanodropDates.sample_sampleId
-            AND sqc.qcDate = maxNanodropDates.maxDate
-            AND sqc.qcMethod = maxNanodropDates.qcMethod
+            AND sqc.date = maxNanodropDates.maxDate
+            AND sqc.type = maxNanodropDates.type
         GROUP BY sqc.sample_sampleId
         ) newestNanodrop ON newestNanodrop.sample_sampleId = s.sampleId
 LEFT JOIN SampleQC nanodrop ON nanodrop.qcId = newestNanodrop.qcId
 LEFT JOIN (
         SELECT sqc.sample_sampleId, MAX(sqc.qcId) AS qcId
         FROM (
-            SELECT sample_sampleId, qcMethod, MAX(qcDate) AS maxDate
+            SELECT sample_sampleId, type, MAX(date) AS maxDate
             FROM SampleQC
-            JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod
+            JOIN QCType ON QCType.qcTypeId = SampleQC.type
             WHERE QCType.name = 'Human qPCR'
-            GROUP By sample_sampleId, qcMethod
+            GROUP By sample_sampleId, type
             ) maxQpcrDates
         JOIN SampleQC sqc ON sqc.sample_sampleId = maxQpcrDates.sample_sampleId
-            AND sqc.qcDate = maxQpcrDates.maxDate
-            AND sqc.qcMethod = maxQpcrDates.qcMethod
+            AND sqc.date = maxQpcrDates.maxDate
+            AND sqc.type = maxQpcrDates.type
         GROUP BY sqc.sample_sampleId
         ) newestQpcr ON newestQpcr.sample_sampleId = s.sampleId
 LEFT JOIN SampleQC qpcr ON qpcr.qcId = newestQpcr.qcId
@@ -177,15 +177,15 @@ LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType
 LEFT JOIN (
         SELECT lqc.library_libraryId, MAX(lqc.qcId) AS qcId
         FROM (
-            SELECT library_libraryId, qcMethod, MAX(qcDate) AS maxDate
+            SELECT library_libraryId, type, MAX(date) AS maxDate
             FROM LibraryQC
-            JOIN QCType ON QCType.qcTypeId = LibraryQC.qcMethod
+            JOIN QCType ON QCType.qcTypeId = LibraryQC.type
             WHERE QCType.name = 'Qubit'
-            GROUP By library_libraryId, qcMethod
+            GROUP By library_libraryId, type
             ) maxQubitDates
         JOIN LibraryQC lqc ON lqc.library_libraryId = maxQubitDates.library_libraryId
-            AND lqc.qcDate = maxQubitDates.maxDate
-            AND lqc.qcMethod = maxQubitDates.qcMethod
+            AND lqc.date = maxQubitDates.maxDate
+            AND lqc.type = maxQubitDates.type
         GROUP BY lqc.library_libraryId
         ) newestQubit ON newestQubit.library_libraryId = l.libraryId
 LEFT JOIN LibraryQC qubit ON qubit.qcId = newestQubit.qcId
