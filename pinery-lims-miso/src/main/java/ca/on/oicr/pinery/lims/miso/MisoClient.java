@@ -291,7 +291,7 @@ public class MisoClient implements Lims {
       "LEFT JOIN Project p ON p.projectId = parent.project_projectId\n" + 
       "LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId\n" +
       "\n" + 
-      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId\n" + 
+      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = l.kitDescriptorId\n" + 
       "\n" + 
       "LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId\n" + "\n" +
       "LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + 
