@@ -171,7 +171,7 @@ SELECT l.alias NAME
 FROM Library l 
 LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId
 LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId
-LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId
+LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = l.kitDescriptorId
 LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId
 LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType
 LEFT JOIN (
