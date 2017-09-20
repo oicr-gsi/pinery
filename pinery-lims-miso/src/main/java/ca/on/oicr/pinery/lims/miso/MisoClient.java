@@ -12,8 +12,6 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -49,10 +47,9 @@ import ca.on.oicr.pinery.lims.DefaultStatus;
 import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.DefaultUser;
 import ca.on.oicr.pinery.lims.miso.MisoClient.SampleRowMapper.AttributeKey;
+import ca.on.oicr.pinery.lims.miso.converters.NonSampleTypeConverter;
 
 public class MisoClient implements Lims {
-
-  private static final Logger log = LoggerFactory.getLogger(MisoClient.class);
 
   private static final String MISO_SAMPLE_ID_PREFIX = "SAM";
   private static final String MISO_LIBRARY_ID_PREFIX = "LIB";
@@ -83,9 +80,8 @@ public class MisoClient implements Lims {
       "FROM PoolOrder o\n" + 
       "LEFT JOIN SequencingParameters sp ON sp.parametersId = o.parametersId\n" + 
       "LEFT JOIN Pool p ON p.poolId = o.poolId\n" + 
-      "INNER JOIN Pool_Elements pe ON pe.elementType = 'uk.ac.bbsrc.tgac.miso.core.data.impl.LibraryDilution'\n" + 
-      "        AND pe.pool_poolId = p.poolId\n" + 
-      "LEFT JOIN LibraryDilution ld ON ld.dilutionId = pe.elementId\n" + 
+      "LEFT JOIN Pool_Dilution pe ON pe.pool_poolId = p.poolId\n" + 
+      "LEFT JOIN LibraryDilution ld ON ld.dilutionId = pe.dilution_dilutionId\n" + 
       "LEFT JOIN TargetedSequencing tr ON tr.targetedSequencingId = ld.targetedSequencingId\n" + 
       "LEFT JOIN Library lib ON lib.libraryId = ld.library_libraryId\n" + 
       "LEFT JOIN (\n" + 
@@ -108,9 +104,8 @@ public class MisoClient implements Lims {
 
   // Run queries
   private static final String queryAllRuns = "SELECT DISTINCT r.alias, r.sequencerReference_sequencerReferenceId AS instrumentId, "
-      + "r.runId, r.filePath, st.health, st.startDate, st.completionDate, spc.identificationBarcode, createLog.userId, "
+      + "r.runId, r.filePath, r.health, r.startDate, r.completionDate, spc.identificationBarcode, createLog.userId, "
       + "createLog.changeTime, updateLog.userId, updateLog.changeTime, sp.paired paired, sp.readLength read_length " + "FROM Run AS r "
-      + "LEFT JOIN Status AS st ON st.statusId = r.status_statusId "
       + "LEFT JOIN SequencingParameters AS sp ON sp.parametersId = r.sequencingParameters_parametersId "
       + "LEFT JOIN Run_SequencerPartitionContainer AS rscp ON rscp.Run_runId = r.runId "
       + "LEFT JOIN SequencerPartitionContainer AS spc ON spc.containerId = rscp.containers_containerId "
@@ -130,10 +125,11 @@ public class MisoClient implements Lims {
 
   // RunSample queries
   private static final String queryAllRunSamples = "SELECT part.partitionId, l.name libraryId, bc1.sequence barcode, "
-      + "bc2.sequence barcode_two, tr.alias targeted_sequencing " + "FROM _Partition part "
+      + "bc2.sequence barcode_two, tr.alias targeted_sequencing "
+      + "FROM _Partition part "
       + "JOIN Pool pool ON pool.poolId = part.pool_poolId "
-      + "JOIN Pool_Elements ele ON ele.elementType='uk.ac.bbsrc.tgac.miso.core.data.impl.LibraryDilution'" + // scary
-      "AND ele.pool_poolId = pool.poolId " + "JOIN LibraryDilution ld ON ld.dilutionId = ele.elementId "
+      + "JOIN Pool_Dilution ele ON ele.pool_poolId = pool.poolId "
+      + "JOIN LibraryDilution ld ON ld.dilutionId = ele.dilution_dilutionId "
       + "JOIN Library l ON l.libraryId = ld.library_libraryId "
       + "LEFT JOIN TargetedSequencing tr ON tr.targetedSequencingId = ld.targetedSequencingId " + "LEFT JOIN ( "
       + "SELECT library_libraryId, sequence FROM Library_Index "
@@ -152,7 +148,7 @@ public class MisoClient implements Lims {
       "        ,s.description description\n" + 
       "        ,s.NAME id\n" + 
       "        ,parent.NAME parentId\n" + 
-      "        ,sc.alias sampleType\n" + 
+      "        ,COALESCE(tt.sampleTypeName, sc.alias) sampleType\n" + 
       "        ,NULL sampleType_platform\n" + 
       "        ,NULL sampleType_description\n" + 
       "        ,tt.alias tissueType\n" + 
@@ -164,7 +160,7 @@ public class MisoClient implements Lims {
       "        ,scluu.userId modifiedById\n" + 
       "        ,s.identificationBarcode tubeBarcode\n" + 
       "        ,s.volume volume\n" + 
-      "        ,ss.concentration concentration\n" + 
+      "        ,sai.concentration concentration\n" + 
       "        ,s.locationBarcode storageLocation\n" + 
       "        ,NULL kitName\n" + 
       "        ,NULL kitDescription\n" + 
@@ -174,7 +170,7 @@ public class MisoClient implements Lims {
       "        ,tor.alias tissue_origin\n" + 
       "        ,tm.alias tissue_preparation\n" + 
       "        ,st.region tissue_region\n" + 
-      "        ,st.tubeNumber tube_id\n" + 
+      "        ,st.secondaryIdentifier tube_id\n" + 
       "        ,ss.strStatus str_result\n" + 
       "        ,sai.groupId group_id\n" + 
       "        ,sai.groupDescription group_id_description\n" + 
@@ -188,8 +184,7 @@ public class MisoClient implements Lims {
       "        ,qpd.description detailedQcStatus\n" + 
       "        ,box.locationBarcode boxLocation\n" + 
       "        ,box.alias boxAlias\n" + 
-      "        ,pos.row boxRow\n" + 
-      "        ,pos.COLUMN boxColumn\n" + 
+      "        ,pos.position boxPosition\n" + 
       "        ,NULL paired\n" + 
       "        ,NULL read_length\n" + 
       "        ,NULL targeted_sequencing\n" + 
@@ -221,24 +216,25 @@ public class MisoClient implements Lims {
       "        SELECT sample_sampleId\n" + 
       "                ,results\n" + 
       "        FROM SampleQC\n" + 
-      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n" + 
+      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.type\n" + 
       "        WHERE QCType.NAME = 'QuBit'\n" + 
       "        ) qubit ON qubit.sample_sampleId = s.sampleId\n" + 
       "LEFT JOIN (\n" + 
       "        SELECT sample_sampleId\n" + 
       "                ,results\n" + 
       "        FROM SampleQC\n" + 
-      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n" + 
+      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.type\n" + 
       "        WHERE QCType.NAME = 'Nanodrop'\n" + 
       "        ) nanodrop ON nanodrop.sample_sampleId = s.sampleId\n" + 
       "LEFT JOIN (\n" + 
       "        SELECT sample_sampleId\n" + 
       "                ,results\n" + 
       "        FROM SampleQC\n" + 
-      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.qcMethod\n" + 
+      "        INNER JOIN QCType ON QCType.qcTypeId = SampleQC.type\n" + 
       "        WHERE QCType.NAME = 'Human qPCR'\n" + 
       "        ) qpcr ON qpcr.sample_sampleId = s.sampleId\n" + 
-      "LEFT JOIN BoxPosition pos ON pos.boxPositionId = s.boxPositionId\n" + 
+      "LEFT JOIN BoxPosition pos ON pos.targetId = s.sampleId\n" + 
+      "        AND pos.targetType LIKE 'Sample%'\n" +
       "LEFT JOIN Box box ON box.boxId = pos.boxId\n" + 
       "\n" + 
       "UNION\n" + 
@@ -253,10 +249,10 @@ public class MisoClient implements Lims {
       "        ,NULL tissueType\n" + 
       "        ,p.shortName project\n" + 
       "        ,lai.archived archived\n" + 
-      "        ,lai.creationDate created\n" + 
-      "        ,lai.createdBy createdById\n" + 
-      "        ,lai.lastUpdated modified\n" + 
-      "        ,lai.updatedBy modifiedById\n" + 
+      "        ,l.creationDate created\n" + 
+      "        ,lclcu.userId createdById\n" + 
+      "        ,lcl.lastUpdated modified\n" + 
+      "        ,lcluu.userId modifiedById\n" + 
       "        ,l.identificationBarcode tubeBarcode\n" + 
       "        ,l.volume volume\n" + 
       "        ,l.concentration concentration\n" + 
@@ -283,8 +279,7 @@ public class MisoClient implements Lims {
       "        ,NULL detailedQcStatus\n" + 
       "        ,box.locationBarcode boxLocation\n" + 
       "        ,box.alias boxAlias\n" + 
-      "        ,pos.row boxRow\n" + 
-      "        ,pos.COLUMN boxColumn\n" + 
+      "        ,pos.position boxPosition\n" + 
       "        ,NULL paired\n" + 
       "        ,NULL readLength\n" + 
       "        ,NULL targeted_sequencing\n" + 
@@ -294,9 +289,9 @@ public class MisoClient implements Lims {
       "FROM Library l\n" + 
       "LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId\n" + 
       "LEFT JOIN Project p ON p.projectId = parent.project_projectId\n" + 
-      "LEFT JOIN LibraryAdditionalInfo lai ON lai.libraryId = l.libraryId\n" + 
+      "LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId\n" +
       "\n" + 
-      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = lai.kitDescriptorId\n" + 
+      "LEFT JOIN KitDescriptor kd ON kd.kitDescriptorId = l.kitDescriptorId\n" + 
       "\n" + 
       "LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId\n" + "\n" +
       "LEFT JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + 
@@ -304,7 +299,7 @@ public class MisoClient implements Lims {
       "        SELECT library_libraryId\n" + 
       "                ,results\n" + 
       "        FROM LibraryQC\n" + 
-      "        INNER JOIN QCType ON QCType.qcTypeId = LibraryQC.qcMethod\n" + 
+      "        INNER JOIN QCType ON QCType.qcTypeId = LibraryQC.type\n" + 
       "        WHERE QCType.NAME = 'QuBit'\n" + 
       "        ) qubit ON qubit.library_libraryId = l.libraryId\n" + 
       "LEFT JOIN (\n" + 
@@ -321,8 +316,17 @@ public class MisoClient implements Lims {
       "        INNER JOIN Indices ON Indices.indexId = Library_Index.index_indexId\n" + 
       "                WHERE position = 2\n" + 
       "        ) bc2 ON bc2.library_libraryId = l.libraryId\n" + 
-      "LEFT JOIN BoxPosition pos ON pos.boxPositionId = l.boxPositionId\n" + 
+      "LEFT JOIN BoxPosition pos ON pos.targetId = l.libraryId\n" + 
+      "        AND pos.targetType LIKE 'Library%'\n" +
       "LEFT JOIN Box box ON box.boxId = pos.boxId\n" + 
+      "LEFT JOIN (SELECT libraryId, MAX(changeTime) as lastUpdated from LibraryChangeLog GROUP BY libraryId) lcl\n" +
+      "        ON lai.libraryId = lcl.libraryId\n" +
+      "LEFT JOIN (SELECT userId, libraryId FROM LibraryChangeLog lcl1 WHERE changeTime = (\n" +
+      "        SELECT MIN(lcl2.changeTime) FROM LibraryChangeLog lcl2 where lcl1.libraryId = lcl2.libraryId)\n" +
+      ") lclcu ON lai.libraryId = lclcu.libraryId\n" + 
+      "LEFT JOIN (SELECT userId, libraryId  FROM LibraryChangeLog lcl1 WHERE changeTime = (\n" +
+      "        SELECT MAX(lcl2.changeTime) FROM LibraryChangeLog lcl2 where lcl1.libraryId = lcl2.libraryId)\n" +
+      ") lcluu ON lai.libraryId = lcluu.libraryId\n" + 
       "\n" + 
       "UNION\n" + 
       "\n" + 
@@ -346,7 +350,7 @@ public class MisoClient implements Lims {
       "        ,NULL storageLocation\n" + 
       "        ,NULL kitName\n" + 
       "        ,NULL kitDescription\n" + 
-      "        ,NULL library_design_code\n" +
+      "        ,ldc.code library_design_code\n" +
       "        ,NULL receive_date\n" + 
       "        ,NULL external_name\n" + 
       "        ,NULL tissue_origin\n" + 
@@ -366,8 +370,7 @@ public class MisoClient implements Lims {
       "        ,NULL detailedQcStatus\n" + 
       "        ,NULL boxLocation\n" + 
       "        ,NULL boxAlias\n" + 
-      "        ,NULL boxRow\n" + 
-      "        ,NULL boxColumn\n" + 
+      "        ,NULL boxPosition\n" + 
       "        ,NULL paired\n" + 
       "        ,NULL readLength\n" + 
       "        ,NULL targeted_sequencing\n" + 
@@ -377,6 +380,8 @@ public class MisoClient implements Lims {
       "FROM LibraryDilution d\n" + 
       "JOIN Library parent ON parent.libraryId = d.library_libraryId\n" + 
       "JOIN LibraryType lt ON lt.libraryTypeId = parent.libraryType\n" + 
+      "LEFT JOIN DetailedLibrary lai ON lai.libraryId = parent.libraryId\n" +
+      "LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId\n" +
       "JOIN Sample s ON s.sampleId = parent.sample_sampleId\n" + 
       "JOIN Project p ON p.projectId = s.project_projectId";
   private static final String querySampleById = "SELECT * FROM (" + queryAllSamples + ") combined " + "WHERE id = ?";
@@ -414,7 +419,7 @@ public class MisoClient implements Lims {
       "        ,MIN(lcl.creationDate) earliest\n" + 
       "        ,MAX(lcl.lastUpdated) latest\n" + 
       "FROM Library l\n" + 
-      "JOIN LibraryAdditionalInfo lai ON lai.libraryId = l.libraryId\n" + 
+      "JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId\n" +
       "JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + 
       "JOIN (\n" + 
       "        SELECT libraryId, MAX(changeTime) lastUpdated, MIN(changeTime) creationDate\n" + 
@@ -448,7 +453,7 @@ public class MisoClient implements Lims {
       + "        INNER JOIN (SELECT sampleId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from SampleChangeLog GROUP BY sampleId) scl ON s.sampleId = scl.sampleId\n"
       + "        \n" + "        UNION ALL\n" + "        \n" + "        SELECT lp.shortName NAME\n" + "                ,lai.archived archived\n"
       + "                ,lcl.creationDate created\n" + "                ,lcl.lastUpdated updated\n"
-      + "        FROM LibraryAdditionalInfo lai\n" + "        INNER JOIN Library l ON l.libraryId = lai.libraryId\n"
+      + "        FROM DetailedLibrary lai\n" + "        INNER JOIN Library l ON l.libraryId = lai.libraryId\n"
       + "        INNER JOIN Sample ls ON l.sample_sampleId = ls.sampleId\n"
       + "        INNER JOIN Project lp ON lp.projectId = ls.project_projectId\n"
       + "        INNER JOIN (SELECT libraryId, MAX(changeTime) as lastUpdated, MIN(changeTime) as creationDate from LibraryChangeLog GROUP BY libraryId) lcl ON l.libraryId = lcl.libraryId\n"
@@ -1017,7 +1022,7 @@ public class MisoClient implements Lims {
       if (rs.getString("sampleType") != null) {
         s.setSampleType(rs.getString("sampleType").replace(" (stock)", "").replace(" (aliquot)", ""));
       } else {
-        s.setSampleType(TypeRowMapper.mapSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
+        s.setSampleType(NonSampleTypeConverter.getNonSampleSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
             rs.getString("sampleType_description")));
       }
       s.setTissueType(rs.getString("tissueType"));
@@ -1031,6 +1036,7 @@ public class MisoClient implements Lims {
       s.setVolume(rs.getFloat("volume"));
       if (rs.wasNull()) s.setVolume(null);
       s.setConcentration(rs.getFloat("concentration"));
+      if (rs.wasNull()) s.setConcentration(null);
       s.setStorageLocation(extractStorageLocation(rs));
       PreparationKit kit = new DefaultPreparationKit();
       kit.setName(rs.getString("kitName"));
@@ -1065,14 +1071,13 @@ public class MisoClient implements Lims {
       if (boxAlias == null) return null;
 
       String boxLocation = rs.getString("boxLocation");
-      int boxRow = rs.getInt("boxRow");
-      int boxColumn = rs.getInt("boxColumn");
+      String boxPosition = rs.getString("boxPosition");
 
       StringBuilder sb = new StringBuilder();
       if (boxLocation != null && !boxLocation.isEmpty()) {
         sb.append(boxLocation).append(", ");
       }
-      sb.append(boxAlias).append(", ").append(toRowChar(boxRow)).append(boxColumn + 1);
+      sb.append(boxAlias).append(", ").append(boxPosition);
 
       return sb.toString();
     }
@@ -1272,7 +1277,7 @@ public class MisoClient implements Lims {
 
       t.setName(rs.getString("name"));
       if (t.getName() == null) {
-        t.setName(TypeRowMapper.mapSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
+        t.setName(NonSampleTypeConverter.getNonSampleSampleType(rs.getString("miso_type"), rs.getString("sampleType_platform"),
             rs.getString("sampleType_description")));
       }
       t.setCount(rs.getInt("count"));
@@ -1281,92 +1286,6 @@ public class MisoClient implements Lims {
       t.setLatest(rs.getTimestamp("latest"));
 
       return t;
-    }
-    
-    private static final String MISO_TYPE_LIBRARY = "Library";
-    private static final String MISO_TYPE_DILUTION = "Dilution";
-
-    private static final String PLATFORM_ILLUMINA = "Illumina";
-
-    private static final String LIBRARY_TYPE_MRNA = "mRNA Seq";
-    private static final String LIBRARY_TYPE_PAIRED_END = "Paired End";
-    private static final String LIBRARY_TYPE_SMALL_RNA = "Small RNA";
-    private static final String LIBRARY_TYPE_SINGLE_END = "Single End";
-    private static final String LIBRARY_TYPE_WHOLE_TRANSCRIPTOME = "Whole Transcriptome";
-
-    public static enum IlluminaSampleType {
-
-      SE("Illumina SE Library", "Illumina SE Library Seq"),
-      PE("Illumina PE Library", "Illumina PE Library Seq"),
-      SM_RNA("Illumina smRNA Library", "Illumina smRNA Library Seq"),
-      M_RNA("Illumina mRNA Library", "Illumina mRNA Library Seq"),
-      WT("Illumina WT Library", "Illumina WT Library Seq");
-
-      private final String libraryType;
-      private final String dilutionType;
-
-      private IlluminaSampleType(String libraryType, String dilutionType) {
-        this.libraryType = libraryType;
-        this.dilutionType = dilutionType;
-      }
-
-      public String getLibraryType() {
-        return libraryType;
-      }
-      
-      public String getDilutionType() {
-        return dilutionType;
-      }
-    }
-
-    private static final String SAMPLE_TYPE_UNKNOWN = "Unknown";
-
-    public static String mapSampleType(String misoType, String platformName, String libraryType) {
-      if (platformName == null) {
-        log.debug("Cannot determine SampleType due to null platformName");
-        return SAMPLE_TYPE_UNKNOWN;
-      }
-      if (libraryType == null) {
-        log.debug("Cannot determine SampleType due to null libraryType");
-        return SAMPLE_TYPE_UNKNOWN;
-      }
-
-      switch (platformName) {
-      case PLATFORM_ILLUMINA:
-        IlluminaSampleType sType = null;
-        switch (libraryType) {
-        case LIBRARY_TYPE_MRNA:
-          sType = IlluminaSampleType.M_RNA;
-          break;
-        case LIBRARY_TYPE_PAIRED_END:
-          sType = IlluminaSampleType.PE;
-          break;
-        case LIBRARY_TYPE_SMALL_RNA:
-          sType = IlluminaSampleType.SM_RNA;
-          break;
-        case LIBRARY_TYPE_SINGLE_END:
-          sType = IlluminaSampleType.SE;
-          break;
-        case LIBRARY_TYPE_WHOLE_TRANSCRIPTOME:
-          sType = IlluminaSampleType.WT;
-          break;
-        default:
-          log.debug("Unexpected LibraryType: " + libraryType + ", Cannot determine Sample Type");
-          return SAMPLE_TYPE_UNKNOWN;
-        }
-        switch (misoType) {
-        case MISO_TYPE_LIBRARY:
-          return sType.getLibraryType();
-        case MISO_TYPE_DILUTION:
-          return sType.getDilutionType();
-        default:
-          log.debug("Unexpected MISO type: " + misoType + ". Cannot determine Sample Type");
-          return SAMPLE_TYPE_UNKNOWN;
-        }
-      default:
-        log.debug("Unknown platform: " + platformName + ". Cannot determine Sample Type");
-        return SAMPLE_TYPE_UNKNOWN;
-      }
     }
 
   }
