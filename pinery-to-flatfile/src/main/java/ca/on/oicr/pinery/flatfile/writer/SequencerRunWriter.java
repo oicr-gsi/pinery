@@ -78,6 +78,8 @@ public class SequencerRunWriter extends Writer {
         if (pos.getPoolName() != null) sb.append("poolName", pos.getPoolName());
         if (pos.getPoolBarcode() != null) sb.append("poolBarcode", pos.getPoolBarcode());
         if (pos.getPoolDescription() != null) sb.append("poolDescription", pos.getPoolDescription());
+        if (pos.getPoolCreatedById() != null) sb.append("poolCreatedById", pos.getPoolCreatedById());
+        if (pos.getPoolCreated() != null) sb.append("poolCreated", pos.getPoolCreated());
         sb.append("samples", getPositionSamplesString(pos));
         list.append(sb.toString());
       }

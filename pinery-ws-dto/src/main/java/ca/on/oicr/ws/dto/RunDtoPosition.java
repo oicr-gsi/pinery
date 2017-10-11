@@ -14,6 +14,8 @@ public class RunDtoPosition {
    private String poolName;
    private String poolDescription;
    private String poolBarcode;
+   private Integer poolCreatedById;
+   private String poolCreated;
 
    public Integer getPosition() {
       return position;
@@ -58,11 +60,30 @@ public class RunDtoPosition {
      this.poolDescription = poolDescription;
    }
 
+   @JsonProperty("pool_created_by_id")
+   public Integer getPoolCreatedById() {
+     return poolCreatedById;
+   }
+   
+   public void setPoolCreatedById(Integer poolCreatedById) {
+     this.poolCreatedById = poolCreatedById;
+   }
+   
+   @JsonProperty("pool_created_date")
+   public String getPoolCreated() {
+     return poolCreated;
+   }
+   
+   public void setPoolCreated(String poolCreated) {
+     this.poolCreated = poolCreated;
+   }
+
    @Override
    public String toString() {
       return "RunDtoPosition [runSample=" + runSample + ", position=" + position + ", hashCode()=" + hashCode() + ", getPosition()="
             + getPosition() + ", getRunSamples()=" + getSamples() + ", getPoolName()=" + getPoolName()
-            + ", getPoolBarcode()=" + getPoolBarcode() + ", getPoolDescription()=" + getPoolDescription() + ", getClass()=" + getClass()
+            + ", getPoolBarcode()=" + getPoolBarcode() + ", getPoolDescription()=" + getPoolDescription() + ", getPoolCreatedById()="
+            + getPoolCreatedById() + ", getPoolCreated()=" + getPoolCreated() + ", getClass()=" + getClass()
             + ", toString()=" + super.toString() + "]";
    }
 
@@ -75,6 +96,8 @@ public class RunDtoPosition {
       result = prime * result + ((poolName == null) ? 0 : poolName.hashCode());
       result = prime * result + ((poolBarcode == null) ? 0 : poolBarcode.hashCode());
       result = prime * result + ((poolDescription == null) ? 0 : poolDescription.hashCode());
+      result = prime * result + ((poolCreatedById == null) ? 0 : poolCreatedById.hashCode());
+      result = prime * result + ((poolCreated == null) ? 0 : poolCreated.hashCode());
       return result;
    }
 
@@ -97,8 +120,14 @@ public class RunDtoPosition {
          if (other.poolBarcode != null) return false;
       } else if (!poolBarcode.equals(other.poolBarcode)) return false;
       if (poolDescription == null) {
-         if (other.poolDescription != null) return false;
+        if (other.poolDescription != null) return false;
       } else if (!poolDescription.equals(other.poolDescription)) return false;
+      if (poolCreatedById == null) {
+        if (other.poolCreatedById != null) return false;
+      } else if (!poolCreatedById.equals(other.poolCreatedById)) return false;
+      if (poolCreated == null) {
+        if (other.poolCreated != null) return false;
+      } else if (!poolCreated.equals(other.poolCreated)) return false;
       return true;
    }
 

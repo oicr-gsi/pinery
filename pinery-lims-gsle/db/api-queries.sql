@@ -570,7 +570,8 @@ FROM finch_user
 -- Description: List all workset dilution (X Library Seq) templates including workset data
 -- Application Properties: worksets
 
-SELECT ws.workset_id AS workset_id, ws.label AS name, ws.barcode AS barcode, ws.description AS description, link.template_id AS template_id
+SELECT ws.workset_id AS workset_id, ws.label AS name, ws.barcode AS barcode, ws.description AS description,
+  ws.created_by AS created_by_id, ws.created_at AS created, link.template_id AS template_id
 FROM ga_template_workset ws
 JOIN ga_template_workset_template link ON link.workset_id = ws.workset_id
 JOIN ga_template t ON t.template_id = link.template_id

@@ -1,5 +1,6 @@
 package ca.on.oicr.pinery.lims;
 
+import java.util.Date;
 import java.util.Set;
 
 import ca.on.oicr.pinery.api.RunPosition;
@@ -16,6 +17,8 @@ public class DefaultRunPosition implements RunPosition {
       result = prime * result + ((poolName == null) ? 0 : poolName.hashCode());
       result = prime * result + ((poolBarcode == null) ? 0 : poolBarcode.hashCode());
       result = prime * result + ((poolDescription == null) ? 0 : poolDescription.hashCode());
+      result = prime * result + ((poolCreatedById == null) ? 0 : poolCreatedById.hashCode());
+      result = prime * result + ((poolCreated == null) ? 0 : poolCreated.hashCode());
       return result;
    }
 
@@ -40,6 +43,12 @@ public class DefaultRunPosition implements RunPosition {
       if (poolDescription == null) {
          if (other.poolDescription != null) return false;
       } else if (!poolDescription.equals(other.poolDescription)) return false;
+      if (poolCreatedById == null) {
+        if (other.poolCreatedById != null) return false;
+      } else if (!poolCreatedById.equals(other.poolCreatedById)) return false;
+      if (poolCreated == null) {
+        if (other.poolCreated != null) return false;
+      } else if (!poolCreated.equals(other.poolCreated)) return false;
       return true;
    }
 
@@ -47,7 +56,8 @@ public class DefaultRunPosition implements RunPosition {
    public String toString() {
       return "DefaultRunPosition [runSample=" + runSample + ", position=" + position + ", getPosition()=" + getPosition()
             + ", getRunSample()=" + getRunSample() + ", getPoolName()=" + getPoolName() + ", getPoolBarcode()=" + getPoolBarcode()
-            + ", getPoolDescription()=" + getPoolDescription() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
+            + ", getPoolDescription()=" + getPoolDescription() + ", getPoolCreatedById()=" + getPoolCreatedById()
+            + ", getPoolCreated()=" + getPoolCreated() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
             + ", toString()=" + super.toString() + "]";
    }
 
@@ -56,6 +66,8 @@ public class DefaultRunPosition implements RunPosition {
    private String poolName;
    private String poolDescription;
    private String poolBarcode;
+   private Integer poolCreatedById;
+   private Date poolCreated;
 
    @Override
    public Integer getPosition() {
@@ -105,6 +117,26 @@ public class DefaultRunPosition implements RunPosition {
   @Override
   public void setPoolDescription(String poolDescription) {
     this.poolDescription = poolDescription;
+  }
+
+  @Override
+  public Integer getPoolCreatedById() {
+    return poolCreatedById;
+  }
+
+  @Override
+  public void setPoolCreatedById(Integer poolCreatedById) {
+    this.poolCreatedById = poolCreatedById;
+  }
+
+  @Override
+  public Date getPoolCreated() {
+    return poolCreated;
+  }
+
+  @Override
+  public void setPoolCreated(Date poolCreated) {
+    this.poolCreated = poolCreated;
   }
 
 }

@@ -67,6 +67,8 @@ public class RunFileDao implements RunDao {
         pos.setPoolName(map.get("poolName"));
         pos.setPoolBarcode(map.get("poolBarcode"));
         pos.setPoolDescription(map.get("poolDescription"));
+        pos.setPoolCreatedById(ModelUtils.parseIntOrNull(map.get("poolCreatedById")));
+        pos.setPoolCreated(ModelUtils.convertToDate(map.get("poolCreated")));
         pos.setRunSample(parseRunSamples(map.get("samples")));
         positions.add(pos);
       }

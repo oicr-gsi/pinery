@@ -1710,6 +1710,8 @@ public class GsleClient implements Lims {
      map.put("barcode", "barcode");
      map.put("description", "description");
      map.put("template_id", "sampleId");
+     map.put("created_by_id", "createdByIdString");
+     map.put("created", "createdString");
      strat.setColumnMapping(map);
 
      CsvToBean<TemporaryWorkset> csvToBean = new CsvToBean<>();
@@ -1746,6 +1748,8 @@ public class GsleClient implements Lims {
           pos.setPoolName(ws.getName());
           pos.setPoolDescription(ws.getDescription());
           pos.setPoolBarcode(ws.getBarcode());
+          pos.setPoolCreatedById(ws.getCreatedById());
+          pos.setPoolCreated(ws.getCreated());
           break;
         }
       }
