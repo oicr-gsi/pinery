@@ -352,6 +352,8 @@ public final class Dtos {
       dto.setPoolName(from.getPoolName());
       dto.setPoolBarcode(from.getPoolBarcode());
       dto.setPoolDescription(from.getPoolDescription());
+      dto.setPoolCreatedById(from.getPoolCreatedById());
+      if (from.getPoolCreated() != null) dto.setPoolCreated(dateTimeFormatter.print(from.getPoolCreated().getTime()));
       if (from.getRunSample() != null && !from.getRunSample().isEmpty()) {
          dto.setSamples(asDto3(from.getRunSample()));
       }

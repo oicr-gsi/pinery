@@ -1,5 +1,6 @@
 package ca.on.oicr.pinery.lims;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,6 +10,8 @@ public class Workset {
   private String name;
   private String barcode;
   private String description;
+  private Integer createdById;
+  private Date created;
   private final Set<String> sampleIds = new HashSet<>();
   
   public String getId() {
@@ -49,6 +52,22 @@ public class Workset {
   
   public void addSampleId(String sampleId) {
     this.sampleIds.add(sampleId);
+  }
+  
+  public Integer getCreatedById() {
+    return createdById;
+  }
+
+  public void setCreatedById(Integer createdById) {
+    this.createdById = createdById;
+  }
+
+  public Date getCreated() {
+    return created;
+  }
+
+  public void setCreated(Date created) {
+    this.created = created;
   }
 
 }

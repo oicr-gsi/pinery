@@ -1,6 +1,7 @@
 package ca.on.oicr.pinery.lims.flatfile.model;
 
 import java.util.Date;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -58,6 +59,14 @@ public class ModelUtils {
    */
   public static Float nullIfEmptyFloat(String floatString) {
     return floatString == null || floatString.length() == 0 ? null : Float.valueOf(floatString);
+  }
+  
+  public static Integer parseIntOrNull(String num) {
+    if (num == null) {
+      return null;
+    } else {
+      return Integer.parseInt(num);
+    }
   }
   
 }
