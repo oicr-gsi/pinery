@@ -38,6 +38,28 @@ public class KeyValueStringBuilder {
   public KeyValueStringBuilder append(String key, int value) {
     return append(key, "" + value);
   }
+  
+  /**
+   * Does nothing if value is null; otherwise adds a key:value pair to the representation
+   * 
+   * @param key
+   * @param value
+   * @return this same KeyValueStringBuilder, to allow chaining
+   */
+  public KeyValueStringBuilder appendNonNull(String key, String value) {
+    return value == null ? this : append(key, value);
+  }
+  
+  /**
+   * Does nothing if value is null; otherwise adds a key:value pair to the representation
+   * 
+   * @param key
+   * @param value
+   * @return this same KeyValueStringBuilder, to allow chaining
+   */
+  public KeyValueStringBuilder appendNonNull(String key, Integer value) {
+    return value == null ? this : append(key, value);
+  }
 
   @Override
   public String toString() {

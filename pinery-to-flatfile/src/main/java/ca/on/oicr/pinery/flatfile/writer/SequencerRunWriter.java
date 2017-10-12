@@ -70,22 +70,24 @@ public class SequencerRunWriter extends Writer {
   
   private static String getPositionsString(RunDto run) {
     ArrayStringBuilder list = new ArrayStringBuilder();
-    
     if (run.getPositions() != null) {
       for (RunDtoPosition pos : run.getPositions()) {
-        KeyValueStringBuilder sb = new KeyValueStringBuilder();
-        sb.append("position", pos.getPosition().toString());
-        if (pos.getPoolName() != null) sb.append("poolName", pos.getPoolName());
-        if (pos.getPoolBarcode() != null) sb.append("poolBarcode", pos.getPoolBarcode());
-        if (pos.getPoolDescription() != null) sb.append("poolDescription", pos.getPoolDescription());
-        if (pos.getPoolCreatedById() != null) sb.append("poolCreatedById", pos.getPoolCreatedById());
-        if (pos.getPoolCreated() != null) sb.append("poolCreated", pos.getPoolCreated());
-        sb.append("samples", getPositionSamplesString(pos));
-        list.append(sb.toString());
+        list.append(getPositionString(pos));
       }
     }
-    
     return list.toString();
+  }
+  
+  private static String getPositionString(RunDtoPosition pos) {
+    KeyValueStringBuilder sb = new KeyValueStringBuilder();
+    sb.append("position", pos.getPosition().toString());
+    sb.appendNonNull("poolName", pos.getPoolName());
+    sb.appendNonNull("poolBarcode", pos.getPoolBarcode());
+    sb.appendNonNull("poolDescription", pos.getPoolDescription());
+    sb.appendNonNull("poolCreatedById", pos.getPoolCreatedById());
+    sb.appendNonNull("poolCreated", pos.getPoolCreated());
+    sb.append("samples", getPositionSamplesString(pos));
+    return sb.toString();
   }
   
   private static String getPositionSamplesString(RunDtoPosition pos) {

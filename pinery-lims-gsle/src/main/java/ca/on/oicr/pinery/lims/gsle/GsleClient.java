@@ -398,28 +398,25 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   private List<Sample> addAttributes(List<Sample> samples) {
+   private void addAttributes(List<Sample> samples) {
       Map<Integer, Set<Attribute>> attributes = getAttributes();
       for (Sample sample : samples) {
          sample.setAttributes(attributes.get(Integer.parseInt(sample.getId())));
       }
-      return samples;
    }
 
-   private List<Sample> addChildren(List<Sample> samples) {
+   private void addChildren(List<Sample> samples) {
       Map<String, Set<String>> children = getChildren();
       for (Sample sample : samples) {
          sample.setChildren(children.get(sample.getId()));
       }
-      return samples;
    }
 
-   private List<Sample> addParents(List<Sample> samples) {
+   private void addParents(List<Sample> samples) {
       Map<String, Set<String>> parents = getParents();
       for (Sample sample : samples) {
          sample.setParents(parents.get(sample.getId()));
       }
-      return samples;
    }
 
    @Override
@@ -505,10 +502,10 @@ public class GsleClient implements Lims {
       }
 
       getBarcode(); // Populating map
-      samples = addAttributes(samples);
+      addAttributes(samples);
       barcodeMap.clear(); // Clearing map
-      samples = addChildren(samples);
-      samples = addParents(samples);
+      addChildren(samples);
+      addParents(samples);
       System.out.println("---- Missing dates ----");
       for (Sample foo : samples) {
          if (foo.getModified() == null || foo.getCreated() == null) {
