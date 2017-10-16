@@ -833,7 +833,11 @@ public class MisoClient implements Lims {
       TARGETED_RESEQUENCING("targeted_sequencing", "Targeted Resequencing"), 
       SOURCE_TEMPLATE_TYPE("library_design_code", "Source Template Type"),
       SUBPROJECT("subproject", "Sub-project"),
-      INSTITUTE("institute", "Institute");
+      INSTITUTE("institute", "Institute"),
+      STAIN("stain", "Stain"),
+      SLIDES("slides", "Slides"),
+      DISCARDS("discards", "Discards"),
+      SLIDES_CONSUMED("slides_consumed", "Slides Consumed");
 
       private final String sqlKey;
       private final String attributeKey;

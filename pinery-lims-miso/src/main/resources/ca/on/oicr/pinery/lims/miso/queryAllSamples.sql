@@ -50,6 +50,10 @@ SELECT s.alias NAME
         ,s.scientificName organism 
         ,subp.alias subproject
         ,it.alias institute
+        ,slide.slides slides
+        ,slide.discards discards
+        ,stain.name stain
+        ,lcm.slidesConsumed slides_consumed
 FROM Sample s 
 LEFT JOIN DetailedSample sai ON sai.sampleId = s.sampleId 
 LEFT JOIN DetailedQcStatus qpd ON qpd.detailedQcStatusId = sai.detailedQcStatusId 
@@ -67,6 +71,9 @@ LEFT JOIN TissueMaterial tm ON tm.tissueMaterialId = st.tissueMaterialId
 LEFT JOIN Lab la ON st.labId = la.labId
 LEFT JOIN Institute it ON la.instituteId = it.instituteId
 LEFT JOIN SampleStock ss ON sai.sampleId = ss.sampleId
+LEFT JOIN SampleSlide slide ON slide.sampleId = s.sampleId
+LEFT JOIN Stain stain ON stain.stainId = slide.stain
+LEFT JOIN SampleLCMTube lcm ON lcm.sampleId = s.sampleId
 LEFT JOIN (
 	    SELECT sqc.sample_sampleId, MAX(sqc.qcId) AS qcId
 	    FROM (
@@ -141,7 +148,7 @@ SELECT l.alias NAME
         ,kd.NAME kitName 
         ,kd.description kitDescription 
         ,ldc.code library_design_code 
-        ,NULL receive_date 
+        ,l.receivedDate receive_date 
         ,NULL external_name 
         ,NULL sex
         ,NULL tissue_origin 
@@ -170,6 +177,10 @@ SELECT l.alias NAME
         ,NULL organism 
         ,NULL subproject
         ,NULL institute
+        ,NULL slides
+        ,NULL discards
+        ,NULL stain
+        ,NULL slides_consumed
 FROM Library l 
 LEFT JOIN Sample parent ON parent.sampleId = l.sample_sampleId
 LEFT JOIN DetailedLibrary lai ON lai.libraryId = l.libraryId
@@ -263,6 +274,10 @@ SELECT parent.alias name
         ,NULL organism 
         ,NULL subproject
         ,NULL institute
+        ,NULL slides
+        ,NULL discards
+        ,NULL stain
+        ,NULL slides_consumed
 FROM LibraryDilution d 
 JOIN Library parent ON parent.libraryId = d.library_libraryId 
 JOIN LibraryType lt ON lt.libraryTypeId = parent.libraryType 
