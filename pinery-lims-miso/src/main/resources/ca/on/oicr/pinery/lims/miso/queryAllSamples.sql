@@ -15,6 +15,7 @@ SELECT s.alias NAME
         ,s.lastModifier modifiedById 
         ,s.identificationBarcode tubeBarcode 
         ,s.volume volume 
+        ,s.discarded discarded
         ,sai.concentration concentration 
         ,s.locationBarcode storageLocation 
         ,NULL kitName 
@@ -134,6 +135,7 @@ SELECT l.alias NAME
         ,l.lastModifier modifiedById 
         ,l.identificationBarcode tubeBarcode 
         ,l.volume volume 
+        ,l.discarded discarded
         ,l.concentration concentration 
         ,l.locationBarcode storageLocation 
         ,kd.NAME kitName 
@@ -226,6 +228,7 @@ SELECT parent.alias name
         ,d.lastModifier modifiedById 
         ,d.identificationBarcode tubeBarcode 
         ,d.volume volume 
+        ,d.discarded discarded
         ,d.concentration concentration 
         ,NULL storageLocation 
         ,NULL kitName 

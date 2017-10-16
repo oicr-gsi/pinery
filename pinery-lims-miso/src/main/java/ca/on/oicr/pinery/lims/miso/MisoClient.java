@@ -738,7 +738,12 @@ public class MisoClient implements Lims {
 
     private String extractStorageLocation(ResultSet rs) throws SQLException {
       String boxAlias = rs.getString("boxAlias");
-      if (boxAlias == null) return null;
+      if (boxAlias == null) {
+        if (rs.getBoolean("discarded")) {
+          return "EMPTY";
+        }
+        return null;
+      }
 
       String boxLocation = rs.getString("boxLocation");
       String boxPosition = rs.getString("boxPosition");
