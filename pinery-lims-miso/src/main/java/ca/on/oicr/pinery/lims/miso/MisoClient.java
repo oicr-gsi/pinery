@@ -738,7 +738,12 @@ public class MisoClient implements Lims {
 
     private String extractStorageLocation(ResultSet rs) throws SQLException {
       String boxAlias = rs.getString("boxAlias");
-      if (boxAlias == null) return null;
+      if (boxAlias == null) {
+        if (rs.getBoolean("discarded")) {
+          return "EMPTY";
+        }
+        return null;
+      }
 
       String boxLocation = rs.getString("boxLocation");
       String boxPosition = rs.getString("boxPosition");
@@ -828,7 +833,11 @@ public class MisoClient implements Lims {
       TARGETED_RESEQUENCING("targeted_sequencing", "Targeted Resequencing"), 
       SOURCE_TEMPLATE_TYPE("library_design_code", "Source Template Type"),
       SUBPROJECT("subproject", "Sub-project"),
-      INSTITUTE("institute", "Institute");
+      INSTITUTE("institute", "Institute"),
+      STAIN("stain", "Stain"),
+      SLIDES("slides", "Slides"),
+      DISCARDS("discards", "Discards"),
+      SLIDES_CONSUMED("slides_consumed", "Slides Consumed");
 
       private final String sqlKey;
       private final String attributeKey;
