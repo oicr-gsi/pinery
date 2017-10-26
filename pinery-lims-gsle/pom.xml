@@ -4,7 +4,7 @@
     <parent>
         <artifactId>pinery</artifactId>
         <groupId>ca.on.oicr</groupId>
-        <version>2.0-rc7-SNAPSHOT</version>
+        <version>2.0.0</version>
     </parent>
     <artifactId>pinery-lims-gsle</artifactId>
     <name>pinery-gsle</name>
