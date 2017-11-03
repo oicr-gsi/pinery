@@ -1,0 +1,4 @@
+id	projectName	status	platformName	createdDate	createdUserId	modifiedDate	modifiedUserId	samples
+1	TestProject	Completed	Illumina HiSeq	2011-11-03T10:50:12-04:00	2	2011-11-03T10:50:12-04:00	2	[{id=2|attributes={Organism=Homo sapiens}},{id=3|attributes={Organism=Homo sapiens}}]
+2	TestProject	Completed	Illumina HiSeq	2011-11-03T10:50:12-04:00	2	2011-11-03T10:50:12-04:00	2	[{id=3|barcode=GGGGGGG|attributes={Organism=Homo sapiens|Targeted Resequencing=Illumina TruSeq Exome}},{id=4|attributes={Organism=Homo sapiens}},{id=5|barcode=CCCCCCC|barcodeTwo=TTTTTTT|attributes={Organism=Homo sapiens|Targeted Resequencing=Illumina TruSeq Exome}}]
+3	TestProject	Completed	Illumina HiSeq	2011-11-03T10:50:12-04:00	2	2011-11-03T10:50:12-04:00	2	[{id=8|barcode=AATTCCGG|attributes={Organism=Homo sapiens|Targeted Resequencing=Illumina TruSeq Exome}}]

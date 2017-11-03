@@ -43,14 +43,19 @@ public class Main {
       System.out.println("Writing orders file...");
       converter.convertOrders("orders" + suffix + ".tsv");
       
+      System.out.println("Writing boxes file...");
+      converter.convertBoxes("boxes" + suffix + ".tsv");
+      
       System.out.println("Finished writing all files.");
       
     } catch (HttpResponseException e) {
       System.out.println("Error retrieving data from Pinery service at " + args[0]);
-      e.printStackTrace();
+      e.printStackTrace(System.out);
+      System.exit(1);
     } catch (IOException e) {
       System.out.println("Error writing to file");
-      e.printStackTrace();
+      e.printStackTrace(System.out);
+      System.exit(1);
     }
   }
   

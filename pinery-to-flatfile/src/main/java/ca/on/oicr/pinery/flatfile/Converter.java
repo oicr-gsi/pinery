@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import ca.on.oicr.pinery.client.HttpResponseException;
 import ca.on.oicr.pinery.client.PineryClient;
+import ca.on.oicr.pinery.flatfile.writer.BoxWriter;
 import ca.on.oicr.pinery.flatfile.writer.ChangeWriter;
 import ca.on.oicr.pinery.flatfile.writer.InstrumentWriter;
 import ca.on.oicr.pinery.flatfile.writer.OrderWriter;
@@ -114,6 +115,18 @@ public class Converter {
    */
   public void convertOrders(String filename) throws HttpResponseException, IOException {
     Writer writer = new OrderWriter(client.getOrder().all());
+    writer.writeFile(new File(outputDir, filename), separator);
+  }
+  
+  /**
+   * Reads all box data from Pinery and writes it to a flat file
+   * 
+   * @param filename output file name
+   * @throws HttpResponseException if there is an error communicating with Pinery
+   * @throws IOException if there is an error writing to file
+   */
+  public void convertBoxes(String filename) throws HttpResponseException, IOException {
+    Writer writer = new BoxWriter(client.getBox().all());
     writer.writeFile(new File(outputDir, filename), separator);
   }
   

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+      http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <import resource="classpath:springmvc-resteasy.xml"/>
+   
+    <context:property-placeholder location="classpath:project.properties" ignore-unresolvable="true"/>
+    <context:component-scan base-package="ca.on.oicr.pinery" />
+    
+    <bean id="lims" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="ca.on.oicr.pinery.api.Lims"/>
+    </bean>
+
+    <bean id="instrumentService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="ca.on.oicr.pinery.service.InstrumentService"/>
+    </bean>
+    
+    <bean id="orderService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="ca.on.oicr.pinery.service.OrderService"/>
+    </bean>
+    
+    <bean id="runService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="ca.on.oicr.pinery.service.RunService"/>
+    </bean>
+    
+    <bean id="laneProvenanceService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="ca.on.oicr.pinery.service.LaneProvenanceService"/>
+    </bean>
+    
+    <bean id="sampleProvenanceService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="ca.on.oicr.pinery.service.SampleProvenanceService"/>
+    </bean>
+    
+    <bean id="sampleService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="ca.on.oicr.pinery.service.SampleService"/>
+    </bean>
+    
+    <bean id="userService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="ca.on.oicr.pinery.service.UserService"/>
+    </bean>
+
+</beans>

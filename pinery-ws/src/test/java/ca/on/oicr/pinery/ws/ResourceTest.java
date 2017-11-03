@@ -43,6 +43,8 @@ import com.google.common.collect.Sets;
 
 public class ResourceTest {
 
+    private final Date expectedDate = new Date();
+    
    @Test
    public void test_Resource_1() throws Exception {
 
@@ -93,10 +95,9 @@ public class ResourceTest {
       orderResource.setOrderService(orderService);
       orderResource.setUriInfo(uriInfoMock);
       OrderDto orderDto = orderResource.getOrder(1);
-      Date date = new Date();
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
-      assertThat(orderDto.getCreatedDate(), is(sf.format(date)));
+      assertThat(orderDto.getCreatedDate(), is(sf.format(expectedDate)));
    }
 
    @Test
@@ -149,10 +150,9 @@ public class ResourceTest {
       orderResource.setOrderService(orderService);
       orderResource.setUriInfo(uriInfoMock);
       OrderDto orderDto = orderResource.getOrder(1);
-      Date date = new Date();
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
-      assertThat(orderDto.getModifiedDate(), is(sf.format(date)));
+      assertThat(orderDto.getModifiedDate(), is(sf.format(expectedDate)));
    }
 
    @Test
@@ -361,7 +361,6 @@ public class ResourceTest {
       List<OrderDto> originalListOrderDto = orderResource.getOrders();
       OrderDto orderDto = new OrderDto();
       List<OrderDto> listOrderDto = Lists.newArrayList();
-      Date date = new Date();
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
       Set<OrderDtoSample> orderDtoSampleSet = Sets.newHashSet();
@@ -369,9 +368,9 @@ public class ResourceTest {
       orderDtoSampleObj.setUrl("http://test/sample/2");
       orderDtoSampleSet.add(orderDtoSampleObj);
 
-      orderDto.setCreatedDate(sf.format(date));
+      orderDto.setCreatedDate(sf.format(expectedDate));
       orderDto.setId(2);
-      orderDto.setModifiedDate(sf.format(date));
+      orderDto.setModifiedDate(sf.format(expectedDate));
       orderDto.setPlatform("Illumina HiSeq 2000");
       orderDto.setProject("HALT");
       orderDto.setStatus("Complete");
@@ -390,15 +389,14 @@ public class ResourceTest {
 
    private Order getOrder() {
       Order order = new DefaultOrder();
-      Date date = new Date();
 
       Set<OrderSample> orderSampleSet = Sets.newHashSet();
       OrderSample orderSampleObj = new DefaultOrderSample();
       orderSampleSet.add(orderSampleObj);
 
-      order.setCreatedDate(date);
+      order.setCreatedDate(expectedDate);
       order.setId(2);
-      order.setModifiedDate(date);
+      order.setModifiedDate(expectedDate);
       order.setPlatform("Illumina HiSeq 2000");
       order.setProject("HALT");
       order.setStatus("Complete");
@@ -432,15 +430,14 @@ public class ResourceTest {
    private List<Order> getListOrder() {
       Order order = new DefaultOrder();
       List<Order> list = Lists.newArrayList();
-      Date date = new Date();
 
       Set<OrderSample> orderSampleSet = Sets.newHashSet();
       OrderSample orderSampleObj = new DefaultOrderSample();
       orderSampleSet.add(orderSampleObj);
 
-      order.setCreatedDate(date);
+      order.setCreatedDate(expectedDate);
       order.setId(2);
-      order.setModifiedDate(date);
+      order.setModifiedDate(expectedDate);
       order.setPlatform("Illumina HiSeq 2000");
       order.setProject("HALT");
       order.setStatus("Complete");
@@ -509,10 +506,9 @@ public class ResourceTest {
       runResource.setRunService(runService);
       runResource.setUriInfo(uriInfoMock);
       RunDto runDto = runResource.getRun(1);
-      Date date = new Date();
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
-      assertThat(runDto.getCreatedDate(), is(sf.format(date)));
+      assertThat(runDto.getCreatedDate(), is(sf.format(expectedDate)));
    }
 
    @Test
@@ -797,10 +793,9 @@ public class ResourceTest {
       List<RunDto> originalListRunDto = runResource.getRuns();
       RunDto runDto = new RunDto();
       List<RunDto> listRunDto = Lists.newArrayList();
-      Date date = new Date();
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
-      runDto.setCreatedDate(sf.format(date));
+      runDto.setCreatedDate(sf.format(expectedDate));
       runDto.setId(2);
       runDto.setName("130906_SN804_0130_AC2D8JACXX");
       runDto.setBarcode("C2D8J");
@@ -834,8 +829,7 @@ public class ResourceTest {
 
    private Run getRun() {
       Run run = new DefaultRun();
-      Date date = new Date();
-      run.setCreatedDate(date);
+      run.setCreatedDate(expectedDate);
       run.setId(2);
       run.setBarcode("C2D8J");
       run.setName("130906_SN203_0196_AC2D4DACXX");
@@ -895,9 +889,8 @@ public class ResourceTest {
    private List<Run> getListRun() {
       Run run = new DefaultRun();
       List<Run> list = Lists.newArrayList();
-      Date date = new Date();
 
-      run.setCreatedDate(date);
+      run.setCreatedDate(expectedDate);
       run.setId(2);
       run.setName("130906_SN804_0130_AC2D8JACXX");
       run.setBarcode("C2D8J");

@@ -7,10 +7,15 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBException;
 
@@ -22,11 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.bean.CsvToBean;
-import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.Box;
 import ca.on.oicr.pinery.api.Change;
 import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.Instrument;
@@ -58,6 +61,7 @@ import ca.on.oicr.pinery.lims.GsleSample;
 import ca.on.oicr.pinery.lims.GsleSampleChildren;
 import ca.on.oicr.pinery.lims.GsleSampleParents;
 import ca.on.oicr.pinery.lims.GsleUser;
+import ca.on.oicr.pinery.lims.Workset;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.HashBasedTable;
@@ -65,6 +69,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
+import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 public class GsleClient implements Lims {
 
@@ -101,6 +108,17 @@ public class GsleClient implements Lims {
    private String instrumentModelInstrumentList;
    private String instrumentSingle;
    private String sampleIdSingle;
+   private String worksetsList;
+   private String boxesList;
+   private String defaultRunDirectoryBaseDir;
+   
+   public void setBoxesList(String boxesList) {
+     this.boxesList = boxesList;
+   }
+   
+   public void setWorksetsList(String worksetsList) {
+     this.worksetsList = worksetsList;
+   }
 
    public void setSampleIdSingle(String sampleIdSingle) {
       this.sampleIdSingle = sampleIdSingle;
@@ -206,6 +224,10 @@ public class GsleClient implements Lims {
       this.url = url;
    }
 
+    public void setDefaultRunDirectoryBaseDir(String defaultRunDirectoryBaseDir) {
+        this.defaultRunDirectoryBaseDir = defaultRunDirectoryBaseDir;
+    }
+
    private List<Sample> getSamples() {
       return getSamples(null, null, null, null, null);
    }
@@ -282,7 +304,8 @@ public class GsleClient implements Lims {
             result.put(attribute.getId(), Sets.<Attribute> newHashSet());
          }
          // Calling barcodeFilter method
-         result.get(attribute.getId()).add(barcodeFilter(attribute));
+         Set<Attribute> sampleAttributes = result.get(attribute.getId());
+         filterAndAddAttribute(attribute, sampleAttributes);
       }
       return result;
    }
@@ -375,28 +398,25 @@ public class GsleClient implements Lims {
       return result;
    }
 
-   private List<Sample> addAttributes(List<Sample> samples) {
+   private void addAttributes(List<Sample> samples) {
       Map<Integer, Set<Attribute>> attributes = getAttributes();
       for (Sample sample : samples) {
          sample.setAttributes(attributes.get(Integer.parseInt(sample.getId())));
       }
-      return samples;
    }
 
-   private List<Sample> addChildren(List<Sample> samples) {
+   private void addChildren(List<Sample> samples) {
       Map<String, Set<String>> children = getChildren();
       for (Sample sample : samples) {
          sample.setChildren(children.get(sample.getId()));
       }
-      return samples;
    }
 
-   private List<Sample> addParents(List<Sample> samples) {
+   private void addParents(List<Sample> samples) {
       Map<String, Set<String>> parents = getParents();
       for (Sample sample : samples) {
          sample.setParents(parents.get(sample.getId()));
       }
-      return samples;
    }
 
    @Override
@@ -482,10 +502,10 @@ public class GsleClient implements Lims {
       }
 
       getBarcode(); // Populating map
-      samples = addAttributes(samples);
+      addAttributes(samples);
       barcodeMap.clear(); // Clearing map
-      samples = addChildren(samples);
-      samples = addParents(samples);
+      addChildren(samples);
+      addParents(samples);
       System.out.println("---- Missing dates ----");
       for (Sample foo : samples) {
          if (foo.getModified() == null || foo.getCreated() == null) {
@@ -1056,6 +1076,7 @@ public class GsleClient implements Lims {
       map.put("modified_by", "modifiedByIdString");
       map.put("modified_at", "modifiedDateString");
       map.put("completed_at", "completionDateString");
+      map.put("path", "runDirectory");
 
       strat.setColumnMapping(map);
 
@@ -1064,6 +1085,17 @@ public class GsleClient implements Lims {
 
       List<Run> runs = Lists.newArrayList();
       for (Run defaultRun : gsleRun) {
+         if(defaultRun.getRunDirectory() == null || defaultRun.getRunDirectory().isEmpty()) {
+             if (!StringUtils.isEmpty(defaultRun.getInstrumentName())
+                     && !StringUtils.isEmpty(defaultRun.getName())
+                     && !StringUtils.isEmpty(defaultRunDirectoryBaseDir)) {
+                 defaultRun.setRunDirectory(
+                         Paths.get(defaultRunDirectoryBaseDir, defaultRun.getInstrumentName(), defaultRun.getName())
+                                 .toAbsolutePath().toString());
+             }
+         } else {
+             defaultRun.setRunDirectory(fixRunDirectory(defaultRun.getName(), defaultRun.getRunDirectory()));
+         }
          runs.add(defaultRun);
       }
 
@@ -1086,6 +1118,21 @@ public class GsleClient implements Lims {
 
       return runs;
    }
+   
+    /**
+     * Truncates result file path to get run directory. Run directory is expected to end with "/" + run.getName() + "/"
+     * and if the run directory does not match this, it is set to null instead
+     *
+     * @param runName the run name use in run directory path matching
+     * @param runDir  the run directory path
+     *
+     * @return runDir
+     */
+    public static String fixRunDirectory(String runName, String runDir) {
+        Pattern p = Pattern.compile("^((/.*)?/" + runName + ")(/.*)?$");
+        Matcher m = p.matcher(runDir);
+        return m.matches() ? m.group(1) : null;
+    }
 
    public List<TemporaryRun> createMapRun(Reader reader) throws IOException {
 
@@ -1264,6 +1311,7 @@ public class GsleClient implements Lims {
          System.out.println(e);
          e.printStackTrace(System.out);
       }
+      addRunWorksetData(result, getWorksets());
       return result;
    }
 
@@ -1293,6 +1341,7 @@ public class GsleClient implements Lims {
          System.out.println(e);
          e.printStackTrace(System.out);
       }
+      addRunWorksetData(result, getWorksets());
       return result;
    }
    
@@ -1323,6 +1372,7 @@ public class GsleClient implements Lims {
        System.out.println(e);
        e.printStackTrace(System.out);
     }
+    addRunWorksetData(result, getWorksets());
     return result;
    }
 
@@ -1598,32 +1648,169 @@ public class GsleClient implements Lims {
 
    @Override
    public Instrument getInstrument(Integer instrumentId) {
-      Instrument result = null;
+     Instrument result = null;
 
-      StringBuilder url = getBaseUrl(instrumentSingle);
+     StringBuilder url = getBaseUrl(instrumentSingle);
 
-      url.append(";bind=");
-      url.append(instrumentId);
-      try {
-         ClientRequest request = new ClientRequest(url.toString());
-         request.accept("text/plain");
-         ClientResponse<String> response = request.get(String.class);
+     url.append(";bind=");
+     url.append(instrumentId);
+     try {
+        ClientRequest request = new ClientRequest(url.toString());
+        request.accept("text/plain");
+        ClientResponse<String> response = request.get(String.class);
 
-         if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-         }
-         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
-         List<Instrument> instruments = getInstruments(br);
-         if (instruments.size() == 1) {
-            result = instruments.get(0);
-         }
+        if (response.getStatus() != 200) {
+           throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+        List<Instrument> instruments = getInstruments(br);
+        if (instruments.size() == 1) {
+           result = instruments.get(0);
+        }
 
-      } catch (Exception e) {
-         System.out.println(e);
-         e.printStackTrace(System.out);
-      }
-      return result;
+     } catch (Exception e) {
+        System.out.println(e);
+        e.printStackTrace(System.out);
+     }
+     return result;
    }
+   
+   private List<Workset> getWorksets() {
+     List<Workset> result = Lists.newArrayList();
+
+     StringBuilder url = getBaseUrl(worksetsList);
+
+     try {
+        ClientRequest request = new ClientRequest(url.toString());
+        request.accept("text/plain");
+        ClientResponse<String> response = request.get(String.class);
+
+        if (response.getStatus() != 200) {
+           throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+        result = getWorksets(br);
+     } catch (Exception e) {
+        System.out.println(e);
+        e.printStackTrace(System.out);
+     }
+     return result;
+  }
+   
+  private List<Workset> getWorksets(Reader reader) {
+     CSVReader csvReader = new CSVReader(reader, '\t');
+     HeaderColumnNameTranslateMappingStrategy<TemporaryWorkset> strat = new HeaderColumnNameTranslateMappingStrategy<TemporaryWorkset>();
+     strat.setType(TemporaryWorkset.class);
+     Map<String, String> map = Maps.newHashMap();
+     map.put("workset_id", "id");
+     map.put("name", "name");
+     map.put("barcode", "barcode");
+     map.put("description", "description");
+     map.put("template_id", "sampleId");
+     map.put("created_by_id", "createdByIdString");
+     map.put("created", "createdString");
+     strat.setColumnMapping(map);
+
+     CsvToBean<TemporaryWorkset> csvToBean = new CsvToBean<>();
+     List<TemporaryWorkset> tempWorksets = csvToBean.parse(strat, csvReader);
+     
+     Map<String, Workset> worksetsById = new HashMap<>();
+     for (TemporaryWorkset temp : tempWorksets) {
+       Workset ws = worksetsById.get(temp.getId());
+       if (ws == null) {
+         ws = temp.makeWorkset();
+         worksetsById.put(ws.getId(), ws);
+       } else {
+         ws.addSampleId(temp.getSampleId());
+       }
+     }
+     
+     return new ArrayList<>(worksetsById.values());
+  }
+  
+  private void addRunWorksetData(Run run, Collection<Workset> worksets) {
+    if (run.getSamples() == null) return;
+    for (RunPosition pos : run.getSamples()) {
+      if (pos.getRunSample() == null || pos.getRunSample().isEmpty()) continue;
+      for (Workset ws : worksets) {
+        if (ws.getSampleIds().size() != pos.getRunSample().size()) continue;
+        boolean foundAll = true;
+        for (RunSample sample : pos.getRunSample()) {
+          if (!ws.getSampleIds().contains(sample.getId())) {
+            foundAll = false;
+            break;
+          }
+        }
+        if (foundAll) {
+          pos.setPoolName(ws.getName());
+          pos.setPoolDescription(ws.getDescription());
+          pos.setPoolBarcode(ws.getBarcode());
+          pos.setPoolCreatedById(ws.getCreatedById());
+          pos.setPoolCreated(ws.getCreated());
+          break;
+        }
+      }
+    }
+  }
+  
+  private void addRunWorksetData(Collection<Run> runs, Collection<Workset> worksets) {
+    for (Run run : runs) {
+      addRunWorksetData(run, worksets);
+    }
+  }
+  
+  @Override
+  public List<Box> getBoxes() {
+    String url = getBaseUrl(boxesList).toString();
+
+    try {
+       ClientRequest request = new ClientRequest(url);
+       request.accept("text/plain");
+       ClientResponse<String> response = request.get(String.class);
+
+       if (response.getStatus() != 200) {
+          throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+       }
+       BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(response.getEntity().getBytes(UTF8)), UTF8));
+       return getBoxes(br);
+    } catch (Exception e) {
+       System.out.println(e);
+       e.printStackTrace(System.out);
+    }
+    return Lists.newArrayList();
+  }
+  
+  private List<Box> getBoxes(Reader reader) {
+    CSVReader csvReader = new CSVReader(reader, '\t');
+    HeaderColumnNameTranslateMappingStrategy<TemporaryBoxPosition> strat = new 
+        HeaderColumnNameTranslateMappingStrategy<TemporaryBoxPosition>();
+    strat.setType(TemporaryBoxPosition.class);
+    Map<String, String> map = Maps.newHashMap();
+    map.put("template_id", "sampleId");
+    map.put("x", "x");
+    map.put("y", "y");
+    map.put("container_id", "idString");
+    map.put("container_name", "name");
+    map.put("container_location", "location");
+    map.put("container_type", "containerType");
+    map.put("container_description", "description");
+    strat.setColumnMapping(map);
+
+    CsvToBean<TemporaryBoxPosition> csvToBean = new CsvToBean<>();
+    List<TemporaryBoxPosition> tempPositions = csvToBean.parse(strat, csvReader);
+    
+    Map<Long, Box> boxesById = new HashMap<>();
+    for (TemporaryBoxPosition temp : tempPositions) {
+      Box box = boxesById.get(temp.getId());
+      if (box == null) {
+        box = temp.getBox();
+        boxesById.put(box.getId(), box);
+      }
+      box.getPositions().add(temp.getBoxPosition());
+    }
+    
+    return Lists.newArrayList(boxesById.values());
+ }
 
    @VisibleForTesting
    void setBarcodeMap(Map<String, String> map) {
@@ -1632,21 +1819,34 @@ public class GsleClient implements Lims {
 
    }
 
-   public Attribute barcodeFilter(Attribute attr) {
-
+  /**
+   * Performs additional processing on the attribute if necessary, then adds it to the collection
+   * 
+   * @param attr the {@link Attribute} to add
+   * @param attributes the collection to add attr to after processing
+   */
+  public void filterAndAddAttribute(Attribute attr, Collection<Attribute> attributes) {
+      // Only barcodes are handled differently
       if (attr.getName().equals("Barcode") || attr.getName().equals("Barcode Two")) {
+         Attribute nameAttr = new DefaultAttribute();
+         nameAttr.setName(attr.getName() + " Name");
          String name = attr.getValue();
 
          if (barcodeMap.size() == 0) {
             getBarcode();
          }
-
          String barcode = barcodeMap.get(name);
 
          if (barcode != null) {
-            attr.setValue(barcode);
+           attr.setValue(barcode);
+           attributes.add(attr);
+           nameAttr.setValue(name);
+           attributes.add(nameAttr);
          }
+      } else {
+        // non-barcode field
+        attributes.add(attr);
+        return;
       }
-      return attr;
    }
 }

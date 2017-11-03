@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
+import ca.on.oicr.pinery.lims.DefaultAttribute;
 import ca.on.oicr.pinery.lims.DefaultRun;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
@@ -47,6 +49,7 @@ public class RunFileDao implements RunDao {
       r.setInstrumentName(ModelUtils.nullIfEmpty(rs.getString("instrumentName")));
       r.setState(ModelUtils.nullIfEmpty(rs.getString("state")));
       r.setBarcode(ModelUtils.nullIfEmpty(rs.getString("barcode")));
+      r.setRunDirectory(ModelUtils.nullIfEmpty(rs.getString("runDirectory")));
       
       r.setSample(parseRunPositions(rs.getString("positions")));
       
@@ -61,6 +64,11 @@ public class RunFileDao implements RunDao {
         Map<String, String> map = DaoUtils.parseKeyValuePairs(positionString);
         RunPosition pos = new DefaultRunPosition();
         pos.setPosition(Integer.parseInt(map.get("position")));
+        pos.setPoolName(map.get("poolName"));
+        pos.setPoolBarcode(map.get("poolBarcode"));
+        pos.setPoolDescription(map.get("poolDescription"));
+        pos.setPoolCreatedById(ModelUtils.parseIntOrNull(map.get("poolCreatedById")));
+        pos.setPoolCreated(ModelUtils.convertToDate(map.get("poolCreated")));
         pos.setRunSample(parseRunSamples(map.get("samples")));
         positions.add(pos);
       }
@@ -77,9 +85,23 @@ public class RunFileDao implements RunDao {
         sample.setId((sampleMap.get("id")));
         if (sampleMap.containsKey("barcode")) sample.setBarcode(ModelUtils.nullIfEmpty(sampleMap.get("barcode")));
         if (sampleMap.containsKey("barcodeTwo")) sample.setBarcodeTwo(ModelUtils.nullIfEmpty(sampleMap.get("barcodeTwo")));
+        if (sampleMap.containsKey("attributes")) sample.setAttributes(parseAttributes(sampleMap.get("attributes")));
         samples.add(sample);
       }
       return samples;
+    }
+    
+    private Set<Attribute> parseAttributes(String string) {
+      Map<String, String> attributeMap = DaoUtils.parseKeyValuePairs(string);
+      
+      Set<Attribute> attributes = new HashSet<>();
+      for (String key : attributeMap.keySet()) {
+        Attribute att = new DefaultAttribute();
+        att.setName(key);
+        att.setValue(attributeMap.get(key));
+        attributes.add(att);
+      }
+      return attributes;
     }
     
   };

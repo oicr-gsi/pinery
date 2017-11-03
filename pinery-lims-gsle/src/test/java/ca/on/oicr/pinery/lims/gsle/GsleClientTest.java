@@ -1,9 +1,10 @@
 package ca.on.oicr.pinery.lims.gsle;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +21,7 @@ import ca.on.oicr.pinery.lims.DefaultAttribute;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
+import static org.hamcrest.Matchers.nullValue;
 
 public class GsleClientTest {
 
@@ -38,7 +40,7 @@ public class GsleClientTest {
    }
 
    @Test
-   public void testBarCodeFilter() throws Exception {
+   public void testFilterAndAddAttribute() throws Exception {
 
       Map<String, String> map = Maps.newHashMap();
       map.put("Agilent_90_CTGGGT", "CTGGGT");
@@ -48,12 +50,17 @@ public class GsleClientTest {
       attr.setName("Barcode");
       attr.setValue("Agilent_90_CTGGGT");
 
-      attr = sut.barcodeFilter(attr);
-      assertThat(attr.getValue(), is("CTGGGT"));
+      List<Attribute> attrs = new ArrayList<>();
+      sut.filterAndAddAttribute(attr, attrs);
+      assertEquals(2, attrs.size());
+      assertThat(attrs.get(0).getName(), is("Barcode"));
+      assertThat(attrs.get(0).getValue(), is("CTGGGT"));
+      assertThat(attrs.get(1).getName(), is("Barcode Name"));
+      assertThat(attrs.get(1).getValue(), is("Agilent_90_CTGGGT"));
    }
 
    @Test
-   public void testBarCodeFilter2() throws Exception {
+   public void testFilterAndAddAttribute2() throws Exception {
 
       Map<String, String> map = Maps.newHashMap();
       map.put("Agilent_90_CTGGGT", "CTGGGT");
@@ -63,12 +70,14 @@ public class GsleClientTest {
       attr.setName("FailingBarcode");
       attr.setValue("Agilent_90_CTGGGT");
 
-      attr = sut.barcodeFilter(attr);
-      assertThat(attr.getValue(), is("Agilent_90_CTGGGT"));
+      List<Attribute> attrs = new ArrayList<>();
+      sut.filterAndAddAttribute(attr, attrs);
+      assertEquals(1, attrs.size());
+      assertThat(attrs.get(0).getName(), is("FailingBarcode"));
    }
 
    @Test
-   public void testBarCodeFilter3() throws Exception {
+   public void testFilterAndAddAttribute3() throws Exception {
 
       Map<String, String> map = Maps.newHashMap();
       map.put("Agilent_90_CTGGGT", null);
@@ -78,26 +87,9 @@ public class GsleClientTest {
       attr.setName("Barcode");
       attr.setValue("Agilent_90_CTGGGT");
 
-      attr = sut.barcodeFilter(attr);
-      assertThat(attr.getValue(), is("Agilent_90_CTGGGT"));
-
-   }
-
-   @Test
-   public void testBarCodeFilter4() throws Exception {
-
-      Map<String, String> map = Maps.newHashMap();
-      map.put("Agilent_90_CTGGGT", null);
-      sut.setBarcodeMap(map);
-
-      Attribute attr = new DefaultAttribute();
-      attr.setName("Barcode");
-      attr.setValue("Agilent_90_CTGGGT");
-
-      attr = sut.barcodeFilter(attr);
-
-      assertThat(attr.getValue(), is("Agilent_90_CTGGGT"));
-
+      List<Attribute> attrs = new ArrayList<>();
+      sut.filterAndAddAttribute(attr, attrs);
+      assertEquals(0, attrs.size());
    }
 
    @Test
@@ -251,6 +243,16 @@ public class GsleClientTest {
       Table<Integer, Integer, Set<RunSample>> table = sut.positionMapGenerator(get_temporary_list_test_input_four());
 
       assertThat("Number of samples in run 13312", table.get(3333, 2).size(), is(1));
+   }
+   
+   @Test
+   public void test_fix_directory() {
+       assertThat(GsleClient.fixRunDirectory("151202_D00331_0148_BC863AANXX", "/tmp/151202_D00331_0148_BC863AANXX"), is("/tmp/151202_D00331_0148_BC863AANXX"));
+       assertThat(GsleClient.fixRunDirectory("151202_D00331_0148_BC863AANXX", "/tmp/151202_D00331_0148_BC863AANXX/jsonReport"), is("/tmp/151202_D00331_0148_BC863AANXX"));
+       assertThat(GsleClient.fixRunDirectory("151202_D00331_0148_BC863AANXX", "/151202_D00331_0148_BC863AANXX/jsonReport"), is("/151202_D00331_0148_BC863AANXX"));
+       assertThat(GsleClient.fixRunDirectory("151202_D00331_0148_BC863AANXX", "/tmp/missing/jsonReport"), is(nullValue()));
+       assertThat(GsleClient.fixRunDirectory("missing", "/tmp/151202_D00331_0148_BC863AANXX/jsonReport"), is(nullValue()));
+       assertThat(GsleClient.fixRunDirectory("151202_D00331_0148_BC863AANXX", "/tmp/151202_D00331_0148_BC863AANXX_fail/jsonReport"), is(nullValue()));
    }
 
    /**

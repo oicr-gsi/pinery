@@ -45,6 +45,10 @@ public interface Run {
    
    public void setInstrumentName(String instrumentName);
    
+   public String getReadLength();
+   
+   public void setReadLength(String readLength);
+   
    public Date getStartDate();
    
    public void setStartDate(Date startDate);
@@ -60,4 +64,9 @@ public interface Run {
    public Integer getModifiedById();
 
    public void setModifiedById(Integer modifiedById);
+   
+   public String getRunDirectory();
+   
+   public void setRunDirectory(String runDirectory);
+   
 }

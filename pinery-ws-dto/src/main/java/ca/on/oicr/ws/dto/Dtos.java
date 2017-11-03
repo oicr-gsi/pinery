@@ -1,15 +1,23 @@
 package ca.on.oicr.ws.dto;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
+import ca.on.oicr.gsi.provenance.model.LaneProvenance;
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.Box;
+import ca.on.oicr.pinery.api.BoxPosition;
 import ca.on.oicr.pinery.api.Change;
 import ca.on.oicr.pinery.api.ChangeLog;
 import ca.on.oicr.pinery.api.Instrument;
@@ -105,15 +113,14 @@ public final class Dtos {
         }
         dto.setChildren(children);
       }
+      dto.setPreMigrationId(from.getPreMigrationId());
       return dto;
    }
 
    public static Set<AttributeDto> asDto(Set<Attribute> from) {
       Set<AttributeDto> dtoSet = Sets.newHashSet();
       for (Attribute attribute : from) {
-         if (!StringUtils.isBlank(attribute.getValue())) {
             dtoSet.add(asDto(attribute));
-         }
       }
       return dtoSet;
    }
@@ -325,6 +332,8 @@ public final class Dtos {
       if (from.getCompletionDate() != null) {
         dto.setCompletionDate(dateTimeFormatter.print(from.getCompletionDate().getTime()));
       }
+      dto.setReadLength(from.getReadLength());
+      dto.setRunDirectory(from.getRunDirectory());
       return dto;
    }
 
@@ -339,10 +348,12 @@ public final class Dtos {
 
    public static RunDtoPosition asDto(RunPosition from) {
       RunDtoPosition dto = new RunDtoPosition();
-
-      if (from.getPosition() != null) {
-         dto.setPosition(from.getPosition());
-      }
+      dto.setPosition(from.getPosition());
+      dto.setPoolName(from.getPoolName());
+      dto.setPoolBarcode(from.getPoolBarcode());
+      dto.setPoolDescription(from.getPoolDescription());
+      dto.setPoolCreatedById(from.getPoolCreatedById());
+      if (from.getPoolCreated() != null) dto.setPoolCreated(dateTimeFormatter.print(from.getPoolCreated().getTime()));
       if (from.getRunSample() != null && !from.getRunSample().isEmpty()) {
          dto.setSamples(asDto3(from.getRunSample()));
       }
@@ -360,6 +371,9 @@ public final class Dtos {
    public static RunDtoSample asDto3(RunSample from) {
       RunDtoSample dto = new RunDtoSample();
       dto.setId(from.getId());
+      if (from.getAttributes() != null && !from.getAttributes().isEmpty()) {
+         dto.setAttributes(asDto(from.getAttributes()));
+      }
       if (!StringUtils.isBlank(from.getBarcode())) {
          dto.setBarcode(from.getBarcode());
       }
@@ -451,4 +465,76 @@ public final class Dtos {
       }
       return dto;
    }
+   
+    public static SampleProvenanceDto asDto(SampleProvenance from) {
+        SampleProvenanceDto dto = new SampleProvenanceDto();
+        try {
+            BeanUtils.copyProperties(dto, from);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+        return dto;
+    }
+
+    public static List<SampleProvenanceDto> sampleProvenanceCollectionAsDto(Collection<SampleProvenance> from) {
+        List<SampleProvenanceDto> result = new ArrayList<>();
+        for (SampleProvenance sp : from) {
+            result.add(asDto(sp));
+        }
+        return result;
+    }
+
+    public static LaneProvenanceDto asDto(LaneProvenance from) {
+        LaneProvenanceDto dto = new LaneProvenanceDto();
+        try {
+            BeanUtils.copyProperties(dto, from);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+        return dto;
+    }
+
+    public static List<LaneProvenanceDto> laneProvenanceCollectionAsDto(Collection<LaneProvenance> from) {
+        List<LaneProvenanceDto> result = new ArrayList<>();
+        for (LaneProvenance lp : from) {
+            result.add(asDto(lp));
+        }
+        return result;
+    }
+    
+    public static List<BoxDto> asDtoList(List<Box> fromList) {
+      List<BoxDto> toList = Lists.newArrayList();
+      for (Box from : fromList) {
+        toList.add(asDto(from));
+      }
+      return toList;
+    }
+    
+    public static BoxDto asDto(Box from) {
+      BoxDto to = new BoxDto();
+      to.setId(from.getId());
+      to.setName(from.getName());
+      to.setDescription(from.getDescription());
+      to.setLocation(from.getLocation());
+      to.setRows(from.getRows());
+      to.setColumns(from.getColumns());
+      to.setPositions(asDtoSet(from.getPositions()));
+      return to;
+    }
+    
+    public static Set<BoxPositionDto> asDtoSet(Set<BoxPosition> fromSet) {
+      Set<BoxPositionDto> toSet = Sets.newHashSet();
+      for (BoxPosition from : fromSet) {
+        toSet.add(asDto(from));
+      }
+      return toSet;
+    }
+    
+    public static BoxPositionDto asDto(BoxPosition from) {
+      BoxPositionDto to = new BoxPositionDto();
+      to.setPosition(from.getPosition());
+      to.setSampleId(from.getSampleId());
+      return to;
+    }
+
 }

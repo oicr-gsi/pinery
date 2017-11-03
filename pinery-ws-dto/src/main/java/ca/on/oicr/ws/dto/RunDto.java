@@ -14,6 +14,7 @@ public class RunDto {
    private String barcode;
    private String instrumentName;
    private Set<RunDtoPosition> positions;
+   private String readLength;
    private Integer createdById;
    private String createdByUrl;
    private String createdDate;
@@ -26,6 +27,7 @@ public class RunDto {
    private Integer modifiedById;
    private String modifiedByUrl;
    private String modifiedDate;
+   private String runDirectory;
 
    public String getState() {
       return state;
@@ -57,6 +59,15 @@ public class RunDto {
 
    public void setPositions(Set<RunDtoPosition> positions) {
       this.positions = positions;
+   }
+
+   @JsonProperty("read_length")
+   public String getReadLength() {
+     return readLength;
+   }
+
+   public void setReadLength(String readLength) {
+     this.readLength = readLength;
    }
 
    @JsonProperty("created_by_id")
@@ -174,6 +185,15 @@ public class RunDto {
     this.modifiedDate = modifiedDate;
   }
 
+  @JsonProperty("run_directory")
+  public String getRunDirectory() {
+    return runDirectory;
+  }
+
+  public void setRunDirectory(String runDirectory) {
+    this.runDirectory = runDirectory;
+  }
+
   @Override
   public String toString() {
     return "RunDto [state=" + state + ", name=" + name + ", barcode=" + barcode
@@ -183,7 +203,7 @@ public class RunDto {
         + ", instrumentId=" + instrumentId + ", instrumentUrl=" + instrumentUrl
         + ", startDate=" + startDate + ", completionDate=" + completionDate
         + ", modifiedById=" + modifiedById + ", modifiedByUrl=" + modifiedByUrl
-        + ", modifiedDate=" + modifiedDate + "]";
+        + ", modifiedDate=" + modifiedDate + ", runDirectory=" + runDirectory + "]";
   }
 
   @Override
@@ -196,27 +216,19 @@ public class RunDto {
     result = prime * result
         + ((createdById == null) ? 0 : createdById.hashCode());
     result = prime * result
-        + ((createdByUrl == null) ? 0 : createdByUrl.hashCode());
-    result = prime * result
         + ((createdDate == null) ? 0 : createdDate.hashCode());
     result = prime * result + ((id == null) ? 0 : id.hashCode());
     result = prime * result
         + ((instrumentId == null) ? 0 : instrumentId.hashCode());
     result = prime * result
         + ((instrumentName == null) ? 0 : instrumentName.hashCode());
-    result = prime * result
-        + ((instrumentUrl == null) ? 0 : instrumentUrl.hashCode());
-    result = prime * result
-        + ((modifiedById == null) ? 0 : modifiedById.hashCode());
-    result = prime * result
-        + ((modifiedByUrl == null) ? 0 : modifiedByUrl.hashCode());
-    result = prime * result
-        + ((modifiedDate == null) ? 0 : modifiedDate.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + ((positions == null) ? 0 : positions.hashCode());
+    result = prime * result
+        + ((readLength == null) ? 0 : readLength.hashCode());
     result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
     result = prime * result + ((state == null) ? 0 : state.hashCode());
-    result = prime * result + ((url == null) ? 0 : url.hashCode());
+    result = prime * result + ((runDirectory == null) ? 0 : runDirectory.hashCode());
     return result;
   }
 
@@ -247,12 +259,6 @@ public class RunDto {
     }
     else if (!createdById.equals(other.createdById))
       return false;
-    if (createdByUrl == null) {
-      if (other.createdByUrl != null)
-        return false;
-    }
-    else if (!createdByUrl.equals(other.createdByUrl))
-      return false;
     if (createdDate == null) {
       if (other.createdDate != null)
         return false;
@@ -277,30 +283,6 @@ public class RunDto {
     }
     else if (!instrumentName.equals(other.instrumentName))
       return false;
-    if (instrumentUrl == null) {
-      if (other.instrumentUrl != null)
-        return false;
-    }
-    else if (!instrumentUrl.equals(other.instrumentUrl))
-      return false;
-    if (modifiedById == null) {
-      if (other.modifiedById != null)
-        return false;
-    }
-    else if (!modifiedById.equals(other.modifiedById))
-      return false;
-    if (modifiedByUrl == null) {
-      if (other.modifiedByUrl != null)
-        return false;
-    }
-    else if (!modifiedByUrl.equals(other.modifiedByUrl))
-      return false;
-    if (modifiedDate == null) {
-      if (other.modifiedDate != null)
-        return false;
-    }
-    else if (!modifiedDate.equals(other.modifiedDate))
-      return false;
     if (name == null) {
       if (other.name != null)
         return false;
@@ -312,6 +294,12 @@ public class RunDto {
         return false;
     }
     else if (!positions.equals(other.positions))
+      return false;
+    if (readLength == null) {
+      if (other.readLength != null)
+        return false;
+    }
+    else if (!readLength.equals(other.readLength))
       return false;
     if (startDate == null) {
       if (other.startDate != null)
@@ -325,11 +313,11 @@ public class RunDto {
     }
     else if (!state.equals(other.state))
       return false;
-    if (url == null) {
-      if (other.url != null)
+    if (runDirectory == null) {
+      if (other.runDirectory != null)
         return false;
     }
-    else if (!url.equals(other.url))
+    else if (!runDirectory.equals(other.runDirectory))
       return false;
     return true;
   }

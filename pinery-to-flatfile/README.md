@@ -34,7 +34,7 @@ List elements may be integers or key:value pair sets. All elements in a list mus
 
 A set of pairs is contained within curly braces ({}). Pairs are separated by pipes (|), and a pair is in the format *key=value*. Example:
 
-    {key1:Abc|key2:123}
+    {key1=Abc|key2=123}
 
 Key:value pair sets may be the elements in a list. The value in a key:value pair may also be a list.
 
@@ -152,6 +152,24 @@ Contains all user data. Fields:
 | createdUserId | int | ID of user who created this user |
 | modifiedDate | Date | format: 2015-12-01T17:16:32-04:00 |
 | modifiedUserId | int | ID of user who last modified this user |
+
+#### boxes.tsv
+
+Contains all box data. Fields:
+
+| Field | Type | Notes |
+| ----- | ---- | ----- |
+| id | long | ID from LIMS |
+| name | String ||
+| description | String ||
+| location | String ||
+| rows | int | number of rows in box |
+| columns | int | number of columns in box |
+| samples | List\* | See below |
+
+\* samples field example:
+
+    [{position=A01|sampleId=123},{position=A02|sampleId=456},{position=H12|sampleId=789}]
 
 #### Omitted Data
 

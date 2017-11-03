@@ -5,7 +5,7 @@
     <parent>
         <artifactId>pinery</artifactId>
         <groupId>ca.on.oicr</groupId>
-        <version>2.0-SNAPSHOT</version>
+        <version>2.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>pinery-ws</artifactId>
     <name>Pinery Webservice</name>
@@ -13,6 +13,7 @@
     <packaging>war</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <overrideDescriptor></overrideDescriptor>
     </properties>
     <dependencies>
         <!-- RESTEasy dependencies (keep at top to prevent NoSuchMethodErrors on some Tomcat versions) -->
@@ -38,12 +39,12 @@
             <artifactId>swagger-jaxrs</artifactId>
         </dependency>
         <dependency>
-           <groupId>org.springframework</groupId>
-           <artifactId>spring-webmvc</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
         </dependency>
         <dependency>
-           <groupId>javax.servlet</groupId>
-           <artifactId>servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -51,48 +52,106 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-           <groupId>org.hamcrest</groupId>
-           <artifactId>hamcrest-library</artifactId>
-           <scope>test</scope>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-           <groupId>org.mockito</groupId>
-           <artifactId>mockito-all</artifactId>
-           <scope>test</scope>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>ca.on.oicr.gsi</groupId>
+            <artifactId>provenance-api</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path-assert</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_hotspot</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_servlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus.jmx</groupId>
+            <artifactId>collector</artifactId>
         </dependency>
     </dependencies>
     <build>
         <plugins>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <configuration>
-                    <connectors>
-                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                            <port>8888</port>
-                            <maxIdleTime>60000</maxIdleTime>
-                        </connector>
-                    </connectors>
+                    <httpConnector> 
+                        <port>8888</port>
+                        <idleTimeout>60000</idleTimeout>
+                    </httpConnector>
+                    <webApp>
+                        <contextPath>/pinery-ws</contextPath>
+                        <!-- this overrides or adds configuration from web.xml-->
+                        <overrideDescriptor>${overrideDescriptor}</overrideDescriptor>
+                    </webApp>
                 </configuration>
             </plugin>
         </plugins>
         
         <!-- copy maven properties into project.properties -->
         <resources>
-           <resource>
-              <directory>src/main/resources</directory>
-              <filtering>true</filtering>
-              <includes>
-                 <include>project.properties</include>
-              </includes>
-           </resource>
-           <resource>
-              <directory>src/main/resources</directory>
-              <filtering>false</filtering>
-              <excludes>
-                 <exclude>project.properties</exclude>
-              </excludes>
-           </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>project.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>project.properties</exclude>
+                </excludes>
+            </resource>
         </resources>
     </build>
 </project>

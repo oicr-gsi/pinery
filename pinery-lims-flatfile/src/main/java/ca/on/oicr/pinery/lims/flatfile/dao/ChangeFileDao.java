@@ -50,7 +50,7 @@ public class ChangeFileDao implements ChangeDao {
 
   @Override
   public ChangeLog getSampleChanges(String sampleId) {
-    SampleFileDao.validateSampleId(sampleId);
+    //don't validate sampleID because it could be from any LIMS
     List<FileChange> changes = template.query(queryChangesBySampleId, new Object[]{sampleId}, changeMapper);
     return DaoUtils.getExpectedSingleResult(compileLogs(changes));
   }
