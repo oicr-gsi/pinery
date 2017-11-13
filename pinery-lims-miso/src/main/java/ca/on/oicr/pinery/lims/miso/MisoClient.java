@@ -267,8 +267,8 @@ public class MisoClient implements Lims {
       "        ,NULL tissue_region\n" + 
       "        ,NULL tube_id\n" + 
       "        ,NULL str_result\n" + 
-      "        ,NULL group_id\n" + 
-      "        ,NULL group_id_description\n" + 
+      "        ,lai.groupId group_id\n" + 
+      "        ,lai.groupDescription group_id_description\n" + 
       "        ,NULL purpose\n" + 
       "        ,qubit.results qubit_concentration\n" + 
       "        ,NULL nanodrop_concentration\n" + 
