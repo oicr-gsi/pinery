@@ -40,6 +40,21 @@ The Pinery-to-FlatFile utility creates a dump of all data from one LIMS into a s
 **WARNING**: Be careful not to commit your own API keys or database credentials. To better avoid
 this, favour external configuration, as detailed in the [webservice README](pinery-ws/README.md). 
 
+## License 
+
+Pinery is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Pinery is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+The GNU General Public License Version 3 is included in this repository as [LICENSE](LICENSE).
+It is also available online at <http://www.gnu.org/licenses/>.
+
 ## Support
 
 For support, please file an issue on the [Github project](https://github.com/oicr-gsi/pinery) or
