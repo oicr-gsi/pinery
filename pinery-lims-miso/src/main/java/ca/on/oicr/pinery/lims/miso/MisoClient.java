@@ -373,7 +373,7 @@ public class MisoClient implements Lims {
       "        ,NULL boxPosition\n" + 
       "        ,NULL paired\n" + 
       "        ,NULL readLength\n" + 
-      "        ,NULL targeted_sequencing\n" + 
+      "        ,ts.alias targeted_sequencing\n" + 
       "        ,'Dilution' miso_type\n" + 
       "        ,d.preMigrationId premigration_id\n" + 
       "        ,NULL organism\n" + 
@@ -382,6 +382,7 @@ public class MisoClient implements Lims {
       "JOIN LibraryType lt ON lt.libraryTypeId = parent.libraryType\n" + 
       "LEFT JOIN DetailedLibrary lai ON lai.libraryId = parent.libraryId\n" +
       "LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId\n" +
+      "LEFT JOIN TargetedSequencing ts ON d.targetedSequencingId = ts.targetedSequencingId\n" +
       "JOIN Sample s ON s.sampleId = parent.sample_sampleId\n" + 
       "JOIN Project p ON p.projectId = s.project_projectId";
   private static final String querySampleById = "SELECT * FROM (" + queryAllSamples + ") combined " + "WHERE id = ?";
