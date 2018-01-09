@@ -65,7 +65,7 @@
     <artifactId>pinery</artifactId>
     <packaging>pom</packaging>
     <groupId>ca.on.oicr</groupId>
-    <version>2.0-rc6-hotfix7</version>
+    <version>2.0-rc6-hotfix8</version>
 
     <modules>
         <module>pinery-api</module>
@@ -625,10 +625,15 @@
         </repository>
     </repositories>
     <distributionManagement>
-        <!-- Required for the maven-release-plugin. -->
         <repository>
-            <id>bintray</id>
-            <url>https://api.bintray.com/maven/oicr-gsi/release/pinery</url>
+            <id>deploy.artifacts.oicr</id>
+            <name>GSI Releases</name>
+            <url>https://artifacts.oicr.on.ca/artifactory/gsi-release</url>
         </repository>
+        <snapshotRepository>
+            <id>deploy.artifacts.oicr</id>
+            <name>GSI Snapshots</name>
+            <url>https://artifacts.oicr.on.ca/artifactory/gsi-snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
 </project>

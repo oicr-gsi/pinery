@@ -373,7 +373,7 @@ public class MisoClient implements Lims {
       "        ,NULL boxPosition\n" + 
       "        ,NULL paired\n" + 
       "        ,NULL readLength\n" + 
-      "        ,NULL targeted_sequencing\n" + 
+      "        ,ts.alias targeted_sequencing\n" + 
       "        ,'Dilution' miso_type\n" + 
       "        ,d.preMigrationId premigration_id\n" + 
       "        ,NULL organism\n" + 
@@ -382,6 +382,7 @@ public class MisoClient implements Lims {
       "JOIN LibraryType lt ON lt.libraryTypeId = parent.libraryType\n" + 
       "LEFT JOIN DetailedLibrary lai ON lai.libraryId = parent.libraryId\n" +
       "LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId\n" +
+      "LEFT JOIN TargetedSequencing ts ON d.targetedSequencingId = ts.targetedSequencingId\n" +
       "JOIN Sample s ON s.sampleId = parent.sample_sampleId\n" + 
       "JOIN Project p ON p.projectId = s.project_projectId";
   private static final String querySampleById = "SELECT * FROM (" + queryAllSamples + ") combined " + "WHERE id = ?";
@@ -769,19 +770,24 @@ public class MisoClient implements Lims {
   }
 
   private List<MisoRunPosition> mapSamplesToPositions(List<MisoRunPosition> positions, List<MisoRunSample> samples) {
-    Map<Integer, MisoRunPosition> map = new HashMap<>();
+    Map<Integer, List<MisoRunPosition>> map = new HashMap<>();
     for (MisoRunPosition p : positions) {
-      map.put(p.getPartitionId(), p);
+      if (!map.containsKey(p.getPartitionId())) {
+        map.put(p.getPartitionId(), new ArrayList<MisoRunPosition>());
+      }
+      map.get(p.getPartitionId()).add(p);
     }
     for (MisoRunSample s : samples) {
-      MisoRunPosition p = map.get(s.getPartitionId());
-      if (p != null) {
-        Set<RunSample> rs = p.getRunSample();
-        if (rs == null) {
-          rs = new HashSet<RunSample>();
-          p.setRunSample(rs);
+      List<MisoRunPosition> ps = map.get(s.getPartitionId());
+      if (ps != null) {
+        for (MisoRunPosition p : ps) {
+          Set<RunSample> rs = p.getRunSample();
+          if (rs == null) {
+            rs = new HashSet<RunSample>();
+            p.setRunSample(rs);
+          }
+          rs.add(s);
         }
-        rs.add(s);
       }
     }
     return positions;
