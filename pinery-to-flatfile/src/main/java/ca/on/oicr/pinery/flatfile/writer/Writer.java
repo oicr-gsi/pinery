@@ -29,11 +29,13 @@ public abstract class Writer {
    * Writes the resources to file
    * 
    * @param file output file
-   * @param separator delimiter
+   * @param separator delimiter to use in output files
+   * @param quoteChar quote character to wrap fields with
+   * @param escapeChar character to escape the delimiter, quote, and escape characters when used within a field
    * @throws IOException if there is an error writing to file
    */
-  public void writeFile(File file, char separator) throws IOException {
-    try (CSVWriter writer = new CSVWriter(new FileWriter(file), separator, CSVWriter.NO_QUOTE_CHARACTER)) {
+  public void writeFile(File file, char separator, char quoteChar, char escapeChar) throws IOException {
+    try (CSVWriter writer = new CSVWriter(new FileWriter(file), separator, quoteChar, escapeChar)) {
       writer.writeNext(getHeaders());
       
       for (int i = 0, count = getRecordCount(); i < count; i++) {
