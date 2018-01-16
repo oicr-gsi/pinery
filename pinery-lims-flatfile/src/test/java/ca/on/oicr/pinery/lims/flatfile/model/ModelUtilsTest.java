@@ -1,5 +1,6 @@
 package ca.on.oicr.pinery.lims.flatfile.model;
 
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 import org.junit.Assert;
@@ -26,7 +27,7 @@ public class ModelUtilsTest {
 
   @Test
   public void testConvertToDateInvalid() {
-    exception.expect(IllegalArgumentException.class);
+    exception.expect(DateTimeParseException.class);
     ModelUtils.convertToDate("Not a date");
   }
   

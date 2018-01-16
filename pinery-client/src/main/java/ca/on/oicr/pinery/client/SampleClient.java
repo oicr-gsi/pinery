@@ -1,8 +1,8 @@
 package ca.on.oicr.pinery.client;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import org.joda.time.DateTime;
 
 import ca.on.oicr.ws.dto.SampleDto;
 
@@ -66,13 +66,13 @@ public class SampleClient extends ResourceClient<SampleDto> {
 			return this;
 		}
 		
-		public SamplesFilter withDateBefore(DateTime before) {
-			this.beforeDate = before.toString();
+		public SamplesFilter withDateBefore(ZonedDateTime before) {
+			this.beforeDate = before.format(DateTimeFormatter.ISO_DATE_TIME);
 			return this;
 		}
 		
-		public SamplesFilter withDateAfter(DateTime after) {
-			this.afterDate = after.toString();
+		public SamplesFilter withDateAfter(ZonedDateTime after) {
+			this.afterDate = after.format(DateTimeFormatter.ISO_DATE_TIME);
 			return this;
 		}
 		

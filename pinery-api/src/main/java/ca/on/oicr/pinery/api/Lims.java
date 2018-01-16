@@ -1,9 +1,8 @@
 package ca.on.oicr.pinery.api;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
-
-import org.joda.time.DateTime;
 
 public interface Lims {
 
@@ -17,7 +16,7 @@ public interface Lims {
     */
    public List<SampleProject> getSampleProjects();
 
-   public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after);
+   public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, ZonedDateTime before, ZonedDateTime after);
 
    public List<User> getUsers();
 

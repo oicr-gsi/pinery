@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * This is the main class used for retrieving data from the Pinery webservice. It contains "child" clients for each 
@@ -70,7 +70,7 @@ public class PineryClient implements AutoCloseable {
     this.client = ignoreHttpsWarnings ? PineryClient.getInsecureClient() : PineryClient.getSecureClient();
     // Register provider manually because it Was not registering automatically in dependent projects
     ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.registerModule(new JodaModule());
+    objectMapper.registerModule(new JavaTimeModule());
     ResteasyJackson2Provider provider = new ResteasyJackson2Provider();
     provider.setMapper(objectMapper);
     this.client.register(provider);

@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.joda.time.DateTime;
+import java.time.ZonedDateTime;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -57,9 +57,9 @@ public class SampleClientIT {
 	
 	@Test
 	public void getAllFilteredByTime() throws HttpResponseException {
-		DateTime before = new DateTime(KNOWN_SAMPLE_CREATE_DATE);
+		ZonedDateTime before = ZonedDateTime.parse(KNOWN_SAMPLE_CREATE_DATE);
 		before = before.plusHours(1);
-		DateTime after = before.minusDays(32);
+		ZonedDateTime after = before.minusDays(32);
 		
 		List<SampleDto> samples = pinery.getSample().allFiltered(
 				new SamplesFilter()

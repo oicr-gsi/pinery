@@ -1,5 +1,24 @@
 package ca.on.oicr.pinery.service.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.when;
+
+import java.time.ZonedDateTime;
+import java.util.Date;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
@@ -12,18 +31,6 @@ import ca.on.oicr.pinery.lims.DefaultRun;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.service.LaneProvenanceService;
 import ca.on.oicr.ws.dto.Dtos;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import org.joda.time.DateTime;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import static org.mockito.Mockito.when;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  *
@@ -76,8 +83,8 @@ public class DefaultLaneProvenanceServiceTest {
 
     @Test
     public void changeRunLastModified() {
-        DateTime expectedDate = DateTime.parse("2016-01-01T00:00:00.000Z");
-        run.setModified(expectedDate.toDate());
+        ZonedDateTime expectedDate = ZonedDateTime.parse("2016-01-01T00:00:00.000Z");
+        run.setModified(Date.from(expectedDate.toInstant()));
 
         LaneProvenance after = Dtos.asDto(getLaneProvenanceById("1_1"));
         assertEquals(expectedDate, after.getLastModified());
@@ -93,15 +100,15 @@ public class DefaultLaneProvenanceServiceTest {
         assertNotEquals(before.getVersion(), after.getVersion());
 
         //set sequencer run to being completed
-        DateTime completionDate = DateTime.parse("2016-01-07T00:00:00.000Z");
-        run.setCompletionDate(completionDate.toDate());
+        ZonedDateTime completionDate = ZonedDateTime.parse("2016-01-07T00:00:00.000Z");
+        run.setCompletionDate(Date.from(completionDate.toInstant()));
         after = Dtos.asDto(getLaneProvenanceById("1_1"));
         assertEquals(completionDate, after.getCreatedDate());
     }
 
     //@Test - skipped because lane does not have a "modified" setter
     public void changeLaneLastModified() {
-        DateTime expectedDate = DateTime.parse("2016-01-01T00:00:00.000Z");
+        ZonedDateTime expectedDate = ZonedDateTime.parse("2016-01-01T00:00:00.000Z");
         //lane.setModified(expectedDate.toDate());
 
         LaneProvenance after = Dtos.asDto(getLaneProvenanceById("1_1"));
@@ -112,8 +119,8 @@ public class DefaultLaneProvenanceServiceTest {
         assertEquals(before.getVersion(), after.getVersion());
 
         //set sequencer run to being completed
-        DateTime completionDate = DateTime.parse("2016-01-07T00:00:00.000Z");
-        run.setCompletionDate(completionDate.toDate());
+        ZonedDateTime completionDate = ZonedDateTime.parse("2016-01-07T00:00:00.000Z");
+        run.setCompletionDate(Date.from(completionDate.toInstant()));
         after = Dtos.asDto(getLaneProvenanceById("1_1"));
         assertEquals(completionDate, after.getCreatedDate());
     }

@@ -1,21 +1,23 @@
 package ca.on.oicr.pinery.lims;
 
-import ca.on.oicr.gsi.provenance.model.LaneProvenance;
-import ca.on.oicr.pinery.api.Instrument;
-import ca.on.oicr.pinery.api.InstrumentModel;
-import ca.on.oicr.pinery.api.Run;
-import ca.on.oicr.pinery.api.RunPosition;
+import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.Objects;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.stream.Stream;
+
 import com.google.common.base.Charsets;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.hash.Hashing;
-import java.util.Date;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import org.apache.commons.lang3.ObjectUtils;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+
+import ca.on.oicr.gsi.provenance.model.LaneProvenance;
+import ca.on.oicr.pinery.api.Instrument;
+import ca.on.oicr.pinery.api.InstrumentModel;
+import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunPosition;
 
 /**
  *
@@ -85,7 +87,7 @@ public class DefaultLaneProvenance implements LaneProvenance {
 
     @Override
     public SortedMap<String, SortedSet<String>> getLaneAttributes() {
-        SortedSetMultimap attrs = TreeMultimap.create();
+        SortedSetMultimap<String, String> attrs = TreeMultimap.create();
 
         if (lane.getPoolName() != null && !lane.getPoolName().isEmpty()) {
             attrs.put(LimsAttribute.POOL_NAME.toString(), lane.getPoolName());
@@ -122,47 +124,17 @@ public class DefaultLaneProvenance implements LaneProvenance {
     }
 
     @Override
-    public DateTime getLastModified() {
-        DateTime lastModified = null;
-
-        if (sequencerRun != null) {
-            lastModified = ObjectUtils.max(lastModified,
-                    getDateTimeNullSafe(sequencerRun.getCreatedDate()),
-                    getDateTimeNullSafe(sequencerRun.getCompletionDate()),
-                    getDateTimeNullSafe(sequencerRun.getModified()));
-        }
-        if (lane != null) {
-//            lastModified = ObjectUtils.max(lastModified,
-//                    getDateTimeNullSafe(lane.getCreatedDate()),
-//                    getDateTimeNullSafe(lane.getModified()));
-        }
-
-        if (lastModified == null) {
-            return null;
-        } else {
-            return lastModified.toDateTime(DateTimeZone.UTC);
-        }
+    public ZonedDateTime getLastModified() {
+    	return Util.optionalDateToZDT(Stream.of
+    			(sequencerRun.getCreatedDate(),
+                    sequencerRun.getCompletionDate(),
+                    sequencerRun.getModified()).filter(Objects::nonNull).max(Date::compareTo));
     }
 
     @Override
-    public DateTime getCreatedDate() {
-        DateTime createdDate = null;
-
-        if (sequencerRun != null) {
-            createdDate = ObjectUtils.min(createdDate,
-                    //completion date is used as this is the first date that this provenance object is ready for processing
-                    getDateTimeNullSafe(sequencerRun.getCompletionDate()));
-        }
-        if (lane != null) {
-//            lastModified = ObjectUtils.min(lastModified,
-//                    getDateTimeNullSafe(lane.getCreatedDate()));
-        }
-
-        if (createdDate == null) {
-            return null;
-        } else {
-            return createdDate.toDateTime(DateTimeZone.UTC);
-        }
+    public ZonedDateTime getCreatedDate() {
+        //completion date is used as this is the first date that this provenance object is ready for processing
+    	return Util.optionalDateToZDT(Stream.of(sequencerRun.getCompletionDate()).filter(Objects::nonNull).min(Date::compareTo));
     }
 
     @Override
@@ -179,14 +151,6 @@ public class DefaultLaneProvenance implements LaneProvenance {
                 + "lastModified=" + getLastModified() + ", "
                 + "createdDate=" + getCreatedDate()
                 + '}';
-    }
-
-    private DateTime getDateTimeNullSafe(Date date) {
-        if (date == null) {
-            return null;
-        } else {
-            return new DateTime(date);
-        }
     }
 
 }

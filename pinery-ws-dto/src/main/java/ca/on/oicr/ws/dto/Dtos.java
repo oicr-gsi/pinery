@@ -1,16 +1,23 @@
 package ca.on.oicr.ws.dto;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
@@ -34,16 +41,11 @@ import ca.on.oicr.pinery.api.Status;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
 /**
  * Methods to convert between domain objects and dtos.
  * 
  */
 public final class Dtos {
-
-   private static DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.dateTimeNoMillis();
 
    public static SampleDto asDto(Sample from) {
       SampleDto dto = new SampleDto();
@@ -58,13 +60,13 @@ public final class Dtos {
          dto.setArchived(from.getArchived());
       }
       if (from.getCreated() != null) {
-         dto.setCreatedDate(dateTimeFormatter.print(from.getCreated().getTime()));
+          dto.setCreatedDate(format(from.getCreated()));
       }
       if (from.getCreatedById() != null) {
          dto.setCreatedById(from.getCreatedById());
       }
       if (from.getModified() != null) {
-         dto.setModifiedDate(dateTimeFormatter.print(from.getModified().getTime()));
+         dto.setModifiedDate(format(from.getModified()));
       }
       if (from.getModifiedById() != null) {
          dto.setModifiedById(from.getModifiedById());
@@ -166,10 +168,10 @@ public final class Dtos {
       dto.setName(from.getName());
       dto.setCount(from.getCount());
       if (from.getEarliest() != null) {
-         dto.setEarliest(dateTimeFormatter.print(from.getEarliest().getTime()));
+         dto.setEarliest(format(from.getEarliest()));
       }
       if (from.getLatest() != null) {
-         dto.setLatest(dateTimeFormatter.print(from.getLatest().getTime()));
+         dto.setLatest(format(from.getLatest()));
       }
       return dto;
    }
@@ -179,10 +181,10 @@ public final class Dtos {
       dto.setName(from.getName());
       dto.setCount(from.getCount());
       if (from.getEarliest() != null) {
-         dto.setEarliest(dateTimeFormatter.print(from.getEarliest().getTime()));
+         dto.setEarliest(format(from.getEarliest()));
       }
       if (from.getLatest() != null) {
-         dto.setLatest(dateTimeFormatter.print(from.getLatest().getTime()));
+         dto.setLatest(format(from.getLatest()));
       }
       dto.setArchivedCount(from.getArchivedCount());
       return dto;
@@ -194,10 +196,10 @@ public final class Dtos {
       dto.setCount(from.getCount());
       dto.setArchivedCount(from.getArchivedCount());
       if (from.getEarliest() != null) {
-         dto.setEarliest(dateTimeFormatter.print(from.getEarliest().getTime()));
+         dto.setEarliest(format(from.getEarliest()));
       }
       if (from.getLatest() != null) {
-         dto.setLatest(dateTimeFormatter.print(from.getLatest().getTime()));
+         dto.setLatest(format(from.getLatest()));
       }
       return dto;
    }
@@ -211,7 +213,7 @@ public final class Dtos {
          dto.setComment(from.getComment());
       }
       if (from.getCreated() != null) {
-         dto.setCreatedDate(dateTimeFormatter.print(from.getCreated().getTime()));
+          dto.setCreatedDate(format(from.getCreated()));
       }
       if (from.getCreatedById() != null) {
          dto.setCreatedById(from.getCreatedById());
@@ -249,13 +251,13 @@ public final class Dtos {
          dto.setPlatform(from.getPlatform());
       }
       if (from.getCreatedDate() != null) {
-         dto.setCreatedDate(dateTimeFormatter.print(from.getCreatedDate().getTime()));
+          dto.setCreatedDate(format(from.getCreatedDate()));
       }
       if (from.getCreatedById() != null) {
         dto.setCreatedById(from.getCreatedById());
       }
       if (from.getModifiedDate() != null) {
-         dto.setModifiedDate(dateTimeFormatter.print(from.getModifiedDate().getTime()));
+         dto.setModifiedDate(format(from.getModifiedDate()));
       }
       if (from.getModifiedById() != null) {
         dto.setModifiedById(from.getModifiedById());
@@ -308,7 +310,7 @@ public final class Dtos {
          dto.setBarcode(from.getBarcode());
       }
       if (from.getCreatedDate() != null) {
-         dto.setCreatedDate(dateTimeFormatter.print(from.getCreatedDate().getTime()));
+          dto.setCreatedDate(format(from.getCreatedDate()));
       }
       if (from.getSamples() != null && !from.getSamples().isEmpty()) {
          dto.setPositions(asDto2(from.getSamples()));
@@ -324,13 +326,13 @@ public final class Dtos {
       }
       dto.setModifiedById(from.getModifiedById());
       if (from.getModified() != null) {
-        dto.setModifiedDate(dateTimeFormatter.print(from.getModified().getTime()));
+          dto.setModifiedDate(format(from.getModified()));
       }
       if (from.getStartDate() != null) {
-        dto.setStartDate(dateTimeFormatter.print(from.getStartDate().getTime()));
+        dto.setStartDate(format(from.getStartDate()));
       }
       if (from.getCompletionDate() != null) {
-        dto.setCompletionDate(dateTimeFormatter.print(from.getCompletionDate().getTime()));
+        dto.setCompletionDate(format(from.getCompletionDate()));
       }
       dto.setReadLength(from.getReadLength());
       dto.setRunDirectory(from.getRunDirectory());
@@ -353,7 +355,7 @@ public final class Dtos {
       dto.setPoolBarcode(from.getPoolBarcode());
       dto.setPoolDescription(from.getPoolDescription());
       dto.setPoolCreatedById(from.getPoolCreatedById());
-      if (from.getPoolCreated() != null) dto.setPoolCreated(dateTimeFormatter.print(from.getPoolCreated().getTime()));
+      if (from.getPoolCreated() != null) dto.setPoolCreated(format(from.getPoolCreated()));
       if (from.getRunSample() != null && !from.getRunSample().isEmpty()) {
          dto.setSamples(asDto3(from.getRunSample()));
       }
@@ -394,10 +396,10 @@ public final class Dtos {
          dto.setArchived(from.getArchived());
       }
       if (from.getCreated() != null) {
-         dto.setCreatedDate(dateTimeFormatter.print(from.getCreated().getTime()));
+          dto.setCreatedDate(format(from.getCreated()));
       }
       if (from.getModified() != null) {
-         dto.setModifiedDate(dateTimeFormatter.print(from.getModified().getTime()));
+          dto.setModifiedDate(format(from.getModified()));
       }
       if (!StringUtils.isBlank(from.getTitle())) {
          dto.setTitle(from.getTitle());
@@ -436,13 +438,13 @@ public final class Dtos {
          dto.setName(from.getName());
       }
       if (from.getCreated() != null) {
-         dto.setCreatedDate(dateTimeFormatter.print(from.getCreated().getTime()));
+         dto.setCreatedDate(format(from.getCreated()));
       }
       if (from.getCreatedById() != null) {
         dto.setCreatedById(from.getCreatedById());
       }
       if (from.getModified() != null) {
-         dto.setModifiedDate(dateTimeFormatter.print(from.getModified().getTime()));
+         dto.setModifiedDate(format(from.getModified()));
       }
       if (from.getModifiedById() != null) {
         dto.setModifiedById(from.getModifiedById());
@@ -457,7 +459,7 @@ public final class Dtos {
          dto.setName(from.getName());
       }
       if (from.getCreated() != null) {
-         dto.setCreatedDate(dateTimeFormatter.print(from.getCreated().getTime()));
+          dto.setCreatedDate(format(from.getCreated()));
       }
 
       if (from.getModelId() != null) {
@@ -535,6 +537,10 @@ public final class Dtos {
       to.setPosition(from.getPosition());
       to.setSampleId(from.getSampleId());
       return to;
+    }
+    
+    private static String format(Date date) {
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault()).truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
 }

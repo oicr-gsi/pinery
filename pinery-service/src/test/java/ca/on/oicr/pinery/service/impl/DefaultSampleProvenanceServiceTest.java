@@ -5,17 +5,22 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+import java.sql.Date;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.api.Attribute;
@@ -37,10 +42,6 @@ import ca.on.oicr.pinery.lims.DefaultSample;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
 import ca.on.oicr.ws.dto.Dtos;
-import com.google.common.collect.ImmutableSet;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  *
@@ -65,7 +66,7 @@ public class DefaultSampleProvenanceServiceTest {
     Run run;
     OrderSample orderSample;
     Order order;
-    DateTime runCompletionDate = DateTime.parse("2014-01-01T00:00:00.000Z");
+    ZonedDateTime runCompletionDate = ZonedDateTime.parse("2014-01-01T00:00:00.000Z");
     SampleProvenance before;
 
     private final String sampleId = "1";
@@ -88,7 +89,7 @@ public class DefaultSampleProvenanceServiceTest {
         sample.setName("TEST_SAMPLE");
         sample.setAttributes(Collections.<Attribute>emptySet());
         sample.setId(sampleId);
-        sample.setModified(DateTime.parse("2015-01-01T00:00:00.000Z").toDate());
+        sample.setModified(Date.from(ZonedDateTime.parse("2015-01-01T00:00:00.000Z").toInstant()));
         samples.add(sample);
 
         parentSample.setChildren(ImmutableSet.of(sampleId));
@@ -107,7 +108,7 @@ public class DefaultSampleProvenanceServiceTest {
         run.setId(1);
         run.setName("ABC_123");
         run.setSample(Sets.newHashSet(lane));
-        run.setCompletionDate(runCompletionDate.toDate());
+        run.setCompletionDate(Date.from(runCompletionDate.toInstant()));
 
         orderSample = new DefaultOrderSample();
         orderSample.setId(sampleId);
@@ -126,8 +127,8 @@ public class DefaultSampleProvenanceServiceTest {
 
     @Test
     public void testVersionCalculate_sampleLastModifiedChange() {
-        DateTime expectedDate = DateTime.parse("2016-01-01T00:00:00.000Z");
-        sample.setModified(expectedDate.toDate());
+        ZonedDateTime expectedDate = ZonedDateTime.parse("2016-01-01T00:00:00.000Z");
+        sample.setModified(Date.from(expectedDate.toInstant()));
 
         SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
         assertEquals(expectedDate, after.getLastModified());
@@ -139,8 +140,8 @@ public class DefaultSampleProvenanceServiceTest {
 
     @Test
     public void testVersionCalculate_runLastModifiedChange() {
-        DateTime expectedDate = DateTime.parse("2016-01-01T00:00:00.000Z");
-        run.setModified(expectedDate.toDate());
+        ZonedDateTime expectedDate = ZonedDateTime.parse("2016-01-01T00:00:00.000Z");
+        run.setModified(Date.from(expectedDate.toInstant()));
 
         SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
         assertEquals(expectedDate, after.getLastModified());
@@ -152,8 +153,8 @@ public class DefaultSampleProvenanceServiceTest {
 
     @Test
     public void testVersionCalculate_runSampleLastModifiedChange() {
-        DateTime expectedDate = DateTime.parse("2016-01-01T00:00:00.000Z");
-        runSample.setModified(expectedDate.toDate());
+        ZonedDateTime expectedDate = ZonedDateTime.parse("2016-01-01T00:00:00.000Z");
+        runSample.setModified(Date.from(expectedDate.toInstant()));
 
         SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));
         assertEquals(expectedDate, after.getLastModified());
@@ -165,7 +166,7 @@ public class DefaultSampleProvenanceServiceTest {
 
     //@Test
     public void testVersionCalculate_laneLastModifiedChange() {
-        DateTime expectedDate = DateTime.parse("2016-01-01T00:00:00.000Z");
+        ZonedDateTime expectedDate = ZonedDateTime.parse("2016-01-01T00:00:00.000Z");
         //lane.setModified(expectedDate.toDate());
 
         SampleProvenance after = Dtos.asDto(getSampleProvenanceById("1_1_1"));

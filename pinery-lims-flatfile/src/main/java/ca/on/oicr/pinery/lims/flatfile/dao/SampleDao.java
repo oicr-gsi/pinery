@@ -1,9 +1,8 @@
 package ca.on.oicr.pinery.lims.flatfile.dao;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
-
-import org.joda.time.DateTime;
 
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Sample;
@@ -30,7 +29,7 @@ public interface SampleDao {
    * @param after earliest Sample creation date for Samples to include (null for any)
    * @return a List of all Samples matching the provided criteria (all samples if all parameters are null)
    */
-  public List<Sample> getSamplesFiltered(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after);
+  public List<Sample> getSamplesFiltered(Boolean archived, Set<String> projects, Set<String> types, ZonedDateTime before, ZonedDateTime after);
   
   /**
    * @return a List of all Projects which have Samples

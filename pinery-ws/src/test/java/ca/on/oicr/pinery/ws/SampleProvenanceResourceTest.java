@@ -1,30 +1,37 @@
 package ca.on.oicr.pinery.ws;
 
-import ca.on.oicr.gsi.provenance.model.SampleProvenance;
-import ca.on.oicr.pinery.service.SampleProvenanceService;
-import ca.on.oicr.ws.dto.SampleProvenanceDto;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import static org.hamcrest.Matchers.*;
-import org.joda.time.DateTime;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
+import ca.on.oicr.pinery.service.SampleProvenanceService;
+import ca.on.oicr.ws.dto.SampleProvenanceDto;
 
 /**
  *
@@ -55,7 +62,7 @@ public class SampleProvenanceResourceTest {
 
     @Test
     public void testEmptyResultSet() throws Exception {
-        List<SampleProvenance> sps = Collections.EMPTY_LIST;
+        List<SampleProvenance> sps = Collections.emptyList();
 
         when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
 
@@ -70,7 +77,7 @@ public class SampleProvenanceResourceTest {
     public void testJodaTimeObjectMapper() throws Exception {
         List<SampleProvenance> sps = new ArrayList<>();
         SampleProvenanceDto sp = new SampleProvenanceDto();
-        sp.setLastModified(DateTime.parse("2016-01-01T00:00:00.000Z"));
+        sp.setLastModified(ZonedDateTime.parse("2016-01-01T00:00:00.000Z"));
         sps.add(sp);
 
         when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
@@ -78,7 +85,7 @@ public class SampleProvenanceResourceTest {
         mockMvc.perform(get("/sample-provenance").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.[*].lastModified", everyItem(equalTo("2016-01-01T00:00:00.000Z"))));
+                .andExpect(jsonPath("$.[*].lastModified", everyItem(equalTo("2016-01-01T00:00:00Z"))));
     }
 
     @Test

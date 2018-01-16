@@ -13,7 +13,7 @@
         <github.user>seqprodbio</github.user>
         <github.repo>pinery</github.repo>
         
-        <provenance.version>1.0-rc6</provenance.version>
+        <provenance.version>1.2</provenance.version>
         <jackson.version>2.6.3</jackson.version>
         <spring.version>3.2.15.RELEASE</spring.version>
         <resteasy.version>3.0.13.Final</resteasy.version>
@@ -68,7 +68,7 @@
     <artifactId>pinery</artifactId>
     <packaging>pom</packaging>
     <groupId>ca.on.oicr</groupId>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>2.0.2-SNAPSHOT</version>
 
     <modules>
         <module>pinery-api</module>
@@ -170,7 +170,7 @@
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
-                <artifactId>jackson-datatype-joda</artifactId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
@@ -496,8 +496,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -520,7 +520,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <configuration>
-                    <targetJdk>1.7</targetJdk>
+                    <targetJdk>1.8</targetJdk>
                 </configuration>
             </plugin>
         </plugins>
@@ -605,8 +605,8 @@
         </repository>
         <repository>
             <id>release.gsi</id>
-            <name>GSI Dependencies Maven Snapshot Repository</name>
-            <url>https://seqwaremaven.oicr.on.ca/artifactory/gsi-release</url>
+            <name>GSI Releases</name>
+            <url>https://artifacts.oicr.on.ca/artifactory/gsi-release</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -616,8 +616,8 @@
         </repository>
         <repository>
             <id>snapshots.gsi</id>
-            <name>GSI Snapshots Maven Snapshot Repository</name>
-            <url>https://seqwaremaven.oicr.on.ca/artifactory/gsi-snapshots</url>
+            <name>GSI Snapshots</name>
+            <url>https://artifacts.oicr.on.ca/artifactory/gsi-snapshots</url>
             <releases>
                 <enabled>false</enabled>
             </releases>

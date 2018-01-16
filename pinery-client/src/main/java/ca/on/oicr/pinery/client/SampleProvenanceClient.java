@@ -1,6 +1,7 @@
 package ca.on.oicr.pinery.client;
 
 import java.util.List;
+
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
 
 public class SampleProvenanceClient extends ResourceClient<SampleProvenanceDto> {

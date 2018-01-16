@@ -1,10 +1,10 @@
 package ca.on.oicr.pinery.lims.flatfile.dao;
 
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,10 +22,10 @@ import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/test-context.xml")
 public class SampleFileDaoTest {
-  
+
   @Autowired
   private SampleFileDao dao;
-  
+
   @Test
   public void testGetSingleSampleAndMapping() {
     Sample sample = dao.getSample("1");
@@ -45,7 +45,7 @@ public class SampleFileDaoTest {
     Assert.assertEquals(Boolean.valueOf(true), sample.getArchived());
     Assert.assertEquals("Ready", sample.getStatus().getName());
     Assert.assertEquals("Ready", sample.getStatus().getState());
-    
+
     Set<Attribute> atts = sample.getAttributes();
     Assert.assertEquals(1, atts.size());
     for (Attribute att : atts) {
@@ -53,27 +53,27 @@ public class SampleFileDaoTest {
       Assert.assertEquals("Homo sapiens", att.getValue());
     }
   }
-  
+
   @Test
   public void testGetAllSamples() {
     List<Sample> samples = dao.getAllSamples();
     Assert.assertEquals(6, samples.size());
   }
-  
+
   @Test
   public void testGetSamplesNoFilter() {
     List<Sample> samples = dao.getSamplesFiltered(null, null, null, null, null);
     Assert.assertEquals(6, samples.size());
   }
-  
+
   @Test
   public void testGetSamplesDateFilters() {
-    DateTime before = DateTime.parse("2012-10-01T17:53:19-04:00", ModelUtils.dateTimeFormatter);
-    DateTime after = DateTime.parse("2012-07-01T15:53:19-04:00", ModelUtils.dateTimeFormatter);
+    ZonedDateTime before = ZonedDateTime.parse("2012-10-01T17:53:19-04:00", ModelUtils.dateTimeFormatter);
+    ZonedDateTime after = ZonedDateTime.parse("2012-07-01T15:53:19-04:00", ModelUtils.dateTimeFormatter);
     List<Sample> samples = dao.getSamplesFiltered(null, null, null, before, after);
     Assert.assertEquals(4, samples.size());
   }
-  
+
   @Test
   public void testGetSamplesProjectAndArchiveFilter() {
     Set<String> projects = new HashSet<>();
@@ -81,7 +81,7 @@ public class SampleFileDaoTest {
     List<Sample> samples = dao.getSamplesFiltered(false, projects, null, null, null);
     Assert.assertEquals(2, samples.size());
   }
-  
+
   @Test
   public void testGetSamplesTypeFilter() {
     Set<String> types = new HashSet<>();
@@ -89,23 +89,23 @@ public class SampleFileDaoTest {
     List<Sample> samples = dao.getSamplesFiltered(null, null, types, null, null);
     Assert.assertEquals(5, samples.size());
   }
-  
+
   @Test
   public void testGetAllSampleProjects() {
     List<SampleProject> projects = dao.getAllSampleProjects();
     Assert.assertEquals(2, projects.size());
   }
-  
+
   @Test
   public void testGetAllSampleTypes() {
     List<Type> types = dao.getAllSampleTypes();
     Assert.assertEquals(2, types.size());
   }
-  
+
   @Test
   public void testGetAllSampleAttributes() {
     List<AttributeName> atts = dao.getAllSampleAttributes();
     Assert.assertEquals(7, atts.size());
   }
-  
+
 }
