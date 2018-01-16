@@ -1,12 +1,15 @@
 package ca.on.oicr.ws.dto;
 
-import ca.on.oicr.gsi.provenance.model.LaneProvenance;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.ZonedDateTime;
 import java.util.SortedMap;
 import java.util.SortedSet;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import org.joda.time.DateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 
 /**
  *
@@ -22,8 +25,8 @@ public class LaneProvenanceDto implements LaneProvenance {
     private Boolean skip;
     private String laneProvenanceId;
     private String version;
-    private DateTime lastModified;
-    private DateTime createdDate;
+    private ZonedDateTime lastModified;
+    private ZonedDateTime createdDate;
 
     @Override
     public String getSequencerRunName() {
@@ -104,20 +107,20 @@ public class LaneProvenanceDto implements LaneProvenance {
     }
 
     @Override
-    public DateTime getLastModified() {
+    public ZonedDateTime getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(DateTime lastModified) {
+    public void setLastModified(ZonedDateTime lastModified) {
         this.lastModified = lastModified;
     }
 
     @Override
-    public DateTime getCreatedDate() {
+    public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(DateTime createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 

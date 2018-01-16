@@ -8,11 +8,12 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -94,8 +95,8 @@ public class SampleClientTest {
   
   @Test
   public void testFilterDateBeforeParameter() {
-    DateTime date = new DateTime(2015, 10, 23, 15, 21);
-    String pattern = "^my\\.pretend\\.url\\?before=2015-10-23T15:21:00\\.000-.{5}$";
+    ZonedDateTime date = ZonedDateTime .of(2015, 10, 23, 15, 21, 0, 0, ZoneId.of("Z"));
+    String pattern = "^my\\.pretend\\.url\\?before=2015-10-23T15:21:00Z$";
     
     SampleClient.SamplesFilter filter = new SampleClient.SamplesFilter().withDateBefore(date);
     assertTrue(filter.buildUrl("my.pretend.url").matches(pattern));
@@ -103,8 +104,8 @@ public class SampleClientTest {
   
   @Test
   public void testFilterDateAfterParameter() {
-    DateTime date = new DateTime(2015, 10, 23, 15, 21);
-    String pattern = "^my\\.pretend\\.url\\?after=2015-10-23T15:21:00\\.000-.{5}$";
+    ZonedDateTime date = ZonedDateTime.of(2015, 10, 23, 15, 21, 0, 0, ZoneId.of("Z"));
+    String pattern = "^my\\.pretend\\.url\\?after=2015-10-23T15:21:00Z$";
     
     SampleClient.SamplesFilter filter = new SampleClient.SamplesFilter().withDateAfter(date);
     assertTrue(filter.buildUrl("my.pretend.url").matches(pattern));
@@ -138,7 +139,7 @@ public class SampleClientTest {
   
   @Test
   public void testFilterAllParams() {
-    DateTime date = new DateTime(2015, 10, 23, 15, 21);
+    ZonedDateTime date = ZonedDateTime.of(2015, 10, 23, 15, 21, 0, 0, ZoneId.of("Z"));
     List<String> projects = Arrays.asList("Proj1");
     List<String> types = Arrays.asList("Type1");
     SampleClient.SamplesFilter filter = new SampleClient.SamplesFilter()

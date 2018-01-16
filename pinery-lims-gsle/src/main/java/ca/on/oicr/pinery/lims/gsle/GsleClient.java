@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,10 +23,19 @@ import javax.xml.bind.JAXBException;
 import org.apache.commons.lang.StringUtils;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Table;
+import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
@@ -62,16 +72,6 @@ import ca.on.oicr.pinery.lims.GsleSampleChildren;
 import ca.on.oicr.pinery.lims.GsleSampleParents;
 import ca.on.oicr.pinery.lims.GsleUser;
 import ca.on.oicr.pinery.lims.Workset;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Table;
-import com.opencsv.CSVReader;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 public class GsleClient implements Lims {
 
@@ -420,12 +420,12 @@ public class GsleClient implements Lims {
    }
 
    @Override
-   public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after) {
+   public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, ZonedDateTime before, ZonedDateTime after) {
       if (before == null) {
-         before = DateTime.now().plusDays(1);
+         before = ZonedDateTime.now().plusDays(1);
       }
       if (after == null) {
-         after = DateTime.now().withYear(2005);
+         after = ZonedDateTime.now().withYear(2005);
       }
       // log.error("Inside getSamples");
 
@@ -695,9 +695,9 @@ public class GsleClient implements Lims {
       }
    }
 
-   String getDateSqlString(DateTime date) {
+   String getDateSqlString(ZonedDateTime date) {
       try {
-         return ";bind=" + URLEncoder.encode(GsleSample.dateTimeFormatter.print(date), "UTF8");
+         return ";bind=" + URLEncoder.encode(date.format(GsleSample.dateTimeFormatter), "UTF8");
       } catch (UnsupportedEncodingException e) {
          throw new RuntimeException(e);
       }

@@ -1,6 +1,8 @@
 package ca.on.oicr.pinery.lims;
 
-import org.joda.time.DateTime;
+import java.time.ZonedDateTime;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,8 +22,8 @@ public class GsleChange extends DefaultChange {
 	public void setCreatedString(String created) {
 		if (created != null && !created.equals("")) {
 			try {
-				DateTime dateTime = GsleSample.dateTimeFormatter.parseDateTime(created);
-				setCreated(dateTime.toDate());
+				ZonedDateTime dateTime = ZonedDateTime.parse(created, GsleSample.dateTimeFormatter);
+				setCreated(Date.from(dateTime.toInstant()));
 			} catch (IllegalArgumentException e) {
 				log.error("Error converting created [{}] date format. {}", created, e);
 			}

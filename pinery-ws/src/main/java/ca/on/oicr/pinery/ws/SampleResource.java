@@ -1,11 +1,7 @@
 package ca.on.oicr.pinery.ws;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-
 import java.net.URI;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -21,9 +17,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.google.common.collect.Lists;
 
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.ChangeLog;
@@ -39,8 +36,10 @@ import ca.on.oicr.ws.dto.SampleDto;
 import ca.on.oicr.ws.dto.SampleProjectDto;
 import ca.on.oicr.ws.dto.SampleReferenceDto;
 import ca.on.oicr.ws.dto.TypeDto;
-
-import com.google.common.collect.Lists;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
 
 @Component
 @Path("/")
@@ -66,14 +65,14 @@ public class SampleResource {
          @ApiParam(value = "filter by sample type(s)", required = false, allowMultiple = true) @QueryParam("type") Set<String> types,
          @ApiParam(value = "filter to include samples created before this date", required = false) @QueryParam("before") String before,
          @ApiParam(value = "filter to include samples created after this date", required = false) @QueryParam("after") String after) {
-      DateTime beforeDateTime = null;
-      DateTime afterDateTime = null;
+      ZonedDateTime beforeDateTime = null;
+      ZonedDateTime afterDateTime = null;
       try {
          if (before != null && !before.equals("")) {
-            beforeDateTime = DateTime.parse(before);
+            beforeDateTime = ZonedDateTime.parse(before);
          }
          if (after != null && !after.equals("")) {
-            afterDateTime = DateTime.parse(after);
+            afterDateTime = ZonedDateTime.parse(after);
          }
       } catch (IllegalArgumentException e) {
          throw new BadRequestException("Invalid date format in parameter [before] or [after]. Use ISO8601 formatting. " + e.getMessage(), e);

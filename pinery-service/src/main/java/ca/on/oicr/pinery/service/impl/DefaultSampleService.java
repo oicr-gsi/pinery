@@ -1,9 +1,9 @@
 package ca.on.oicr.pinery.service.impl;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public class DefaultSampleService implements SampleService {
 	}
 
 	@Override
-	public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after) {
+	public List<Sample> getSamples(Boolean archived, Set<String> projects, Set<String> types, ZonedDateTime before, ZonedDateTime after) {
 		return lims.getSamples(archived, projects, types, before, after);
 	}
 

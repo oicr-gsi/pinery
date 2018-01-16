@@ -1,14 +1,23 @@
 package ca.on.oicr.pinery.lims;
 
-import ca.on.oicr.gsi.provenance.model.SampleProvenance;
-import ca.on.oicr.pinery.api.Attribute;
-import ca.on.oicr.pinery.api.Instrument;
-import ca.on.oicr.pinery.api.InstrumentModel;
-import ca.on.oicr.pinery.api.Run;
-import ca.on.oicr.pinery.api.RunPosition;
-import ca.on.oicr.pinery.api.RunSample;
-import ca.on.oicr.pinery.api.Sample;
-import ca.on.oicr.pinery.api.SampleProject;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.stream.Stream;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.collect.HashMultimap;
@@ -18,22 +27,16 @@ import com.google.common.collect.Multimaps;
 import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.hash.Hashing;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
+import ca.on.oicr.pinery.api.Attribute;
+import ca.on.oicr.pinery.api.Instrument;
+import ca.on.oicr.pinery.api.InstrumentModel;
+import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunPosition;
+import ca.on.oicr.pinery.api.RunSample;
+import ca.on.oicr.pinery.api.Sample;
+import ca.on.oicr.pinery.api.SampleProject;
 
 /**
  *
@@ -304,63 +307,23 @@ public class DefaultSampleProvenance implements SampleProvenance {
 //        return Versioning.getSha256(this);
     }
 
-    @Override
-    public DateTime getLastModified() {
-        DateTime lastModified = null;
-
-        if (sequencerRun != null) {
-            lastModified = ObjectUtils.max(lastModified,
-                    getDateTimeNullSafe(sequencerRun.getCreatedDate()),
-                    getDateTimeNullSafe(sequencerRun.getCompletionDate()),
-                    getDateTimeNullSafe(sequencerRun.getModified()));
-        }
-        if (lane != null) {
-            //
-        }
-        if (runSample != null) {
-            lastModified = ObjectUtils.max(lastModified,
-                    getDateTimeNullSafe(runSample.getCreated()),
-                    getDateTimeNullSafe(runSample.getModified()));
-        }
-        if (sample != null) {
-            lastModified = ObjectUtils.max(lastModified,
-                    getDateTimeNullSafe(sample.getCreated()),
-                    getDateTimeNullSafe(sample.getModified()));
-        }
-        if (parentSamples != null) {
-            for (Sample parentSample : parentSamples) {
-                lastModified = ObjectUtils.max(lastModified,
-                        getDateTimeNullSafe(parentSample.getCreated()),
-                        getDateTimeNullSafe(parentSample.getModified()));
-            }
-        }
-
-        if (lastModified == null) {
-            return null;
-        } else {
-            return lastModified.toDateTime(DateTimeZone.UTC);
-        }
-    }
+	@Override
+	public ZonedDateTime getLastModified() {
+		return Util.optionalDateToZDT(Stream
+				.concat(Stream.of(sequencerRun == null ? null : sequencerRun.getCreatedDate(),
+						sequencerRun == null ? null : sequencerRun.getCompletionDate(),
+						sequencerRun == null ? null : sequencerRun.getModified(),
+						runSample == null ? null : runSample.getCreated(),
+						runSample == null ? null : runSample.getModified(), sample == null ? null : sample.getCreated(),
+						sample == null ? null : sample.getModified()),
+						parentSamples == null ? Stream.empty()
+								: parentSamples.stream().flatMap(p -> Stream.of(p.getCreated(), p.getModified())))
+				.filter(Objects::nonNull).max(Date::compareTo));
+	}
 
     @Override
-    public DateTime getCreatedDate() {
-        DateTime createdDate = null;
-
-        if (sequencerRun != null) {
-            createdDate = ObjectUtils.min(createdDate,
-                    //completion date is used as this is the first date that this provenance object is ready for processing
-                    getDateTimeNullSafe(sequencerRun.getCompletionDate()));
-        }
-        if (lane != null) {
-//            lastModified = ObjectUtils.min(lastModified,
-//                    getDateTimeNullSafe(lane.getCreatedDate()));
-        }
-
-        if (createdDate == null) {
-            return null;
-        } else {
-            return createdDate.toDateTime(DateTimeZone.UTC);
-        }
+    public ZonedDateTime getCreatedDate() {
+    	return Util.optionalDateToZDT(Stream.of(sequencerRun.getCompletionDate()).filter(Objects::nonNull).min(Date::compareTo));
     }
 
     @Override
@@ -408,13 +371,4 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
         return attrs;
     }
-
-    private DateTime getDateTimeNullSafe(Date date) {
-        if (date == null) {
-            return null;
-        } else {
-            return new DateTime(date);
-        }
-    }
-
 }

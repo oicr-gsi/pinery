@@ -1,9 +1,9 @@
 package ca.on.oicr.pinery.lims.flatfile;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.on.oicr.pinery.api.AttributeName;
@@ -55,7 +55,7 @@ public class FlatfileClient implements Lims {
 
   @Override
   public List<Sample> getSamples(Boolean archived, Set<String> projects,
-      Set<String> types, DateTime before, DateTime after) {
+      Set<String> types, ZonedDateTime before, ZonedDateTime after) {
     return sampleDao.getSamplesFiltered(archived, projects, types, before, after);
   }
 

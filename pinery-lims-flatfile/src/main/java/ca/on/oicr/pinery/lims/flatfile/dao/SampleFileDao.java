@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.lims.flatfile.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -175,7 +175,7 @@ public class SampleFileDao implements SampleDao {
   }
 
   @Override
-  public List<Sample> getSamplesFiltered(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after) {
+  public List<Sample> getSamplesFiltered(Boolean archived, Set<String> projects, Set<String> types, ZonedDateTime before, ZonedDateTime after) {
     if (archived == null && projects == null && types == null && before == null && after == null) {
       return getAllSamples();
     }
@@ -188,12 +188,12 @@ public class SampleFileDao implements SampleDao {
     return template.query(fullQuery, params, sampleMapper);
   }
   
-  private Object[] makeQueryParams(Boolean archived, Set<String> projects, Set<String> types, DateTime before, DateTime after) {
+  private Object[] makeQueryParams(Boolean archived, Set<String> projects, Set<String> types, ZonedDateTime before, ZonedDateTime after) {
     int paramCount = 3 + (projects == null ? 0 : projects.size()) + (types == null ? 0 : types.size());
     Object[] queryParams = new Object[paramCount];
     queryParams[0] = archived == null ? "%" : archived.toString();
-    queryParams[1] = before == null ? DateTime.now().plusDays(1).toString() : before.toString();
-    queryParams[2] = after == null ? DateTime.now().withYear(2000).toString() : after.toString();
+    queryParams[1] = before == null ? ZonedDateTime.now().plusDays(1).toString() : before.toString();
+    queryParams[2] = after == null ? ZonedDateTime.now().withYear(2000).toString() : after.toString();
     int paramPos = 3;
     if (projects != null) {
       for (String project : projects) {
