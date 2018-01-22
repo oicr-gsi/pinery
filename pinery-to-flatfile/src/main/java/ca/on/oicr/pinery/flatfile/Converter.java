@@ -22,6 +22,8 @@ public class Converter {
   private final PineryClient client;
   private final File outputDir;
   private char separator = '\t';
+  private char quoteChar = '"';
+  private char escapeChar = '\\';
   
   /**
    * Creates a new Converter instance
@@ -40,10 +42,14 @@ public class Converter {
    * @param client the Pinery client to use for retrieving input data
    * @param outputDir the directory to write output files to
    * @param separator delimiter to use in output files
+   * @param quoteChar quote character to wrap fields with
+   * @param escapeChar character to escape the delimiter, quote, and escape characters when used within a field
    */
-  public Converter(PineryClient client, File outputDir, char separator) {
+  public Converter(PineryClient client, File outputDir, char separator, char quoteChar, char escapeChar) {
     this(client, outputDir);
     this.separator = separator;
+    this.quoteChar = quoteChar;
+    this.escapeChar = escapeChar;
   }
 
   /**
@@ -55,7 +61,7 @@ public class Converter {
    */
   public void convertInstruments(String filename) throws HttpResponseException, IOException {
     Writer writer = new InstrumentWriter(client.getInstrument().all(), client.getInstrumentModel().all());
-    writer.writeFile(new File(outputDir, filename), separator);
+    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
   
   /**
@@ -67,7 +73,7 @@ public class Converter {
    */
   public void convertSamples(String filename) throws HttpResponseException, IOException {
     Writer writer = new SampleWriter(client.getSample().all());
-    writer.writeFile(new File(outputDir, filename), separator);
+    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
   
   /**
@@ -79,7 +85,7 @@ public class Converter {
    */
   public void convertChangeLogs(String filename) throws HttpResponseException, IOException {
     Writer writer = new ChangeWriter(client.getChangeLog().all());
-    writer.writeFile(new File(outputDir, filename), separator);
+    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
   
   /**
@@ -91,7 +97,7 @@ public class Converter {
    */
   public void convertUsers(String filename) throws HttpResponseException, IOException {
     Writer writer = new UserWriter(client.getUser().all());
-    writer.writeFile(new File(outputDir, filename), separator);
+    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
   
   /**
@@ -103,7 +109,7 @@ public class Converter {
    */
   public void convertRuns(String filename) throws HttpResponseException, IOException {
     Writer writer = new SequencerRunWriter(client.getSequencerRun().all());
-    writer.writeFile(new File(outputDir, filename), separator);
+    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
   
   /**
@@ -115,7 +121,7 @@ public class Converter {
    */
   public void convertOrders(String filename) throws HttpResponseException, IOException {
     Writer writer = new OrderWriter(client.getOrder().all());
-    writer.writeFile(new File(outputDir, filename), separator);
+    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
   
   /**
@@ -127,7 +133,7 @@ public class Converter {
    */
   public void convertBoxes(String filename) throws HttpResponseException, IOException {
     Writer writer = new BoxWriter(client.getBox().all());
-    writer.writeFile(new File(outputDir, filename), separator);
+    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
   
 }
