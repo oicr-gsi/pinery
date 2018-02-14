@@ -25,6 +25,7 @@ public class DefaultRun implements Run {
    private Date modified;
    private Integer modifiedById;
    private String runDirectory;
+   private String runBasesMask;
 
    @Override
    public String getState() {
@@ -190,6 +191,16 @@ public class DefaultRun implements Run {
   }
 
   @Override
+  public String getRunBasesMask() {
+    return runBasesMask;
+  }
+
+  @Override
+  public void setRunBasesMask(String runBasesMask) {
+    this.runBasesMask = runBasesMask;
+  }
+
+@Override
   public String toString() {
     return "DefaultRun [state=" + state + ", name=" + name + ", barcode="
         + barcode + ", barcodeTwo=" + barcodeTwo + ", sample=" + sample
@@ -198,7 +209,8 @@ public class DefaultRun implements Run {
         + instrumentId + ", instrumentName=" + instrumentName + ", readLength="
         + readLength + ", startDate=" + startDate + ", completionDate="
         + completionDate + ", modified=" + modified + ", modifiedById="
-        + modifiedById + ", runDirectory=" + runDirectory + "]";
+        + modifiedById + ", runDirectory=" + runDirectory + ", runBasesMask="
+        + runBasesMask + "]";
   }
 
   @Override
@@ -231,6 +243,7 @@ public class DefaultRun implements Run {
     result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
     result = prime * result + ((state == null) ? 0 : state.hashCode());
     result = prime * result + ((runDirectory == null) ? 0 : runDirectory.hashCode());
+    result = prime * result + ((runBasesMask == null) ? 0 : runBasesMask.hashCode());
     return result;
   }
 
@@ -344,6 +357,12 @@ public class DefaultRun implements Run {
         return false;
     }
     else if (!runDirectory.equals(other.runDirectory))
+      return false;
+    if (runBasesMask == null) {
+      if (other.runBasesMask != null)
+    	return false;
+    }
+    else if (!runBasesMask.equals(other.runBasesMask))
       return false;
     return true;
   }

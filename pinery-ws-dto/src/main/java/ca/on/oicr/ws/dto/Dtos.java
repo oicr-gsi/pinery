@@ -336,6 +336,9 @@ public final class Dtos {
       }
       dto.setReadLength(from.getReadLength());
       dto.setRunDirectory(from.getRunDirectory());
+      if (from.getRunBasesMask() != null) {
+        dto.setRunBasesMask(from.getRunBasesMask());
+      }
       return dto;
    }
 
