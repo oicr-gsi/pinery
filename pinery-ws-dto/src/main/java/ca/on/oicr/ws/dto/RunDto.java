@@ -195,13 +195,14 @@ public class RunDto {
     this.runDirectory = runDirectory;
   }
 
+  @JsonProperty("run_bases_mask")
   public String getRunBasesMask() {
-	return runBasesMask;
-}
+    return runBasesMask;
+  }
 
-public void setRunBasesMask(String runBasesMask) {
-	this.runBasesMask = runBasesMask;
-}
+  public void setRunBasesMask(String runBasesMask) {
+    this.runBasesMask = runBasesMask;
+  }
 
 @Override
   public String toString() {
