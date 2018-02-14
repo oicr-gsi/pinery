@@ -25,6 +25,7 @@ public class SequencerRunWriter extends Writer {
     "state",
     "barcode",
     "runDirectory",
+    "runBasesMask",
     "positions"
   };
   
@@ -62,6 +63,7 @@ public class SequencerRunWriter extends Writer {
         run.getState(),
         run.getBarcode(),
         run.getRunDirectory(),
+        run.getRunBasesMask(),
         getPositionsString(run)
     };
     
