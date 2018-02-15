@@ -64,6 +64,9 @@ public class DefaultLaneProvenance implements LaneProvenance {
         if (sequencerRun != null && sequencerRun.getRunDirectory() != null && !sequencerRun.getRunDirectory().isEmpty()) {
             attrs.put("run_dir", sequencerRun.getRunDirectory());
         }
+        if (sequencerRun != null && sequencerRun.getRunBasesMask() != null && !sequencerRun.getRunBasesMask().isEmpty()) {
+        	attrs.put("run_bases_mask", sequencerRun.getRunBasesMask());
+        }
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }
 
