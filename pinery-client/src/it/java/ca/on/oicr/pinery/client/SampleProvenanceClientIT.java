@@ -1,6 +1,9 @@
 package ca.on.oicr.pinery.client;
 
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
+import ca.on.oicr.pinery.client.HttpResponseException;
+import ca.on.oicr.pinery.client.PineryClient;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -10,11 +13,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
+
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import org.joda.time.DateTime;
 import static org.junit.Assert.*;
 
 public class SampleProvenanceClientIT {
@@ -194,13 +199,13 @@ public class SampleProvenanceClientIT {
 
     @Test
     public void checkLastModified() {
-        assertEquals(DateTime.parse("2015-07-14T14:51:36.000Z"), spById.get("1_1_2").getLastModified());
-        assertEquals(DateTime.parse("2015-08-01T20:56:20.000Z"), spById.get("1_2_3").getLastModified());
-        assertEquals(DateTime.parse("2015-07-14T14:51:36.000Z"), spById.get("2_1_2").getLastModified());
-        assertEquals(DateTime.parse("2015-08-01T20:56:20.000Z"), spById.get("2_1_3").getLastModified());
-        assertEquals(DateTime.parse("2015-09-01T20:56:20.000Z"), spById.get("2_2_4").getLastModified());
-        assertEquals(DateTime.parse("2015-10-01T20:56:20.000Z"), spById.get("2_2_5").getLastModified());
-        assertEquals(DateTime.parse("2016-03-05T20:00:00.000Z"), spById.get("3_5_8").getLastModified());
+        assertEquals(ZonedDateTime.parse("2015-07-14T14:51:36Z").toString(), spById.get("1_1_2").getLastModified().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2015-08-01T20:56:20Z").toString(), spById.get("1_2_3").getLastModified().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2015-07-14T14:51:36Z").toString(), spById.get("2_1_2").getLastModified().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2015-08-01T20:56:20Z").toString(), spById.get("2_1_3").getLastModified().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2015-09-01T20:56:20Z").toString(), spById.get("2_2_4").getLastModified().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2015-10-01T20:56:20Z").toString(), spById.get("2_2_5").getLastModified().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2016-03-05T20:00:01Z").toString(), spById.get("3_5_8").getLastModified().toInstant().toString());
     }
 
     @Test

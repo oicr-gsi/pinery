@@ -28,6 +28,7 @@ public class RunDto {
    private String modifiedByUrl;
    private String modifiedDate;
    private String runDirectory;
+   private String runBasesMask;
 
    public String getState() {
       return state;
@@ -194,7 +195,16 @@ public class RunDto {
     this.runDirectory = runDirectory;
   }
 
-  @Override
+  @JsonProperty("run_bases_mask")
+  public String getRunBasesMask() {
+    return runBasesMask;
+  }
+
+  public void setRunBasesMask(String runBasesMask) {
+    this.runBasesMask = runBasesMask;
+  }
+
+@Override
   public String toString() {
     return "RunDto [state=" + state + ", name=" + name + ", barcode=" + barcode
         + ", instrumentName=" + instrumentName + ", positions=" + positions
@@ -203,7 +213,8 @@ public class RunDto {
         + ", instrumentId=" + instrumentId + ", instrumentUrl=" + instrumentUrl
         + ", startDate=" + startDate + ", completionDate=" + completionDate
         + ", modifiedById=" + modifiedById + ", modifiedByUrl=" + modifiedByUrl
-        + ", modifiedDate=" + modifiedDate + ", runDirectory=" + runDirectory + "]";
+        + ", modifiedDate=" + modifiedDate + ", runDirectory=" + runDirectory
+        + ", runBasesMask=" + runBasesMask + "]";
   }
 
   @Override
@@ -229,6 +240,7 @@ public class RunDto {
     result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
     result = prime * result + ((state == null) ? 0 : state.hashCode());
     result = prime * result + ((runDirectory == null) ? 0 : runDirectory.hashCode());
+    result = prime * result + ((runBasesMask == null) ? 0 : runBasesMask.hashCode());
     return result;
   }
 
@@ -318,6 +330,12 @@ public class RunDto {
         return false;
     }
     else if (!runDirectory.equals(other.runDirectory))
+      return false;
+    if (runBasesMask == null) {
+      if (other.runBasesMask != null)
+        return false;
+    }
+    else if (!runBasesMask.equals(other.runBasesMask))
       return false;
     return true;
   }

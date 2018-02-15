@@ -50,6 +50,7 @@ public class RunFileDao implements RunDao {
       r.setState(ModelUtils.nullIfEmpty(rs.getString("state")));
       r.setBarcode(ModelUtils.nullIfEmpty(rs.getString("barcode")));
       r.setRunDirectory(ModelUtils.nullIfEmpty(rs.getString("runDirectory")));
+      r.setRunBasesMask(ModelUtils.nullIfEmpty(rs.getString("runBasesMask")));
       
       r.setSample(parseRunPositions(rs.getString("positions")));
       

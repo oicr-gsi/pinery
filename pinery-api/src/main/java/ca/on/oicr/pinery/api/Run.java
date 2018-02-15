@@ -69,4 +69,8 @@ public interface Run {
    
    public void setRunDirectory(String runDirectory);
    
+   public String getRunBasesMask();
+   
+   public void setRunBasesMask(String runBasesMask);
+   
 }
