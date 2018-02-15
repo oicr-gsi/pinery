@@ -10,11 +10,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ca.on.oicr.ws.dto.LaneProvenanceDto;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import org.joda.time.DateTime;
 import static org.junit.Assert.*;
 
 public class LaneProvenanceClientIT {
@@ -106,11 +106,11 @@ public class LaneProvenanceClientIT {
         for (LaneProvenance lp : lps) {
             System.out.println(lp.getLaneProvenanceId() + " = " + lp.getLastModified());
         }
-        assertEquals(DateTime.parse("2015-07-14T14:51:36.000Z"), lpById.get("1_1").getLastModified());
-        assertEquals(DateTime.parse("2015-07-14T14:51:36.000Z"), lpById.get("1_2").getLastModified());
-        assertEquals(DateTime.parse("2015-07-14T14:51:36.000Z"), lpById.get("2_1").getLastModified());
-        assertEquals(DateTime.parse("2015-07-14T14:51:36.000Z"), lpById.get("2_2").getLastModified());
-        assertEquals(DateTime.parse("2016-03-03T20:00:00.000Z"), lpById.get("3_5").getLastModified());
+        assertEquals(ZonedDateTime.parse("2015-07-14T14:51:36Z").toString(), lpById.get("1_1").getLastModified().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2015-07-14T14:51:36Z").toString(), lpById.get("1_2").getLastModified().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2015-07-14T14:51:36Z").toString(), lpById.get("2_1").getLastModified().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2015-07-14T14:51:36Z").toString(), lpById.get("2_2").getLastModified().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2016-03-03T20:00:01Z").toString(), lpById.get("3_5").getLastModified().toInstant().toString());
     }
 
     @Test
@@ -119,11 +119,11 @@ public class LaneProvenanceClientIT {
         for (LaneProvenance lp : lps) {
             System.out.println(lp.getLaneProvenanceId() + " = " + lp.getCreatedDate());
         }
-        assertEquals(DateTime.parse("2015-07-11T14:51:36.000Z"), lpById.get("1_1").getCreatedDate());
-        assertEquals(DateTime.parse("2015-07-11T14:51:36.000Z"), lpById.get("1_2").getCreatedDate());
-        assertEquals(DateTime.parse("2015-07-11T14:51:36.000Z"), lpById.get("2_1").getCreatedDate());
-        assertEquals(DateTime.parse("2015-07-11T14:51:36.000Z"), lpById.get("2_2").getCreatedDate());
-        assertEquals(DateTime.parse("2016-03-01T20:00:00.000Z"), lpById.get("3_5").getCreatedDate());
+        assertEquals(ZonedDateTime.parse("2015-07-11T14:51:36Z").toString(), lpById.get("1_1").getCreatedDate().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2015-07-11T14:51:36Z").toString(), lpById.get("1_2").getCreatedDate().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2015-07-11T14:51:36Z").toString(), lpById.get("2_1").getCreatedDate().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2015-07-11T14:51:36Z").toString(), lpById.get("2_2").getCreatedDate().toInstant().toString());
+        assertEquals(ZonedDateTime.parse("2016-03-01T20:00:01Z").toString(), lpById.get("3_5").getCreatedDate().toInstant().toString());
     }
 
     @Test
