@@ -1,6 +1,9 @@
 # Pinery
 
-Pinery is a webservice that provides a LIMS abstraction layer.
+Pinery is a webservice that provides a LIMS abstraction layer. The main advantage of this is to avoid
+tightly coupling your other applications with a particular data source. This means that your downstream
+applications are not dependent on a specific LIMS' schema. You can write your applications once and they
+will be compatible with any data source that has a Pinery implementation.
 
 ## Build
 
@@ -13,8 +16,7 @@ Build all modules, running all unit tests and integration tests:
 ### Webservice
 
 Pinery is a read-only webservice that pulls information from a LIMS. This repository includes
-implementations that read data from Geospiza GeneSifter Lab Edition (GSLE), MISO-LIMS, and .tsv
-flat files.
+implementations that read data from Geospiza GeneSifter Lab Edition (GSLE), and .tsv flat files.
 
 [More Info](pinery-ws/README.md)
 
