@@ -160,7 +160,7 @@ public class MisoClient implements Lims {
       "        ,scluu.userId modifiedById\n" + 
       "        ,s.identificationBarcode tubeBarcode\n" + 
       "        ,s.volume volume\n" + 
-      "        ,sai.concentration concentration\n" + 
+      "        ,s.concentration concentration\n" + 
       "        ,s.locationBarcode storageLocation\n" + 
       "        ,NULL kitName\n" + 
       "        ,NULL kitDescription\n" + 
