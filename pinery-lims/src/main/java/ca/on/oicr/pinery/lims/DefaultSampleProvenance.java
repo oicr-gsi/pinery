@@ -54,7 +54,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
     private Sample sample;
     private SampleProject sampleProject;
     private Collection<Sample> parentSamples;
-    private Map<LimsAttribute, Set<String>> additionalSampleAttributes = Collections.EMPTY_MAP;
+    private Map<LimsAttribute, Set<String>> additionalSampleAttributes = Collections.emptyMap();
 
     private final boolean ALLOW_UNKNOWN_ATTRIBUTES = false;
 
