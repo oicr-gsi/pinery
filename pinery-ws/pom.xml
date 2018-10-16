@@ -27,6 +27,10 @@
         </dependency>
         <!-- Other dependencies -->
         <dependency>
+            <groupId>ca.on.oicr.gsi</groupId>
+            <artifactId>server-utils</artifactId>
+        </dependency>
+        <dependency>
             <groupId>ca.on.oicr</groupId>
             <artifactId>pinery-service</artifactId>
         </dependency>

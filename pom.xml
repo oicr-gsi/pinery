@@ -413,6 +413,11 @@
                 <artifactId>provenance-api</artifactId>
                 <version>${provenance.version}</version>
             </dependency>
+            <dependency>
+                <groupId>ca.on.oicr.gsi</groupId>
+                <artifactId>server-utils</artifactId>
+                <version>0.0.1</version>
+            </dependency>
          
         </dependencies>
     </dependencyManagement>
