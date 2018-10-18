@@ -9,6 +9,7 @@ import ca.on.oicr.pinery.flatfile.writer.BoxWriter;
 import ca.on.oicr.pinery.flatfile.writer.ChangeWriter;
 import ca.on.oicr.pinery.flatfile.writer.InstrumentWriter;
 import ca.on.oicr.pinery.flatfile.writer.OrderWriter;
+import ca.on.oicr.pinery.flatfile.writer.SampleProjectWriter;
 import ca.on.oicr.pinery.flatfile.writer.SampleWriter;
 import ca.on.oicr.pinery.flatfile.writer.SequencerRunWriter;
 import ca.on.oicr.pinery.flatfile.writer.UserWriter;
@@ -136,4 +137,15 @@ public class Converter {
     writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
   
+  /**
+   * Reads all project data from Pinery and writes it to a flat file
+   * 
+   * @param filename output file name
+   * @throws HttpResponseException if there is an error communicating with Pinery
+   * @throws IOException if there is an error writing to file
+   */
+  public void convertProjects(String filename) throws HttpResponseException, IOException {
+    Writer writer = new SampleProjectWriter(client.getSampleProject().all());
+    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
+  }
 }

@@ -167,6 +167,7 @@ public final class Dtos {
       SampleProjectDto dto = new SampleProjectDto();
       dto.setName(from.getName());
       dto.setCount(from.getCount());
+      dto.setActive(from.isActive());
       if (from.getEarliest() != null) {
          dto.setEarliest(format(from.getEarliest()));
       }
