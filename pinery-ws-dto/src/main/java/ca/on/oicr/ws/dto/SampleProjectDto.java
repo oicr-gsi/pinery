@@ -12,6 +12,7 @@ public class SampleProjectDto {
    private Integer archivedCount;
    private String earliest;
    private String latest;
+   private boolean active;
 
    public String getName() {
       return name;
@@ -54,6 +55,14 @@ public class SampleProjectDto {
       this.archivedCount = archivedCount;
    }
 
+   public boolean isActive() {
+     return active;
+   }
+
+   public void setActive(boolean active) {
+     this.active = active;
+   }
+
    @Override
    public int hashCode() {
       final int prime = 31;
@@ -63,6 +72,7 @@ public class SampleProjectDto {
       result = prime * result + ((earliest == null) ? 0 : earliest.hashCode());
       result = prime * result + ((latest == null) ? 0 : latest.hashCode());
       result = prime * result + ((name == null) ? 0 : name.hashCode());
+      result = prime * result + Boolean.hashCode(active);
       return result;
    }
 
@@ -87,13 +97,14 @@ public class SampleProjectDto {
       if (name == null) {
          if (other.name != null) return false;
       } else if (!name.equals(other.name)) return false;
+      if (active != other.active) return false;
       return true;
    }
 
    @Override
    public String toString() {
       return "SampleProjectDto [name=" + name + ", count=" + count + ", archivedCount=" + archivedCount + ", earliest=" + earliest
-            + ", latest=" + latest + "]";
+            + ", latest=" + latest + ", active=" + active + "]";
    }
 
 }

@@ -44,7 +44,8 @@ public class SampleFileDao implements SampleDao {
   
   private static final String queryProjectList = "SELECT projectName, COUNT(*) AS count,"
       + " COUNT(CASE archived WHEN 'true' THEN 1 ELSE NULL END) As archivedCount,"
-      + " MIN(createdDate) AS earliest, MAX(modifiedDate) as latest"
+      + " MIN(createdDate) AS earliest, MAX(modifiedDate) as latest,"
+      + " MAX((SELECT active FROM projects WHERE projects.projectName = samples.projectName)) AS active"
       + " FROM samples"
       + " GROUP BY projectName";
   
@@ -64,6 +65,7 @@ public class SampleFileDao implements SampleDao {
       p.setArchivedCount(ModelUtils.nullIfZero(rs.getInt("archivedCount")));
       p.setEarliest(ModelUtils.convertToDate(rs.getString("earliest")));
       p.setLatest(ModelUtils.convertToDate(rs.getString("latest")));
+      p.setActive(rs.getBoolean("active"));
       return p;
     }
     

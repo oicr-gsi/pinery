@@ -574,6 +574,7 @@ public class GsleClient implements Lims {
             project.setCount(1);
             project.setEarliest(sample.getCreated());
             project.setLatest(sample.getModified());
+            project.setActive(true);
             if (sample.getArchived()) {
                project.setArchivedCount(1);
             }

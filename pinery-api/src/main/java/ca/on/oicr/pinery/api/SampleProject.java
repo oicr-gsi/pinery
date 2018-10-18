@@ -14,5 +14,7 @@ public interface SampleProject {
 	public void setEarliest(Date earliest);
 	public Date getLatest();
 	public void setLatest(Date latest);
+	public boolean isActive();
+	public void setActive(boolean active);
 
 }

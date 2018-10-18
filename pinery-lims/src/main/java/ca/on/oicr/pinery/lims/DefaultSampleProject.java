@@ -11,6 +11,7 @@ public class DefaultSampleProject implements SampleProject {
 	private Integer archivedCount;
 	private Date earliest;
 	private Date latest;
+	private boolean active = true;
 
 	@Override
 	public String getName() {
@@ -64,5 +65,14 @@ public class DefaultSampleProject implements SampleProject {
 	public void setArchivedCount(Integer archivedCount) {
 		this.archivedCount = archivedCount;
 	}
+	
+        @Override
+        public boolean isActive() {
+                return active;
+        }
 
+        @Override
+        public void setActive(boolean active) {
+                this.active = active;
+        }
 }
