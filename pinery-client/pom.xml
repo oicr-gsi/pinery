@@ -85,6 +85,11 @@
             <scope>test</scope>
             <type>war</type>
         </dependency>
+        <dependency>
+            <groupId>ca.on.oicr</groupId>
+            <artifactId>pinery-lims-flatfile</artifactId>
+            <scope>test</scope>
+        </dependency>
          
         <dependency>
             <groupId>org.eclipse.jetty</groupId>

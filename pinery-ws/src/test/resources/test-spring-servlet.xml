@@ -12,8 +12,6 @@
       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <import resource="classpath:springmvc-resteasy.xml"/>
-   
     <context:property-placeholder location="classpath:project.properties" ignore-unresolvable="true"/>
     <context:component-scan base-package="ca.on.oicr.pinery" />
     

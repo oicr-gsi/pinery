@@ -1,23 +1,20 @@
 package ca.on.oicr.pinery.ws;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
@@ -38,63 +35,28 @@ import ca.on.oicr.ws.dto.RunDto;
 import ca.on.oicr.ws.dto.RunDtoPosition;
 import ca.on.oicr.ws.dto.RunDtoSample;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
 public class ResourceTest {
 
     private final Date expectedDate = new Date();
     
    @Test
    public void test_Resource_1() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
       orderResource.setOrderService(orderService);
-      orderResource.setUriInfo(uriInfoMock);
-      OrderDto orderDto = orderResource.getOrder(1);
+      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
 
       assertThat(orderDto, is(notNullValue()));
    }
 
    @Test
    public void test_Resource_2() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
       orderResource.setOrderService(orderService);
-      orderResource.setUriInfo(uriInfoMock);
-      OrderDto orderDto = orderResource.getOrder(1);
+      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
       assertThat(orderDto.getCreatedDate(), is(sf.format(expectedDate)));
@@ -102,54 +64,22 @@ public class ResourceTest {
 
    @Test
    public void test_Resource_3() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
       orderResource.setOrderService(orderService);
-      orderResource.setUriInfo(uriInfoMock);
-      OrderDto orderDto = orderResource.getOrder(1);
+      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
 
       assertThat(orderDto.getId(), is(2));
    }
 
    @Test
    public void test_Resource_4() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
       orderResource.setOrderService(orderService);
-      orderResource.setUriInfo(uriInfoMock);
-      OrderDto orderDto = orderResource.getOrder(1);
+      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
       assertThat(orderDto.getModifiedDate(), is(sf.format(expectedDate)));
@@ -157,109 +87,40 @@ public class ResourceTest {
 
    @Test
    public void test_Resource_5() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
       orderResource.setOrderService(orderService);
-      orderResource.setUriInfo(uriInfoMock);
-      OrderDto orderDto = orderResource.getOrder(1);
+      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
 
       assertThat(orderDto.getPlatform(), is("Illumina HiSeq 2000"));
    }
 
    @Test
    public void test_Resource_6() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
       orderResource.setOrderService(orderService);
-      orderResource.setUriInfo(uriInfoMock);
-      OrderDto orderDto = orderResource.getOrder(1);
+      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
 
       assertThat(orderDto.getProject(), is("HALT"));
    }
 
    @Test
    public void test_Resource_7() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder(1)).thenReturn(getOrder());
       OrderResource orderResource = new OrderResource();
       orderResource.setOrderService(orderService);
-      orderResource.setUriInfo(uriInfoMock);
-      OrderDto orderDto = orderResource.getOrder(1);
+      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
 
       assertThat(orderDto.getStatus(), is("Complete"));
    }
 
    @Test
    public void test_Resource_8() throws Exception {
-
       boolean status;
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
-      OrderService orderService = mock(OrderService.class);
-      when(orderService.getOrder(1)).thenReturn(getOrder());
-      OrderResource orderResource = new OrderResource();
-      orderResource.setOrderService(orderService);
-      orderResource.setUriInfo(uriInfoMock);
-
       AttributeDto attributeDto = new AttributeDto();
       Set<AttributeDto> attributeDtoSet = Sets.newHashSet();
       OrderDtoSample orderDtoSample = new OrderDtoSample();
@@ -273,28 +134,7 @@ public class ResourceTest {
 
    @Test
    public void test_Resource_9() throws Exception {
-
       boolean status;
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/order/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("order/").build()).thenReturn(new URI("http://test/order/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
-      OrderService orderService = mock(OrderService.class);
-      when(orderService.getOrder(1)).thenReturn(getOrder());
-      OrderResource orderResource = new OrderResource();
-      orderResource.setOrderService(orderService);
-      orderResource.setUriInfo(uriInfoMock);
-
       AttributeDto attributeDto = new AttributeDto();
       Set<AttributeDto> attributeDtoSet = Sets.newHashSet();
       OrderDtoSample orderDtoSample = new OrderDtoSample();
@@ -308,57 +148,23 @@ public class ResourceTest {
 
    @Test
    public void test_Resource_10() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("order")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("order/")).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getBaseUriBuilder().build()).thenReturn(new URI("http://test/order"));
-      when(uriInfoMock.getBaseUriBuilder().path("order").build()).thenReturn(new URI("http://test/order"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder()).thenReturn(getListOrder());
       OrderResource orderResource = new OrderResource();
       orderResource.setOrderService(orderService);
-      orderResource.setUriInfo(uriInfoMock);
-      List<OrderDto> orderDto = orderResource.getOrders();
+      List<OrderDto> orderDto = orderResource.getOrders(getUriBuilder());
 
       assertThat(orderDto, is(notNullValue()));
    }
 
    @Test
    public void test_Resource_11() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("order")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("order/")).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getBaseUriBuilder().build()).thenReturn(new URI("http://test/order"));
-      when(uriInfoMock.getBaseUriBuilder().path("order").build()).thenReturn(new URI("http://test/order"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/"));
-
       OrderService orderService = mock(OrderService.class);
       when(orderService.getOrder()).thenReturn(getListOrder());
       OrderResource orderResource = new OrderResource();
       orderResource.setOrderService(orderService);
-      orderResource.setUriInfo(uriInfoMock);
 
-      List<OrderDto> originalListOrderDto = orderResource.getOrders();
+      List<OrderDto> originalListOrderDto = orderResource.getOrders(getUriBuilder());
       OrderDto orderDto = new OrderDto();
       List<OrderDto> listOrderDto = Lists.newArrayList();
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
@@ -454,58 +260,22 @@ public class ResourceTest {
 
    @Test
    public void test_Resource__Run_1() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/sequencerrun/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/").build()).thenReturn(new URI("http://test/sequencerrun/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
-
       RunService runService = mock(RunService.class);
       when(runService.getRun(1)).thenReturn(getRun());
       RunResource runResource = new RunResource();
       runResource.setRunService(runService);
-      runResource.setUriInfo(uriInfoMock);
-      RunDto runDto = runResource.getRun(1);
+      RunDto runDto = runResource.getRun(getUriBuilder(), 1);
 
       assertThat(runDto, is(notNullValue()));
    }
 
    @Test
    public void test_Resource__Run_2() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/sequencerrun/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/").build()).thenReturn(new URI("http://test/sequencerrun/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
-
       RunService runService = mock(RunService.class);
       when(runService.getRun(1)).thenReturn(getRun());
       RunResource runResource = new RunResource();
       runResource.setRunService(runService);
-      runResource.setUriInfo(uriInfoMock);
-      RunDto runDto = runResource.getRun(1);
+      RunDto runDto = runResource.getRun(getUriBuilder(), 1);
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
       assertThat(runDto.getCreatedDate(), is(sf.format(expectedDate)));
@@ -513,144 +283,51 @@ public class ResourceTest {
 
    @Test
    public void test_Resource_Run_3() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/sequencerrun/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/").build()).thenReturn(new URI("http://test/sequencerrun/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
-
       RunService runService = mock(RunService.class);
       when(runService.getRun(1)).thenReturn(getRun());
       RunResource runResource = new RunResource();
       runResource.setRunService(runService);
-      runResource.setUriInfo(uriInfoMock);
-      RunDto runDto = runResource.getRun(1);
+      RunDto runDto = runResource.getRun(getUriBuilder(), 1);
 
       assertThat(runDto.getId(), is(2));
    }
 
    @Test
    public void test_Resource_Run_4() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/sequencerrun/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/").build()).thenReturn(new URI("http://test/sequencerrun/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
-
       RunService runService = mock(RunService.class);
       when(runService.getRun(1)).thenReturn(getRun());
       RunResource runResource = new RunResource();
       runResource.setRunService(runService);
-      runResource.setUriInfo(uriInfoMock);
-      RunDto runDto = runResource.getRun(1);
+      RunDto runDto = runResource.getRun(getUriBuilder(), 1);
 
       assertThat(runDto.getState(), is("Complete"));
    }
 
    @Test
    public void test_Resource_Run_5() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/sequencerrun/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/").build()).thenReturn(new URI("http://test/sequencerrun/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
-
       RunService runService = mock(RunService.class);
       when(runService.getRun(1)).thenReturn(getRun());
       RunResource runResource = new RunResource();
       runResource.setRunService(runService);
-      runResource.setUriInfo(uriInfoMock);
-      RunDto runDto = runResource.getRun(1);
+      RunDto runDto = runResource.getRun(getUriBuilder(), 1);
 
       assertThat(runDto.getName(), is("130906_SN203_0196_AC2D4DACXX"));
    }
 
    @Test
    public void test_Resource_Run_6() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/sequencerrun/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/").build()).thenReturn(new URI("http://test/sequencerrun/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
-
       RunService runService = mock(RunService.class);
       when(runService.getRun(1)).thenReturn(getRun());
       RunResource runResource = new RunResource();
       runResource.setRunService(runService);
-      runResource.setUriInfo(uriInfoMock);
-      RunDto runDto = runResource.getRun(1);
+      RunDto runDto = runResource.getRun(getUriBuilder(), 1);
 
       assertThat(runDto.getBarcode(), is("C2D8J"));
    }
 
    @Test
    public void test_Resource_Run_7() throws Exception {
-
       boolean status;
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/sequencerrun/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/").build()).thenReturn(new URI("http://test/sequencerrun/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
-      RunService runService = mock(RunService.class);
-      when(runService.getRun(1)).thenReturn(getRun());
-      RunResource runResource = new RunResource();
-      runResource.setRunService(runService);
-      runResource.setUriInfo(uriInfoMock);
-
       RunDtoSample runDtoSample = new RunDtoSample();
       Set<RunDtoSample> runDtoSampleSet = Sets.newHashSet();
       RunDtoPosition runDtoPosition = new RunDtoPosition();
@@ -664,28 +341,7 @@ public class ResourceTest {
 
    @Test
    public void test_Resource_Run_8() throws Exception {
-
       boolean status;
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/sequencerrun/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/").build()).thenReturn(new URI("http://test/sequencerrun/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
-      RunService runService = mock(RunService.class);
-      when(runService.getRun(1)).thenReturn(getRun());
-      RunResource runResource = new RunResource();
-      runResource.setRunService(runService);
-      runResource.setUriInfo(uriInfoMock);
-
       RunDtoSample runDtoSample = new RunDtoSample();
       Set<RunDtoSample> runDtoSampleSet = Sets.newHashSet();
       RunDtoPosition runDtoPosition = new RunDtoPosition();
@@ -699,28 +355,7 @@ public class ResourceTest {
 
    @Test
    public void test_Resource_Run_9() throws Exception {
-
       boolean status;
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getAbsolutePathBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getAbsolutePathBuilder().build()).thenReturn(new URI("http://test/sequencerrun/1"));
-      when(uriInfoMock.getAbsolutePathBuilder().path("sequencerrun/").build()).thenReturn(new URI("http://test/sequencerrun/1"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-
-      RunService runService = mock(RunService.class);
-      when(runService.getRun(1)).thenReturn(getRun());
-      RunResource runResource = new RunResource();
-      runResource.setRunService(runService);
-      runResource.setUriInfo(uriInfoMock);
-
       RunDtoSample runDtoSample = new RunDtoSample();
       Set<RunDtoSample> runDtoSampleSet = Sets.newHashSet();
       RunDtoPosition runDtoPosition = new RunDtoPosition();
@@ -734,63 +369,23 @@ public class ResourceTest {
 
    @Test
    public void test_Resource_Run_10() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sequencerrun")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sequencerrun/")).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getBaseUriBuilder().build()).thenReturn(new URI("http://test/sequencerrun"));
-      when(uriInfoMock.getBaseUriBuilder().path("sequencerrun").build()).thenReturn(new URI("http://test/sequencerruns"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sequenncerrunrun")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sequenncerrunrun").build()).thenReturn(new URI("http://test/sequenncerrunrun/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("instrument/").build()).thenReturn(new URI("http://test/instrument/1"));
-
       RunService runService = mock(RunService.class);
       when(runService.getRun()).thenReturn(getListRun());
       RunResource runResource = new RunResource();
       runResource.setRunService(runService);
-      runResource.setUriInfo(uriInfoMock);
-      List<RunDto> runDto = runResource.getRuns();
+      List<RunDto> runDto = runResource.getRuns(getUriBuilder());
 
       assertThat(runDto, is(notNullValue()));
    }
 
    @Ignore
    public void test_Resource_Run_11() throws Exception {
-
-      UriInfo uriInfoMock = mock(UriInfo.class);
-      UriBuilder uriBuilderMock = mock(UriBuilder.class);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sequencerrun")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder()).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sequencerrun/")).thenReturn(uriBuilderMock);
-
-      when(uriInfoMock.getBaseUriBuilder().build()).thenReturn(new URI("http://test/sequencerrun"));
-      when(uriInfoMock.getBaseUriBuilder().path("sequencerrun").build()).thenReturn(new URI("http://test/sequencerrun"));
-
-      when(uriInfoMock.getBaseUriBuilder().path("user/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("user/").build()).thenReturn(new URI("http://test/user/1"));
-      when(uriInfoMock.getBaseUriBuilder().path("sample/")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("sample/").build()).thenReturn(new URI("http://test/sample"));
-      when(uriInfoMock.getBaseUriBuilder().path("run")).thenReturn(uriBuilderMock);
-      when(uriInfoMock.getBaseUriBuilder().path("run").build()).thenReturn(new URI("http://test/run/"));
-
       RunService runService = mock(RunService.class);
       when(runService.getRun()).thenReturn(getListRun());
       RunResource runResource = new RunResource();
       runResource.setRunService(runService);
-      runResource.setUriInfo(uriInfoMock);
 
-      List<RunDto> originalListRunDto = runResource.getRuns();
+      List<RunDto> originalListRunDto = runResource.getRuns(getUriBuilder());
       RunDto runDto = new RunDto();
       List<RunDto> listRunDto = Lists.newArrayList();
       SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
@@ -918,5 +513,9 @@ public class ResourceTest {
       list.add(run);
 
       return list;
+   }
+   
+   private UriComponentsBuilder getUriBuilder() {
+     return UriComponentsBuilder.fromHttpUrl("http://test");
    }
 }

@@ -2,7 +2,7 @@ package ca.on.oicr.pinery.ws.component;
 
 import java.util.Map;
 
-import javax.ws.rs.core.Response.Status;
+import org.springframework.http.HttpStatus;
 
 /**
  * Representation of an error regarding a REST request, intended to be sent back to the client as JSON
@@ -27,9 +27,9 @@ public class RestError {
    * @param status the response status to represent. Will be used to set the status code and message
    * @param detail detailed error message
    */
-  public RestError(Status status, String detail) {
-    this.status = status.getStatusCode();
-    this.message = status.toString();
+  public RestError(HttpStatus status, String detail) {
+    this.status = status.value();
+    this.message = status.getReasonPhrase();
     this.detail = detail;
   }
 

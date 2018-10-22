@@ -16,16 +16,14 @@
         <overrideDescriptor></overrideDescriptor>
     </properties>
     <dependencies>
-        <!-- RESTEasy dependencies (keep at top to prevent NoSuchMethodErrors on some Tomcat versions) -->
         <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jackson2-provider</artifactId>
+            <groupId>ca.on.oicr</groupId>
+            <artifactId>pinery-lims-flatfile</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-spring</artifactId>
+            <groupId>ca.on.oicr</groupId>
+            <artifactId>pinery-lims-gsle</artifactId>
         </dependency>
-        <!-- Other dependencies -->
         <dependency>
             <groupId>ca.on.oicr.gsi</groupId>
             <artifactId>server-utils</artifactId>
@@ -38,10 +36,14 @@
             <groupId>ca.on.oicr</groupId>
             <artifactId>pinery-ws-dto</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-jaxrs</artifactId>
-        </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+            </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
@@ -98,11 +100,6 @@
             <artifactId>json-path-assert</artifactId>
             <scope>test</scope>
         </dependency>
-        
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>io.prometheus</groupId>
@@ -139,7 +136,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        
+            
         <!-- copy maven properties into project.properties -->
         <resources>
             <resource>

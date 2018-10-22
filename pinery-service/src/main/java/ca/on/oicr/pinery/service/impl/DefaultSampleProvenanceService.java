@@ -1,5 +1,25 @@
 package ca.on.oicr.pinery.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
+
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Instrument;
@@ -16,24 +36,6 @@ import ca.on.oicr.pinery.lims.DefaultSampleProvenance;
 import ca.on.oicr.pinery.lims.LimsAttribute;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
 import ca.on.oicr.pinery.service.util.LimsProvenanceComparator;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  *
@@ -44,7 +46,7 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
 
     Logger log = LoggerFactory.getLogger(DefaultSampleProvenanceService.class);
 
-    private Lims lims;
+    private final Lims lims;
 
     @Autowired
     public DefaultSampleProvenanceService(Lims lims) {
@@ -168,7 +170,7 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
             for (Sample sample : samples) {
                 Set<String> parentIds = sample.getParents();
                 if (parentIds == null) {
-                    parentIds = Collections.EMPTY_SET;
+                    parentIds = Collections.emptySet();
                 }
                 sampleParents.putAll(sample.getId(), parentIds);
             }

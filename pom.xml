@@ -14,17 +14,17 @@
         <github.repo>pinery</github.repo>
         
         <provenance.version>1.2</provenance.version>
-        <jackson.version>2.6.3</jackson.version>
-        <spring.version>3.2.15.RELEASE</spring.version>
-        <resteasy.version>3.0.13.Final</resteasy.version>
-        <swagger.version>1.5.4</swagger.version>
+        <jackson.version>2.9.7</jackson.version>
+        <spring.version>5.1.1.RELEASE</spring.version>
+        <resteasy.version>3.6.1.SP2</resteasy.version>
+        <server-utils.version>0.0.2</server-utils.version>
+        <springfox.version>2.9.2</springfox.version>
         <junit.version>4.12</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
         <mockito.version>1.10.19</mockito.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-lang3.version>3.4</commons-lang3.version>
         <postgresql.version>9.1-901.jdbc3</postgresql.version>
-        <guava.version>19.0</guava.version>
         <mysql.version>5.1.21</mysql.version>
         <slf4j.version>1.6.6</slf4j.version>
         <log4j.version>1.2.16</log4j.version>
@@ -38,7 +38,6 @@
         <opencsv.version>3.6</opencsv.version>
         <csvjdbc.version>1.0.28</csvjdbc.version>
         <json-path-assert.version>0.8.1</json-path-assert.version>
-        <hibernate-validator.version>4.2.0.Final</hibernate-validator.version>
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
         <surefire-junit47.version>2.19.1</surefire-junit47.version>
         <commons-io.version>2.5</commons-io.version>
@@ -256,11 +255,6 @@
                 <version>${resteasy.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-spring</artifactId>
-                <version>${resteasy.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.opencsv</groupId>
                 <artifactId>opencsv</artifactId>
                 <version>${opencsv.version}</version>
@@ -326,11 +320,6 @@
                 <version>${json-path-assert.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-validator</artifactId>
-                <version>4.2.0.Final</version>
-            </dependency>
-            <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
                 <version>${jetty.version}</version>
@@ -386,28 +375,16 @@
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
-            <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-jaxrs</artifactId>
-                <version>1.5.4</version>
-            </dependency>
-         
             <dependency>
                 <groupId>ca.on.oicr.gsi</groupId>
                 <artifactId>provenance-api</artifactId>
@@ -416,7 +393,17 @@
             <dependency>
                 <groupId>ca.on.oicr.gsi</groupId>
                 <artifactId>server-utils</artifactId>
-                <version>0.0.1</version>
+                <version>${server-utils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${springfox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${springfox.version}</version>
             </dependency>
          
         </dependencies>
