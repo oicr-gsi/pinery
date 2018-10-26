@@ -37,7 +37,7 @@
         <jetty.version>9.3.0.M1</jetty.version>
         <opencsv.version>3.6</opencsv.version>
         <csvjdbc.version>1.0.28</csvjdbc.version>
-        <json-path-assert.version>0.8.1</json-path-assert.version>
+        <json-path-assert.version>2.4.0</json-path-assert.version>
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
         <surefire-junit47.version>2.19.1</surefire-junit47.version>
         <commons-io.version>2.5</commons-io.version>
@@ -236,8 +236,8 @@
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
-                <version>2.5</version>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>3.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>

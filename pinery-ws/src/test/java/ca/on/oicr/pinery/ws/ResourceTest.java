@@ -180,7 +180,7 @@ public class ResourceTest {
       orderDto.setPlatform("Illumina HiSeq 2000");
       orderDto.setProject("HALT");
       orderDto.setStatus("Complete");
-      orderDto.setUrl("http://test/sample/2");
+      orderDto.setUrl("http://test/order/2");
 
       for (OrderDtoSample orderDtoSample : orderDtoSampleSet) {
          orderDtoSample.setId("2");

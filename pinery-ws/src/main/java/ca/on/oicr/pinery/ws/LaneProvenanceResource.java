@@ -4,7 +4,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
@@ -19,13 +21,14 @@ import io.swagger.annotations.ApiOperation;
  * @author mlaszloffy
  */
 @RestController
+@RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Api(tags = {"Lane Provenance"})
 public class LaneProvenanceResource {
 
     @Autowired
     private LaneProvenanceService laneProvenanceService;
 
-    @GetMapping("/lane-provenance")
+    @GetMapping(path = "/lane-provenance")
     @ApiOperation(value = "Get all lane provenance records", response = LaneProvenanceDto.class, responseContainer = "List")
     public List<LaneProvenanceDto> getLanes() {
 
