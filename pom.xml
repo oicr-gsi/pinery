@@ -16,7 +16,7 @@
         <provenance.version>1.2</provenance.version>
         <jackson.version>2.9.7</jackson.version>
         <spring.version>5.1.1.RELEASE</spring.version>
-        <resteasy.version>3.6.1.SP2</resteasy.version>
+        <resteasy.version>3.0.13.Final</resteasy.version>
         <server-utils.version>0.0.2</server-utils.version>
         <springfox.version>2.9.2</springfox.version>
         <junit.version>4.12</junit.version>
