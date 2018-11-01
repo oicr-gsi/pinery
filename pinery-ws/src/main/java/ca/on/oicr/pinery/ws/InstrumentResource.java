@@ -1,6 +1,6 @@
 package ca.on.oicr.pinery.ws;
 
-import static ca.on.oicr.pinery.ws.PineryUtils.*;
+import static ca.on.oicr.pinery.ws.util.PineryUtils.*;
 
 import java.net.URI;
 import java.util.List;

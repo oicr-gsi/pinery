@@ -1,15 +1,21 @@
 package ca.on.oicr.pinery.ws;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -25,8 +31,36 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
+import ca.on.oicr.pinery.api.Attribute;
+import ca.on.oicr.pinery.api.Instrument;
+import ca.on.oicr.pinery.api.InstrumentModel;
+import ca.on.oicr.pinery.api.PreparationKit;
+import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunPosition;
+import ca.on.oicr.pinery.api.RunSample;
+import ca.on.oicr.pinery.api.Sample;
+import ca.on.oicr.pinery.api.SampleProject;
+import ca.on.oicr.pinery.api.Status;
+import ca.on.oicr.pinery.lims.DefaultAttribute;
+import ca.on.oicr.pinery.lims.DefaultInstrument;
+import ca.on.oicr.pinery.lims.DefaultInstrumentModel;
+import ca.on.oicr.pinery.lims.DefaultPreparationKit;
+import ca.on.oicr.pinery.lims.DefaultRun;
+import ca.on.oicr.pinery.lims.DefaultRunPosition;
+import ca.on.oicr.pinery.lims.DefaultRunSample;
+import ca.on.oicr.pinery.lims.DefaultSample;
+import ca.on.oicr.pinery.lims.DefaultSampleProject;
+import ca.on.oicr.pinery.lims.DefaultSampleProvenance;
+import ca.on.oicr.pinery.lims.DefaultStatus;
+import ca.on.oicr.pinery.lims.LimsAttribute;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
+import ca.on.oicr.pinery.ws.util.VersionTransformer;
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
 
 /**
@@ -38,67 +72,264 @@ import ca.on.oicr.ws.dto.SampleProvenanceDto;
 @ContextConfiguration("classpath:test-spring-servlet.xml")
 public class SampleProvenanceResourceTest {
 
-    @Autowired
-    private WebApplicationContext wac;
+  @Autowired
+  private WebApplicationContext wac;
 
-    @Autowired
-    private SampleProvenanceService sampleProvenanceService;
+  @Autowired
+  private SampleProvenanceService sampleProvenanceService;
 
-    private MockMvc mockMvc;
+  private MockMvc mockMvc;
 
-    @Before
-    public void setup() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+  @Before
+  public void setup() {
+    this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+  }
+
+  @After
+  public void resetMocks() {
+    Mockito.reset(sampleProvenanceService);
+  }
+
+  @Test
+  public void testEmptyResultSet() throws Exception {
+    List<SampleProvenance> sps = Collections.emptyList();
+
+    when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
+
+    mockMvc
+        .perform(
+            get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(content().string("[ ]")).andDo(print()).andReturn();
+  }
+
+  @Test
+  public void testJodaTimeObjectMapper() throws Exception {
+    List<SampleProvenance> sps = new ArrayList<>();
+    SampleProvenanceDto sp = new SampleProvenanceDto();
+    sp.setLastModified(ZonedDateTime.parse("2016-01-01T00:00:00.000Z"));
+    sps.add(sp);
+
+    when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
+
+    mockMvc
+        .perform(
+            get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(jsonPath("$.[*].lastModified",
+            everyItem(equalTo("2016-01-01T00:00:00Z"))));
+  }
+
+  @Test
+  public void testJsonArraySize() throws Exception {
+    List<SampleProvenance> sps = new ArrayList<>();
+    for (int i = 0; i < 100; i++) {
+      SampleProvenanceDto sp = new SampleProvenanceDto();
+      sps.add(sp);
     }
 
-    @After
-    public void resetMocks() {
-        Mockito.reset(sampleProvenanceService);
+    when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
+
+    mockMvc
+        .perform(
+            get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(jsonPath("$", hasSize(100)));
+  }
+
+  /**
+   * Test that the v1 sample provenance object (and version hash) has not changed. This method should be replicated for each new
+   * provenance version added
+   */
+  @Test
+  public void testV1ProvenanceTransform() {
+    VersionTransformer<SampleProvenance> transformer = SampleProvenanceResource.transformers
+        .get("v1");
+    SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
+    // This hash must never change
+    assertEquals("54d16cc61c3bb139ac16a017fac31f088b3809f67c07ac71e77750f0daaac07d", sp.getVersion());
+  }
+
+  private SampleProvenance makeBaseSampleProvenance() {
+    DefaultSampleProvenance sp = new DefaultSampleProvenance();
+
+    sp.setSample(makeBaseSample());
+    sp.setRunSample(makeBaseRunSample());
+    sp.setLane(makeBaseLane());
+    sp.setSequencerRun(makeBaseRun());
+    sp.setInstrument(makeBaseInstrument());
+    sp.setInstrumentModel(makeBaseInstrumentModel());
+    sp.setSampleProject(makeBaseProject());
+    sp.setAdditionalSampleAttributes(
+        ImmutableMap.<LimsAttribute, Set<String>> of(
+            LimsAttribute.TARGETED_RESEQUENCING, ImmutableSet.of("tarseq")));
+    sp.setParentSamples(makeBaseSampleParents());
+
+    return sp;
+  }
+
+  private Sample makeBaseSample() {
+    Sample s = new DefaultSample();
+    s.setId("LDI100");
+    s.setName("Dilution");
+    s.setArchived(false);
+    s.setConcentration(12.34F);
+    s.setVolume(23.45F);
+    s.setDescription("a dilution");
+    s.setProject("PROJ");
+    s.setSampleType("Illumina PE Library Seq");
+    s.setStorageLocation("Over there");
+    s.setTubeBarcode("11112222");
+    s.setParents(Sets.newHashSet("LIB100"));
+
+    PreparationKit kit = new DefaultPreparationKit();
+    kit.setName("Kit");
+    kit.setDescription("a kit");
+    s.setPreparationKit(kit);
+
+    Status status = new DefaultStatus();
+    status.setName("Ready");
+    status.setState("Ready");
+    s.setStatus(status);
+
+    // Should include all attributes from LimsAttribute enum except
+    // TEMPLATE_TYPE, RUN_ID_AND_POSITION, PREPARATION_KIT: constructed
+    // separately
+    // LIBRARY_SIZE: doesn't seem to actually be set anywhere
+    Set<Attribute> attrs = Sets.newHashSet();
+    attrs.add(makeAttribute("Tissue Type", "P"));
+    attrs.add(makeAttribute("Tissue Origin", "Ly"));
+    attrs.add(makeAttribute("Organism", "Homo sapiens"));
+    attrs.add(makeAttribute("Source Template Type", "EX"));
+    attrs.add(makeAttribute("STR", "Not Submitted"));
+    attrs.add(makeAttribute("Group ID", "33"));
+    attrs.add(makeAttribute("Group Description", "thirty three"));
+    attrs.add(makeAttribute("Tissue Preparation", "FFPE"));
+    attrs.add(makeAttribute("Qubit (ng/uL)", "11.22"));
+    attrs.add(makeAttribute("Region", "someplace"));
+    attrs.add(makeAttribute("Nanodrop (ng/uL)", "22.33"));
+    attrs.add(makeAttribute("Receive Date", "2018-11-01"));
+    attrs.add(makeAttribute("External Name", "Sammy"));
+    attrs.add(makeAttribute("Tube ID", "Samsam"));
+    attrs.add(makeAttribute("Targeted Resequencing", "tarseq"));
+    attrs.add(makeAttribute("Purpose", "Library"));
+    attrs.add(makeAttribute("qPCR %", "50"));
+    attrs.add(makeAttribute("Subproject", "Sub"));
+    attrs.add(makeAttribute("Institute", "Institute"));
+    attrs.add(makeAttribute("Pool Name", "Pool"));
+    s.setAttributes(attrs);
+
+    return s;
+  }
+
+  private Attribute makeAttribute(String name, String value) {
+    Attribute attr = new DefaultAttribute();
+    attr.setName(name);
+    attr.setValue(value);
+    return attr;
+  }
+
+  private RunSample makeBaseRunSample() {
+    RunSample s = new DefaultRunSample();
+    s.setId("LDI100");
+    s.setBarcode("ACGTACGT");
+    s.setBarcodeTwo("TGCATGCA");
+
+    Attribute tarseq = new DefaultAttribute();
+    tarseq.setName("Targeted Resequencing");
+    tarseq.setValue("tarseq");
+    Set<Attribute> atts = Sets.newHashSet(tarseq);
+    s.setAttributes(atts);
+
+    return s;
+  }
+
+  private RunPosition makeBaseLane() {
+    RunPosition l = new DefaultRunPosition();
+    l.setPosition(1);
+    l.setPoolName("Pool");
+    l.setPoolDescription("a pool");
+    l.setPoolBarcode("12345678");
+    l.setPoolCreated(makeDate("2018-11-01T10:22:55Z"));
+    l.setPoolCreatedById(3);
+    l.setRunSample(Sets.newHashSet(makeBaseRunSample()));
+    return l;
+  }
+
+  private Run makeBaseRun() {
+    Run r = new DefaultRun();
+    r.setId(34);
+    r.setName("Run");
+    r.setState("Completed");
+    r.setStartDate(makeDate("2018-11-01T00:00:00Z"));
+    r.setCompletionDate(makeDate("2018-11-01T00:00:00Z"));
+    r.setBarcode("ABCDEFXX");
+    r.setSample(Sets.newHashSet(makeBaseLane()));
+    r.setReadLength("2x101");
+    r.setRunBasesMask("y101,I9,y101");
+    r.setRunDirectory("/path/to/run");
+    r.setInstrumentId(123);
+    r.setCreatedDate(makeDate("2018-11-01T10:36:34Z"));
+    r.setCreatedById(3);
+    r.setModified(makeDate("2018-11-01T10:36:34Z"));
+    r.setModifiedById(3);
+    return r;
+  }
+
+  private Instrument makeBaseInstrument() {
+    Instrument i = new DefaultInstrument();
+    i.setId(123);
+    i.setName("Instrument");
+    i.setModelId(456);
+    i.setCreated(makeDate("2018-11-01T09:56:01Z"));
+    return i;
+  }
+
+  private InstrumentModel makeBaseInstrumentModel() {
+    InstrumentModel m = new DefaultInstrumentModel();
+    m.setId(456);
+    m.setName("Model");
+    m.setCreated(makeDate("2018-11-01T09:54:23Z"));
+    m.setCreatedById(3);
+    m.setModified(makeDate("2018-11-01T09:54:23Z"));
+    m.setModifiedById(3);
+    return m;
+  }
+
+  private SampleProject makeBaseProject() {
+    SampleProject p = new DefaultSampleProject();
+    p.setName("PROJ");
+    p.setCount(10);
+    p.setArchivedCount(2);
+    p.setEarliest(makeDate("2018-10-01T09:30:41Z"));
+    p.setLatest(makeDate("2018-11-01T10:09:12Z"));
+    p.setActive(true);
+    return p;
+  }
+
+  private Date makeDate(String dateString) {
+    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+    try {
+      return formatter.parse(dateString);
+    } catch (ParseException e) {
+      throw new IllegalArgumentException("Bad date format");
     }
+  }
 
-    @Test
-    public void testEmptyResultSet() throws Exception {
-        List<SampleProvenance> sps = Collections.emptyList();
+  private List<Sample> makeBaseSampleParents() {
+    List<Sample> parents = Lists.newArrayList(makeEmptySample("library"),
+        makeEmptySample("aliquot"), makeEmptySample("stock"),
+        makeEmptySample("tissue"), makeEmptySample("identity"));
+    return parents;
+  }
 
-        when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
-
-        mockMvc.perform(get("/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string("[ ]"))
-                .andDo(print())
-                .andReturn();
-    }
-
-    @Test
-    public void testJodaTimeObjectMapper() throws Exception {
-        List<SampleProvenance> sps = new ArrayList<>();
-        SampleProvenanceDto sp = new SampleProvenanceDto();
-        sp.setLastModified(ZonedDateTime.parse("2016-01-01T00:00:00.000Z"));
-        sps.add(sp);
-
-        when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
-
-        mockMvc.perform(get("/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.[*].lastModified", everyItem(equalTo("2016-01-01T00:00:00Z"))));
-    }
-
-    @Test
-    public void testJsonArraySize() throws Exception {
-        List<SampleProvenance> sps = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            SampleProvenanceDto sp = new SampleProvenanceDto();
-            sps.add(sp);
-        }
-
-        when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
-
-        mockMvc.perform(get("/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$", hasSize(100)));
-    }
+  private Sample makeEmptySample(String name) {
+    Sample s = new DefaultSample();
+    s.setName(name);
+    return s;
+  }
 
 }

@@ -1,6 +1,6 @@
 package ca.on.oicr.pinery.ws;
 
-import static ca.on.oicr.pinery.ws.PineryUtils.*;
+import static ca.on.oicr.pinery.ws.util.PineryUtils.*;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -84,7 +84,7 @@ public class SampleResource {
 
    @GetMapping("/sample/{id}")
    @ApiOperation(value = "Find sample by ID", response = SampleDto.class)
-   @ApiResponses({@ApiResponse(code = 404, message = "No sample found")})
+   @ApiResponses({@ApiResponse(code = 404, message = "No sample found"), @ApiResponse(code = 400, message = "Invalid ID format")})
    public SampleDto getSample(UriComponentsBuilder uriBuilder,
        @ApiParam(value = "ID of sample to fetch") @PathVariable("id") String id) {
      Sample sample = null;
