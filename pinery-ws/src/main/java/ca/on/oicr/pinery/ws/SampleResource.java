@@ -1,5 +1,7 @@
 package ca.on.oicr.pinery.ws;
 
+import static ca.on.oicr.pinery.ws.PineryUtils.*;
+
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -7,18 +9,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.common.collect.Lists;
 
@@ -28,6 +27,7 @@ import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.service.SampleService;
+import ca.on.oicr.pinery.ws.component.RestException;
 import ca.on.oicr.ws.dto.AttributeNameDto;
 import ca.on.oicr.ws.dto.ChangeDto;
 import ca.on.oicr.ws.dto.ChangeLogDto;
@@ -40,31 +40,25 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
-@Component
-@Path("/")
-@Api(value = "sample")
+@RestController
+@RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@Api(tags = {"Samples"})
 public class SampleResource {
-
-//   private static final Logger log = LoggerFactory.getLogger(SampleResource.class);
-
-   @Context
-   private UriInfo uriInfo;
 
    @Autowired
    private SampleService sampleService;
 
-   @GET
-   @Produces({ "application/json" })
-   @Path("/samples")
+   @GetMapping(value = "/samples")
    @ApiOperation(value = "List all samples", response = SampleDto.class, responseContainer = "List")
-   @ApiResponse(code = 400, message = "Invalid parameter")
-   public List<SampleDto> getSamples(
-         @ApiParam(value = "filter by archived status", required = false) @QueryParam("archived") Boolean archived,
-         @ApiParam(value = "filter by project(s)", required = false, allowMultiple = true) @QueryParam("project") Set<String> projects,
-         @ApiParam(value = "filter by sample type(s)", required = false, allowMultiple = true) @QueryParam("type") Set<String> types,
-         @ApiParam(value = "filter to include samples created before this date", required = false) @QueryParam("before") String before,
-         @ApiParam(value = "filter to include samples created after this date", required = false) @QueryParam("after") String after) {
+   @ApiResponses({@ApiResponse(code = 400, message = "Invalid parameter")})
+   public List<SampleDto> getSamples(UriComponentsBuilder uriBuilder,
+      @ApiParam(value = "filter by archived status") @RequestParam(name = "archived", required = false) Boolean archived,
+      @ApiParam(value = "filter by project(s)") @RequestParam(name = "project", required = false) Set<String> projects,
+      @ApiParam(value = "filter by sample type(s)") @RequestParam(name = "type", required = false) Set<String> types,
+      @ApiParam(value = "filter to include samples created before this date", example = "yyyy-mm-dd") @RequestParam(name = "before", required = false) String before,
+      @ApiParam(value = "filter to include samples created after this date", example = "yyyy-mm-dd") @RequestParam(name = "after", required = false) String after) {
       ZonedDateTime beforeDateTime = null;
       ZonedDateTime afterDateTime = null;
       try {
@@ -75,42 +69,39 @@ public class SampleResource {
             afterDateTime = ZonedDateTime.parse(after);
          }
       } catch (IllegalArgumentException e) {
-         throw new BadRequestException("Invalid date format in parameter [before] or [after]. Use ISO8601 formatting. " + e.getMessage(), e);
+         throw new RestException(HttpStatus.BAD_REQUEST, "Invalid date format in parameter [before] or [after]. Use ISO8601 formatting. " + e.getMessage());
       }
       List<Sample> samples = sampleService.getSamples(archived, projects, types, beforeDateTime, afterDateTime);
       List<SampleDto> result = Lists.newArrayList();
       
       for (Sample sample : samples) {
          SampleDto dto = Dtos.asDto(sample);
-         addUrls(dto);
+         addUrls(dto, uriBuilder);
          result.add(dto);
       }
       return result;
    }
 
-   @GET
-   @Produces({ "application/json" })
-   @Path("/sample/{id}")
+   @GetMapping("/sample/{id}")
    @ApiOperation(value = "Find sample by ID", response = SampleDto.class)
-   @ApiResponse(code = 404, message = "No sample found")
-   public SampleDto getSample(@ApiParam(value = "ID of sample to fetch", required = true) @PathParam("id") String id) {
+   @ApiResponses({@ApiResponse(code = 404, message = "No sample found")})
+   public SampleDto getSample(UriComponentsBuilder uriBuilder,
+       @ApiParam(value = "ID of sample to fetch") @PathVariable("id") String id) {
      Sample sample = null;
       try {
         sample = sampleService.getSample(id);
       } catch (IllegalArgumentException e) {
-        throw new BadRequestException(e.getMessage(), e);
+        throw new RestException(HttpStatus.BAD_REQUEST, e.getMessage());
       }
       if (sample == null) {
-        throw new NotFoundException("No sample found with ID: " + id);
+        throw new RestException(HttpStatus.NOT_FOUND, "No sample found with ID: " + id);
       }
       SampleDto dto = Dtos.asDto(sample);
-      addUrls(dto);
+      addUrls(dto, uriBuilder);
       return dto;
    }
 
-   @GET
-   @Produces({ "application/json" })
-   @Path("/sample/projects")
+   @GetMapping("/sample/projects")
    @ApiOperation(value = "List all projects", response = SampleProjectDto.class, responseContainer = "List")
    public List<SampleProjectDto> getSampleProjects() {
       List<SampleProject> projects = sampleService.getSampleProjects();
@@ -128,9 +119,7 @@ public class SampleResource {
       return result;
    }
 
-   @GET
-   @Produces({ "application/json" })
-   @Path("/sample/types")
+   @GetMapping("/sample/types")
    @ApiOperation(value = "List all sample types", response = TypeDto.class, responseContainer = "List")
    public List<TypeDto> getTypes() {
       List<Type> types = sampleService.getTypes();
@@ -148,9 +137,7 @@ public class SampleResource {
       return result;
    }
 
-   @GET
-   @Produces({ "application/json" })
-   @Path("/sample/attributenames")
+   @GetMapping("/sample/attributenames")
    @ApiOperation(value = "List all sample attribute names", response = AttributeNameDto.class, responseContainer = "List")
    public List<AttributeNameDto> getAttributeNames() {
       List<AttributeName> attributeNames = sampleService.getAttributeNames();
@@ -168,97 +155,72 @@ public class SampleResource {
       return result;
    }
 
-   private void addUrls(SampleDto dto) {
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("sample").build();
-      final URI baseUriUser = uriInfo.getBaseUriBuilder().path("user/").build();
-      
-      dto.setUrl(baseUri + "/" + dto.getId().toString());
+   private void addUrls(SampleDto dto, UriComponentsBuilder uriBuilder) {
+     URI baseUri = uriBuilder.build().toUri();
+     dto.setUrl(buildSampleUrl(baseUri, dto.getId()));
       
       if (dto.getCreatedById() != null) {
-         dto.setCreatedByUrl(baseUriUser + dto.getCreatedById().toString());
+        dto.setCreatedByUrl(buildUserUrl(baseUri, dto.getCreatedById()));
       }
       if (dto.getModifiedById() != null) {
-         dto.setModifiedByUrl(baseUriUser + dto.getModifiedById().toString());
+        dto.setModifiedByUrl(buildUserUrl(baseUri, dto.getModifiedById()));
       }
       
-      addUrls(dto.getParents());
-      addUrls(dto.getChildren());
+      addUrls(dto.getParents(), baseUri);
+      addUrls(dto.getChildren(), baseUri);
    }
    
-   private void addUrls(Set<SampleReferenceDto> relatedSamples) {
+   private void addUrls(Set<SampleReferenceDto> relatedSamples, URI baseUri) {
      if (relatedSamples != null) {
-        final URI baseUriSample = uriInfo.getBaseUriBuilder().path("sample").build();
         for (SampleReferenceDto sample : relatedSamples) {
-           sample.setUrl(baseUriSample + "/" + sample.getId());
+           sample.setUrl(buildSampleUrl(baseUri, sample.getId()));
         }
      }
    }
 
-   @GET
-   @Produces({ "application/json" })
-   @Path("/sample/changelogs")
+   @GetMapping("/sample/changelogs")
    @ApiOperation(value = "List changelogs for all samples", response = ChangeLogDto.class, responseContainer = "List")
-   public List<ChangeLogDto> getChangeLogs() {
+   public List<ChangeLogDto> getChangeLogs(UriComponentsBuilder uriBuilder) {
       List<ChangeLog> changeLogs = sampleService.getChangeLogs();
       List<ChangeLogDto> result = Lists.newArrayList();
 
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("sample/").build();
       for (ChangeLog changeLog : changeLogs) {
          ChangeLogDto dto = Dtos.asDto(changeLog);
-         dto.setSampleUrl(baseUri + changeLog.getSampleId().toString());
-         for (ChangeDto change : dto.getChanges()) {
-            addUrls(change);
-         }
-         Collections.sort(dto.getChanges(), new Comparator<ChangeDto>() {
-
-            @Override
-            public int compare(ChangeDto o1, ChangeDto o2) {
-               return o1.getCreatedDate().compareTo(o2.getCreatedDate());
-            }
-
-         });
+         addUrls(dto, uriBuilder);
+         Collections.sort(dto.getChanges(), (o1, o2) -> o1.getCreatedDate().compareTo(o2.getCreatedDate()));
          result.add(dto);
       }
       return result;
    }
 
-   @GET
-   @Produces({ "application/json" })
-   @Path("/sample/{id}/changelog")
+   @GetMapping("/sample/{id}/changelog")
    @ApiOperation(value = "Find sample changelog by sample ID", response = ChangeLogDto.class)
-   @ApiResponse(code = 404, message = "No sample changelog found")
-   public ChangeLogDto getChangeLog(@ApiParam(value = "ID of sample to fetch changelogs for", required = true) @PathParam("id") String id) {
+   @ApiResponses({@ApiResponse(code = 404, message = "No sample changelog found")})
+   public ChangeLogDto getChangeLog(UriComponentsBuilder uriBuilder,
+       @ApiParam(value = "ID of sample to fetch changelogs for") @PathVariable("id") String id) {
       ChangeLog changeLog = null; 
       try {
         changeLog = sampleService.getChangeLog(id);
       } catch (IllegalArgumentException e) {
-        throw new BadRequestException(e.getMessage(), e);
+        throw new RestException(HttpStatus.BAD_REQUEST, e.getMessage());
       }
       if (changeLog == null) {
-        throw new NotFoundException("No changelog found for sample ID: " + id);
+        throw new RestException(HttpStatus.NOT_FOUND, "No changelog found for sample ID: " + id);
       }
       ChangeLogDto dto = Dtos.asDto(changeLog);
-      final URI uri = uriInfo.getBaseUriBuilder().path("sample").path(changeLog.getSampleId().toString()).build();
-      dto.setSampleUrl(uri.toString());
-      for (ChangeDto change : dto.getChanges()) {
-         addUrls(change);
-      }
-      Collections.sort(dto.getChanges(), new Comparator<ChangeDto>() {
-
-         @Override
-         public int compare(ChangeDto o1, ChangeDto o2) {
-            return o1.getCreatedDate().compareTo(o2.getCreatedDate());
-         }
-
-      });
+      addUrls(dto, uriBuilder);
+      Collections.sort(dto.getChanges(), (o1, o2) -> o1.getCreatedDate().compareTo(o2.getCreatedDate()));
       return dto;
    }
 
-   private void addUrls(ChangeDto dto) {
-      final URI baseUri = uriInfo.getBaseUriBuilder().path("user/").build();
-      if (dto.getCreatedById() != null) {
-         dto.setCreatedByUrl(baseUri + dto.getCreatedById().toString());
+  private void addUrls(ChangeLogDto dto, UriComponentsBuilder uriBuilder) {
+    URI baseUri = uriBuilder.build().toUri();
+    dto.setSampleUrl(buildSampleUrl(baseUri, dto.getSampleId()));
+    for (ChangeDto change : dto.getChanges()) {
+      if (change.getCreatedById() != null) {
+        change.setCreatedByUrl(buildUserUrl(baseUri, change.getCreatedById()));
       }
-   }
-   
+    }
+  }
+
 }

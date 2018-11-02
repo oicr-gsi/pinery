@@ -5,17 +5,11 @@ import java.io.OutputStream;
 import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 import javax.xml.stream.XMLStreamException;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import ca.on.oicr.gsi.status.ConfigurationSection;
 import ca.on.oicr.gsi.status.Header;
@@ -23,9 +17,11 @@ import ca.on.oicr.gsi.status.NavigationMenu;
 import ca.on.oicr.gsi.status.SectionRenderer;
 import ca.on.oicr.gsi.status.ServerConfig;
 import ca.on.oicr.gsi.status.StatusPage;
+import springfox.documentation.annotations.ApiIgnore;
 
-@Component
-@Path("/")
+@Controller
+@RequestMapping("/")
+@ApiIgnore
 public class StatusController {
   public static final ServerConfig SERVER_CONFIG = new ServerConfig() {
 
@@ -43,28 +39,30 @@ public class StatusController {
     public Stream<Header> headers() {
       return Stream.empty();
     }
+
+    @Override
+    public String documentationUrl() {
+      return "swagger-ui.html";
+    }
   };
 
-  @GET
-  public Response status(@Context HttpServletResponse response) throws IOException {
-    return Response.ok(new StreamingOutput() {
+  @GetMapping
+  public void showStatus(HttpServletResponse response) throws IOException {
+    response.setContentType("text/html;charset=utf-8");
+    response.setStatus(HttpServletResponse.SC_OK);
+    try (OutputStream output = response.getOutputStream()) {
+      new StatusPage(SERVER_CONFIG) {
 
-      @Override
-      public void write(OutputStream output) throws IOException, WebApplicationException {
-        new StatusPage(SERVER_CONFIG) {
+        @Override
+        public Stream<ConfigurationSection> sections() {
+          return Stream.empty();
+        }
 
-          @Override
-          public Stream<ConfigurationSection> sections() {
-            return Stream.empty();
-          }
-
-          @Override
-          protected void emitCore(SectionRenderer renderer) throws XMLStreamException {
-            // No information to display.
-          }
-        }.renderPage(output);
-      }
-
-    }, "text/html;charset=utf-8").build();
+        @Override
+        protected void emitCore(SectionRenderer renderer) throws XMLStreamException {
+          // No information to display.
+        }
+      }.renderPage(output);
+    }
   }
 }

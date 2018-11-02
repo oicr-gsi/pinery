@@ -61,12 +61,9 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
-        <!-- <dependency> <groupId>org.jboss.resteasy</groupId> <artifactId>resteasy-jaxrs</artifactId> </dependency> <dependency> 
-        <groupId>org.jboss.resteasy</groupId> <artifactId>resteasy-jettison-provider</artifactId> </dependency> <dependency> <groupId>org.jboss.resteasy</groupId> 
-        <artifactId>resteasy-jaxb-provider</artifactId> </dependency> -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-spring</artifactId>
+            <artifactId>resteasy-client</artifactId>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>
@@ -79,10 +76,6 @@
         <dependency>
             <groupId>ca.on.oicr</groupId>
             <artifactId>pinery-lims</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>

@@ -1,14 +1,10 @@
 package ca.on.oicr.pinery.ws;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.everyItem;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -66,9 +62,10 @@ public class SampleProvenanceResourceTest {
 
         when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
 
-        mockMvc.perform(get("/sample-provenance").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(404))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().string("[ ]"))
                 .andDo(print())
                 .andReturn();
     }
@@ -82,9 +79,9 @@ public class SampleProvenanceResourceTest {
 
         when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
 
-        mockMvc.perform(get("/sample-provenance").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.[*].lastModified", everyItem(equalTo("2016-01-01T00:00:00Z"))));
     }
 
@@ -98,9 +95,9 @@ public class SampleProvenanceResourceTest {
 
         when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
 
-        mockMvc.perform(get("/sample-provenance").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$", hasSize(100)));
     }
 
