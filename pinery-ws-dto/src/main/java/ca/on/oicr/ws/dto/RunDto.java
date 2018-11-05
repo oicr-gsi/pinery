@@ -29,6 +29,7 @@ public class RunDto {
    private String modifiedDate;
    private String runDirectory;
    private String runBasesMask;
+   private String sequencingParameters;
 
    public String getState() {
       return state;
@@ -203,6 +204,15 @@ public class RunDto {
   public void setRunBasesMask(String runBasesMask) {
     this.runBasesMask = runBasesMask;
   }
+  
+  @JsonProperty("sequencing_parameters")
+  public String getSequencingParameters() {
+    return sequencingParameters;
+  }
+  
+  public void setSequencingParameters(String sequencingParameters) {
+    this.sequencingParameters = sequencingParameters;
+  }
 
 @Override
   public String toString() {
@@ -214,7 +224,8 @@ public class RunDto {
         + ", startDate=" + startDate + ", completionDate=" + completionDate
         + ", modifiedById=" + modifiedById + ", modifiedByUrl=" + modifiedByUrl
         + ", modifiedDate=" + modifiedDate + ", runDirectory=" + runDirectory
-        + ", runBasesMask=" + runBasesMask + "]";
+        + ", runBasesMask=" + runBasesMask + ", sequencingParameters=" 
+        + sequencingParameters + "]";
   }
 
   @Override
@@ -241,6 +252,7 @@ public class RunDto {
     result = prime * result + ((state == null) ? 0 : state.hashCode());
     result = prime * result + ((runDirectory == null) ? 0 : runDirectory.hashCode());
     result = prime * result + ((runBasesMask == null) ? 0 : runBasesMask.hashCode());
+    result = prime * result + ((sequencingParameters == null) ? 0 : sequencingParameters.hashCode());
     return result;
   }
 
@@ -337,6 +349,12 @@ public class RunDto {
     }
     else if (!runBasesMask.equals(other.runBasesMask))
       return false;
+    if (sequencingParameters == null) {
+        if (other.sequencingParameters != null)
+          return false;
+      }
+      else if (!sequencingParameters.equals(other.sequencingParameters))
+        return false;
     return true;
   }
 

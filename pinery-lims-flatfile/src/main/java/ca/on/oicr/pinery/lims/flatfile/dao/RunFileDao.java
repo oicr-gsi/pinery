@@ -51,6 +51,7 @@ public class RunFileDao implements RunDao {
       r.setBarcode(ModelUtils.nullIfEmpty(rs.getString("barcode")));
       r.setRunDirectory(ModelUtils.nullIfEmpty(rs.getString("runDirectory")));
       r.setRunBasesMask(ModelUtils.nullIfEmpty(rs.getString("runBasesMask")));
+      r.setSequencingParameters(ModelUtils.nullIfEmpty(rs.getString("sequencingParameters")));
       
       r.setSample(parseRunPositions(rs.getString("positions")));
       
