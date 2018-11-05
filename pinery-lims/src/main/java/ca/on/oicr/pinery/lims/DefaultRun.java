@@ -26,6 +26,7 @@ public class DefaultRun implements Run {
    private Integer modifiedById;
    private String runDirectory;
    private String runBasesMask;
+   private String sequencingParameters;
 
    @Override
    public String getState() {
@@ -199,6 +200,16 @@ public class DefaultRun implements Run {
   public void setRunBasesMask(String runBasesMask) {
     this.runBasesMask = runBasesMask;
   }
+  
+  @Override
+  public String getSequencingParameters() {
+    return sequencingParameters;
+  }
+  
+  @Override
+  public void setSequencingParameters(String sequencingParameters) {
+    this.sequencingParameters = sequencingParameters;
+  }
 
 @Override
   public String toString() {
@@ -210,7 +221,7 @@ public class DefaultRun implements Run {
         + readLength + ", startDate=" + startDate + ", completionDate="
         + completionDate + ", modified=" + modified + ", modifiedById="
         + modifiedById + ", runDirectory=" + runDirectory + ", runBasesMask="
-        + runBasesMask + "]";
+        + runBasesMask + ", sequencingParameters=" + sequencingParameters + "]";
   }
 
   @Override
@@ -244,6 +255,7 @@ public class DefaultRun implements Run {
     result = prime * result + ((state == null) ? 0 : state.hashCode());
     result = prime * result + ((runDirectory == null) ? 0 : runDirectory.hashCode());
     result = prime * result + ((runBasesMask == null) ? 0 : runBasesMask.hashCode());
+    result = prime * result + ((sequencingParameters == null) ? 0 : sequencingParameters.hashCode());
     return result;
   }
 
@@ -363,6 +375,12 @@ public class DefaultRun implements Run {
     	return false;
     }
     else if (!runBasesMask.equals(other.runBasesMask))
+      return false;
+    if (sequencingParameters == null) {
+      if (other.sequencingParameters != null)
+        return false;
+    }
+    else if (!sequencingParameters.equals(other.sequencingParameters))
       return false;
     return true;
   }

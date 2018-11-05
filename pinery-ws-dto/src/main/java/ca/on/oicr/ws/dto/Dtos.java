@@ -340,6 +340,9 @@ public final class Dtos {
       if (from.getRunBasesMask() != null) {
         dto.setRunBasesMask(from.getRunBasesMask());
       }
+      if (from.getSequencingParameters() != null) {
+        dto.setSequencingParameters(from.getSequencingParameters());
+      }
       return dto;
    }
 

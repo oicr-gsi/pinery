@@ -73,4 +73,8 @@ public interface Run {
    
    public void setRunBasesMask(String runBasesMask);
    
+   public String getSequencingParameters();
+   
+   public void setSequencingParameters(String sequencingParameters);
+   
 }
