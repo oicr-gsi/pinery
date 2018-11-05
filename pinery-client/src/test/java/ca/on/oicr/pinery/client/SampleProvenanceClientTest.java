@@ -1,11 +1,7 @@
 package ca.on.oicr.pinery.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +31,9 @@ public class SampleProvenanceClientTest {
         List<SampleProvenanceDto> list = new ArrayList<>();
         list.add(sp1);
         list.add(sp2);
-        doReturn(list).when(client).getResourceList("sample-provenance");
+        doReturn(list).when(client).getResourceList("provenance/latest/sample-provenance");
 
-        List<SampleProvenanceDto> results = client.all();
+        List<SampleProvenanceDto> results = client.latest();
         assertEquals(2, results.size());
         assertEquals("111", results.get(0).getSampleProvenanceId());
         assertEquals("111", results.get(0).getProvenanceId());
@@ -47,17 +43,17 @@ public class SampleProvenanceClientTest {
 
     @Test
     public void testGetAllButNoneAvailable() throws HttpResponseException {
-        doReturn(new ArrayList<String>()).when(client).getResourceList("sample-provenance");
-        List<SampleProvenanceDto> results = client.all();
+        doReturn(new ArrayList<String>()).when(client).getResourceList("provenance/latest/sample-provenance");
+        List<SampleProvenanceDto> results = client.latest();
         assertNotNull(results);
         assertEquals(0, results.size());
     }
 
     @Test(expected = HttpResponseException.class)
     public void testGetAllBadStatus() throws HttpResponseException {
-        doThrow(new HttpResponseException()).when(client).getResourceList("sample-provenance");
+        doThrow(new HttpResponseException()).when(client).getResourceList("provenance/latest/sample-provenance");
 
-        client.all();
+        client.latest();
     }
 
 }
