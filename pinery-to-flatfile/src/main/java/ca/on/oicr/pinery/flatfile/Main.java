@@ -47,7 +47,7 @@ public class Main {
       converter.convertBoxes("boxes" + suffix + ".tsv");
             
       System.out.println("Writing projects file...");
-      converter.convertProjects("project" + suffix + ".tsv");
+      converter.convertProjects("projects" + suffix + ".tsv");
       
       System.out.println("Finished writing all files.");
       
