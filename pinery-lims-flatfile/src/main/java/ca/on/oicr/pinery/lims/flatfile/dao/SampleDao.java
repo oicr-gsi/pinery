@@ -6,7 +6,6 @@ import java.util.Set;
 
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Sample;
-import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 
 public interface SampleDao {
@@ -30,11 +29,6 @@ public interface SampleDao {
    * @return a List of all Samples matching the provided criteria (all samples if all parameters are null)
    */
   public List<Sample> getSamplesFiltered(Boolean archived, Set<String> projects, Set<String> types, ZonedDateTime before, ZonedDateTime after);
-  
-  /**
-   * @return a List of all Projects which have Samples
-   */
-  public List<SampleProject> getAllSampleProjects();
   
   /**
    * @return a List of all optional Sample Attributes

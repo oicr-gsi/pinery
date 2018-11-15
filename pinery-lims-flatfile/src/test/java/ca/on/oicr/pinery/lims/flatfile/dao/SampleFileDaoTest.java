@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Sample;
-import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
 
@@ -90,11 +89,6 @@ public class SampleFileDaoTest {
     Assert.assertEquals(5, samples.size());
   }
 
-  @Test
-  public void testGetAllSampleProjects() {
-    List<SampleProject> projects = dao.getAllSampleProjects();
-    Assert.assertEquals(2, projects.size());
-  }
 
   @Test
   public void testGetAllSampleTypes() {

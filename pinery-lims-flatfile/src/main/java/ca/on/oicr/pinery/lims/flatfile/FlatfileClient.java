@@ -24,6 +24,7 @@ import ca.on.oicr.pinery.lims.flatfile.dao.InstrumentDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.OrderDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.RunDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.SampleDao;
+import ca.on.oicr.pinery.lims.flatfile.dao.SampleProjectDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.UserDao;
 
 public class FlatfileClient implements Lims {
@@ -36,6 +37,8 @@ public class FlatfileClient implements Lims {
   private RunDao runDao;
   @Autowired
   private SampleDao sampleDao;
+  @Autowired
+  private SampleProjectDao sampleProjectDao;
   @Autowired
   private UserDao userDao;
   @Autowired
@@ -50,7 +53,7 @@ public class FlatfileClient implements Lims {
 
   @Override
   public List<SampleProject> getSampleProjects() {
-    return sampleDao.getAllSampleProjects();
+    return sampleProjectDao.getAllSampleProjects();
   }
 
   @Override
