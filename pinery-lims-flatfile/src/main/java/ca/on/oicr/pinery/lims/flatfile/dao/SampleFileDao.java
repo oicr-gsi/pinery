@@ -18,14 +18,12 @@ import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.PreparationKit;
 import ca.on.oicr.pinery.api.Sample;
-import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Status;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.lims.DefaultAttribute;
 import ca.on.oicr.pinery.lims.DefaultAttributeName;
 import ca.on.oicr.pinery.lims.DefaultPreparationKit;
 import ca.on.oicr.pinery.lims.DefaultSample;
-import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.lims.DefaultStatus;
 import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
@@ -41,36 +39,13 @@ public class SampleFileDao implements SampleDao {
   
   private static final String querySampleById = queryAllSamples
       + " WHERE id LIKE ?";
-  
-  private static final String queryProjectList = "SELECT projectName, COUNT(*) AS count,"
-      + " COUNT(CASE archived WHEN 'true' THEN 1 ELSE NULL END) As archivedCount,"
-      + " MIN(createdDate) AS earliest, MAX(modifiedDate) as latest,"
-      + " MAX((SELECT active FROM projects WHERE projects.projectName = samples.projectName)) AS active"
-      + " FROM samples"
-      + " GROUP BY projectName";
-  
+
   private static final String queryTypeList = "SELECT sampleType, COUNT(*) AS count,"
       + " COUNT(CASE archived WHEN 'true' THEN 1 ELSE NULL END) As archivedCount,"
       + " MIN(createdDate) AS earliest, MAX(modifiedDate) as latest"
       + " FROM samples"
       + " GROUP BY sampleType";
-  
-  private static final RowMapper<SampleProject> projectMapper = new RowMapper<SampleProject>() {
-
-    @Override
-    public SampleProject mapRow(ResultSet rs, int rowNum) throws SQLException {
-      SampleProject p = new DefaultSampleProject();
-      p.setName(rs.getString("projectName"));
-      p.setCount(ModelUtils.nullIfZero(rs.getInt("count")));
-      p.setArchivedCount(ModelUtils.nullIfZero(rs.getInt("archivedCount")));
-      p.setEarliest(ModelUtils.convertToDate(rs.getString("earliest")));
-      p.setLatest(ModelUtils.convertToDate(rs.getString("latest")));
-      p.setActive(rs.getBoolean("active"));
-      return p;
-    }
     
-  };
-  
   private static final RowMapper<Type> typeMapper = new RowMapper<Type>() {
 
     @Override
@@ -240,11 +215,6 @@ public class SampleFileDao implements SampleDao {
     }
     sb.append(")");
     return sb.toString();
-  }
-
-  @Override
-  public List<SampleProject> getAllSampleProjects() {
-    return template.query(queryProjectList, projectMapper);
   }
 
   @Override
