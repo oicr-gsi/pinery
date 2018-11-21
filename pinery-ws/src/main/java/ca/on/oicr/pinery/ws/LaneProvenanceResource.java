@@ -28,6 +28,7 @@ import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.LaneProvenanceDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -48,6 +49,8 @@ public class LaneProvenanceResource {
           .put("latest", noopTransformer) //
           .put("v1", noopTransformer) //
           .build();
+  
+  private static final String versions = "latest, v1";
 
   @Autowired
   private LaneProvenanceService laneProvenanceService;
@@ -55,7 +58,7 @@ public class LaneProvenanceResource {
   @GetMapping(path = "/provenance/{version}/lane-provenance")
   @ApiOperation(value = "Get all lane provenance records", response = LaneProvenanceDto.class, responseContainer = "List")
   @ApiResponses({@ApiResponse(code = 404, message = "Provenance version not found")})
-  public List<LaneProvenanceDto> getLanes(@PathVariable String version) {
+  public List<LaneProvenanceDto> getLanes(@ApiParam(allowableValues = versions) @PathVariable String version) {
     VersionTransformer<LaneProvenance> transformer = transformers.get(version);
     if (transformer == null) {
       throw new RestException(HttpStatus.NOT_FOUND, String.format("Provenance version '%s' not found", version));
@@ -68,12 +71,10 @@ public class LaneProvenanceResource {
   }
   
   @GetMapping("/lane-provenance")
-  @ApiOperation("Redirect to versioned lane provenance URL")
-  @ApiResponses({@ApiResponse(code = 301, message = "Permanent redirect")})
+  @ApiOperation("Get latest version of all lane provenance records")
   @Deprecated
-  public void redirectOldUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setStatus(HttpStatus.MOVED_PERMANENTLY.value());
-    response.setHeader("Location", request.getContextPath() + "/provenance/latest/lane-provenance");
+  public List<LaneProvenanceDto> getLanes() throws IOException {
+    return getLanes("latest");
   }
   
 }

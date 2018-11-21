@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +25,7 @@ import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -44,6 +42,8 @@ public class SampleProvenanceResource {
           .put("latest", noopTransformer) //
           .put("v1", noopTransformer) //
           .build();
+  
+  private static final String versions = "latest, v1";
 
   @Autowired
   private SampleProvenanceService sampleProvenanceService;
@@ -51,7 +51,7 @@ public class SampleProvenanceResource {
   @GetMapping("/provenance/{version}/sample-provenance")
   @ApiOperation(value = "Get all sample provenance records", response = SampleProvenanceDto.class, responseContainer = "List")
   @ApiResponses({@ApiResponse(code = 404, message = "Provenance version not found")})
-  public List<SampleProvenanceDto> getSamples(@PathVariable String version) {
+  public List<SampleProvenanceDto> getSamples(@ApiParam(allowableValues = versions) @PathVariable String version) {
     VersionTransformer<SampleProvenance> transformer = transformers.get(version);
     if (transformer == null) {
       throw new RestException(HttpStatus.NOT_FOUND, String.format("Provenance version '%s' not found", version));
@@ -64,10 +64,10 @@ public class SampleProvenanceResource {
   }
   
   @GetMapping("/sample-provenance")
-  @ApiOperation("Redirect to versioned sample provenance URL")
+  @ApiOperation("Get latest version of all sample provenance records")
   @Deprecated
-  public void redirectOldUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.sendRedirect(request.getContextPath() + "/provenance/latest/sample-provenance");
+  public List<SampleProvenanceDto> getSamples() throws IOException {
+    return getSamples("latest");
   }
   
 }
