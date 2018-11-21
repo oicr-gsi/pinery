@@ -8,6 +8,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 
@@ -15,6 +16,7 @@ import ca.on.oicr.gsi.provenance.model.SampleProvenance;
  *
  * @author mlaszloffy
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SampleProvenanceDto implements SampleProvenance {
 
     private String studyTitle;
