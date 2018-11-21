@@ -73,7 +73,7 @@ public class LaneProvenanceResource {
   @GetMapping("/lane-provenance")
   @ApiOperation("Get latest version of all lane provenance records")
   @Deprecated
-  public List<LaneProvenanceDto> getLanes() throws IOException {
+  public List<LaneProvenanceDto> getLanes() {
     return getLanes("latest");
   }
   

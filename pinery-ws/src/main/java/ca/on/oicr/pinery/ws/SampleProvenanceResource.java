@@ -66,7 +66,7 @@ public class SampleProvenanceResource {
   @GetMapping("/sample-provenance")
   @ApiOperation("Get latest version of all sample provenance records")
   @Deprecated
-  public List<SampleProvenanceDto> getSamples() throws IOException {
+  public List<SampleProvenanceDto> getSamples() {
     return getSamples("latest");
   }
   
