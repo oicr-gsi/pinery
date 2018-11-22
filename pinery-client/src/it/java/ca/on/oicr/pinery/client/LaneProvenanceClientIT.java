@@ -1,21 +1,22 @@
 package ca.on.oicr.pinery.client;
 
-import ca.on.oicr.gsi.provenance.model.LaneProvenance;
+import static org.junit.Assert.assertEquals;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.ws.dto.LaneProvenanceDto;
-import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import static org.junit.Assert.*;
 
 public class LaneProvenanceClientIT {
 
@@ -28,7 +29,7 @@ public class LaneProvenanceClientIT {
         ItProperties props = new ItProperties();
         pinery = props.getPineryClient();
 
-        lps = pinery.getLaneProvenance().all();
+        lps = pinery.getLaneProvenance().latest();
         Collections.sort(lps, new Comparator<LaneProvenanceDto>() {
             @Override
             public int compare(LaneProvenanceDto o1, LaneProvenanceDto o2) {

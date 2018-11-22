@@ -1,26 +1,22 @@
 package ca.on.oicr.pinery.client;
 
-import ca.on.oicr.gsi.provenance.model.SampleProvenance;
-import ca.on.oicr.pinery.client.HttpResponseException;
-import ca.on.oicr.pinery.client.PineryClient;
+import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
-
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import static org.junit.Assert.*;
 
 public class SampleProvenanceClientIT {
 
@@ -33,7 +29,7 @@ public class SampleProvenanceClientIT {
         ItProperties props = new ItProperties();
         pinery = props.getPineryClient();
 
-        sps = pinery.getSampleProvenance().all();
+        sps = pinery.getSampleProvenance().latest();
         Collections.sort(sps, new Comparator<SampleProvenanceDto>() {
             @Override
             public int compare(SampleProvenanceDto o1, SampleProvenanceDto o2) {

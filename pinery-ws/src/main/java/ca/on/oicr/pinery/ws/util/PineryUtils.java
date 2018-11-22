@@ -1,4 +1,4 @@
-package ca.on.oicr.pinery.ws;
+package ca.on.oicr.pinery.ws.util;
 
 import java.net.URI;
 

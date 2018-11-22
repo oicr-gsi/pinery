@@ -6,8 +6,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -485,14 +483,6 @@ public final class Dtos {
         return dto;
     }
 
-    public static List<SampleProvenanceDto> sampleProvenanceCollectionAsDto(Collection<SampleProvenance> from) {
-        List<SampleProvenanceDto> result = new ArrayList<>();
-        for (SampleProvenance sp : from) {
-            result.add(asDto(sp));
-        }
-        return result;
-    }
-
     public static LaneProvenanceDto asDto(LaneProvenance from) {
         LaneProvenanceDto dto = new LaneProvenanceDto();
         try {
@@ -501,14 +491,6 @@ public final class Dtos {
             throw new RuntimeException(e);
         }
         return dto;
-    }
-
-    public static List<LaneProvenanceDto> laneProvenanceCollectionAsDto(Collection<LaneProvenance> from) {
-        List<LaneProvenanceDto> result = new ArrayList<>();
-        for (LaneProvenance lp : from) {
-            result.add(asDto(lp));
-        }
-        return result;
     }
     
     public static List<BoxDto> asDtoList(List<Box> fromList) {
