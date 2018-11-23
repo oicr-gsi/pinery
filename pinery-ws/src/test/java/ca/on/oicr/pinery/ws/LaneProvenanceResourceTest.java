@@ -135,7 +135,7 @@ public class LaneProvenanceResourceTest {
     VersionTransformer<LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v2");
     LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
     // This hash must never change
-    assertEquals("c57c27ff1be654a70a51ca148e5531c66de85a757d26ea0c1a92af4a0a0a55ae", lp.getVersion());
+    assertEquals("9ad4e9fdeb49b2254d91283ff380331757118bf71381a7a6851efc276910b658", lp.getVersion());
   }
   
   private LaneProvenance makeBaseLaneProvenance() {
@@ -213,6 +213,7 @@ public class LaneProvenanceResourceTest {
     r.setCreatedById(3);
     r.setModified(makeDate("2018-11-01T10:36:34Z"));
     r.setModifiedById(3);
+    r.setSequencingParameters("V4 2x126");
     return r;
   }
 

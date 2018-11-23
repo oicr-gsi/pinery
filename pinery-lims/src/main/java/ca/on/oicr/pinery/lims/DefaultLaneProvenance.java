@@ -59,13 +59,16 @@ public class DefaultLaneProvenance implements LaneProvenance {
     public SortedMap<String, SortedSet<String>> getSequencerRunAttributes() {
         SortedSetMultimap<String, String> attrs = TreeMultimap.create();
         if (instrument != null) {
-            attrs.put("instrument_name", instrument.getName());
+            attrs.put(LimsSequencerRunAttribute.INSTRUMENT_NAME.getKey(), instrument.getName());
         }
         if (sequencerRun != null && sequencerRun.getRunDirectory() != null && !sequencerRun.getRunDirectory().isEmpty()) {
-            attrs.put("run_dir", sequencerRun.getRunDirectory());
+            attrs.put(LimsSequencerRunAttribute.RUN_DIRECTORY.getKey(), sequencerRun.getRunDirectory());
         }
         if (sequencerRun != null && sequencerRun.getRunBasesMask() != null && !sequencerRun.getRunBasesMask().isEmpty()) {
-        	attrs.put("run_bases_mask", sequencerRun.getRunBasesMask());
+        	attrs.put(LimsSequencerRunAttribute.RUN_BASES_MASK.getKey(), sequencerRun.getRunBasesMask());
+        }
+        if (sequencerRun.getSequencingParameters() != null) {
+          attrs.put(LimsSequencerRunAttribute.SEQUENCING_PARAMETERS.getKey(), sequencerRun.getSequencingParameters());
         }
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }
@@ -93,11 +96,11 @@ public class DefaultLaneProvenance implements LaneProvenance {
         SortedSetMultimap<String, String> attrs = TreeMultimap.create();
 
         if (lane.getPoolName() != null && !lane.getPoolName().isEmpty()) {
-            attrs.put(LimsAttribute.POOL_NAME.toString(), lane.getPoolName());
+            attrs.put(LimsLaneAttribute.POOL_NAME.getKey(), lane.getPoolName());
         }
         
         if (lane.getQcStatus() != null && !lane.getQcStatus().isEmpty()) {
-          attrs.put(LimsAttribute.QC_STATUS.toString(), lane.getQcStatus());
+          attrs.put(LimsLaneAttribute.QC_STATUS.getKey(), lane.getQcStatus());
         }
 
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);

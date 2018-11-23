@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.annotations.VisibleForTesting;
 
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
-import ca.on.oicr.pinery.lims.LimsAttribute;
+import ca.on.oicr.pinery.lims.LimsLaneAttribute;
+import ca.on.oicr.pinery.lims.LimsSequencerRunAttribute;
 import ca.on.oicr.pinery.lims.SimpleLaneProvenance;
 import ca.on.oicr.pinery.service.LaneProvenanceService;
 import ca.on.oicr.pinery.ws.component.RestException;
@@ -43,7 +44,8 @@ public class LaneProvenanceResource {
   
   private static final VersionTransformer<LaneProvenance> v1Transformer = input -> {
     SimpleLaneProvenance modified = SimpleLaneProvenance.from(input);
-    modified.getLaneAttributes().remove(LimsAttribute.QC_STATUS.toString());
+    modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.SEQUENCING_PARAMETERS.getKey());
+    modified.getLaneAttributes().remove(LimsLaneAttribute.QC_STATUS.getKey());
     modified.setSkip(false);
     return modified;
   };
@@ -56,7 +58,7 @@ public class LaneProvenanceResource {
           .put("v1", v1Transformer) //
           .build();
   
-  private static final String versions = "latest, v1";
+  private static final String versions = "latest, v2, v1";
 
   @Autowired
   private LaneProvenanceService laneProvenanceService;

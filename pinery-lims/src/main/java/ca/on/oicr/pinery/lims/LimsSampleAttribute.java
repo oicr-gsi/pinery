@@ -10,7 +10,7 @@ import com.google.common.collect.Sets;
  *
  * @author mlaszloffy
  */
-public enum LimsAttribute {
+public enum LimsSampleAttribute {
     TISSUE_TYPE("geo_tissue_type", "Tissue Type"),
     TISSUE_ORIGIN("geo_tissue_origin", "Tissue Origin"),
     ORGANISM("geo_organism", "Organism"),
@@ -34,9 +34,7 @@ public enum LimsAttribute {
     PURPOSE("geo_purpose", "Purpose"),
     QPCR_PERCENTAGE_HUMAN("geo_qpcr_percentage_human", "qPCR %"),
     SUBPROJECT("subproject", "Subproject", "Sub-project"),
-    INSTITUTE("institute", "Institute"),
-    POOL_NAME("pool_name", "Pool Name"),
-    QC_STATUS("qc_status", "QC Status");
+    INSTITUTE("institute", "Institute");
 
     private final Set<String> inputTerms;
     private final String outputTerm;
@@ -45,14 +43,14 @@ public enum LimsAttribute {
         validate();
     }
 
-    private LimsAttribute(String outputTerm, String... inputTerm) {
+    private LimsSampleAttribute(String outputTerm, String... inputTerm) {
         this.inputTerms = new HashSet<>(Arrays.asList(inputTerm));
         this.outputTerm = outputTerm;
     }
 
-    public static LimsAttribute fromString(String text) {
+    public static LimsSampleAttribute fromString(String text) {
         if (text != null) {
-            for (LimsAttribute sa : LimsAttribute.values()) {
+            for (LimsSampleAttribute sa : LimsSampleAttribute.values()) {
                 if (sa.inputTerms.contains(text)) {
                     return sa;
                 }
@@ -80,7 +78,7 @@ public enum LimsAttribute {
     private static void validate() {
         Set<String> allTerms = new HashSet<>();
         Set<String> allOutputTerms = new HashSet<>();
-        for (LimsAttribute la : LimsAttribute.values()) {
+        for (LimsSampleAttribute la : LimsSampleAttribute.values()) {
 
             //check that there are no duplicate input terms
             if (Sets.intersection(allTerms, la.inputTerms).isEmpty()) {

@@ -77,7 +77,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
     // Sample attribute LimsAttribute enum key names used in hash instead of actual map keys
     SortedMap<String, SortedSet<String>> sampleAttrs = new TreeMap<>();
     getSampleAttributes().forEach((key, values) -> {
-      LimsAttribute limsAttr = LimsAttribute.fromString(key);
+      LimsSampleAttribute limsAttr = LimsSampleAttribute.fromString(key);
       String newKey = limsAttr == null ? key : limsAttr.name();
       sampleAttrs.put(newKey, values);
     });

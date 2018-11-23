@@ -58,7 +58,7 @@ import ca.on.oicr.pinery.lims.DefaultSample;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
 import ca.on.oicr.pinery.lims.DefaultSampleProvenance;
 import ca.on.oicr.pinery.lims.DefaultStatus;
-import ca.on.oicr.pinery.lims.LimsAttribute;
+import ca.on.oicr.pinery.lims.LimsSampleAttribute;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
 import ca.on.oicr.pinery.ws.util.VersionTransformer;
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
@@ -149,7 +149,7 @@ public class SampleProvenanceResourceTest {
     VersionTransformer<SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v1");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
-    assertEquals("54d16cc61c3bb139ac16a017fac31f088b3809f67c07ac71e77750f0daaac07d", sp.getVersion());
+    assertEquals("c06f3bd04de538704689c77a95353c5e1ba3b512e53382662267703159bc65f7", sp.getVersion());
   }
   
   @Test
@@ -157,7 +157,7 @@ public class SampleProvenanceResourceTest {
     VersionTransformer<SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v2");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
-    assertEquals("865311157f1dfa2d72a3205a358ef013e487e35efe93299e6d9b472daa4f3d0d", sp.getVersion());
+    assertEquals("1ae45fa6e7a3160f0df1f1899449bf043efa415ca6f8e1617b5329ef707e15f5", sp.getVersion());
   }
 
   private SampleProvenance makeBaseSampleProvenance() {
@@ -171,8 +171,8 @@ public class SampleProvenanceResourceTest {
     sp.setInstrumentModel(makeBaseInstrumentModel());
     sp.setSampleProject(makeBaseProject());
     sp.setAdditionalSampleAttributes(
-        ImmutableMap.<LimsAttribute, Set<String>> of(
-            LimsAttribute.TARGETED_RESEQUENCING, ImmutableSet.of("tarseq")));
+        ImmutableMap.<LimsSampleAttribute, Set<String>> of(
+            LimsSampleAttribute.TARGETED_RESEQUENCING, ImmutableSet.of("tarseq")));
     sp.setParentSamples(makeBaseSampleParents());
 
     return sp;
@@ -202,7 +202,7 @@ public class SampleProvenanceResourceTest {
     status.setState("Ready");
     s.setStatus(status);
 
-    // Should include all attributes from LimsAttribute enum except
+    // Should include all attributes from LimsSampleAttribute enum except
     // TEMPLATE_TYPE, RUN_ID_AND_POSITION, PREPARATION_KIT: constructed
     // separately
     // LIBRARY_SIZE: doesn't seem to actually be set anywhere
@@ -226,7 +226,6 @@ public class SampleProvenanceResourceTest {
     attrs.add(makeAttribute("qPCR %", "50"));
     attrs.add(makeAttribute("Subproject", "Sub"));
     attrs.add(makeAttribute("Institute", "Institute"));
-    attrs.add(makeAttribute("Pool Name", "Pool"));
     s.setAttributes(attrs);
 
     return s;
@@ -285,6 +284,7 @@ public class SampleProvenanceResourceTest {
     r.setCreatedById(3);
     r.setModified(makeDate("2018-11-01T10:36:34Z"));
     r.setModifiedById(3);
+    r.setSequencingParameters("V4 2x126");
     return r;
   }
 
