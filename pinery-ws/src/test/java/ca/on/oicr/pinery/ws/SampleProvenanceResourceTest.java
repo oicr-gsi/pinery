@@ -146,11 +146,18 @@ public class SampleProvenanceResourceTest {
    */
   @Test
   public void testV1ProvenanceTransform() {
-    VersionTransformer<SampleProvenance> transformer = SampleProvenanceResource.transformers
-        .get("v1");
+    VersionTransformer<SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v1");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals("54d16cc61c3bb139ac16a017fac31f088b3809f67c07ac71e77750f0daaac07d", sp.getVersion());
+  }
+  
+  @Test
+  public void testV2ProvenanceTransform() {
+    VersionTransformer<SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v2");
+    SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
+    // This hash must never change
+    assertEquals("865311157f1dfa2d72a3205a358ef013e487e35efe93299e6d9b472daa4f3d0d", sp.getVersion());
   }
 
   private SampleProvenance makeBaseSampleProvenance() {
@@ -256,6 +263,8 @@ public class SampleProvenanceResourceTest {
     l.setPoolCreated(makeDate("2018-11-01T10:22:55Z"));
     l.setPoolCreatedById(3);
     l.setRunSample(Sets.newHashSet(makeBaseRunSample()));
+    l.setAnalysisSkipped(true);
+    l.setQcStatus("Failed: Other problem");
     return l;
   }
 

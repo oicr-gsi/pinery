@@ -18,6 +18,8 @@ public class RunDtoPosition {
    private String poolBarcode;
    private Integer poolCreatedById;
    private String poolCreated;
+   private String qcStatus;
+   private Boolean analysisSkipped;
 
    public Integer getPosition() {
       return position;
@@ -80,13 +82,31 @@ public class RunDtoPosition {
      this.poolCreated = poolCreated;
    }
 
+   @JsonProperty("qc_status")
+   public String getQcStatus() {
+     return qcStatus;
+   }
+
+   public void setQcStatus(String qcStatus) {
+     this.qcStatus = qcStatus;
+   }
+
+   @JsonProperty("analysis_skipped")
+   public Boolean isAnalysisSkipped() {
+     return analysisSkipped;
+   }
+
+   public void setAnalysisSkipped(Boolean analysisSkipped) {
+     this.analysisSkipped = analysisSkipped;
+   }
+
    @Override
    public String toString() {
       return "RunDtoPosition [runSample=" + runSample + ", position=" + position + ", hashCode()=" + hashCode() + ", getPosition()="
             + getPosition() + ", getRunSamples()=" + getSamples() + ", getPoolName()=" + getPoolName()
             + ", getPoolBarcode()=" + getPoolBarcode() + ", getPoolDescription()=" + getPoolDescription() + ", getPoolCreatedById()="
-            + getPoolCreatedById() + ", getPoolCreated()=" + getPoolCreated() + ", getClass()=" + getClass()
-            + ", toString()=" + super.toString() + "]";
+            + getPoolCreatedById() + ", getPoolCreated()=" + getPoolCreated() + ", getQcStatus()=" + getQcStatus()
+            + ", isAnalysisSkipped()=" + isAnalysisSkipped() + ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
    }
 
    @Override
@@ -100,6 +120,8 @@ public class RunDtoPosition {
       result = prime * result + ((poolDescription == null) ? 0 : poolDescription.hashCode());
       result = prime * result + ((poolCreatedById == null) ? 0 : poolCreatedById.hashCode());
       result = prime * result + ((poolCreated == null) ? 0 : poolCreated.hashCode());
+      result = prime * result + ((qcStatus == null) ? 0 : qcStatus.hashCode());
+      result = prime * result + ((analysisSkipped == null) ? 0 : analysisSkipped.hashCode());
       return result;
    }
 
@@ -130,6 +152,12 @@ public class RunDtoPosition {
       if (poolCreated == null) {
         if (other.poolCreated != null) return false;
       } else if (!poolCreated.equals(other.poolCreated)) return false;
+      if (qcStatus == null) {
+        if (other.qcStatus != null) return false;
+      } else if (!qcStatus.equals(other.qcStatus)) return false;
+      if (analysisSkipped == null) {
+        if (other.analysisSkipped != null) return false;
+      } else if (!analysisSkipped.equals(other.analysisSkipped)) return false;
       return true;
    }
 

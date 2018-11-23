@@ -1,6 +1,5 @@
 package ca.on.oicr.pinery.ws;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.annotations.VisibleForTesting;
 
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
+import ca.on.oicr.pinery.lims.LimsAttribute;
+import ca.on.oicr.pinery.lims.SimpleSampleProvenance;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
 import ca.on.oicr.pinery.ws.component.RestException;
 import ca.on.oicr.pinery.ws.util.MapBuilder;
@@ -35,12 +36,20 @@ import io.swagger.annotations.ApiResponses;
 public class SampleProvenanceResource {
 
   private static final VersionTransformer<SampleProvenance> noopTransformer = input -> input;
+  
+  private static final VersionTransformer<SampleProvenance> v1Transformer = input -> {
+    SimpleSampleProvenance modified = SimpleSampleProvenance.from(input);
+    modified.getLaneAttributes().remove(LimsAttribute.QC_STATUS.toString());
+    modified.setSkip(false);
+    return modified;
+  };
 
   @VisibleForTesting
   protected static final Map<String, VersionTransformer<SampleProvenance>> transformers //
       = new MapBuilder<String, VersionTransformer<SampleProvenance>>() //
           .put("latest", noopTransformer) //
-          .put("v1", noopTransformer) //
+          .put("v2", noopTransformer) //
+          .put("v1", v1Transformer) //
           .build();
   
   private static final String versions = "latest, v1";

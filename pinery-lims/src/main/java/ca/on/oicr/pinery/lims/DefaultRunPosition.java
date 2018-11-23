@@ -8,86 +8,95 @@ import ca.on.oicr.pinery.api.RunSample;
 
 public class DefaultRunPosition implements RunPosition {
 
-   @Override
-   public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((position == null) ? 0 : position.hashCode());
-      result = prime * result + ((runSample == null) ? 0 : runSample.hashCode());
-      result = prime * result + ((poolName == null) ? 0 : poolName.hashCode());
-      result = prime * result + ((poolBarcode == null) ? 0 : poolBarcode.hashCode());
-      result = prime * result + ((poolDescription == null) ? 0 : poolDescription.hashCode());
-      result = prime * result + ((poolCreatedById == null) ? 0 : poolCreatedById.hashCode());
-      result = prime * result + ((poolCreated == null) ? 0 : poolCreated.hashCode());
-      return result;
-   }
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((analysisSkipped == null) ? 0 : analysisSkipped.hashCode());
+    result = prime * result + ((poolBarcode == null) ? 0 : poolBarcode.hashCode());
+    result = prime * result + ((poolCreated == null) ? 0 : poolCreated.hashCode());
+    result = prime * result + ((poolCreatedById == null) ? 0 : poolCreatedById.hashCode());
+    result = prime * result + ((poolDescription == null) ? 0 : poolDescription.hashCode());
+    result = prime * result + ((poolName == null) ? 0 : poolName.hashCode());
+    result = prime * result + ((position == null) ? 0 : position.hashCode());
+    result = prime * result + ((qcStatus == null) ? 0 : qcStatus.hashCode());
+    result = prime * result + ((runSample == null) ? 0 : runSample.hashCode());
+    return result;
+  }
 
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null) return false;
-      if (getClass() != obj.getClass()) return false;
-      DefaultRunPosition other = (DefaultRunPosition) obj;
-      if (position == null) {
-         if (other.position != null) return false;
-      } else if (!position.equals(other.position)) return false;
-      if (runSample == null) {
-         if (other.runSample != null) return false;
-      } else if (!runSample.equals(other.runSample)) return false;
-      if (poolName == null) {
-         if (other.poolName != null) return false;
-      } else if (!poolName.equals(other.poolName)) return false;
-      if (poolBarcode == null) {
-         if (other.poolBarcode != null) return false;
-      } else if (!poolBarcode.equals(other.poolBarcode)) return false;
-      if (poolDescription == null) {
-         if (other.poolDescription != null) return false;
-      } else if (!poolDescription.equals(other.poolDescription)) return false;
-      if (poolCreatedById == null) {
-        if (other.poolCreatedById != null) return false;
-      } else if (!poolCreatedById.equals(other.poolCreatedById)) return false;
-      if (poolCreated == null) {
-        if (other.poolCreated != null) return false;
-      } else if (!poolCreated.equals(other.poolCreated)) return false;
-      return true;
-   }
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    DefaultRunPosition other = (DefaultRunPosition) obj;
+    if (analysisSkipped == null) {
+      if (other.analysisSkipped != null) return false;
+    } else if (!analysisSkipped.equals(other.analysisSkipped)) return false;
+    if (poolBarcode == null) {
+      if (other.poolBarcode != null) return false;
+    } else if (!poolBarcode.equals(other.poolBarcode)) return false;
+    if (poolCreated == null) {
+      if (other.poolCreated != null) return false;
+    } else if (!poolCreated.equals(other.poolCreated)) return false;
+    if (poolCreatedById == null) {
+      if (other.poolCreatedById != null) return false;
+    } else if (!poolCreatedById.equals(other.poolCreatedById)) return false;
+    if (poolDescription == null) {
+      if (other.poolDescription != null) return false;
+    } else if (!poolDescription.equals(other.poolDescription)) return false;
+    if (poolName == null) {
+      if (other.poolName != null) return false;
+    } else if (!poolName.equals(other.poolName)) return false;
+    if (position == null) {
+      if (other.position != null) return false;
+    } else if (!position.equals(other.position)) return false;
+    if (qcStatus == null) {
+      if (other.qcStatus != null) return false;
+    } else if (!qcStatus.equals(other.qcStatus)) return false;
+    if (runSample == null) {
+      if (other.runSample != null) return false;
+    } else if (!runSample.equals(other.runSample)) return false;
+    return true;
+  }
 
-   @Override
-   public String toString() {
-      return "DefaultRunPosition [runSample=" + runSample + ", position=" + position + ", getPosition()=" + getPosition()
-            + ", getRunSample()=" + getRunSample() + ", getPoolName()=" + getPoolName() + ", getPoolBarcode()=" + getPoolBarcode()
-            + ", getPoolDescription()=" + getPoolDescription() + ", getPoolCreatedById()=" + getPoolCreatedById()
-            + ", getPoolCreated()=" + getPoolCreated() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
-            + ", toString()=" + super.toString() + "]";
-   }
+  @Override
+  public String toString() {
+    return "DefaultRunPosition [runSample=" + runSample + ", position=" + position + ", poolName=" + poolName + ", poolDescription="
+        + poolDescription + ", poolBarcode=" + poolBarcode + ", poolCreatedById=" + poolCreatedById + ", poolCreated=" + poolCreated
+        + ", qcStatus=" + qcStatus + ", analysisSkipped=" + analysisSkipped + ", hashCode()=" + hashCode() + ", toString()="
+        + super.toString() + "]";
+  }
 
-   private Set<RunSample> runSample;
-   private Integer position;
-   private String poolName;
-   private String poolDescription;
-   private String poolBarcode;
-   private Integer poolCreatedById;
-   private Date poolCreated;
+  private Set<RunSample> runSample;
+  private Integer position;
+  private String poolName;
+  private String poolDescription;
+  private String poolBarcode;
+  private Integer poolCreatedById;
+  private Date poolCreated;
+  private String qcStatus;
+  private Boolean analysisSkipped;
 
-   @Override
-   public Integer getPosition() {
-      return position;
-   }
+  @Override
+  public Integer getPosition() {
+    return position;
+  }
 
-   @Override
-   public void setPosition(Integer position) {
-      this.position = position;
-   }
+  @Override
+  public void setPosition(Integer position) {
+    this.position = position;
+  }
 
-   @Override
-   public Set<RunSample> getRunSample() {
-      return runSample;
-   }
+  @Override
+  public Set<RunSample> getRunSample() {
+    return runSample;
+  }
 
-   @Override
-   public void setRunSample(Set<RunSample> runSample) {
-      this.runSample = runSample;
-   }
+  @Override
+  public void setRunSample(Set<RunSample> runSample) {
+    this.runSample = runSample;
+  }
 
   @Override
   public String getPoolName() {
@@ -137,6 +146,26 @@ public class DefaultRunPosition implements RunPosition {
   @Override
   public void setPoolCreated(Date poolCreated) {
     this.poolCreated = poolCreated;
+  }
+
+  @Override
+  public String getQcStatus() {
+    return qcStatus;
+  }
+
+  @Override
+  public void setQcStatus(String qcStatus) {
+    this.qcStatus = qcStatus;
+  }
+
+  @Override
+  public Boolean isAnalysisSkipped() {
+    return analysisSkipped;
+  }
+
+  @Override
+  public void setAnalysisSkipped(Boolean analysisSkipped) {
+    this.analysisSkipped = analysisSkipped;
   }
 
 }

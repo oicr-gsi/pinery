@@ -105,7 +105,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     @Override
     public SortedMap<String, SortedSet<String>> getStudyAttributes() {
-        SortedSetMultimap attrs = TreeMultimap.create();
+        SortedSetMultimap<String, String> attrs = TreeMultimap.create();
         //sampleProject.getAttributes();
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }
@@ -219,7 +219,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     @Override
     public SortedMap<String, SortedSet<String>> getSequencerRunAttributes() {
-        SortedSetMultimap attrs = TreeMultimap.create();
+        SortedSetMultimap<String, String> attrs = TreeMultimap.create();
         if (instrument != null) {
             attrs.put("instrument_name", instrument.getName());
         }
@@ -246,10 +246,14 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     @Override
     public SortedMap<String, SortedSet<String>> getLaneAttributes() {
-        SortedSetMultimap attrs = TreeMultimap.create();
+        SortedSetMultimap<String, String> attrs = TreeMultimap.create();
 
         if (lane.getPoolName() != null && !lane.getPoolName().isEmpty()) {
             attrs.put(LimsAttribute.POOL_NAME.toString(), lane.getPoolName());
+        }
+        
+        if (lane.getQcStatus() != null && !lane.getQcStatus().isEmpty()) {
+          attrs.put(LimsAttribute.QC_STATUS.toString(), lane.getQcStatus());
         }
 
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
@@ -274,7 +278,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     @Override
     public Boolean getSkip() {
-        return false;
+        return lane.isAnalysisSkipped();
     }
 
     @Override
@@ -304,7 +308,6 @@ public class DefaultSampleProvenance implements SampleProvenance {
         sb.append(getIusTag());
         String s = sb.toString();
         return Hashing.sha256().hashString(s, Charsets.UTF_8).toString();
-//        return Versioning.getSha256(this);
     }
 
 	@Override

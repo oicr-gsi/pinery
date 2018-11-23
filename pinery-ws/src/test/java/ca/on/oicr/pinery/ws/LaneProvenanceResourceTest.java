@@ -130,6 +130,14 @@ public class LaneProvenanceResourceTest {
     assertEquals("0c342e4dd3f44daaa1c5920c3968e4fd6a803213a7a587cab0b15bb5762d1048", lp.getVersion());
   }
   
+  @Test
+  public void testV2ProvenanceTransform() {
+    VersionTransformer<LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v2");
+    LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
+    // This hash must never change
+    assertEquals("c57c27ff1be654a70a51ca148e5531c66de85a757d26ea0c1a92af4a0a0a55ae", lp.getVersion());
+  }
+  
   private LaneProvenance makeBaseLaneProvenance() {
     DefaultLaneProvenance lp = new DefaultLaneProvenance();
     lp.setInstrumentModel(makeBaseInstrumentModel());
@@ -168,6 +176,8 @@ public class LaneProvenanceResourceTest {
     l.setPoolCreated(makeDate("2018-11-01T10:22:55Z"));
     l.setPoolCreatedById(3);
     l.setRunSample(Sets.newHashSet(makeBaseRunSample()));
+    l.setAnalysisSkipped(true);
+    l.setQcStatus("Failed: Other problem");
     return l;
   }
   

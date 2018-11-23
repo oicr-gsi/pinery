@@ -364,6 +364,8 @@ public final class Dtos {
       if (from.getRunSample() != null && !from.getRunSample().isEmpty()) {
          dto.setSamples(asDto3(from.getRunSample()));
       }
+      dto.setQcStatus(from.getQcStatus());
+      dto.setAnalysisSkipped(from.isAnalysisSkipped());
       return dto;
    }
 
