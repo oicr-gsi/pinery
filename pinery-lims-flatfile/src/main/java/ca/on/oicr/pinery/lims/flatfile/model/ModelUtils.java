@@ -74,5 +74,9 @@ public class ModelUtils {
       return Integer.parseInt(num);
     }
   }
+  
+  public static Boolean parseBooleanOrNull(String bool) {
+    return bool == null ? null : Boolean.parseBoolean(bool);
+  }
 
 }
