@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/oicr-gsi/pinery.svg?branch=master)](https://travis-ci.org/oicr-gsi/pinery) 
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=ca.on.oicr%3Apinery&metric=alert_status)](https://sonarcloud.io/dashboard?id=ca.on.oicr%3Apinery)
+
 # Pinery
 
 Pinery is a webservice that provides a LIMS abstraction layer. The main advantage of this is to avoid
