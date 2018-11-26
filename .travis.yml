@@ -13,10 +13,6 @@ addons:
         organization: "oicr-gsi"
         token:
             secure: "nFuAZYShhnImHBicrSVaKuSO9zD7NmfNABxDvaOgTetZzKZ17UkSaUlIwve3+Mm/3Chw1sqf6epmbUCbL2WKgywinoWAWv073NJ+omrUGf7PYcapriW5oOE/ooa5U+B+E3ym/cDy0t+SXiwopJ+i++Z9c1+z5jvQgoxUZQPXpspEQQvk54eb5mG8FqOQY/56EuIJqHanpI1Q01xQy1kLMfzwiZrhp75Xmfo1UBcKg3/cQUn/UpTnRo0Xb1lJ2Hxw4B5ztRHZdeI6H4fEMxh6C0/Ln02ozL0X4/cJPrQEK5VT6uelbaKzjdNPKKR9Ak2+l1v5z8g+MxYXt7np7i1a+rmyIRXujkqmgzbSv6hu3rEcDz6Nu+t90oq1FWyDdpH43k09ZCcNWp0bKYePFK8IFLfK86w4EQdcAd5EU3JO38iluIvkY2hhBFZY69X+W5DEGFmiDFDcUJrqxuJehR4lNVzSfBTDGWipQWxkNf6A0Feyzz/njOIMPj4hymUGzI3v0XAmOjmnTNLhhojlHFmetuZuEEX/7y9QC/JGGo1JEdwmT2GbPm0DqmNj0MtCzorKHGqCpMYYT6a808DRdco41zjtmX2qfSYkwUcFzGie0rHL0nmQGbIeLabjHnTqmGI0/M/wChvk+oxhSI79GmevOfknOMzQdsoN03p8M0uc7B8="
-        github_token:
-            secure: "io9Q9cpmvUKSwwIDG9ND/PgNUPz8gr6CcE1u4NW4iWa/VXyJsM1ZbneNqJUdvu4jBKXWUbuELyluPcObgq6wCIiKLeJt8s1dEco/6EdazzI4q0CnNqknccAvgTpIOCv5Nu+onHu7wtGOPCVtsv7WTXR7RkMno0ZhckSgNwrXgkzGoIMH5KGukZqIiSgbRZqJbgflaryysVJAsP87JjVBeofjTQ2CFQnRgiUHRLPRZ9H8gGUEo5V2rpjQ6Ud7MVJ5WgKwx0vZ/qDnrrwWCH1qymqmU2KEUQP+Y/6rkbmb6PjQHV9IM6F2V1K+X40ysQxZHSqD26lOClmxVSCpdzI/gCevFERY0ph7fFcCi97RtGcqihYkCQ4s9ssI0Us911c/XN63Tov8BfKVArq2kzGJSsTFVNbfhyWSJTgU9kurDzX1K6DhyxO0trzDIYBmswi1vtq77o3Ozpg4InkLqZbisSUyiwrSVZzGO16qRcS8viC6EynxGotAJGffr9OFPqd3GCfcSAnVO5xC1gn1kWq8g0yIzrRqEXCdx+eXcD2PMbN8UXKnpDK77To/oh6ZEQ5lBTb1wcXYakzy2OIDcGqqB3EAd++iNTN6dCDKr6uiCt9FUzCzUACOmgvLFeWL9DiFR5hGXGDL0eycFdUod5JdE7TzLLxZIUvusV6VRKEJJZE="
-        branches:
-        - 2.0-rc7
 
 before_install:
 - git clone https://github.com/oicr-gsi/gsi-config.git "${MAVEN_SETTINGS}"
@@ -27,7 +23,7 @@ before_script:
 
 script:
   - mvn clean install
-  - 'if [[ ${TRAVIS_PULL_REQUEST_SLUG} == ${TRAVIS_REPO_SLUG} ]] ; then
+  - 'if [[ ${TRAVIS_PULL_REQUEST} == "false" ]] || [[ ${TRAVIS_PULL_REQUEST_SLUG} == ${TRAVIS_REPO_SLUG} ]] ; then
         mvn org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar ;
      else
         echo "[WARN] SonarCloud cannot run on pull requests from forks." ;
