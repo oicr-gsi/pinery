@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -eux
+
+git checkout master
+git pull
+xmlstarlet sel -t -v /_:project/_:version pom.xml | sed -e s/-SNAPSHOT//g > version.temp
+${EDITOR:-editor} version.temp
+PINERY_VERSION=$(cat version.temp)
+PINERY_VERSION_NEXT=$(awk -F. '{print $1 "." $2 "." ($3 + 1) "-SNAPSHOT"}' version.temp)
+rm version.temp
+git checkout -b v${PINERY_VERSION_NEXT}_pr
+mvn clean install
+mvn versions:set -DnewVersion=${PINERY_VERSION} -DgenerateBackupPoms=false
+git commit -a -m "Pinery ${PINERY_VERSION} release"
+git tag -a v${PINERY_VERSION} -m "Pinery ${PINERY_VERSION} release"
+mvn deploy
+mvn versions:set -DnewVersion=${PINERY_VERSION_NEXT} -DgenerateBackupPoms=false
+git commit -a -m "prepared for next development iteration"
+git push origin v${PINERY_VERSION}
+git push -u origin v${PINERY_VERSION_NEXT}_pr
+set +x
+
+echo PINERY_VERSION=${PINERY_VERSION}
