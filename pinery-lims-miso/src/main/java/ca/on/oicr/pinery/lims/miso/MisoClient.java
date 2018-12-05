@@ -57,13 +57,13 @@ public class MisoClient implements Lims {
 
   // @formatter:off
   // InstrumentModel queries
-  private static final String queryAllModels = "SELECT p.platformId, p.instrumentModel " + "FROM Platform as p";
-  private static final String queryModelById = queryAllModels + " WHERE p.platformId = ?";
+  private static final String queryAllModels = "SELECT im.instrumentModelId, im.alias " + "FROM InstrumentModel as im";
+  private static final String queryModelById = queryAllModels + " WHERE im.instrumentModelId = ?";
 
   // Instrument queries
-  private static final String queryAllInstruments = "SELECT i.instrumentId, i.name, i.platformId " + "FROM Instrument AS i";
+  private static final String queryAllInstruments = "SELECT i.instrumentId, i.name, i.instrumentModelId " + "FROM Instrument AS i";
   private static final String queryInstrumentById = queryAllInstruments + " WHERE i.instrumentId = ?";
-  private static final String queryInstrumentsByModelId = queryAllInstruments + " WHERE i.platformId = ?";
+  private static final String queryInstrumentsByModelId = queryAllInstruments + " WHERE i.instrumentModelId = ?";
 
   // Order queries
   private static final String queryAllOrders = "SELECT o.poolOrderId orderId, o.creationDate createdDate, o.createdBy createdById, "
@@ -902,7 +902,7 @@ public class MisoClient implements Lims {
 
       ins.setId(rs.getInt("instrumentId"));
       ins.setName(rs.getString("name"));
-      ins.setModelId(rs.getInt("platformId"));
+      ins.setModelId(rs.getInt("instrumentModelId"));
 
       return ins;
     }
@@ -915,8 +915,8 @@ public class MisoClient implements Lims {
     public InstrumentModel mapRow(ResultSet rs, int rowNum) throws SQLException {
       InstrumentModel m = new DefaultInstrumentModel();
 
-      m.setId(rs.getInt("platformId"));
-      m.setName(rs.getString("instrumentModel"));
+      m.setId(rs.getInt("instrumentModelId"));
+      m.setName(rs.getString("alias"));
 
       return m;
     }
