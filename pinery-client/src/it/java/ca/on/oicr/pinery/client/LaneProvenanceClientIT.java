@@ -29,7 +29,7 @@ public class LaneProvenanceClientIT {
         ItProperties props = new ItProperties();
         pinery = props.getPineryClient();
 
-        lps = pinery.getLaneProvenance().latest();
+        lps = pinery.getLaneProvenance().version("v1");
         Collections.sort(lps, new Comparator<LaneProvenanceDto>() {
             @Override
             public int compare(LaneProvenanceDto o1, LaneProvenanceDto o2) {

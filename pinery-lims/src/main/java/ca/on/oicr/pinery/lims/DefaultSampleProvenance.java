@@ -54,7 +54,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
     private Sample sample;
     private SampleProject sampleProject;
     private Collection<Sample> parentSamples;
-    private Map<LimsAttribute, Set<String>> additionalSampleAttributes = Collections.emptyMap();
+    private Map<LimsSampleAttribute, Set<String>> additionalSampleAttributes = Collections.emptyMap();
 
     private final boolean ALLOW_UNKNOWN_ATTRIBUTES = false;
 
@@ -90,7 +90,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
         this.sampleProject = sampleProject;
     }
 
-    public void setAdditionalSampleAttributes(Map<LimsAttribute, Set<String>> additionalSampleAttributes) {
+    public void setAdditionalSampleAttributes(Map<LimsSampleAttribute, Set<String>> additionalSampleAttributes) {
         this.additionalSampleAttributes = additionalSampleAttributes;
     }
 
@@ -105,7 +105,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     @Override
     public SortedMap<String, SortedSet<String>> getStudyAttributes() {
-        SortedSetMultimap attrs = TreeMultimap.create();
+        SortedSetMultimap<String, String> attrs = TreeMultimap.create();
         //sampleProject.getAttributes();
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }
@@ -173,21 +173,21 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
         //collect additional sample fields as attributes
         if (sequencerRun.getId() != null && lane.getPosition() != null) {
-            attrsAll.put(LimsAttribute.RUN_ID_AND_POSITION.toString(), sequencerRun.getId() + "_" + lane.getPosition());
+            attrsAll.put(LimsSampleAttribute.RUN_ID_AND_POSITION.toString(), sequencerRun.getId() + "_" + lane.getPosition());
         }
         if (sample.getSampleType() != null) {
-            attrsAll.put(LimsAttribute.SAMPLE_TYPE.toString(), sample.getSampleType());
+            attrsAll.put(LimsSampleAttribute.SAMPLE_TYPE.toString(), sample.getSampleType());
         }
 
         //add additional sample attributes
-        for (Entry<LimsAttribute, Set<String>> e : additionalSampleAttributes.entrySet()) {
+        for (Entry<LimsSampleAttribute, Set<String>> e : additionalSampleAttributes.entrySet()) {
             attrsAll.putAll(e.getKey().toString(), e.getValue());
         }
 
         //remap sample attribute key names and filter (or allow) unknown attributes
         SortedSetMultimap<String, String> attrsRemappedAndFiltered = TreeMultimap.create();
         for (String key : attrsAll.keySet()) {
-            LimsAttribute sampleAttributeKey = LimsAttribute.fromString(key);
+            LimsSampleAttribute sampleAttributeKey = LimsSampleAttribute.fromString(key);
             SortedSet<String> values = attrsAll.get(key);
             if (sampleAttributeKey != null) {
                 // sample attribute key is known
@@ -219,9 +219,20 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     @Override
     public SortedMap<String, SortedSet<String>> getSequencerRunAttributes() {
-        SortedSetMultimap attrs = TreeMultimap.create();
+        SortedSetMultimap<String, String> attrs = TreeMultimap.create();
         if (instrument != null) {
-            attrs.put("instrument_name", instrument.getName());
+            attrs.put(LimsSequencerRunAttribute.INSTRUMENT_NAME.getKey(), instrument.getName());
+        }
+        if (sequencerRun != null) {
+          if (sequencerRun.getRunDirectory() != null && !sequencerRun.getRunDirectory().isEmpty()) {
+            attrs.put(LimsSequencerRunAttribute.RUN_DIRECTORY.getKey(), sequencerRun.getRunDirectory());
+          }
+          if (sequencerRun.getRunBasesMask() != null && !sequencerRun.getRunBasesMask().isEmpty()) {
+            attrs.put(LimsSequencerRunAttribute.RUN_BASES_MASK.getKey(), sequencerRun.getRunBasesMask());
+          }
+          if (sequencerRun.getSequencingParameters() != null) {
+            attrs.put(LimsSequencerRunAttribute.SEQUENCING_PARAMETERS.getKey(), sequencerRun.getSequencingParameters());
+          }
         }
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }
@@ -246,10 +257,14 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     @Override
     public SortedMap<String, SortedSet<String>> getLaneAttributes() {
-        SortedSetMultimap attrs = TreeMultimap.create();
+        SortedSetMultimap<String, String> attrs = TreeMultimap.create();
 
         if (lane.getPoolName() != null && !lane.getPoolName().isEmpty()) {
-            attrs.put(LimsAttribute.POOL_NAME.toString(), lane.getPoolName());
+            attrs.put(LimsLaneAttribute.POOL_NAME.getKey(), lane.getPoolName());
+        }
+        
+        if (lane.getQcStatus() != null && !lane.getQcStatus().isEmpty()) {
+          attrs.put(LimsLaneAttribute.QC_STATUS.getKey(), lane.getQcStatus());
         }
 
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
@@ -274,7 +289,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     @Override
     public Boolean getSkip() {
-        return false;
+        return lane.isAnalysisSkipped();
     }
 
     @Override
@@ -304,7 +319,6 @@ public class DefaultSampleProvenance implements SampleProvenance {
         sb.append(getIusTag());
         String s = sb.toString();
         return Hashing.sha256().hashString(s, Charsets.UTF_8).toString();
-//        return Versioning.getSha256(this);
     }
 
 	@Override
@@ -364,8 +378,8 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
         //Geospiza sample type is gDNA - recategorize the "Tissue Type" to the correct attribute name of "Tissue Preparation"
         if (Arrays.asList("gDNA", "gDNA_wga").contains(sample.getSampleType())
-                && (attrs.containsKey(LimsAttribute.TISSUE_TYPE.toString()) || attrs.containsKey("Tissue Type"))) {
-            attrs.putAll("Tissue Preparation", attrs.removeAll(LimsAttribute.TISSUE_TYPE.toString()));
+                && (attrs.containsKey(LimsSampleAttribute.TISSUE_TYPE.toString()) || attrs.containsKey("Tissue Type"))) {
+            attrs.putAll("Tissue Preparation", attrs.removeAll(LimsSampleAttribute.TISSUE_TYPE.toString()));
             attrs.putAll("Tissue Preparation", attrs.removeAll("Tissue Type"));
         }
 

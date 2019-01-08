@@ -33,7 +33,7 @@ import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.lims.DefaultSampleProvenance;
-import ca.on.oicr.pinery.lims.LimsAttribute;
+import ca.on.oicr.pinery.lims.LimsSampleAttribute;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
 import ca.on.oicr.pinery.service.util.LimsProvenanceComparator;
 
@@ -82,8 +82,8 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
             if (order.getSamples() != null) {
                 for (OrderSample orderSample : order.getSamples()) {
                     for (Attribute attr : orderSample.getAttributes()) {
-                        LimsAttribute sa = LimsAttribute.fromString(attr.getName());
-                        if (LimsAttribute.TARGETED_RESEQUENCING == sa) {
+                        LimsSampleAttribute sa = LimsSampleAttribute.fromString(attr.getName());
+                        if (LimsSampleAttribute.TARGETED_RESEQUENCING == sa) {
                             String key = orderSample.getId() + orderSample.getBarcode() + orderSample.getBarcodeTwo();
                             if (sampleTargetedRequencingTypeFromSampleIdAndBarcode.containsKey(key)) {
                                 if (sampleTargetedRequencingTypeFromSampleIdAndBarcode.get(key).equals(attr.getValue())) {
@@ -92,7 +92,7 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
                                     //unable to determine the targeted resequencing type for the sample
                                     sampleTargetedRequencingTypeFromSampleIdAndBarcode.put(key, "TARGETED RESEQUENCING CONFLICT DETECTED");
                                     log.warn("{} conflict detected for sample id: {}",
-                                            LimsAttribute.TARGETED_RESEQUENCING.name(), orderSample.getId());
+                                            LimsSampleAttribute.TARGETED_RESEQUENCING.name(), orderSample.getId());
                                 }
                             } else {
                                 sampleTargetedRequencingTypeFromSampleIdAndBarcode.put(key, attr.getValue());
@@ -140,7 +140,7 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
                                 //special handling of target resequencing type, as this attribute is currently not stored in sample or run sample attrs
                                 String targetedResequencing = sampleTargetedRequencingTypeFromSampleIdAndBarcode.get(runSample.getId() + runSample.getBarcode() + runSample.getBarcodeTwo());
                                 if (targetedResequencing != null && !"No Target".equals(targetedResequencing)) {
-                                    sp.setAdditionalSampleAttributes(ImmutableMap.<LimsAttribute, Set<String>>of(LimsAttribute.TARGETED_RESEQUENCING, ImmutableSet.of(targetedResequencing)));
+                                    sp.setAdditionalSampleAttributes(ImmutableMap.<LimsSampleAttribute, Set<String>>of(LimsSampleAttribute.TARGETED_RESEQUENCING, ImmutableSet.of(targetedResequencing)));
                                 }
 
                                 LinkedHashSet<Sample> parentSamples = new LinkedHashSet<>();

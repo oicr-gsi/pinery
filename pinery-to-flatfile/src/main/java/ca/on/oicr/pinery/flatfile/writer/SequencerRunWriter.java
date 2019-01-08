@@ -90,6 +90,7 @@ public class SequencerRunWriter extends Writer {
     sb.appendNonNull("poolDescription", pos.getPoolDescription());
     sb.appendNonNull("poolCreatedById", pos.getPoolCreatedById());
     sb.appendNonNull("poolCreated", pos.getPoolCreated());
+    sb.appendNonNull("analysisSkipped", pos.isAnalysisSkipped());
     sb.append("samples", getPositionSamplesString(pos));
     return sb.toString();
   }

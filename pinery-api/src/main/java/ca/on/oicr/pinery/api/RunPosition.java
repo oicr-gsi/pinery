@@ -32,4 +32,12 @@ public interface RunPosition {
    public Set<RunSample> getRunSample();
 
    public void setRunSample(Set<RunSample> setRunSample);
+
+   public String getQcStatus();
+   
+   public void setQcStatus(String qcStatus);
+   
+   public Boolean isAnalysisSkipped();
+   
+   public void setAnalysisSkipped(Boolean analysisSkipped);
 }

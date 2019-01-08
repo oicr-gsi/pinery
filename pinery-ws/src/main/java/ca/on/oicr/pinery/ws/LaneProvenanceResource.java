@@ -1,13 +1,9 @@
 package ca.on.oicr.pinery.ws;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.annotations.VisibleForTesting;
 
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
+import ca.on.oicr.pinery.lims.LimsLaneAttribute;
+import ca.on.oicr.pinery.lims.LimsSequencerRunAttribute;
+import ca.on.oicr.pinery.lims.SimpleLaneProvenance;
 import ca.on.oicr.pinery.service.LaneProvenanceService;
 import ca.on.oicr.pinery.ws.component.RestException;
 import ca.on.oicr.pinery.ws.util.MapBuilder;
@@ -42,15 +41,24 @@ import io.swagger.annotations.ApiResponses;
 public class LaneProvenanceResource {
 
   private static final VersionTransformer<LaneProvenance> noopTransformer = input -> input;
+  
+  private static final VersionTransformer<LaneProvenance> v1Transformer = input -> {
+    SimpleLaneProvenance modified = SimpleLaneProvenance.from(input);
+    modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.SEQUENCING_PARAMETERS.getKey());
+    modified.getLaneAttributes().remove(LimsLaneAttribute.QC_STATUS.getKey());
+    modified.setSkip(false);
+    return modified;
+  };
 
   @VisibleForTesting
   protected static final Map<String, VersionTransformer<LaneProvenance>> transformers //
       = new MapBuilder<String, VersionTransformer<LaneProvenance>>() //
           .put("latest", noopTransformer) //
-          .put("v1", noopTransformer) //
+          .put("v2", noopTransformer) //
+          .put("v1", v1Transformer) //
           .build();
   
-  private static final String versions = "latest, v1";
+  private static final String versions = "latest, v2, v1";
 
   @Autowired
   private LaneProvenanceService laneProvenanceService;
@@ -74,7 +82,7 @@ public class LaneProvenanceResource {
   @ApiOperation("Get latest version of all lane provenance records")
   @Deprecated
   public List<LaneProvenanceDto> getLanes() {
-    return getLanes("latest");
+    return getLanes("v1");
   }
   
 }

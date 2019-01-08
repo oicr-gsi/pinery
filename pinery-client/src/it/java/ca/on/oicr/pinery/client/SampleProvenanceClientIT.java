@@ -29,7 +29,7 @@ public class SampleProvenanceClientIT {
         ItProperties props = new ItProperties();
         pinery = props.getPineryClient();
 
-        sps = pinery.getSampleProvenance().latest();
+        sps = pinery.getSampleProvenance().version("v1");
         Collections.sort(sps, new Comparator<SampleProvenanceDto>() {
             @Override
             public int compare(SampleProvenanceDto o1, SampleProvenanceDto o2) {
