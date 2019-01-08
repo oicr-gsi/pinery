@@ -80,7 +80,7 @@ public class SampleProvenanceResource {
   @ApiOperation("Get latest version of all sample provenance records")
   @Deprecated
   public List<SampleProvenanceDto> getSamples() {
-    return getSamples("latest");
+    return getSamples("v1");
   }
   
 }

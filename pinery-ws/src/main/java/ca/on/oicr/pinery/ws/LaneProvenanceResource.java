@@ -82,7 +82,7 @@ public class LaneProvenanceResource {
   @ApiOperation("Get latest version of all lane provenance records")
   @Deprecated
   public List<LaneProvenanceDto> getLanes() {
-    return getLanes("latest");
+    return getLanes("v1");
   }
   
 }
