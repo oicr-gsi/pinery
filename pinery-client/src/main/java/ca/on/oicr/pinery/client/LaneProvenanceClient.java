@@ -25,7 +25,7 @@ public class LaneProvenanceClient extends ResourceClient<LaneProvenanceDto> {
      * @throws HttpResponseException on any HTTP Status other than 200 OK
      */
     public List<LaneProvenanceDto> version(String version) throws HttpResponseException {
-      return getResourceList("provenance/" + version + "/lane-provenance");
+      return getResourceList(version == null ? "provenance/lane-provenance" : "provenance/" + version + "/lane-provenance");
     }
 
 }
