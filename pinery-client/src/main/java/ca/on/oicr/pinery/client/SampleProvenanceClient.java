@@ -23,7 +23,7 @@ public class SampleProvenanceClient extends ResourceClient<SampleProvenanceDto> 
    * @throws HttpResponseException on any HTTP Status other than 200 OK
    */
   public List<SampleProvenanceDto> version(String version) throws HttpResponseException {
-    return getResourceList("provenance/" + version + "/sample-provenance");
+    return getResourceList(version == null ? "provenance/sample-provenance" : "provenance/" + version + "/sample-provenance");
   }
 
 }
