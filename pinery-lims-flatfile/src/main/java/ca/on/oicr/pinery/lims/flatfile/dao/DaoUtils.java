@@ -1,5 +1,8 @@
 package ca.on.oicr.pinery.lims.flatfile.dao;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +10,7 @@ import java.util.Map;
 
 import ca.on.oicr.pinery.lims.flatfile.dao.exception.NonUniqueKeyException;
 import ca.on.oicr.pinery.lims.flatfile.dao.exception.ParseException;
+import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
 
 /**
  * Static class that provides utility methods used by DAOs
@@ -151,6 +155,32 @@ public class DaoUtils {
     map.put(key, value);
     
     return map;
+  }
+  
+  public static boolean hasColumn(ResultSet rs, String columnName) throws SQLException {
+    ResultSetMetaData metadata = rs.getMetaData();
+    for (int i = 1; i <= metadata.getColumnCount(); i++) {
+      if (columnName.equals(metadata.getColumnName(i))) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  /**
+   * Gets a String from the ResultSet if the column exists and has a value. Useful to maintain backwards compatibility with flatfiles
+   * created with a previous version of Pinery-to-flatfile which may not have included the column in question
+   * 
+   * @param rs the ResultSet to check
+   * @param columnName the name of the column to check for
+   * @return the column value if the column is present and is not null or empty; otherwise null
+   * @throws SQLException
+   */
+  public static String getStringIfPresent(ResultSet rs, String columnName) throws SQLException {
+    if (!hasColumn(rs, columnName)) {
+      return null;
+    }
+    return ModelUtils.nullIfEmpty(rs.getString(columnName));
   }
   
 }

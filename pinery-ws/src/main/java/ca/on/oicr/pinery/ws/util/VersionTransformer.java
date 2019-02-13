@@ -1,7 +1,7 @@
 package ca.on.oicr.pinery.ws.util;
 
-public interface VersionTransformer<T> {
+public interface VersionTransformer<T, U extends T> {
 
-  public T transform(T original);
+  public U transform(T original);
 
 }

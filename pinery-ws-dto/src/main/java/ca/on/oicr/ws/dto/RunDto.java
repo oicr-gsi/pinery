@@ -32,6 +32,7 @@ public class RunDto {
    private String runDirectory;
    private String runBasesMask;
    private String sequencingParameters;
+   private String workflowType;
 
    public String getState() {
       return state;
@@ -216,7 +217,15 @@ public class RunDto {
     this.sequencingParameters = sequencingParameters;
   }
 
-@Override
+  public String getWorkflowType() {
+    return workflowType;
+  }
+
+  public void setWorkflowType(String workflowType) {
+    this.workflowType = workflowType;
+  }
+
+  @Override
   public String toString() {
     return "RunDto [state=" + state + ", name=" + name + ", barcode=" + barcode
         + ", instrumentName=" + instrumentName + ", positions=" + positions
@@ -227,7 +236,7 @@ public class RunDto {
         + ", modifiedById=" + modifiedById + ", modifiedByUrl=" + modifiedByUrl
         + ", modifiedDate=" + modifiedDate + ", runDirectory=" + runDirectory
         + ", runBasesMask=" + runBasesMask + ", sequencingParameters=" 
-        + sequencingParameters + "]";
+        + sequencingParameters + ", workflowType=" + workflowType + "]";
   }
 
   @Override
@@ -255,6 +264,7 @@ public class RunDto {
     result = prime * result + ((runDirectory == null) ? 0 : runDirectory.hashCode());
     result = prime * result + ((runBasesMask == null) ? 0 : runBasesMask.hashCode());
     result = prime * result + ((sequencingParameters == null) ? 0 : sequencingParameters.hashCode());
+    result = prime * result + ((workflowType == null) ? 0 : workflowType.hashCode());
     return result;
   }
 
@@ -357,6 +367,12 @@ public class RunDto {
       }
       else if (!sequencingParameters.equals(other.sequencingParameters))
         return false;
+    if (workflowType == null) {
+      if (other.workflowType != null)
+        return false;
+    }
+    else if (!workflowType.equals(other.workflowType))
+      return false;
     return true;
   }
 
