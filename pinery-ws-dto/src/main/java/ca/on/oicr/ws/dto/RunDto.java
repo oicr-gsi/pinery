@@ -217,6 +217,7 @@ public class RunDto {
     this.sequencingParameters = sequencingParameters;
   }
 
+  @JsonProperty("workflow_type")
   public String getWorkflowType() {
     return workflowType;
   }
