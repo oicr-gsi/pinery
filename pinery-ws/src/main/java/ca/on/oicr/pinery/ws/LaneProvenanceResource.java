@@ -40,10 +40,16 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = { "Lane Provenance" })
 public class LaneProvenanceResource {
 
-  private static final VersionTransformer<LaneProvenance> noopTransformer = input -> input;
+  private static final VersionTransformer<LaneProvenance, LaneProvenance> noopTransformer = input -> input;
   
-  private static final VersionTransformer<LaneProvenance> v1Transformer = input -> {
+  private static final VersionTransformer<LaneProvenance, SimpleLaneProvenance> v2Transformer = input -> {
     SimpleLaneProvenance modified = SimpleLaneProvenance.from(input);
+    modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.WORKFLOW_TYPE.getKey());
+    return modified;
+  };
+  
+  private static final VersionTransformer<LaneProvenance, SimpleLaneProvenance> v1Transformer = input -> {
+    SimpleLaneProvenance modified = v2Transformer.transform(input);
     modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.SEQUENCING_PARAMETERS.getKey());
     modified.getLaneAttributes().remove(LimsLaneAttribute.QC_STATUS.getKey());
     modified.setSkip(false);
@@ -51,14 +57,15 @@ public class LaneProvenanceResource {
   };
 
   @VisibleForTesting
-  protected static final Map<String, VersionTransformer<LaneProvenance>> transformers //
-      = new MapBuilder<String, VersionTransformer<LaneProvenance>>() //
+  protected static final Map<String, VersionTransformer<LaneProvenance, ? extends LaneProvenance>> transformers //
+      = new MapBuilder<String, VersionTransformer<LaneProvenance, ? extends LaneProvenance>>() //
           .put("latest", noopTransformer) //
-          .put("v2", noopTransformer) //
+          .put("v3", noopTransformer) //
+          .put("v2", v2Transformer) //
           .put("v1", v1Transformer) //
           .build();
   
-  private static final String versions = "latest, v2, v1";
+  private static final String versions = "latest, v3, v2, v1";
 
   @Autowired
   private LaneProvenanceService laneProvenanceService;
@@ -67,7 +74,7 @@ public class LaneProvenanceResource {
   @ApiOperation(value = "Get all lane provenance records", response = LaneProvenanceDto.class, responseContainer = "List")
   @ApiResponses({@ApiResponse(code = 404, message = "Provenance version not found")})
   public List<LaneProvenanceDto> getLanes(@ApiParam(allowableValues = versions) @PathVariable String version) {
-    VersionTransformer<LaneProvenance> transformer = transformers.get(version);
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = transformers.get(version);
     if (transformer == null) {
       throw new RestException(HttpStatus.NOT_FOUND, String.format("Provenance version '%s' not found", version));
     }
@@ -79,7 +86,7 @@ public class LaneProvenanceResource {
   }
   
   @GetMapping("/lane-provenance")
-  @ApiOperation("Get latest version of all lane provenance records")
+  @ApiOperation("Get version 1 of all lane provenance records")
   @Deprecated
   public List<LaneProvenanceDto> getLanes() {
     return getLanes("v1");

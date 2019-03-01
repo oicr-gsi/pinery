@@ -1,5 +1,7 @@
 package ca.on.oicr.pinery.lims.flatfile.dao;
 
+import static ca.on.oicr.pinery.lims.flatfile.dao.DaoUtils.getStringIfPresent;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -52,6 +54,7 @@ public class RunFileDao implements RunDao {
       r.setRunDirectory(ModelUtils.nullIfEmpty(rs.getString("runDirectory")));
       r.setRunBasesMask(ModelUtils.nullIfEmpty(rs.getString("runBasesMask")));
       r.setSequencingParameters(ModelUtils.nullIfEmpty(rs.getString("sequencingParameters")));
+      r.setWorkflowType(getStringIfPresent(rs, "workflowType"));
       
       r.setSample(parseRunPositions(rs.getString("positions")));
       

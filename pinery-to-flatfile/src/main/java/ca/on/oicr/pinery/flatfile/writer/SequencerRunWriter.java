@@ -27,6 +27,7 @@ public class SequencerRunWriter extends Writer {
     "runDirectory",
     "runBasesMask",
     "sequencingParameters",
+    "workflowType",
     "positions"
   };
   
@@ -66,6 +67,7 @@ public class SequencerRunWriter extends Writer {
         run.getRunDirectory(),
         run.getRunBasesMask(),
         run.getSequencingParameters(),
+        run.getWorkflowType(),
         getPositionsString(run)
     };
     

@@ -27,6 +27,7 @@ public class DefaultRun implements Run {
    private String runDirectory;
    private String runBasesMask;
    private String sequencingParameters;
+   private String workflowType;
 
    @Override
    public String getState() {
@@ -211,7 +212,17 @@ public class DefaultRun implements Run {
     this.sequencingParameters = sequencingParameters;
   }
 
-@Override
+  @Override
+  public String getWorkflowType() {
+    return workflowType;
+  }
+
+  @Override
+  public void setWorkflowType(String workflowType) {
+    this.workflowType = workflowType;
+  }
+
+  @Override
   public String toString() {
     return "DefaultRun [state=" + state + ", name=" + name + ", barcode="
         + barcode + ", barcodeTwo=" + barcodeTwo + ", sample=" + sample
@@ -221,7 +232,8 @@ public class DefaultRun implements Run {
         + readLength + ", startDate=" + startDate + ", completionDate="
         + completionDate + ", modified=" + modified + ", modifiedById="
         + modifiedById + ", runDirectory=" + runDirectory + ", runBasesMask="
-        + runBasesMask + ", sequencingParameters=" + sequencingParameters + "]";
+        + runBasesMask + ", sequencingParameters=" + sequencingParameters
+        + ", workflowType=" + workflowType + "]";
   }
 
   @Override
@@ -256,6 +268,7 @@ public class DefaultRun implements Run {
     result = prime * result + ((runDirectory == null) ? 0 : runDirectory.hashCode());
     result = prime * result + ((runBasesMask == null) ? 0 : runBasesMask.hashCode());
     result = prime * result + ((sequencingParameters == null) ? 0 : sequencingParameters.hashCode());
+    result = prime * result + ((workflowType == null) ? 0 : workflowType.hashCode());
     return result;
   }
 
@@ -381,6 +394,12 @@ public class DefaultRun implements Run {
         return false;
     }
     else if (!sequencingParameters.equals(other.sequencingParameters))
+      return false;
+    if (workflowType == null) {
+      if (other.workflowType != null)
+        return false;
+    }
+    else if (!workflowType.equals(other.workflowType))
       return false;
     return true;
   }

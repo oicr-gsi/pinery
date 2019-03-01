@@ -77,4 +77,8 @@ public interface Run {
    
    public void setSequencingParameters(String sequencingParameters);
    
+   public String getWorkflowType();
+   
+   public void setWorkflowType(String workflowType);
+   
 }

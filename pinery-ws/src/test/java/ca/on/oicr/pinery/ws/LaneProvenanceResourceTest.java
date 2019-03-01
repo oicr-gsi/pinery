@@ -124,7 +124,7 @@ public class LaneProvenanceResourceTest {
    */
   @Test
   public void testV1ProvenanceTransform() {
-    VersionTransformer<LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v1");
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v1");
     LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
     // This hash must never change
     assertEquals("0c342e4dd3f44daaa1c5920c3968e4fd6a803213a7a587cab0b15bb5762d1048", lp.getVersion());
@@ -132,10 +132,18 @@ public class LaneProvenanceResourceTest {
   
   @Test
   public void testV2ProvenanceTransform() {
-    VersionTransformer<LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v2");
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v2");
     LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
     // This hash must never change
     assertEquals("9ad4e9fdeb49b2254d91283ff380331757118bf71381a7a6851efc276910b658", lp.getVersion());
+  }
+  
+  @Test
+  public void testV3ProvenanceTransform() {
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v3");
+    LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
+    // This hash must never change
+    assertEquals("0b348aa6bb7755a301da710794afe9fe3b5ba097f4fa7e0cf0a70922078e4e95", lp.getVersion());
   }
   
   private LaneProvenance makeBaseLaneProvenance() {
@@ -214,6 +222,7 @@ public class LaneProvenanceResourceTest {
     r.setModified(makeDate("2018-11-01T10:36:34Z"));
     r.setModifiedById(3);
     r.setSequencingParameters("V4 2x126");
+    r.setWorkflowType("NovaSeqXp");
     return r;
   }
 

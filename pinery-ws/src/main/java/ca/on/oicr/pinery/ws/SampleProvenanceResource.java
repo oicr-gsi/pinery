@@ -36,10 +36,16 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = { "Sample Provenance" })
 public class SampleProvenanceResource {
 
-  private static final VersionTransformer<SampleProvenance> noopTransformer = input -> input;
+  private static final VersionTransformer<SampleProvenance, SampleProvenance> noopTransformer = input -> input;
   
-  private static final VersionTransformer<SampleProvenance> v1Transformer = input -> {
+  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v2Transformer = input -> {
     SimpleSampleProvenance modified = SimpleSampleProvenance.from(input);
+    modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.WORKFLOW_TYPE.getKey());
+    return modified;
+  };
+  
+  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v1Transformer = input -> {
+    SimpleSampleProvenance modified = v2Transformer.transform(input);
     modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.RUN_DIRECTORY.getKey());
     modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.RUN_BASES_MASK.getKey());
     modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.SEQUENCING_PARAMETERS.getKey());
@@ -49,14 +55,15 @@ public class SampleProvenanceResource {
   };
 
   @VisibleForTesting
-  protected static final Map<String, VersionTransformer<SampleProvenance>> transformers //
-      = new MapBuilder<String, VersionTransformer<SampleProvenance>>() //
+  protected static final Map<String, VersionTransformer<SampleProvenance, ? extends SampleProvenance>> transformers //
+      = new MapBuilder<String, VersionTransformer<SampleProvenance, ? extends SampleProvenance>>() //
           .put("latest", noopTransformer) //
-          .put("v2", noopTransformer) //
+          .put("v3", noopTransformer) //
+          .put("v2", v2Transformer) //
           .put("v1", v1Transformer) //
           .build();
   
-  private static final String versions = "latest, v2, v1";
+  private static final String versions = "latest, v3, v2, v1";
 
   @Autowired
   private SampleProvenanceService sampleProvenanceService;
@@ -65,7 +72,7 @@ public class SampleProvenanceResource {
   @ApiOperation(value = "Get all sample provenance records", response = SampleProvenanceDto.class, responseContainer = "List")
   @ApiResponses({@ApiResponse(code = 404, message = "Provenance version not found")})
   public List<SampleProvenanceDto> getSamples(@ApiParam(allowableValues = versions) @PathVariable String version) {
-    VersionTransformer<SampleProvenance> transformer = transformers.get(version);
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = transformers.get(version);
     if (transformer == null) {
       throw new RestException(HttpStatus.NOT_FOUND, String.format("Provenance version '%s' not found", version));
     }
@@ -77,7 +84,7 @@ public class SampleProvenanceResource {
   }
   
   @GetMapping("/sample-provenance")
-  @ApiOperation("Get latest version of all sample provenance records")
+  @ApiOperation("Get version 1 of all sample provenance records")
   @Deprecated
   public List<SampleProvenanceDto> getSamples() {
     return getSamples("v1");

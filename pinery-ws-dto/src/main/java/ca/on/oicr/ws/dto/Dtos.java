@@ -341,6 +341,9 @@ public final class Dtos {
       if (from.getSequencingParameters() != null) {
         dto.setSequencingParameters(from.getSequencingParameters());
       }
+      if (from.getWorkflowType() != null) {
+        dto.setWorkflowType(from.getWorkflowType());
+      }
       return dto;
    }
 
