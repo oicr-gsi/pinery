@@ -66,18 +66,20 @@ public class MisoClient implements Lims {
   private static final String queryInstrumentsByModelId = queryAllInstruments + " WHERE i.instrumentModelId = ?";
 
   // Order queries
-  private static final String queryAllOrders = "SELECT o.poolOrderId orderId, o.creationDate createdDate, o.createdBy createdById, "
-      + "o.lastUpdated modifiedDate, o.updatedBy modifiedById, pool.platformType platform " + "FROM PoolOrder o "
-      + "JOIN Pool pool ON pool.poolId = o.poolId ";
+  private static final String queryAllOrders = "SELECT o.sequencingOrderId orderId, o.creationDate createdDate, o.createdBy createdById, "
+      + "o.lastUpdated modifiedDate, o.updatedBy modifiedById, pool.platformType platform "
+      + "FROM SequencingOrder o "
+      + "JOIN Pool pool ON pool.poolId = o.poolId "
+      + "WHERE EXISTS(SELECT * FROM Pool_Dilution WHERE Pool_Dilution.pool_poolId = o.poolId)";
   private static final String queryOrderById = queryAllOrders + " WHERE poolOrderId = ?";
-  private static final String queryAllOrderSamples = "SELECT o.poolOrderId orderId\n" + 
+  private static final String queryAllOrderSamples = "SELECT o.sequencingOrderId orderId\n" + 
       "        ,lib.NAME libraryId\n" + 
       "        ,bc1.sequence barcode\n" + 
       "        ,bc2.sequence barcode_two\n" + 
       "        ,sp.paired paired\n" + 
       "        ,sp.readLength read_length\n" + 
       "        ,tr.alias targeted_sequencing\n" + 
-      "FROM PoolOrder o\n" + 
+      "FROM SequencingOrder o\n" + 
       "LEFT JOIN SequencingParameters sp ON sp.parametersId = o.parametersId\n" + 
       "LEFT JOIN Pool p ON p.poolId = o.poolId\n" + 
       "LEFT JOIN Pool_Dilution pe ON pe.pool_poolId = p.poolId\n" + 
