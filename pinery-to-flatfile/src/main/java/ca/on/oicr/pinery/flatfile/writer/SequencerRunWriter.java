@@ -88,6 +88,7 @@ public class SequencerRunWriter extends Writer {
     KeyValueStringBuilder sb = new KeyValueStringBuilder();
     sb.append("position", pos.getPosition().toString());
     sb.appendNonNull("poolName", pos.getPoolName());
+    sb.appendNonNull("poolId", pos.getPoolId());
     sb.appendNonNull("poolBarcode", pos.getPoolBarcode());
     sb.appendNonNull("poolDescription", pos.getPoolDescription());
     sb.appendNonNull("poolCreatedById", pos.getPoolCreatedById());

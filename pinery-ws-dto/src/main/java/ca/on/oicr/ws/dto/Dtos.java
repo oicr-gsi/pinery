@@ -359,6 +359,7 @@ public final class Dtos {
    public static RunDtoPosition asDto(RunPosition from) {
       RunDtoPosition dto = new RunDtoPosition();
       dto.setPosition(from.getPosition());
+      dto.setPoolId(from.getPoolId());
       dto.setPoolName(from.getPoolName());
       dto.setPoolBarcode(from.getPoolBarcode());
       dto.setPoolDescription(from.getPoolDescription());
