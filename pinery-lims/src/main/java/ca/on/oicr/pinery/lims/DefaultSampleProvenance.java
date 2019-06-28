@@ -332,7 +332,9 @@ public class DefaultSampleProvenance implements SampleProvenance {
 						sequencerRun == null ? null : sequencerRun.getModified(),
 						runSample == null ? null : runSample.getCreated(),
 						runSample == null ? null : runSample.getModified(), sample == null ? null : sample.getCreated(),
-						sample == null ? null : sample.getModified()),
+						sample == null ? null : sample.getModified(),
+						lane == null ? null : lane.getPoolCreated(),
+				    lane == null ? null : lane.getPoolModified()),
 						parentSamples == null ? Stream.empty()
 								: parentSamples.stream().flatMap(p -> Stream.of(p.getCreated(), p.getModified())))
 				.filter(Objects::nonNull).max(Date::compareTo));

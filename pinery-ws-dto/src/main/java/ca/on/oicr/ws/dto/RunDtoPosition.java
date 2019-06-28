@@ -19,6 +19,8 @@ public class RunDtoPosition {
    private String poolBarcode;
    private Integer poolCreatedById;
    private String poolCreated;
+   private Integer poolModifiedById;
+   private String poolModified;
    private String qcStatus;
    private Boolean analysisSkipped;
 
@@ -89,6 +91,24 @@ public class RunDtoPosition {
    
    public void setPoolCreated(String poolCreated) {
      this.poolCreated = poolCreated;
+   }
+
+   @JsonProperty("pool_modified_by_id")
+   public Integer getPoolModifiedById() {
+     return poolModifiedById;
+   }
+   
+   public void setPoolModifiedById(Integer poolModifiedById) {
+     this.poolModifiedById = poolModifiedById;
+   }
+   
+   @JsonProperty("pool_modified_date")
+   public String getPoolModified() {
+     return poolModified;
+   }
+   
+   public void setPoolModified(String poolModified) {
+     this.poolModified = poolModified;
    }
 
    @JsonProperty("qc_status")

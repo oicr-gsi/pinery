@@ -16,6 +16,8 @@ public class DefaultRunPosition implements RunPosition {
     result = prime * result + ((poolBarcode == null) ? 0 : poolBarcode.hashCode());
     result = prime * result + ((poolCreated == null) ? 0 : poolCreated.hashCode());
     result = prime * result + ((poolCreatedById == null) ? 0 : poolCreatedById.hashCode());
+    result = prime * result + ((poolModified == null) ? 0 : poolModified.hashCode());
+    result = prime * result + ((poolModifiedById == null) ? 0 : poolModifiedById.hashCode());
     result = prime * result + ((poolDescription == null) ? 0 : poolDescription.hashCode());
     result = prime * result + ((poolId == null) ? 0 : poolId.hashCode());
     result = prime * result + ((poolName == null) ? 0 : poolName.hashCode());
@@ -43,6 +45,12 @@ public class DefaultRunPosition implements RunPosition {
     if (poolCreatedById == null) {
       if (other.poolCreatedById != null) return false;
     } else if (!poolCreatedById.equals(other.poolCreatedById)) return false;
+    if (poolModified == null) {
+      if (other.poolModified != null) return false;
+    } else if (!poolModified.equals(other.poolModified)) return false;
+    if (poolModifiedById == null) {
+      if (other.poolModifiedById != null) return false;
+    } else if (!poolModifiedById.equals(other.poolModifiedById)) return false;
     if (poolDescription == null) {
       if (other.poolDescription != null) return false;
     } else if (!poolDescription.equals(other.poolDescription)) return false;
@@ -68,8 +76,8 @@ public class DefaultRunPosition implements RunPosition {
   public String toString() {
     return "DefaultRunPosition [runSample=" + runSample + ", position=" + position + ", poolId=" + poolId + ", poolName=" + poolName
         + ", poolDescription=" + poolDescription + ", poolBarcode=" + poolBarcode + ", poolCreatedById=" + poolCreatedById
-        + ", poolCreated=" + poolCreated + ", qcStatus=" + qcStatus + ", analysisSkipped=" + analysisSkipped + ", hashCode()="
-        + hashCode() + ", toString()=" + super.toString() + "]";
+        + ", poolCreated=" + poolCreated + ", poolModifiedById=" + poolModifiedById + ", poolModified=" + poolModified + ", qcStatus="
+        + qcStatus + ", analysisSkipped=" + analysisSkipped + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
   }
 
   private Set<RunSample> runSample;
@@ -80,6 +88,8 @@ public class DefaultRunPosition implements RunPosition {
   private String poolBarcode;
   private Integer poolCreatedById;
   private Date poolCreated;
+  private Integer poolModifiedById;
+  private Date poolModified;
   private String qcStatus;
   private Boolean analysisSkipped;
 
@@ -161,6 +171,26 @@ public class DefaultRunPosition implements RunPosition {
   @Override
   public void setPoolCreated(Date poolCreated) {
     this.poolCreated = poolCreated;
+  }
+
+  @Override
+  public Integer getPoolModifiedById() {
+    return poolModifiedById;
+  }
+
+  @Override
+  public void setPoolModifiedById(Integer poolModifiedById) {
+    this.poolModifiedById = poolModifiedById;
+  }
+
+  @Override
+  public Date getPoolModified() {
+    return poolModified;
+  }
+
+  @Override
+  public void setPoolModified(Date poolModified) {
+    this.poolModified = poolModified;
   }
 
   @Override

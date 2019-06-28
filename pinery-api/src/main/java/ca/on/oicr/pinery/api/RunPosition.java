@@ -32,6 +32,14 @@ public interface RunPosition {
    public Date getPoolCreated();
    
    public void setPoolCreated(Date poolCreated);
+   
+   public Integer getPoolModifiedById();
+   
+   public void setPoolModifiedById(Integer poolModifiedById);
+   
+   public Date getPoolModified();
+   
+   public void setPoolModified(Date poolModified);
 
    public Set<RunSample> getRunSample();
 
