@@ -17,6 +17,7 @@ public class DefaultRunPosition implements RunPosition {
     result = prime * result + ((poolCreated == null) ? 0 : poolCreated.hashCode());
     result = prime * result + ((poolCreatedById == null) ? 0 : poolCreatedById.hashCode());
     result = prime * result + ((poolDescription == null) ? 0 : poolDescription.hashCode());
+    result = prime * result + ((poolId == null) ? 0 : poolId.hashCode());
     result = prime * result + ((poolName == null) ? 0 : poolName.hashCode());
     result = prime * result + ((position == null) ? 0 : position.hashCode());
     result = prime * result + ((qcStatus == null) ? 0 : qcStatus.hashCode());
@@ -48,6 +49,9 @@ public class DefaultRunPosition implements RunPosition {
     if (poolName == null) {
       if (other.poolName != null) return false;
     } else if (!poolName.equals(other.poolName)) return false;
+    if (poolId == null) {
+      if (other.poolId != null) return false;
+    } else if (!poolId.equals(other.poolId)) return false;
     if (position == null) {
       if (other.position != null) return false;
     } else if (!position.equals(other.position)) return false;
@@ -62,14 +66,15 @@ public class DefaultRunPosition implements RunPosition {
 
   @Override
   public String toString() {
-    return "DefaultRunPosition [runSample=" + runSample + ", position=" + position + ", poolName=" + poolName + ", poolDescription="
-        + poolDescription + ", poolBarcode=" + poolBarcode + ", poolCreatedById=" + poolCreatedById + ", poolCreated=" + poolCreated
-        + ", qcStatus=" + qcStatus + ", analysisSkipped=" + analysisSkipped + ", hashCode()=" + hashCode() + ", toString()="
-        + super.toString() + "]";
+    return "DefaultRunPosition [runSample=" + runSample + ", position=" + position + ", poolId=" + poolId + ", poolName=" + poolName
+        + ", poolDescription=" + poolDescription + ", poolBarcode=" + poolBarcode + ", poolCreatedById=" + poolCreatedById
+        + ", poolCreated=" + poolCreated + ", qcStatus=" + qcStatus + ", analysisSkipped=" + analysisSkipped + ", hashCode()="
+        + hashCode() + ", toString()=" + super.toString() + "]";
   }
 
   private Set<RunSample> runSample;
   private Integer position;
+  private Integer poolId;
   private String poolName;
   private String poolDescription;
   private String poolBarcode;
@@ -96,6 +101,16 @@ public class DefaultRunPosition implements RunPosition {
   @Override
   public void setRunSample(Set<RunSample> runSample) {
     this.runSample = runSample;
+  }
+
+  @Override
+  public Integer getPoolId() {
+    return poolId;
+  }
+
+  @Override
+  public void setPoolId(Integer poolId) {
+    this.poolId = poolId;
   }
 
   @Override

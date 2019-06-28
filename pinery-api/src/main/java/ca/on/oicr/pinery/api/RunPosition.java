@@ -9,6 +9,10 @@ public interface RunPosition {
 
    public void setPosition(Integer position);
    
+   public Integer getPoolId();
+   
+   public void setPoolId(Integer poolId);
+   
    public String getPoolName();
    
    public void setPoolName(String poolName);
