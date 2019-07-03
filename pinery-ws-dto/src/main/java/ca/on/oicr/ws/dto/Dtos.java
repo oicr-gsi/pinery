@@ -365,6 +365,8 @@ public final class Dtos {
       dto.setPoolDescription(from.getPoolDescription());
       dto.setPoolCreatedById(from.getPoolCreatedById());
       if (from.getPoolCreated() != null) dto.setPoolCreated(format(from.getPoolCreated()));
+      dto.setPoolModifiedById(from.getPoolModifiedById());
+      if (from.getPoolModified() != null) dto.setPoolModified(format(from.getPoolModified()));
       if (from.getRunSample() != null && !from.getRunSample().isEmpty()) {
          dto.setSamples(asDto3(from.getRunSample()));
       }

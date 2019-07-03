@@ -141,7 +141,10 @@ public class DefaultLaneProvenance implements LaneProvenance {
     	return Util.optionalDateToZDT(Stream.of
     			(sequencerRun.getCreatedDate(),
                     sequencerRun.getCompletionDate(),
-                    sequencerRun.getModified()).filter(Objects::nonNull).max(Date::compareTo));
+                    sequencerRun.getModified(),
+                    lane == null ? null : lane.getPoolCreated(),
+                    lane == null ? null : lane.getPoolModified())
+    			.filter(Objects::nonNull).max(Date::compareTo));
     }
 
     @Override
