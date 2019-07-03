@@ -10,11 +10,11 @@ public class NonSampleTypeConverterTest {
   public void testGetSampleType() throws Exception {
     // No library design code
     assertEquals("Illumina PE Library", NonSampleTypeConverter.getNonSampleSampleType("Library", "ILLUMINA", "Paired End"));
-    assertEquals("Illumina PE Library Seq", NonSampleTypeConverter.getNonSampleSampleType("Dilution", "ILLUMINA", "Paired End"));
+    assertEquals("Illumina PE Library Seq", NonSampleTypeConverter.getNonSampleSampleType("Library Aliquot", "ILLUMINA", "Paired End"));
     
     // matching library type and design code
     assertEquals("Illumina WT Library", NonSampleTypeConverter.getNonSampleSampleType("Library", "ILLUMINA", "Whole Transcriptome"));
-    assertEquals("Illumina WT Library Seq", NonSampleTypeConverter.getNonSampleSampleType("Dilution", "ILLUMINA", "Whole Transcriptome"));
+    assertEquals("Illumina WT Library Seq", NonSampleTypeConverter.getNonSampleSampleType("Library Aliquot", "ILLUMINA", "Whole Transcriptome"));
   }
 
   @Test

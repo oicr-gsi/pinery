@@ -53,7 +53,7 @@ public class MisoClient implements Lims {
 
   private static final String MISO_SAMPLE_ID_PREFIX = "SAM";
   private static final String MISO_LIBRARY_ID_PREFIX = "LIB";
-  private static final String MISO_DILUTION_ID_PREFIX = "LDI";
+  private static final String MISO_LIBRARY_ALIQUOT_ID_PREFIX = "LDI";
 
   // @formatter:off
   // InstrumentModel queries
@@ -70,7 +70,7 @@ public class MisoClient implements Lims {
       + "o.lastUpdated modifiedDate, o.updatedBy modifiedById, pool.platformType platform "
       + "FROM SequencingOrder o "
       + "JOIN Pool pool ON pool.poolId = o.poolId "
-      + "WHERE EXISTS(SELECT * FROM Pool_Dilution WHERE Pool_Dilution.pool_poolId = o.poolId)";
+      + "WHERE EXISTS(SELECT * FROM Pool_LibraryAliquot WHERE Pool_LibraryAliquot.poolId = o.poolId)";
   private static final String queryOrderById = queryAllOrders + " WHERE poolOrderId = ?";
   private static final String queryAllOrderSamples = "SELECT o.sequencingOrderId orderId\n" + 
       "        ,lib.NAME libraryId\n" + 
@@ -82,10 +82,10 @@ public class MisoClient implements Lims {
       "FROM SequencingOrder o\n" + 
       "LEFT JOIN SequencingParameters sp ON sp.parametersId = o.parametersId\n" + 
       "LEFT JOIN Pool p ON p.poolId = o.poolId\n" + 
-      "LEFT JOIN Pool_Dilution pe ON pe.pool_poolId = p.poolId\n" + 
-      "LEFT JOIN LibraryDilution ld ON ld.dilutionId = pe.dilution_dilutionId\n" + 
+      "LEFT JOIN Pool_LibraryAliquot pe ON pe.poolId = p.poolId\n" + 
+      "LEFT JOIN LibraryAliquot ld ON ld.aliquotId = pe.aliquotId\n" + 
       "LEFT JOIN TargetedSequencing tr ON tr.targetedSequencingId = ld.targetedSequencingId\n" + 
-      "LEFT JOIN Library lib ON lib.libraryId = ld.library_libraryId\n" + 
+      "LEFT JOIN Library lib ON lib.libraryId = ld.libraryId\n" + 
       "LEFT JOIN (\n" + 
       "        SELECT library_libraryId\n" + 
       "                ,sequence\n" + 
@@ -130,9 +130,9 @@ public class MisoClient implements Lims {
       + "bc2.sequence barcode_two, tr.alias targeted_sequencing "
       + "FROM _Partition part "
       + "JOIN Pool pool ON pool.poolId = part.pool_poolId "
-      + "JOIN Pool_Dilution ele ON ele.pool_poolId = pool.poolId "
-      + "JOIN LibraryDilution ld ON ld.dilutionId = ele.dilution_dilutionId "
-      + "JOIN Library l ON l.libraryId = ld.library_libraryId "
+      + "JOIN Pool_LibraryAliquot ele ON ele.poolId = pool.poolId "
+      + "JOIN LibraryAliquot ld ON ld.aliquotId = ele.aliquotId "
+      + "JOIN Library l ON l.libraryId = ld.libraryId "
       + "LEFT JOIN TargetedSequencing tr ON tr.targetedSequencingId = ld.targetedSequencingId " + "LEFT JOIN ( "
       + "SELECT library_libraryId, sequence FROM Library_Index "
       + "JOIN Indices ON Indices.indexId = Library_Index.index_indexId "
@@ -236,7 +236,7 @@ public class MisoClient implements Lims {
       "        WHERE QCType.NAME = 'Human qPCR'\n" + 
       "        ) qpcr ON qpcr.sample_sampleId = s.sampleId\n" + 
       "LEFT JOIN BoxPosition pos ON pos.targetId = s.sampleId\n" + 
-      "        AND pos.targetType LIKE 'Sample%'\n" +
+      "        AND pos.targetType = 'SAMPLE'\n" +
       "LEFT JOIN Box box ON box.boxId = pos.boxId\n" + 
       "\n" + 
       "UNION\n" + 
@@ -319,7 +319,7 @@ public class MisoClient implements Lims {
       "                WHERE position = 2\n" + 
       "        ) bc2 ON bc2.library_libraryId = l.libraryId\n" + 
       "LEFT JOIN BoxPosition pos ON pos.targetId = l.libraryId\n" + 
-      "        AND pos.targetType LIKE 'Library%'\n" +
+      "        AND pos.targetType = 'LIBRARY'\n" +
       "LEFT JOIN Box box ON box.boxId = pos.boxId\n" + 
       "LEFT JOIN (SELECT libraryId, MAX(changeTime) as lastUpdated from LibraryChangeLog GROUP BY libraryId) lcl\n" +
       "        ON lai.libraryId = lcl.libraryId\n" +
@@ -376,15 +376,18 @@ public class MisoClient implements Lims {
       "        ,NULL paired\n" + 
       "        ,NULL readLength\n" + 
       "        ,ts.alias targeted_sequencing\n" + 
-      "        ,'Dilution' miso_type\n" + 
+      "        ,'Library Aliquot' miso_type\n" + 
       "        ,d.preMigrationId premigration_id\n" + 
       "        ,NULL organism\n" + 
-      "FROM LibraryDilution d\n" + 
-      "JOIN Library parent ON parent.libraryId = d.library_libraryId\n" + 
+      "FROM LibraryAliquot d\n" + 
+      "JOIN Library parent ON parent.libraryId = d.libraryId\n" + 
       "JOIN LibraryType lt ON lt.libraryTypeId = parent.libraryType\n" + 
       "LEFT JOIN DetailedLibrary lai ON lai.libraryId = parent.libraryId\n" +
       "LEFT JOIN LibraryDesignCode ldc ON lai.libraryDesignCodeId = ldc.libraryDesignCodeId\n" +
       "LEFT JOIN TargetedSequencing ts ON d.targetedSequencingId = ts.targetedSequencingId\n" +
+      "LEFT JOIN BoxPosition pos ON pos.targetId = d.aliquotId" +
+      "        AND pos.targetType = 'LIBRARY_ALIQUOT'\n" +
+      "LEFT JOIN Box box ON box.boxId = pos.boxId" +
       "JOIN Sample s ON s.sampleId = parent.sample_sampleId\n" + 
       "JOIN Project p ON p.projectId = s.project_projectId";
   private static final String querySampleById = "SELECT * FROM (" + queryAllSamples + ") combined " + "WHERE id = ?";
@@ -433,15 +436,15 @@ public class MisoClient implements Lims {
       "UNION\n" + 
       "\n" + 
       "SELECT NULL NAME\n" + 
-      "        ,'Dilution' miso_type\n" + 
+      "        ,'Library Aliquot' miso_type\n" + 
       "        ,lt.platformType sampleType_platform\n" + 
       "        ,lt.description sampleType_description\n" + 
       "        ,COUNT(*) count\n" + 
       "        ,0 archivedCount\n" + 
       "        ,MIN(d.creationDate) earliest\n" + 
       "        ,MAX(d.lastUpdated) latest\n" + 
-      "FROM LibraryDilution d\n" + 
-      "JOIN Library l ON l.libraryId = d.library_libraryId\n" + 
+      "FROM LibraryAliquot d\n" + 
+      "JOIN Library l ON l.libraryId = d.libraryId\n" + 
       "JOIN LibraryType lt ON lt.libraryTypeId = l.libraryType\n" + 
       "GROUP BY l.libraryType";
 
@@ -515,7 +518,7 @@ public class MisoClient implements Lims {
       try {
         Integer.parseInt(id.substring(3, id.length()));
         switch (id.substring(0, 3)) {
-        case MISO_SAMPLE_ID_PREFIX: case MISO_LIBRARY_ID_PREFIX: case MISO_DILUTION_ID_PREFIX:
+        case MISO_SAMPLE_ID_PREFIX: case MISO_LIBRARY_ID_PREFIX: case MISO_LIBRARY_ALIQUOT_ID_PREFIX:
           return;
         }
       } catch (NumberFormatException e) {
