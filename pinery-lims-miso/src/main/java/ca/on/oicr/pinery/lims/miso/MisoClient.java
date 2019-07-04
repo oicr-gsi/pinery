@@ -387,7 +387,7 @@ public class MisoClient implements Lims {
       "LEFT JOIN TargetedSequencing ts ON d.targetedSequencingId = ts.targetedSequencingId\n" +
       "LEFT JOIN BoxPosition pos ON pos.targetId = d.aliquotId" +
       "        AND pos.targetType = 'LIBRARY_ALIQUOT'\n" +
-      "LEFT JOIN Box box ON box.boxId = pos.boxId" +
+      "LEFT JOIN Box box ON box.boxId = pos.boxId\n" +
       "JOIN Sample s ON s.sampleId = parent.sample_sampleId\n" + 
       "JOIN Project p ON p.projectId = s.project_projectId";
   private static final String querySampleById = "SELECT * FROM (" + queryAllSamples + ") combined " + "WHERE id = ?";
