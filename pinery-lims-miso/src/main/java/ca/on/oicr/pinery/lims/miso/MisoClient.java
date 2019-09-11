@@ -76,7 +76,7 @@ public class MisoClient implements Lims {
       "        ,lib.NAME libraryId\n" + 
       "        ,bc1.sequence barcode\n" + 
       "        ,bc2.sequence barcode_two\n" + 
-      "        ,sp.paired paired\n" + 
+      "        ,sp.readLength2 != 0 paired\n" + 
       "        ,sp.readLength read_length\n" + 
       "        ,tr.alias targeted_sequencing\n" + 
       "FROM SequencingOrder o\n" + 
@@ -107,7 +107,7 @@ public class MisoClient implements Lims {
   // Run queries
   private static final String queryAllRuns = "SELECT DISTINCT r.alias, r.instrumentId AS instrumentId, "
       + "r.runId, r.filePath, r.health, r.startDate, r.completionDate, spc.identificationBarcode, createLog.userId, "
-      + "createLog.changeTime, updateLog.userId, updateLog.changeTime, sp.paired paired, sp.readLength read_length " + "FROM Run AS r "
+      + "createLog.changeTime, updateLog.userId, updateLog.changeTime, sp.readLength2 != 0 paired, sp.readLength read_length " + "FROM Run AS r "
       + "LEFT JOIN SequencingParameters AS sp ON sp.parametersId = r.sequencingParameters_parametersId "
       + "LEFT JOIN Run_SequencerPartitionContainer AS rscp ON rscp.Run_runId = r.runId "
       + "LEFT JOIN SequencerPartitionContainer AS spc ON spc.containerId = rscp.containers_containerId "
