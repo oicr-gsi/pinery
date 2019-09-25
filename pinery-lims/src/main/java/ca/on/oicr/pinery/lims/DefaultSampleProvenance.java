@@ -250,6 +250,15 @@ public class DefaultSampleProvenance implements SampleProvenance {
     }
 
     @Override
+    public String getSequencerRunPlatform() {
+        if (instrumentModel == null) {
+            return null;
+        } else {
+            return instrumentModel.getPlatform();
+        }
+    }
+
+    @Override
     public String getLaneNumber() {
         if (lane == null) {
             return null;

@@ -8,6 +8,7 @@ public class DefaultInstrumentModel implements InstrumentModel {
 
    private Integer id;
    private String name;
+   private String platform;
    private Date created;
    private Integer createdById;
    private Date modified;
@@ -23,6 +24,12 @@ public class DefaultInstrumentModel implements InstrumentModel {
    }
    public void setName(String name) {
       this.name = name;
+   }
+   public String getPlatform() {
+      return platform;
+   }
+   public void setPlatform(String platform) {
+      this.platform = platform;
    }
    public Date getCreated() {
       return created;

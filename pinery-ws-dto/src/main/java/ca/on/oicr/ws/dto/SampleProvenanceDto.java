@@ -28,6 +28,7 @@ public class SampleProvenanceDto implements SampleProvenance {
     private String sequencerRunName;
     private SortedMap<String, SortedSet<String>> sequencerRunAttributes;
     private String sequencerRunPlatformModel;
+    private String sequencerRunPlatform;
     private String laneNumber;
     private SortedMap<String, SortedSet<String>> laneAttributes;
     private String iusTag;
@@ -116,6 +117,15 @@ public class SampleProvenanceDto implements SampleProvenance {
 
     public void setSequencerRunPlatformModel(String sequencerRunPlatformModel) {
         this.sequencerRunPlatformModel = sequencerRunPlatformModel;
+    }
+
+    @Override
+    public String getSequencerRunPlatform() {
+        return sequencerRunPlatform;
+    }
+
+    public void setSequencerRunPlatform(String sequencerRunPlatform) {
+        this.sequencerRunPlatform = sequencerRunPlatform;
     }
 
     @Override

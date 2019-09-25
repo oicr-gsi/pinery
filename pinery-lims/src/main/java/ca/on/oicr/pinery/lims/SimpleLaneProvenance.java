@@ -18,6 +18,7 @@ public class SimpleLaneProvenance implements LaneProvenance {
   private SortedMap<String, SortedSet<String>> laneAttributes;
   private String sequencerRunName;
   private String sequencerRunPlatformModel;
+  private String sequencerRunPlatform;
   private SortedMap<String, SortedSet<String>> sequencerRunAttributes;
   private ZonedDateTime createdDate;
   private ZonedDateTime lastModified;
@@ -31,6 +32,7 @@ public class SimpleLaneProvenance implements LaneProvenance {
     to.setLaneAttributes(from.getLaneAttributes());
     to.setSequencerRunName(from.getSequencerRunName());
     to.setSequencerRunPlatformModel(from.getSequencerRunPlatformModel());
+    to.setSequencerRunPlatform(from.getSequencerRunPlatform());
     to.setSequencerRunAttributes(from.getSequencerRunAttributes());
     to.setCreatedDate(from.getCreatedDate());
     to.setLastModified(from.getLastModified());
@@ -125,9 +127,18 @@ public class SimpleLaneProvenance implements LaneProvenance {
   public String getSequencerRunPlatformModel() {
     return sequencerRunPlatformModel;
   }
-  
+
   public void setSequencerRunPlatformModel(String sequencerRunPlatformModel) {
     this.sequencerRunPlatformModel = sequencerRunPlatformModel;
+  }
+
+  @Override
+  public String getSequencerRunPlatform() {
+    return sequencerRunPlatform;
+  }
+  
+  public void setSequencerRunPlatform(String sequencerRunPlatform) {
+    this.sequencerRunPlatform = sequencerRunPlatform;
   }
 
   @Override

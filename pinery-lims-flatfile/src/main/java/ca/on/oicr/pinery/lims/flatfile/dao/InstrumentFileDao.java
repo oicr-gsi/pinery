@@ -16,7 +16,7 @@ import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
 
 public class InstrumentFileDao implements InstrumentDao {
   
-  private static final String queryAllModels = "SELECT DISTINCT modelId, modelName," +
+  private static final String queryAllModels = "SELECT DISTINCT modelId, modelName, platform," +
       " modelCreatedDate AS createdDate, modelCreatedUserId AS createdUserId," +
       " modelModifiedDate AS modifiedDate, modelModifiedUserId AS modifiedUserId" +
       " FROM instruments";
@@ -41,6 +41,7 @@ public class InstrumentFileDao implements InstrumentDao {
       
       m.setId(rs.getInt("modelId"));
       m.setName(rs.getString("modelName"));
+      m.setPlatform(rs.getString("platform"));
       m.setCreated(ModelUtils.convertToDate(rs.getString("createdDate")));
       m.setCreatedById(ModelUtils.nullIfZero(rs.getInt("createdUserId")));
       m.setModified(ModelUtils.convertToDate(rs.getString("modifiedDate")));

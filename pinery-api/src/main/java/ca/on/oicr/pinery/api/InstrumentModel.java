@@ -12,6 +12,10 @@ public interface InstrumentModel {
 
 	public void setName(String name);
 
+	public String getPlatform();
+
+	public void setPlatform(String platform);
+
 	public Date getCreated();
 
 	public void setCreated(Date created);

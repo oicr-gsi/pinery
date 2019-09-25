@@ -11,6 +11,7 @@ public class InstrumentModelDto {
 
    private String url;
    private String name;
+   private String platform;
    private String createdDate;
    private Integer createdById;
    private String createdByUrl;
@@ -34,6 +35,14 @@ public class InstrumentModelDto {
 
    public void setName(String name) {
       this.name = name;
+   }
+
+   public String getPlatform() {
+      return platform;
+   }
+
+   public void setPlatform(String platform) {
+      this.platform = platform;
    }
 
    @JsonProperty("created_date")

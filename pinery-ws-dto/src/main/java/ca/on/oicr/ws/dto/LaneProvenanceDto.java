@@ -22,6 +22,7 @@ public class LaneProvenanceDto implements LaneProvenance {
     private String sequencerRunName;
     private SortedMap<String, SortedSet<String>> sequencerRunAttributes;
     private String sequencerRunPlatformModel;
+    private String sequencerRunPlatform;
     private String laneNumber;
     private SortedMap<String, SortedSet<String>> laneAttributes;
     private Boolean skip;
@@ -53,8 +54,17 @@ public class LaneProvenanceDto implements LaneProvenance {
         return sequencerRunPlatformModel;
     }
 
-    public void setSequencerRunPlatformModel(String sequencerRunPlatformModel) {
+   public void setSequencerRunPlatformModel(String sequencerRunPlatformModel) {
         this.sequencerRunPlatformModel = sequencerRunPlatformModel;
+    }
+
+    @Override
+    public String getSequencerRunPlatform() {
+        return sequencerRunPlatform;
+    }
+
+    public void setSequencerRunPlatform(String sequencerRunPlatform) {
+        this.sequencerRunPlatform = sequencerRunPlatform;
     }
 
     @Override
