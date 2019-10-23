@@ -23,9 +23,18 @@ public class KeyValueStringBuilder {
     if (hasFirstPair) {
       sb.append('|');
     }
-    sb.append(key).append('=').append(value);
+    sb.append(key).append('=').append(escapeValue(value));
     hasFirstPair = true;
     return this;
+  }
+  
+  private String escapeValue(String original) {
+    return original.replace("{", "\\{")
+    		.replace("}", "\\}")
+    		.replace("[", "\\[")
+    		.replace("]", "\\]")
+    		.replace("|", "\\|")
+    		.replace("\\", "\\\\");
   }
   
   /**

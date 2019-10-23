@@ -6,7 +6,7 @@ package ca.on.oicr.pinery.flatfile.util;
 public class ArrayStringBuilder {
   
   private final StringBuilder sb = new StringBuilder();
-  private boolean hasFirstPair = false;
+  private boolean hasFirstItem = false;
   
   public ArrayStringBuilder() {
     // Default constructor
@@ -19,11 +19,11 @@ public class ArrayStringBuilder {
    * @return this same ArrayStringBuilder, to allow chaining
    */
   public ArrayStringBuilder append(String item) {
-    if (hasFirstPair) {
+    if (hasFirstItem) {
       sb.append(',');
     }
     sb.append(item);
-    hasFirstPair = true;
+    hasFirstItem = true;
     return this;
   }
   

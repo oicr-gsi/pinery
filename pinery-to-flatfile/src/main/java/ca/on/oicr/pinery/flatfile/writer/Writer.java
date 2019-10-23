@@ -39,9 +39,20 @@ public abstract class Writer {
       writer.writeNext(getHeaders());
       
       for (int i = 0, count = getRecordCount(); i < count; i++) {
-        writer.writeNext(getRecord(i));
+        String[] record = getRecord(i);
+        for (int j = 0; j < record.length; j++) {
+          record[j] = cleanString(record[j]);
+        }
+        writer.writeNext(record);
       }
     }
+  }
+  
+  private static String cleanString(String original) {
+    if (original == null) {
+      return null;
+    }
+    return original.replaceAll("(\\r\\n|\\r|\\n)+", " ").trim();
   }
   
 }
