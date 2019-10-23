@@ -17,6 +17,7 @@ import com.google.common.annotations.VisibleForTesting;
 
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.lims.LimsLaneAttribute;
+import ca.on.oicr.pinery.lims.LimsSampleAttribute;
 import ca.on.oicr.pinery.lims.LimsSequencerRunAttribute;
 import ca.on.oicr.pinery.lims.SimpleSampleProvenance;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
@@ -38,8 +39,14 @@ public class SampleProvenanceResource {
 
   private static final VersionTransformer<SampleProvenance, SampleProvenance> noopTransformer = input -> input;
   
-  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v2Transformer = input -> {
+  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v3Transformer = input -> {
     SimpleSampleProvenance modified = SimpleSampleProvenance.from(input);
+    modified.getSampleAttributes().remove(LimsSampleAttribute.UMIS.toString());
+    return modified;
+  };
+  
+  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v2Transformer = input -> {
+    SimpleSampleProvenance modified = v3Transformer.transform(input);
     modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.WORKFLOW_TYPE.getKey());
     return modified;
   };
@@ -58,12 +65,13 @@ public class SampleProvenanceResource {
   protected static final Map<String, VersionTransformer<SampleProvenance, ? extends SampleProvenance>> transformers //
       = new MapBuilder<String, VersionTransformer<SampleProvenance, ? extends SampleProvenance>>() //
           .put("latest", noopTransformer) //
-          .put("v3", noopTransformer) //
+          .put("v4", noopTransformer) //
+          .put("v3", v3Transformer) //
           .put("v2", v2Transformer) //
           .put("v1", v1Transformer) //
           .build();
   
-  private static final String versions = "latest, v3, v2, v1";
+  private static final String versions = "latest, v4, v3, v2, v1";
 
   @Autowired
   private SampleProvenanceService sampleProvenanceService;

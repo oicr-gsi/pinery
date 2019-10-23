@@ -34,7 +34,8 @@ public enum LimsSampleAttribute {
     PURPOSE("geo_purpose", "Purpose"),
     QPCR_PERCENTAGE_HUMAN("geo_qpcr_percentage_human", "qPCR %"),
     SUBPROJECT("subproject", "Subproject", "Sub-project"),
-    INSTITUTE("institute", "Institute");
+    INSTITUTE("institute", "Institute"),
+    UMIS("umis", "UMIs");
 
     private final Set<String> inputTerms;
     private final String outputTerm;
