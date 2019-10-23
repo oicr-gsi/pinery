@@ -12,9 +12,11 @@ public class DefaultInstrumentModel implements InstrumentModel {
    private Integer createdById;
    private Date modified;
    private Integer modifiedById;
+   private String platform;
    public Integer getId() {
       return id;
    }
+
    public void setId(Integer id) {
       this.id = id;
    }
@@ -48,6 +50,10 @@ public class DefaultInstrumentModel implements InstrumentModel {
    public void setModifiedById(Integer modifiedById) {
       this.modifiedById = modifiedById;
    }
-   
- 
+   public String getPlatform() {
+      return platform;
+   }
+   public void setPlatform(String platform) {
+      this.platform = platform;
+   }
 }

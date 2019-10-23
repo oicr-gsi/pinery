@@ -462,6 +462,9 @@ public final class Dtos {
       if (from.getModifiedById() != null) {
         dto.setModifiedById(from.getModifiedById());
       }
+      if (from.getPlatform() != null) {
+         dto.setPlatform(from.getPlatform());
+      }
       return dto;
    }
 

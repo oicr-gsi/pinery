@@ -18,7 +18,7 @@ public class InstrumentFileDao implements InstrumentDao {
   
   private static final String queryAllModels = "SELECT DISTINCT modelId, modelName," +
       " modelCreatedDate AS createdDate, modelCreatedUserId AS createdUserId," +
-      " modelModifiedDate AS modifiedDate, modelModifiedUserId AS modifiedUserId" +
+      " modelModifiedDate AS modifiedDate, modelModifiedUserId AS modifiedUserId, modelPlatform AS platform" +
       " FROM instruments";
   
   private static final String queryModelById = queryAllModels +
@@ -41,11 +41,12 @@ public class InstrumentFileDao implements InstrumentDao {
       
       m.setId(rs.getInt("modelId"));
       m.setName(rs.getString("modelName"));
+      m.setPlatform(rs.getString("platform"));
       m.setCreated(ModelUtils.convertToDate(rs.getString("createdDate")));
       m.setCreatedById(ModelUtils.nullIfZero(rs.getInt("createdUserId")));
       m.setModified(ModelUtils.convertToDate(rs.getString("modifiedDate")));
       m.setModifiedById(ModelUtils.nullIfZero(rs.getInt("modifiedUserId")));
-      
+
       return m;
     }
     

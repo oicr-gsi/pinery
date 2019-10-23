@@ -27,4 +27,8 @@ public interface InstrumentModel {
 	public Integer getModifiedById();
 
 	public void setModifiedById(Integer modifiedById);
+
+	public void setPlatform(String platform);
+
+	public String getPlatform();
 }
