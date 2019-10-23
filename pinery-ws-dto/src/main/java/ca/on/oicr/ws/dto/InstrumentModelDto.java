@@ -19,10 +19,12 @@ public class InstrumentModelDto {
    private String modifiedByUrl;
    private String instrumentsUrl;
    private Integer id;
+   private String platform;
 
    public String getUrl() {
       return url;
    }
+
 
    public void setUrl(String url) {
       this.url = url;
@@ -107,4 +109,11 @@ public class InstrumentModelDto {
       this.modifiedById = modifiedById;
    }
 
+   public String getPlatform() {
+      return platform;
+   }
+
+   public void setPlatform(String platform) {
+      this.platform = platform;
+   }
 }

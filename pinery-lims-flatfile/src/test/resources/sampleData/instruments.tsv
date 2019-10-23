@@ -1,5 +1,5 @@
-id	name	createdDate	modelId	modelName	modelCreatedDate	modelCreatedUserId	modelModifiedDate	modelModifiedUserId
-1	s001		1	SOLiD				1
-2	s002		1	SOLiD				1
-3	h001		2	HiSeq				1
-4	h002		2	HiSeq				1
+id	name	createdDate	modelId	modelName	modelPlatform	modelCreatedDate	modelCreatedUserId	modelModifiedDate	modelModifiedUserId
+1	s001		1	SOLiD	SOLID				1
+2	s002		1	SOLiD	SOLID				1
+3	h001		2	HiSeq	ILLUMINA				1
+4	h002		2	HiSeq	ILLUMINA				1
