@@ -167,6 +167,14 @@ public class SampleProvenanceResourceTest {
     // This hash must never change
     assertEquals("7cbb2609e0a387d90d8a3a754dcd131f7f013aa6df9d74a21c70a39b3b4330af", sp.getVersion());
   }
+  
+  @Test
+  public void testV4ProvenanceTransform() {
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v4");
+    SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
+    // This hash must never change
+    assertEquals("6afbb7e2e805eb185702d59b40c191600f5e4ae28f8283d20884552a43b31576", sp.getVersion());
+  }
 
   private SampleProvenance makeBaseSampleProvenance() {
     DefaultSampleProvenance sp = new DefaultSampleProvenance();
@@ -234,6 +242,7 @@ public class SampleProvenanceResourceTest {
     attrs.add(makeAttribute("qPCR %", "50"));
     attrs.add(makeAttribute("Subproject", "Sub"));
     attrs.add(makeAttribute("Institute", "Institute"));
+    attrs.add(makeAttribute("UMIs", "True"));
     s.setAttributes(attrs);
 
     return s;
