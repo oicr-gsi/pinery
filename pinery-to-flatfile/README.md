@@ -1,7 +1,7 @@
 # Pinery-to-Flatfile Exporter
 
-This is a small Java app for reading all LIMS data from a Pinery service and writing it to flat files. The flat files are compatible 
-for use in a flatfile-sourced Pinery service.
+This is a small Java app for reading all LIMS data from a Pinery service and writing it to flat files. The flat files
+are compatible for use in a flatfile-sourced Pinery service.
 
 ## Build
 
@@ -19,8 +19,8 @@ for use in a flatfile-sourced Pinery service.
 
 ## File Format
 
-Output files are tab-separated value (tsv) files, for the most part. Additional patterns are used to represent lists and key:value 
-pairs within a field.
+Output files are tab-separated value (tsv) files, for the most part. Additional patterns are used to represent lists
+and key:value pairs within a field.
 
 ### Lists
 
@@ -32,9 +32,10 @@ List elements may be integers or key:value pair sets. All elements in a list mus
 
 ### Key:Value Pairs
 
-A set of pairs is contained within curly braces ({}). Pairs are separated by pipes (|), and a pair is in the format *key=value*. Example:
+A set of pairs is contained within curly braces ({}). Pairs are separated by pipes (|), and a pair is in the format
+*key=value*. The characters "{}[]|\\" are escaped with a single backslash (\\) in the value. Example:
 
-    {key1=Abc|key2=123}
+    {key1=Abc|key2=1\{2\}3}
 
 Key:value pair sets may be the elements in a list. The value in a key:value pair may also be a list.
 
@@ -64,7 +65,7 @@ Contains all sample data. Fields:
 | volume | Float |  |
 | concentration |  |
 | preparationKit | key:value set | possible keys: 'name' and 'description' |
-| attributes | key:value set | Any additional sample attributes. Attribute names are used as the keys | 
+| attributes | key:value set | Any additional sample attributes. Attribute names are used as the keys |
 
 #### changes.tsv
 

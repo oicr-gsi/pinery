@@ -61,13 +61,15 @@ public class DaoUtils {
     for (int i = 1; i < string.length()-1; i++) {
       char c = string.charAt(i);
       switch (c) {
-      case '[':
-      case '{':
-        nestLevel += 1;
+      case '[': case '{':
+        if (!isEscaped(string, i)) {
+          nestLevel += 1;
+        }
         break;
-      case ']':
-      case '}':
-        nestLevel -= 1;
+      case ']': case '}':
+        if (!isEscaped(string, i)) {
+          nestLevel -= 1;
+        }
         break;
       case ',':
         if (nestLevel == 0) {
@@ -127,14 +129,18 @@ public class DaoUtils {
       case VALUE:
         switch (c) {
         case '{': case '[':
-          nestLevel += 1;
+          if (!isEscaped(string, i)) {
+            nestLevel += 1;
+          }
           break;
         case '}': case ']':
-          nestLevel -= 1;
+	      if (!isEscaped(string, i)) {
+            nestLevel -= 1;
+          }
           break;
         case '|':
-          if (nestLevel == 0) {
-            value = string.substring(currentStringStart, i);
+          if (!isEscaped(string, i) && nestLevel == 0) {
+            value = unescapeValue(string.substring(currentStringStart, i));
             currentStringStart = i+1;
             map.put(key, value);
             key = null;
@@ -151,10 +157,38 @@ public class DaoUtils {
     if (readingPart != PairPart.VALUE) {
       throw ParseException.fromErrorData(string, string.length()-1, "Does not end in key=value pair");
     }
-    value = string.substring(currentStringStart, string.length()-1);
+    value = unescapeValue(string.substring(currentStringStart, string.length()-1));
     map.put(key, value);
     
     return map;
+  }
+  
+  private static boolean isEscaped(String string, int position) {
+    if (position == 1 || string.charAt(position - 1) != '\\') {
+      return false;
+    }
+    if (position < 3) {
+      return true;
+    }
+    // if number of (\) is odd, it is escaped
+    boolean escaped = true;
+    for (int i = position - 2; i > 0; i--) {
+      if (string.charAt(i) == '\\') {
+        escaped = !escaped;
+      } else {
+        break;
+      }
+    }
+    return escaped;
+  }
+  
+  private static String unescapeValue(String escaped) {
+    return escaped.replace("\\{", "{")
+    		.replace("\\}", "}")
+    		.replace("\\[", "[")
+    		.replace("\\]", "]")
+    		.replace("\\|", "|")
+    		.replace("\\\\", "\\");
   }
   
   public static boolean hasColumn(ResultSet rs, String columnName) throws SQLException {

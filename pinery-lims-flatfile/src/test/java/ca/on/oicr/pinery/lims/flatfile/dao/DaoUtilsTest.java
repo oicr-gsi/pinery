@@ -1,8 +1,12 @@
 package ca.on.oicr.pinery.lims.flatfile.dao;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Rule;
@@ -142,6 +146,39 @@ public class DaoUtilsTest {
     Assert.assertEquals("[{name=1|val=1},{name=2|val=2}]", parsed.get("One"));
     Assert.assertEquals("[{name=3|val=3},{name=4|val=4}]", parsed.get("Two"));
     Assert.assertEquals("[{name=5|val=5},{name=6|val=6}]", parsed.get("Three"));
+  }
+  
+  @Test
+  public void testParseKVEscapedValues() {
+    String string = "{One=value|Two=val\\{ue|Three=val\\}ue|Four=val\\[ue|Five=val\\]ue|Six=val\\|ue|Seven=val\\\\\\|ue|Eight=value\\\\|Nine=value\\\\}";
+    Map<String, String> parsed = DaoUtils.parseKeyValuePairs(string);
+    assertNotNull(parsed);
+    assertEquals("value", parsed.get("One"));
+    assertEquals("val{ue", parsed.get("Two"));
+    assertEquals("val}ue", parsed.get("Three"));
+    assertEquals("val[ue", parsed.get("Four"));
+    assertEquals("val]ue", parsed.get("Five"));
+    assertEquals("val|ue", parsed.get("Six"));
+    assertEquals("val\\|ue", parsed.get("Seven"));
+    assertEquals("value\\", parsed.get("Eight"));
+    assertEquals("value\\", parsed.get("Nine"));
+  }
+  
+  @Test
+  public void testParseListEscapedValues() {
+    String string = "[{name=value},{name=val\\{ue},{name=val\\}ue},{name=val\\[ue},{name=val\\]ue},{name=val,ue},{name=val\\\\ue},{name=value}]";
+    List<String> parsed = DaoUtils.parseList(string);
+    assertNotNull(parsed);
+    assertEquals(8, parsed.size());
+    List<Map<String, String>> kvPairs = parsed.stream().map(item -> DaoUtils.parseKeyValuePairs(item)).collect(Collectors.toList());
+    assertEquals("value", kvPairs.get(0).get("name"));
+    assertEquals("val{ue", kvPairs.get(1).get("name"));
+    assertEquals("val}ue", kvPairs.get(2).get("name"));
+    assertEquals("val[ue", kvPairs.get(3).get("name"));
+    assertEquals("val]ue", kvPairs.get(4).get("name"));
+    assertEquals("val,ue", kvPairs.get(5).get("name"));
+    assertEquals("val\\ue", kvPairs.get(6).get("name"));
+    assertEquals("value", kvPairs.get(7).get("name"));
   }
   
   @Test
