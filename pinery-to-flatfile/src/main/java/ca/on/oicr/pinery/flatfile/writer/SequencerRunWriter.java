@@ -100,14 +100,14 @@ public class SequencerRunWriter extends Writer {
     return sb.toString();
   }
   
-  private static String getPositionSamplesString(RunDtoPosition pos) {
+  private static ArrayStringBuilder getPositionSamplesString(RunDtoPosition pos) {
     ArrayStringBuilder sb = new ArrayStringBuilder();
     if (pos.getSamples() != null) {
         for (RunDtoSample sample : pos.getSamples()) {
             sb.append(getPositionSampleString(sample));
         }
     }
-    return sb.toString();
+    return sb;
   }
   
   private static String getPositionSampleString(RunDtoSample sample) {
@@ -123,12 +123,12 @@ public class SequencerRunWriter extends Writer {
     return sb.toString();
   }
   
-  private static String getPositionSampleAttributesString(RunDtoSample sample) {
+  private static KeyValueStringBuilder getPositionSampleAttributesString(RunDtoSample sample) {
     KeyValueStringBuilder sb = new KeyValueStringBuilder();
     for (AttributeDto att : sample.getAttributes()) {
       sb.append(att.getName(), att.getValue());
     }
-    return sb.toString();
+    return sb;
   }
 
 }

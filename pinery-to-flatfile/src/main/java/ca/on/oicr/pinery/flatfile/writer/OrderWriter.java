@@ -78,12 +78,12 @@ public class OrderWriter extends Writer {
     return sb.toString();
   }
   
-  private static String getSampleAttributesString(OrderDtoSample sample) {
+  private static KeyValueStringBuilder getSampleAttributesString(OrderDtoSample sample) {
     KeyValueStringBuilder sb = new KeyValueStringBuilder();
     for (AttributeDto att : sample.getAttributes()) {
       sb.append(att.getName(), att.getValue());
     }
-    return sb.toString();
+    return sb;
   }
 
 }
