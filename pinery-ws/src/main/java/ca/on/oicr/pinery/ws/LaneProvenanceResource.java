@@ -60,13 +60,14 @@ public class LaneProvenanceResource {
   protected static final Map<String, VersionTransformer<LaneProvenance, ? extends LaneProvenance>> transformers //
       = new MapBuilder<String, VersionTransformer<LaneProvenance, ? extends LaneProvenance>>() //
           .put("latest", noopTransformer) //
+          .put("v5", noopTransformer) //
           .put("v4", noopTransformer) //
           .put("v3", noopTransformer) //
           .put("v2", v2Transformer) //
           .put("v1", v1Transformer) //
           .build();
   
-  private static final String versions = "latest, v4, v3, v2, v1";
+  private static final String versions = "latest, v5, v4, v3, v2, v1";
 
   @Autowired
   private LaneProvenanceService laneProvenanceService;
