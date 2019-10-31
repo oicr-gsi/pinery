@@ -6,7 +6,9 @@ public enum LimsSequencerRunAttribute {
   RUN_BASES_MASK("run_bases_mask"),
   RUN_DIRECTORY("run_dir"),
   SEQUENCING_PARAMETERS("sequencing_parameters"),
-  WORKFLOW_TYPE("workflow_type");
+  WORKFLOW_TYPE("workflow_type"),
+  CONTAINER_MODEL("container_model"),
+  SEQUENCING_KIT("sequencing_kit");
   
   private final String key;
   
