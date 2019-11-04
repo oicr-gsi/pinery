@@ -43,6 +43,8 @@ public class SampleProvenanceResource {
 	SimpleSampleProvenance modified = SimpleSampleProvenance.from(input);
 	modified.getSampleAttributes().remove(LimsSampleAttribute.DV200.toString());
 	modified.getSampleAttributes().remove(LimsSampleAttribute.RIN.toString());
+	modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.CONTAINER_MODEL.getKey());
+	modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.SEQUENCING_KIT.getKey());
 	return modified;
   };
   

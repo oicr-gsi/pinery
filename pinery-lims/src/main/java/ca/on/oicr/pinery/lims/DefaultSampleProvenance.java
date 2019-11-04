@@ -236,6 +236,12 @@ public class DefaultSampleProvenance implements SampleProvenance {
           if (sequencerRun.getWorkflowType() != null) {
             attrs.put(LimsSequencerRunAttribute.WORKFLOW_TYPE.getKey(), sequencerRun.getWorkflowType());
           }
+          if (sequencerRun.getContainerModel() != null) {
+              attrs.put(LimsSequencerRunAttribute.CONTAINER_MODEL.getKey(), sequencerRun.getContainerModel());
+            }
+          if (sequencerRun.getSequencingKit() != null) {
+            attrs.put(LimsSequencerRunAttribute.SEQUENCING_KIT.getKey(), sequencerRun.getSequencingKit());
+          }
         }
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }

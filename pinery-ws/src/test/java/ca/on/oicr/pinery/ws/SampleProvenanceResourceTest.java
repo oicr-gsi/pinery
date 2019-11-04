@@ -181,7 +181,7 @@ public class SampleProvenanceResourceTest {
     VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v5");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
-    assertEquals("fe07bd70bbb4759a2caa0ae25f89d94c4967755ae51301fbc70c87687c962b43", sp.getVersion());
+    assertEquals("57423efd8747ea9c32d61511e6a9e6a9c11ef7601a8806c1bfb5153174a72db3", sp.getVersion());
   }
 
   private SampleProvenance makeBaseSampleProvenance() {
@@ -313,6 +313,8 @@ public class SampleProvenanceResourceTest {
     r.setModifiedById(3);
     r.setSequencingParameters("V4 2x126");
     r.setWorkflowType("NovaSeqXp");
+    r.setContainerModel("S4");
+    r.setSequencingKit("SomeKit");
     return r;
   }
 

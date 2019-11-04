@@ -42,8 +42,15 @@ public class LaneProvenanceResource {
 
   private static final VersionTransformer<LaneProvenance, LaneProvenance> noopTransformer = input -> input;
   
-  private static final VersionTransformer<LaneProvenance, SimpleLaneProvenance> v2Transformer = input -> {
+  private static final VersionTransformer<LaneProvenance, SimpleLaneProvenance> v3Transformer = input -> {
     SimpleLaneProvenance modified = SimpleLaneProvenance.from(input);
+    modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.CONTAINER_MODEL.getKey());
+    modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.SEQUENCING_KIT.getKey());
+    return modified;
+  };
+  
+  private static final VersionTransformer<LaneProvenance, SimpleLaneProvenance> v2Transformer = input -> {
+    SimpleLaneProvenance modified = v3Transformer.transform(input);
     modified.getSequencerRunAttributes().remove(LimsSequencerRunAttribute.WORKFLOW_TYPE.getKey());
     return modified;
   };
@@ -61,8 +68,8 @@ public class LaneProvenanceResource {
       = new MapBuilder<String, VersionTransformer<LaneProvenance, ? extends LaneProvenance>>() //
           .put("latest", noopTransformer) //
           .put("v5", noopTransformer) //
-          .put("v4", noopTransformer) //
-          .put("v3", noopTransformer) //
+          .put("v4", v3Transformer) //
+          .put("v3", v3Transformer) //
           .put("v2", v2Transformer) //
           .put("v1", v1Transformer) //
           .build();
