@@ -61,17 +61,25 @@ public class DefaultLaneProvenance implements LaneProvenance {
         if (instrument != null) {
             attrs.put(LimsSequencerRunAttribute.INSTRUMENT_NAME.getKey(), instrument.getName());
         }
-        if (sequencerRun != null && sequencerRun.getRunDirectory() != null && !sequencerRun.getRunDirectory().isEmpty()) {
+        if (sequencerRun != null) {
+          if (sequencerRun.getRunDirectory() != null && !sequencerRun.getRunDirectory().isEmpty()) {
             attrs.put(LimsSequencerRunAttribute.RUN_DIRECTORY.getKey(), sequencerRun.getRunDirectory());
-        }
-        if (sequencerRun != null && sequencerRun.getRunBasesMask() != null && !sequencerRun.getRunBasesMask().isEmpty()) {
-        	attrs.put(LimsSequencerRunAttribute.RUN_BASES_MASK.getKey(), sequencerRun.getRunBasesMask());
-        }
-        if (sequencerRun.getSequencingParameters() != null) {
-          attrs.put(LimsSequencerRunAttribute.SEQUENCING_PARAMETERS.getKey(), sequencerRun.getSequencingParameters());
-        }
-        if (sequencerRun.getWorkflowType() != null) {
-          attrs.put(LimsSequencerRunAttribute.WORKFLOW_TYPE.getKey(), sequencerRun.getWorkflowType());
+          }
+          if (sequencerRun.getRunBasesMask() != null && !sequencerRun.getRunBasesMask().isEmpty()) {
+            attrs.put(LimsSequencerRunAttribute.RUN_BASES_MASK.getKey(), sequencerRun.getRunBasesMask());
+          }
+          if (sequencerRun.getSequencingParameters() != null) {
+            attrs.put(LimsSequencerRunAttribute.SEQUENCING_PARAMETERS.getKey(), sequencerRun.getSequencingParameters());
+          }
+          if (sequencerRun.getWorkflowType() != null) {
+            attrs.put(LimsSequencerRunAttribute.WORKFLOW_TYPE.getKey(), sequencerRun.getWorkflowType());
+          }
+          if (sequencerRun.getContainerModel() != null) {
+            attrs.put(LimsSequencerRunAttribute.CONTAINER_MODEL.getKey(), sequencerRun.getContainerModel());
+          }
+          if (sequencerRun.getSequencingKit() != null) {
+            attrs.put(LimsSequencerRunAttribute.SEQUENCING_KIT.getKey(), sequencerRun.getSequencingKit());
+          }
         }
         return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
     }

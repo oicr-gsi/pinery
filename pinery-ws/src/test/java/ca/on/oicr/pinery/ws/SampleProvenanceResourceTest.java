@@ -175,6 +175,14 @@ public class SampleProvenanceResourceTest {
     // This hash must never change
     assertEquals("6afbb7e2e805eb185702d59b40c191600f5e4ae28f8283d20884552a43b31576", sp.getVersion());
   }
+  
+  @Test
+  public void testV5ProvenanceTransform() {
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v5");
+    SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
+    // This hash must never change
+    assertEquals("57423efd8747ea9c32d61511e6a9e6a9c11ef7601a8806c1bfb5153174a72db3", sp.getVersion());
+  }
 
   private SampleProvenance makeBaseSampleProvenance() {
     DefaultSampleProvenance sp = new DefaultSampleProvenance();
@@ -243,6 +251,8 @@ public class SampleProvenanceResourceTest {
     attrs.add(makeAttribute("Subproject", "Sub"));
     attrs.add(makeAttribute("Institute", "Institute"));
     attrs.add(makeAttribute("UMIs", "True"));
+    attrs.add(makeAttribute("RIN", "5.7"));
+    attrs.add(makeAttribute("DV200", "91.7"));
     s.setAttributes(attrs);
 
     return s;
@@ -303,6 +313,8 @@ public class SampleProvenanceResourceTest {
     r.setModifiedById(3);
     r.setSequencingParameters("V4 2x126");
     r.setWorkflowType("NovaSeqXp");
+    r.setContainerModel("S4");
+    r.setSequencingKit("SomeKit");
     return r;
   }
 

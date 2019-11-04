@@ -28,6 +28,8 @@ public class DefaultRun implements Run {
    private String runBasesMask;
    private String sequencingParameters;
    private String workflowType;
+   private String containerModel;
+   private String sequencingKit;
 
    @Override
    public String getState() {
@@ -223,6 +225,26 @@ public class DefaultRun implements Run {
   }
 
   @Override
+  public String getContainerModel() {
+    return containerModel;
+  }
+
+  @Override
+  public void setContainerModel(String containerModel) {
+    this.containerModel = containerModel;
+  }
+
+  @Override
+  public String getSequencingKit() {
+    return sequencingKit;
+  }
+
+  @Override
+  public void setSequencingKit(String sequencingKit) {
+    this.sequencingKit = sequencingKit;
+  }
+
+  @Override
   public String toString() {
     return "DefaultRun [state=" + state + ", name=" + name + ", barcode="
         + barcode + ", barcodeTwo=" + barcodeTwo + ", sample=" + sample
@@ -233,7 +255,8 @@ public class DefaultRun implements Run {
         + completionDate + ", modified=" + modified + ", modifiedById="
         + modifiedById + ", runDirectory=" + runDirectory + ", runBasesMask="
         + runBasesMask + ", sequencingParameters=" + sequencingParameters
-        + ", workflowType=" + workflowType + "]";
+        + ", workflowType=" + workflowType + ", containerModel=" + containerModel
+        + ", sequencingKit=" + sequencingKit + "]";
   }
 
   @Override
@@ -269,6 +292,8 @@ public class DefaultRun implements Run {
     result = prime * result + ((runBasesMask == null) ? 0 : runBasesMask.hashCode());
     result = prime * result + ((sequencingParameters == null) ? 0 : sequencingParameters.hashCode());
     result = prime * result + ((workflowType == null) ? 0 : workflowType.hashCode());
+    result = prime * result + ((containerModel == null) ? 0 : containerModel.hashCode());
+    result = prime * result + ((sequencingKit == null) ? 0 : sequencingKit.hashCode());
     return result;
   }
 
@@ -400,6 +425,18 @@ public class DefaultRun implements Run {
         return false;
     }
     else if (!workflowType.equals(other.workflowType))
+      return false;
+    if (containerModel == null) {
+      if (other.containerModel != null)
+        return false;
+    }
+    else if (!containerModel.equals(other.containerModel))
+      return false;
+    if (sequencingKit == null) {
+      if (other.sequencingKit != null)
+        return false;
+    }
+    else if (!sequencingKit.equals(other.sequencingKit))
       return false;
     return true;
   }

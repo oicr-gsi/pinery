@@ -335,15 +335,11 @@ public final class Dtos {
       }
       dto.setReadLength(from.getReadLength());
       dto.setRunDirectory(from.getRunDirectory());
-      if (from.getRunBasesMask() != null) {
-        dto.setRunBasesMask(from.getRunBasesMask());
-      }
-      if (from.getSequencingParameters() != null) {
-        dto.setSequencingParameters(from.getSequencingParameters());
-      }
-      if (from.getWorkflowType() != null) {
-        dto.setWorkflowType(from.getWorkflowType());
-      }
+      dto.setRunBasesMask(from.getRunBasesMask());
+      dto.setSequencingParameters(from.getSequencingParameters());
+      dto.setWorkflowType(from.getWorkflowType());
+      dto.setContainerModel(from.getContainerModel());
+      dto.setSequencingKit(from.getSequencingKit());
       return dto;
    }
 

@@ -33,6 +33,8 @@ public class RunDto {
    private String runBasesMask;
    private String sequencingParameters;
    private String workflowType;
+   private String containerModel;
+   private String sequencingKit;
 
    public String getState() {
       return state;
@@ -226,6 +228,22 @@ public class RunDto {
     this.workflowType = workflowType;
   }
 
+  public String getContainerModel() {
+	return containerModel;
+  }
+
+  public void setContainerModel(String containerModel) {
+    this.containerModel = containerModel;
+  }
+
+  public String getSequencingKit() {
+    return sequencingKit;
+  }
+
+  public void setSequencingKit(String sequencingKit) {
+    this.sequencingKit = sequencingKit;
+  }
+
   @Override
   public String toString() {
     return "RunDto [state=" + state + ", name=" + name + ", barcode=" + barcode
@@ -237,7 +255,9 @@ public class RunDto {
         + ", modifiedById=" + modifiedById + ", modifiedByUrl=" + modifiedByUrl
         + ", modifiedDate=" + modifiedDate + ", runDirectory=" + runDirectory
         + ", runBasesMask=" + runBasesMask + ", sequencingParameters=" 
-        + sequencingParameters + ", workflowType=" + workflowType + "]";
+        + sequencingParameters + ", workflowType=" + workflowType
+        + ", containerModel=" + containerModel + ", sequencingKit="
+        + sequencingKit + "]";
   }
 
   @Override
@@ -266,6 +286,8 @@ public class RunDto {
     result = prime * result + ((runBasesMask == null) ? 0 : runBasesMask.hashCode());
     result = prime * result + ((sequencingParameters == null) ? 0 : sequencingParameters.hashCode());
     result = prime * result + ((workflowType == null) ? 0 : workflowType.hashCode());
+    result = prime * result + ((containerModel == null) ? 0 : containerModel.hashCode());
+    result = prime * result + ((sequencingKit == null) ? 0 : sequencingKit.hashCode());
     return result;
   }
 
@@ -373,6 +395,18 @@ public class RunDto {
         return false;
     }
     else if (!workflowType.equals(other.workflowType))
+      return false;
+    if (containerModel == null) {
+      if (other.containerModel != null)
+        return false;
+    }
+    else if (!containerModel.equals(other.containerModel))
+      return false;
+    if (sequencingKit == null) {
+      if (other.sequencingKit != null)
+        return false;
+    }
+    else if (!sequencingKit.equals(other.sequencingKit))
       return false;
     return true;
   }

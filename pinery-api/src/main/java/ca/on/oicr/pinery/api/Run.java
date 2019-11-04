@@ -81,4 +81,12 @@ public interface Run {
    
    public void setWorkflowType(String workflowType);
    
+   public String getContainerModel();
+   
+   public void setContainerModel(String containerModel);
+   
+   public String getSequencingKit();
+   
+   public void setSequencingKit(String sequencingKit);
+   
 }

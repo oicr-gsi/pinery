@@ -154,6 +154,14 @@ public class LaneProvenanceResourceTest {
     assertEquals("0b348aa6bb7755a301da710794afe9fe3b5ba097f4fa7e0cf0a70922078e4e95", lp.getVersion());
   }
   
+  @Test
+  public void testV5ProvenanceTransform() {
+	  VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v5");
+	    LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
+	    // This hash must never change
+	    assertEquals("8ed7a679a7027964844433713ff08119229b4c9be5d296a54c20b1a3d0594447", lp.getVersion());
+  }
+  
   private LaneProvenance makeBaseLaneProvenance() {
     DefaultLaneProvenance lp = new DefaultLaneProvenance();
     lp.setInstrumentModel(makeBaseInstrumentModel());
@@ -231,6 +239,8 @@ public class LaneProvenanceResourceTest {
     r.setModifiedById(3);
     r.setSequencingParameters("V4 2x126");
     r.setWorkflowType("NovaSeqXp");
+    r.setContainerModel("S4");
+    r.setSequencingKit("SomeKit");
     return r;
   }
 
