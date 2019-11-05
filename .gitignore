@@ -2,7 +2,6 @@ target
 bin
 .project
 .classpath
-.settings
 *.swp
 pinery.log
 nb-configuration.xml
