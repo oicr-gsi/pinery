@@ -1,10 +1,9 @@
 package ca.on.oicr.pinery.lims;
 
-import java.util.Date;
-import java.util.Set;
-
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
+import java.util.Date;
+import java.util.Set;
 
 public class DefaultRunPosition implements RunPosition {
 
@@ -74,10 +73,35 @@ public class DefaultRunPosition implements RunPosition {
 
   @Override
   public String toString() {
-    return "DefaultRunPosition [runSample=" + runSample + ", position=" + position + ", poolId=" + poolId + ", poolName=" + poolName
-        + ", poolDescription=" + poolDescription + ", poolBarcode=" + poolBarcode + ", poolCreatedById=" + poolCreatedById
-        + ", poolCreated=" + poolCreated + ", poolModifiedById=" + poolModifiedById + ", poolModified=" + poolModified + ", qcStatus="
-        + qcStatus + ", analysisSkipped=" + analysisSkipped + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+    return "DefaultRunPosition [runSample="
+        + runSample
+        + ", position="
+        + position
+        + ", poolId="
+        + poolId
+        + ", poolName="
+        + poolName
+        + ", poolDescription="
+        + poolDescription
+        + ", poolBarcode="
+        + poolBarcode
+        + ", poolCreatedById="
+        + poolCreatedById
+        + ", poolCreated="
+        + poolCreated
+        + ", poolModifiedById="
+        + poolModifiedById
+        + ", poolModified="
+        + poolModified
+        + ", qcStatus="
+        + qcStatus
+        + ", analysisSkipped="
+        + analysisSkipped
+        + ", hashCode()="
+        + hashCode()
+        + ", toString()="
+        + super.toString()
+        + "]";
   }
 
   private Set<RunSample> runSample;
@@ -212,5 +236,4 @@ public class DefaultRunPosition implements RunPosition {
   public void setAnalysisSkipped(Boolean analysisSkipped) {
     this.analysisSkipped = analysisSkipped;
   }
-
 }

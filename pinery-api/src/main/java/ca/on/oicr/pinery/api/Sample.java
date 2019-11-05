@@ -5,91 +5,91 @@ import java.util.Set;
 
 public interface Sample {
 
-	public String getUrl();
+  public String getUrl();
 
-	public void setUrl(String url);
+  public void setUrl(String url);
 
-	public String getName();
+  public String getName();
 
-	public void setName(String name);
+  public void setName(String name);
 
-	public String getDescription();
+  public String getDescription();
 
-	public void setDescription(String description);
+  public void setDescription(String description);
 
-	public String getId();
+  public String getId();
 
-	public void setId(String id);
+  public void setId(String id);
 
-	public Set<String> getParents();
+  public Set<String> getParents();
 
-	public void setParents(Set<String> parents);
+  public void setParents(Set<String> parents);
 
-	public Set<String> getChildren();
+  public Set<String> getChildren();
 
-	public void setChildren(Set<String> children);
+  public void setChildren(Set<String> children);
 
-	public String getSampleType();
+  public String getSampleType();
 
-	public void setSampleType(String sampleType);
+  public void setSampleType(String sampleType);
 
-	public String getTissueType();
+  public String getTissueType();
 
-	public void setTissueType(String tissueType);
+  public void setTissueType(String tissueType);
 
-	public String getProject();
+  public String getProject();
 
-	public void setProject(String project);
+  public void setProject(String project);
 
-	public Set<Attribute> getAttributes();
+  public Set<Attribute> getAttributes();
 
-	public void setAttributes(Set<Attribute> attributes);
+  public void setAttributes(Set<Attribute> attributes);
 
-	public Boolean getArchived();
+  public Boolean getArchived();
 
-	public void setArchived(Boolean archived);
+  public void setArchived(Boolean archived);
 
-	public Date getCreated();
+  public Date getCreated();
 
-	public void setCreated(Date created);
+  public void setCreated(Date created);
 
-	public Date getModified();
+  public Date getModified();
 
-	public void setModified(Date modified);
+  public void setModified(Date modified);
 
-	public String getTubeBarcode();
+  public String getTubeBarcode();
 
-	public void setTubeBarcode(String tubeBarcode);
+  public void setTubeBarcode(String tubeBarcode);
 
-	public Float getVolume();
+  public Float getVolume();
 
-	public void setVolume(Float volume);
+  public void setVolume(Float volume);
 
-	public Float getConcentration();
+  public Float getConcentration();
 
-	public void setConcentration(Float concentration);
+  public void setConcentration(Float concentration);
 
-	public String getStorageLocation();
+  public String getStorageLocation();
 
-	public void setStorageLocation(String storageLocation);
+  public void setStorageLocation(String storageLocation);
 
-	public PreparationKit getPreparationKit();
+  public PreparationKit getPreparationKit();
 
-	public void setPreparationKit(PreparationKit preparationKit);
+  public void setPreparationKit(PreparationKit preparationKit);
 
-	public Status getStatus();
+  public Status getStatus();
 
-	public void setStatus(Status status);
+  public void setStatus(Status status);
 
-	public Integer getCreatedById();
+  public Integer getCreatedById();
 
-	public void setCreatedById(Integer createdById);
+  public void setCreatedById(Integer createdById);
 
-	public Integer getModifiedById();
+  public Integer getModifiedById();
 
-	public void setModifiedById(Integer modifiedById);
-	
-	public Long getPreMigrationId();
-	
-	public void setPreMigrationId(Long preMigrationId);
+  public void setModifiedById(Integer modifiedById);
+
+  public Long getPreMigrationId();
+
+  public void setPreMigrationId(Long preMigrationId);
 }

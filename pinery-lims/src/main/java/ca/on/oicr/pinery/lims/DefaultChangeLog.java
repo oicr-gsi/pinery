@@ -1,33 +1,31 @@
 package ca.on.oicr.pinery.lims;
 
-import java.util.Set;
-
 import ca.on.oicr.pinery.api.Change;
 import ca.on.oicr.pinery.api.ChangeLog;
+import java.util.Set;
 
 public class DefaultChangeLog implements ChangeLog {
 
-	private String sampleId;
-	private Set<Change> changes;
+  private String sampleId;
+  private Set<Change> changes;
 
-	@Override
+  @Override
   public String getSampleId() {
-		return sampleId;
-	}
+    return sampleId;
+  }
 
-	@Override
+  @Override
   public void setSampleId(String sampleId) {
-		this.sampleId = sampleId;
-	}
+    this.sampleId = sampleId;
+  }
 
-	@Override
+  @Override
   public Set<Change> getChanges() {
-		return changes;
-	}
+    return changes;
+  }
 
-	@Override
+  @Override
   public void setChanges(Set<Change> changes) {
-		this.changes = changes;
-	}
-
+    this.changes = changes;
+  }
 }

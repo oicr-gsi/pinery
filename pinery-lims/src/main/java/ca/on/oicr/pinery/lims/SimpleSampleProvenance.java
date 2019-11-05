@@ -1,17 +1,15 @@
 package ca.on.oicr.pinery.lims;
 
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import java.time.ZonedDateTime;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 
-import com.google.common.base.Charsets;
-import com.google.common.hash.Hashing;
-
-import ca.on.oicr.gsi.provenance.model.SampleProvenance;
-
 public class SimpleSampleProvenance implements SampleProvenance {
-  
+
   private String sampleProvenanceId;
   private String provenanceId;
   private String sampleName;
@@ -29,10 +27,10 @@ public class SimpleSampleProvenance implements SampleProvenance {
   private SortedMap<String, SortedSet<String>> sequencerRunAttributes;
   private ZonedDateTime createdDate;
   private ZonedDateTime lastModified;
-  
+
   public static SimpleSampleProvenance from(SampleProvenance from) {
     SimpleSampleProvenance to = new SimpleSampleProvenance();
-    
+
     to.setSampleProvenanceId(from.getSampleProvenanceId());
     to.setProvenanceId(from.getProvenanceId());
     to.setSampleName(from.getSampleName());
@@ -50,15 +48,15 @@ public class SimpleSampleProvenance implements SampleProvenance {
     to.setSequencerRunAttributes(from.getSequencerRunAttributes());
     to.setCreatedDate(from.getCreatedDate());
     to.setLastModified(from.getLastModified());
-    
+
     return to;
   }
-  
+
   @Override
   public ZonedDateTime getLastModified() {
     return lastModified;
   }
-  
+
   public void setLastModified(ZonedDateTime lastModified) {
     this.lastModified = lastModified;
   }
@@ -67,7 +65,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public String getProvenanceId() {
     return provenanceId;
   }
-  
+
   public void setProvenanceId(String provenanceId) {
     this.provenanceId = provenanceId;
   }
@@ -76,12 +74,14 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public String getVersion() {
     // Sample attribute LimsAttribute enum key names used in hash instead of actual map keys
     SortedMap<String, SortedSet<String>> sampleAttrs = new TreeMap<>();
-    getSampleAttributes().forEach((key, values) -> {
-      LimsSampleAttribute limsAttr = LimsSampleAttribute.fromString(key);
-      String newKey = limsAttr == null ? key : limsAttr.name();
-      sampleAttrs.put(newKey, values);
-    });
-    
+    getSampleAttributes()
+        .forEach(
+            (key, values) -> {
+              LimsSampleAttribute limsAttr = LimsSampleAttribute.fromString(key);
+              String newKey = limsAttr == null ? key : limsAttr.name();
+              sampleAttrs.put(newKey, values);
+            });
+
     StringBuilder sb = new StringBuilder();
     sb.append(getStudyTitle());
     sb.append(getStudyAttributes());
@@ -103,7 +103,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public ZonedDateTime getCreatedDate() {
     return createdDate;
   }
-  
+
   public void setCreatedDate(ZonedDateTime createdDate) {
     this.createdDate = createdDate;
   }
@@ -112,7 +112,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public String getIusTag() {
     return iusTag;
   }
-  
+
   public void setIusTag(String iusTag) {
     this.iusTag = iusTag;
   }
@@ -121,7 +121,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public SortedMap<String, SortedSet<String>> getLaneAttributes() {
     return laneAttributes;
   }
-  
+
   public void setLaneAttributes(SortedMap<String, SortedSet<String>> laneAttributes) {
     this.laneAttributes = laneAttributes;
   }
@@ -130,7 +130,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public String getLaneNumber() {
     return laneNumber;
   }
-  
+
   public void setLaneNumber(String laneNumber) {
     this.laneNumber = laneNumber;
   }
@@ -139,7 +139,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public String getParentSampleName() {
     return parentSampleName;
   }
-  
+
   public void setParentSampleName(String parentSampleName) {
     this.parentSampleName = parentSampleName;
   }
@@ -148,7 +148,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public String getRootSampleName() {
     return rootSampleName;
   }
-  
+
   public void setRootSampleName(String rootSampleName) {
     this.rootSampleName = rootSampleName;
   }
@@ -157,7 +157,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public SortedMap<String, SortedSet<String>> getSampleAttributes() {
     return sampleAttributes;
   }
-  
+
   public void setSampleAttributes(SortedMap<String, SortedSet<String>> sampleAttributes) {
     this.sampleAttributes = sampleAttributes;
   }
@@ -166,7 +166,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public String getSampleName() {
     return sampleName;
   }
-  
+
   public void setSampleName(String sampleName) {
     this.sampleName = sampleName;
   }
@@ -175,7 +175,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public String getSampleProvenanceId() {
     return sampleProvenanceId;
   }
-  
+
   public void setSampleProvenanceId(String sampleProvenanceId) {
     this.sampleProvenanceId = sampleProvenanceId;
   }
@@ -184,8 +184,9 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public SortedMap<String, SortedSet<String>> getSequencerRunAttributes() {
     return sequencerRunAttributes;
   }
-  
-  public void setSequencerRunAttributes(SortedMap<String, SortedSet<String>> sequencerRunAttributes) {
+
+  public void setSequencerRunAttributes(
+      SortedMap<String, SortedSet<String>> sequencerRunAttributes) {
     this.sequencerRunAttributes = sequencerRunAttributes;
   }
 
@@ -193,7 +194,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public String getSequencerRunName() {
     return sequencerRunName;
   }
-  
+
   public void setSequencerRunName(String sequencerRunName) {
     this.sequencerRunName = sequencerRunName;
   }
@@ -202,7 +203,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public String getSequencerRunPlatformModel() {
     return sequencerRunPlatformModel;
   }
-  
+
   public void setSequencerRunPlatformModel(String sequencerRunPlatformModel) {
     this.sequencerRunPlatformModel = sequencerRunPlatformModel;
   }
@@ -211,7 +212,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public Boolean getSkip() {
     return skip;
   }
-  
+
   public void setSkip(Boolean skip) {
     this.skip = skip;
   }
@@ -220,7 +221,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public SortedMap<String, SortedSet<String>> getStudyAttributes() {
     return studyAttributes;
   }
-  
+
   public void setStudyAttributes(SortedMap<String, SortedSet<String>> studyAttributes) {
     this.studyAttributes = studyAttributes;
   }
@@ -229,9 +230,8 @@ public class SimpleSampleProvenance implements SampleProvenance {
   public String getStudyTitle() {
     return studyTitle;
   }
-  
+
   public void setStudyTitle(String studyTitle) {
     this.studyTitle = studyTitle;
   }
-
 }

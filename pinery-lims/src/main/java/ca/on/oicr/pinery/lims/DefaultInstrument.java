@@ -1,45 +1,44 @@
 package ca.on.oicr.pinery.lims;
 
-import java.util.Date;
-
 import ca.on.oicr.pinery.api.Instrument;
+import java.util.Date;
 
 public class DefaultInstrument implements Instrument {
 
-   private Integer id;
-   private String name;
-   private Date created;
-   private Integer modelId;
+  private Integer id;
+  private String name;
+  private Date created;
+  private Integer modelId;
 
-   @Override
+  @Override
   public Integer getId() {
-      return id;
-   }
+    return id;
+  }
 
-   @Override
+  @Override
   public void setId(Integer id) {
-      this.id = id;
-   }
+    this.id = id;
+  }
 
-   @Override
+  @Override
   public String getName() {
-      return name;
-   }
+    return name;
+  }
 
-   @Override
+  @Override
   public void setName(String name) {
-      this.name = name;
-   }
+    this.name = name;
+  }
 
-   @Override
+  @Override
   public Date getCreated() {
-      return created;
-   }
+    return created;
+  }
 
-   @Override
+  @Override
   public void setCreated(Date created) {
-      this.created = created;
-   }
+    this.created = created;
+  }
 
   @Override
   public Integer getModelId() {

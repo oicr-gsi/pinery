@@ -9,56 +9,56 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InstrumentDto {
 
-   private String url;
-   private String name;
-   private String createdDate;
-   private Integer id;
-   private Integer modelId;
-   private String modelUrl;
+  private String url;
+  private String name;
+  private String createdDate;
+  private Integer id;
+  private Integer modelId;
+  private String modelUrl;
 
-   public String getUrl() {
-      return url;
-   }
+  public String getUrl() {
+    return url;
+  }
 
-   public void setUrl(String url) {
-      this.url = url;
-   }
+  public void setUrl(String url) {
+    this.url = url;
+  }
 
-   public String getName() {
-      return name;
-   }
+  public String getName() {
+    return name;
+  }
 
-   public void setName(String name) {
-      this.name = name;
-   }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-   @JsonProperty("created_date")
-   public String getCreatedDate() {
-      return createdDate;
-   }
+  @JsonProperty("created_date")
+  public String getCreatedDate() {
+    return createdDate;
+  }
 
-   public void setCreatedDate(String createdDate) {
-      this.createdDate = createdDate;
-   }
+  public void setCreatedDate(String createdDate) {
+    this.createdDate = createdDate;
+  }
 
-   public Integer getId() {
-      return id;
-   }
+  public Integer getId() {
+    return id;
+  }
 
-   public void setId(Integer id) {
-      this.id = id;
-   }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-   @JsonProperty("model_id")
-   public Integer getModelId() {
-      return modelId;
-   }
+  @JsonProperty("model_id")
+  public Integer getModelId() {
+    return modelId;
+  }
 
-   public void setModelId(Integer modelId) {
-      this.modelId = modelId;
-   }
+  public void setModelId(Integer modelId) {
+    this.modelId = modelId;
+  }
 
-   @JsonProperty("model_url")
+  @JsonProperty("model_url")
   public String getModelUrl() {
     return modelUrl;
   }
@@ -66,5 +66,4 @@ public class InstrumentDto {
   public void setModelUrl(String modelUrl) {
     this.modelUrl = modelUrl;
   }
-
 }

@@ -2,12 +2,11 @@ package ca.on.oicr.pinery.api;
 
 public interface OrderSample extends Sample {
 
-   public String getBarcode();
+  public String getBarcode();
 
-   public void setBarcode(String barcode);
+  public void setBarcode(String barcode);
 
-   public String getBarcodeTwo();
+  public String getBarcodeTwo();
 
-   public void setBarcodeTwo(String barcodeTwo);
-
+  public void setBarcodeTwo(String barcodeTwo);
 }

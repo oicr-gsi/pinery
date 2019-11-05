@@ -1,16 +1,14 @@
 package ca.on.oicr.pinery.lims;
 
+import ca.on.oicr.gsi.provenance.model.LaneProvenance;
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import java.time.ZonedDateTime;
 import java.util.SortedMap;
 import java.util.SortedSet;
 
-import com.google.common.base.Charsets;
-import com.google.common.hash.Hashing;
-
-import ca.on.oicr.gsi.provenance.model.LaneProvenance;
-
 public class SimpleLaneProvenance implements LaneProvenance {
-  
+
   private String laneProvenanceId;
   private String provenanceId;
   private String laneNumber;
@@ -21,7 +19,7 @@ public class SimpleLaneProvenance implements LaneProvenance {
   private SortedMap<String, SortedSet<String>> sequencerRunAttributes;
   private ZonedDateTime createdDate;
   private ZonedDateTime lastModified;
-  
+
   public static SimpleLaneProvenance from(LaneProvenance from) {
     SimpleLaneProvenance to = new SimpleLaneProvenance();
     to.setLaneProvenanceId(from.getLaneProvenanceId());
@@ -41,7 +39,7 @@ public class SimpleLaneProvenance implements LaneProvenance {
   public ZonedDateTime getLastModified() {
     return lastModified;
   }
-  
+
   public void setLastModified(ZonedDateTime lastModified) {
     this.lastModified = lastModified;
   }
@@ -50,7 +48,7 @@ public class SimpleLaneProvenance implements LaneProvenance {
   public String getProvenanceId() {
     return provenanceId;
   }
-  
+
   public void setProvenanceId(String provenanceId) {
     this.provenanceId = provenanceId;
   }
@@ -71,7 +69,7 @@ public class SimpleLaneProvenance implements LaneProvenance {
   public ZonedDateTime getCreatedDate() {
     return createdDate;
   }
-  
+
   public void setCreatedDate(ZonedDateTime createdDate) {
     this.createdDate = createdDate;
   }
@@ -80,7 +78,7 @@ public class SimpleLaneProvenance implements LaneProvenance {
   public SortedMap<String, SortedSet<String>> getLaneAttributes() {
     return laneAttributes;
   }
-  
+
   public void setLaneAttributes(SortedMap<String, SortedSet<String>> laneAttributes) {
     this.laneAttributes = laneAttributes;
   }
@@ -89,7 +87,7 @@ public class SimpleLaneProvenance implements LaneProvenance {
   public String getLaneNumber() {
     return laneNumber;
   }
-  
+
   public void setLaneNumber(String laneNumber) {
     this.laneNumber = laneNumber;
   }
@@ -98,7 +96,7 @@ public class SimpleLaneProvenance implements LaneProvenance {
   public String getLaneProvenanceId() {
     return laneProvenanceId;
   }
-  
+
   public void setLaneProvenanceId(String laneProvenanceId) {
     this.laneProvenanceId = laneProvenanceId;
   }
@@ -107,8 +105,9 @@ public class SimpleLaneProvenance implements LaneProvenance {
   public SortedMap<String, SortedSet<String>> getSequencerRunAttributes() {
     return sequencerRunAttributes;
   }
-  
-  public void setSequencerRunAttributes(SortedMap<String, SortedSet<String>> sequencerRunAttributes) {
+
+  public void setSequencerRunAttributes(
+      SortedMap<String, SortedSet<String>> sequencerRunAttributes) {
     this.sequencerRunAttributes = sequencerRunAttributes;
   }
 
@@ -116,7 +115,7 @@ public class SimpleLaneProvenance implements LaneProvenance {
   public String getSequencerRunName() {
     return sequencerRunName;
   }
-  
+
   public void setSequencerRunName(String sequencerRunName) {
     this.sequencerRunName = sequencerRunName;
   }
@@ -125,7 +124,7 @@ public class SimpleLaneProvenance implements LaneProvenance {
   public String getSequencerRunPlatformModel() {
     return sequencerRunPlatformModel;
   }
-  
+
   public void setSequencerRunPlatformModel(String sequencerRunPlatformModel) {
     this.sequencerRunPlatformModel = sequencerRunPlatformModel;
   }
@@ -134,9 +133,8 @@ public class SimpleLaneProvenance implements LaneProvenance {
   public Boolean getSkip() {
     return skip;
   }
-  
+
   public void setSkip(Boolean skip) {
     this.skip = skip;
   }
-
 }

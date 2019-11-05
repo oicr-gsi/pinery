@@ -1,12 +1,11 @@
 package ca.on.oicr.pinery.lims;
 
-import java.util.Set;
-
 import ca.on.oicr.pinery.api.Box;
 import ca.on.oicr.pinery.api.BoxPosition;
+import java.util.Set;
 
 public class DefaultBox implements Box {
-  
+
   private Long id;
   private String name;
   private String description;
@@ -90,8 +89,7 @@ public class DefaultBox implements Box {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((columns == null) ? 0 : columns.hashCode());
-    result = prime * result
-        + ((description == null) ? 0 : description.hashCode());
+    result = prime * result + ((description == null) ? 0 : description.hashCode());
     result = prime * result + ((id == null) ? 0 : id.hashCode());
     result = prime * result + ((location == null) ? 0 : location.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -101,50 +99,28 @@ public class DefaultBox implements Box {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     DefaultBox other = (DefaultBox) obj;
     if (columns == null) {
-      if (other.columns != null)
-        return false;
-    }
-    else if (!columns.equals(other.columns))
-      return false;
+      if (other.columns != null) return false;
+    } else if (!columns.equals(other.columns)) return false;
     if (description == null) {
-      if (other.description != null)
-        return false;
-    }
-    else if (!description.equals(other.description))
-      return false;
+      if (other.description != null) return false;
+    } else if (!description.equals(other.description)) return false;
     if (id == null) {
-      if (other.id != null)
-        return false;
-    }
-    else if (!id.equals(other.id))
-      return false;
+      if (other.id != null) return false;
+    } else if (!id.equals(other.id)) return false;
     if (location == null) {
-      if (other.location != null)
-        return false;
-    }
-    else if (!location.equals(other.location))
-      return false;
+      if (other.location != null) return false;
+    } else if (!location.equals(other.location)) return false;
     if (name == null) {
-      if (other.name != null)
-        return false;
-    }
-    else if (!name.equals(other.name))
-      return false;
+      if (other.name != null) return false;
+    } else if (!name.equals(other.name)) return false;
     if (rows == null) {
-      if (other.rows != null)
-        return false;
-    }
-    else if (!rows.equals(other.rows))
-      return false;
+      if (other.rows != null) return false;
+    } else if (!rows.equals(other.rows)) return false;
     return true;
   }
-
 }

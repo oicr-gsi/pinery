@@ -4,11 +4,11 @@ import java.util.Set;
 
 public interface ChangeLog {
 
-	public String getSampleId();
+  public String getSampleId();
 
-	public void setSampleId(String sampleId);
+  public void setSampleId(String sampleId);
 
-	public Set<Change> getChanges();
+  public Set<Change> getChanges();
 
-	public void setChanges(Set<Change> changes);
+  public void setChanges(Set<Change> changes);
 }

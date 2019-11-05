@@ -7,27 +7,28 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SampleReferenceDto {
-  
+
   private String id;
   private String url;
-  
-  public SampleReferenceDto() {
-    
-  }
-  
+
+  public SampleReferenceDto() {}
+
   public SampleReferenceDto(String id) {
     this.id = id;
   }
-  
+
   public String getId() {
     return id;
   }
+
   public void setId(String id) {
     this.id = id;
   }
+
   public String getUrl() {
     return url;
   }
+
   public void setUrl(String url) {
     this.url = url;
   }
@@ -42,20 +43,13 @@ public class SampleReferenceDto {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     SampleReferenceDto other = (SampleReferenceDto) obj;
     if (id == null) {
-      if (other.id != null)
-        return false;
-    }
-    else if (!id.equals(other.id))
-      return false;
+      if (other.id != null) return false;
+    } else if (!id.equals(other.id)) return false;
     return true;
   }
-  
 }
