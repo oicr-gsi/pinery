@@ -4,19 +4,19 @@ import java.util.Date;
 
 public interface Change {
 
-	public String getAction();
+  public String getAction();
 
-	public void setAction(String action);
+  public void setAction(String action);
 
-	public Integer getCreatedById();
+  public Integer getCreatedById();
 
-	public void setCreatedById(Integer createdById);
+  public void setCreatedById(Integer createdById);
 
-	public Date getCreated();
+  public Date getCreated();
 
-	public void setCreated(Date created);
+  public void setCreated(Date created);
 
-	public String getComment();
+  public String getComment();
 
-	public void setComment(String comment);
+  public void setComment(String comment);
 }

@@ -7,35 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Instrument;
@@ -62,21 +33,42 @@ import ca.on.oicr.pinery.lims.LimsSampleAttribute;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
 import ca.on.oicr.pinery.ws.util.VersionTransformer;
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-/**
- *
- * @author mlaszloffy
- */
+/** @author mlaszloffy */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration("classpath:test-spring-servlet.xml")
 public class SampleProvenanceResourceTest {
 
-  @Autowired
-  private WebApplicationContext wac;
+  @Autowired private WebApplicationContext wac;
 
-  @Autowired
-  private SampleProvenanceService sampleProvenanceService;
+  @Autowired private SampleProvenanceService sampleProvenanceService;
 
   private MockMvc mockMvc;
 
@@ -101,7 +93,9 @@ public class SampleProvenanceResourceTest {
             get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-        .andExpect(content().string("[ ]")).andDo(print()).andReturn();
+        .andExpect(content().string("[ ]"))
+        .andDo(print())
+        .andReturn();
   }
 
   @Test
@@ -118,8 +112,7 @@ public class SampleProvenanceResourceTest {
             get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-        .andExpect(jsonPath("$.[*].lastModified",
-            everyItem(equalTo("2016-01-01T00:00:00Z"))));
+        .andExpect(jsonPath("$.[*].lastModified", everyItem(equalTo("2016-01-01T00:00:00Z"))));
   }
 
   @Test
@@ -141,47 +134,57 @@ public class SampleProvenanceResourceTest {
   }
 
   /**
-   * Test that the v1 sample provenance object (and version hash) has not changed. This method should be replicated for each new
-   * provenance version added
+   * Test that the v1 sample provenance object (and version hash) has not changed. This method
+   * should be replicated for each new provenance version added
    */
   @Test
   public void testV1ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v1");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
+        SampleProvenanceResource.transformers.get("v1");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
-    assertEquals("c06f3bd04de538704689c77a95353c5e1ba3b512e53382662267703159bc65f7", sp.getVersion());
+    assertEquals(
+        "c06f3bd04de538704689c77a95353c5e1ba3b512e53382662267703159bc65f7", sp.getVersion());
   }
-  
+
   @Test
   public void testV2ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v2");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
+        SampleProvenanceResource.transformers.get("v2");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
-    assertEquals("1ae45fa6e7a3160f0df1f1899449bf043efa415ca6f8e1617b5329ef707e15f5", sp.getVersion());
+    assertEquals(
+        "1ae45fa6e7a3160f0df1f1899449bf043efa415ca6f8e1617b5329ef707e15f5", sp.getVersion());
   }
-  
+
   @Test
   public void testV3ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v3");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
+        SampleProvenanceResource.transformers.get("v3");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
-    assertEquals("7cbb2609e0a387d90d8a3a754dcd131f7f013aa6df9d74a21c70a39b3b4330af", sp.getVersion());
+    assertEquals(
+        "7cbb2609e0a387d90d8a3a754dcd131f7f013aa6df9d74a21c70a39b3b4330af", sp.getVersion());
   }
-  
+
   @Test
   public void testV4ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v4");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
+        SampleProvenanceResource.transformers.get("v4");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
-    assertEquals("6afbb7e2e805eb185702d59b40c191600f5e4ae28f8283d20884552a43b31576", sp.getVersion());
+    assertEquals(
+        "6afbb7e2e805eb185702d59b40c191600f5e4ae28f8283d20884552a43b31576", sp.getVersion());
   }
-  
+
   @Test
   public void testV5ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v5");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
+        SampleProvenanceResource.transformers.get("v5");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
-    assertEquals("57423efd8747ea9c32d61511e6a9e6a9c11ef7601a8806c1bfb5153174a72db3", sp.getVersion());
+    assertEquals(
+        "57423efd8747ea9c32d61511e6a9e6a9c11ef7601a8806c1bfb5153174a72db3", sp.getVersion());
   }
 
   private SampleProvenance makeBaseSampleProvenance() {
@@ -195,7 +198,7 @@ public class SampleProvenanceResourceTest {
     sp.setInstrumentModel(makeBaseInstrumentModel());
     sp.setSampleProject(makeBaseProject());
     sp.setAdditionalSampleAttributes(
-        ImmutableMap.<LimsSampleAttribute, Set<String>> of(
+        ImmutableMap.<LimsSampleAttribute, Set<String>>of(
             LimsSampleAttribute.TARGETED_RESEQUENCING, ImmutableSet.of("tarseq")));
     sp.setParentSamples(makeBaseSampleParents());
 
@@ -359,9 +362,13 @@ public class SampleProvenanceResourceTest {
   }
 
   private List<Sample> makeBaseSampleParents() {
-    List<Sample> parents = Lists.newArrayList(makeEmptySample("library"),
-        makeEmptySample("aliquot"), makeEmptySample("stock"),
-        makeEmptySample("tissue"), makeEmptySample("identity"));
+    List<Sample> parents =
+        Lists.newArrayList(
+            makeEmptySample("library"),
+            makeEmptySample("aliquot"),
+            makeEmptySample("stock"),
+            makeEmptySample("tissue"),
+            makeEmptySample("identity"));
     return parents;
   }
 
@@ -370,5 +377,4 @@ public class SampleProvenanceResourceTest {
     s.setName(name);
     return s;
   }
-
 }

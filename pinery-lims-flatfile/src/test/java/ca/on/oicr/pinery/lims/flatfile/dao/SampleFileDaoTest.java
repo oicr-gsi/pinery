@@ -1,10 +1,14 @@
 package ca.on.oicr.pinery.lims.flatfile.dao;
 
+import ca.on.oicr.pinery.api.Attribute;
+import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.Sample;
+import ca.on.oicr.pinery.api.Type;
+import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,18 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import ca.on.oicr.pinery.api.Attribute;
-import ca.on.oicr.pinery.api.AttributeName;
-import ca.on.oicr.pinery.api.Sample;
-import ca.on.oicr.pinery.api.Type;
-import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/test-context.xml")
 public class SampleFileDaoTest {
 
-  @Autowired
-  private SampleFileDao dao;
+  @Autowired private SampleFileDao dao;
 
   @Test
   public void testGetSingleSampleAndMapping() {
@@ -38,7 +35,8 @@ public class SampleFileDaoTest {
     Assert.assertEquals("Identity", sample.getSampleType());
     Assert.assertEquals(ModelUtils.convertToDate("2012-06-01T16:53:19-04:00"), sample.getCreated());
     Assert.assertEquals(Integer.valueOf(2), sample.getCreatedById());
-    Assert.assertEquals(ModelUtils.convertToDate("2012-06-01T16:56:20-04:00"), sample.getModified());
+    Assert.assertEquals(
+        ModelUtils.convertToDate("2012-06-01T16:56:20-04:00"), sample.getModified());
     Assert.assertEquals(Integer.valueOf(1), sample.getModifiedById());
     Assert.assertEquals("TestProject", sample.getProject());
     Assert.assertEquals(Boolean.valueOf(true), sample.getArchived());
@@ -67,8 +65,10 @@ public class SampleFileDaoTest {
 
   @Test
   public void testGetSamplesDateFilters() {
-    ZonedDateTime before = ZonedDateTime.parse("2012-10-01T17:53:19-04:00", ModelUtils.dateTimeFormatter);
-    ZonedDateTime after = ZonedDateTime.parse("2012-07-01T15:53:19-04:00", ModelUtils.dateTimeFormatter);
+    ZonedDateTime before =
+        ZonedDateTime.parse("2012-10-01T17:53:19-04:00", ModelUtils.dateTimeFormatter);
+    ZonedDateTime after =
+        ZonedDateTime.parse("2012-07-01T15:53:19-04:00", ModelUtils.dateTimeFormatter);
     List<Sample> samples = dao.getSamplesFiltered(null, null, null, before, after);
     Assert.assertEquals(4, samples.size());
   }
@@ -89,7 +89,6 @@ public class SampleFileDaoTest {
     Assert.assertEquals(5, samples.size());
   }
 
-
   @Test
   public void testGetAllSampleTypes() {
     List<Type> types = dao.getAllSampleTypes();
@@ -101,5 +100,4 @@ public class SampleFileDaoTest {
     List<AttributeName> atts = dao.getAllSampleAttributes();
     Assert.assertEquals(7, atts.size());
   }
-
 }

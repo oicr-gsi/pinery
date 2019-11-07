@@ -7,7 +7,6 @@ import java.time.temporal.ChronoField;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,19 +17,29 @@ public class GsleSample extends DefaultSample {
   public static final String NONE = "NONE";
 
   // "2012-06-12 14:47:09-04"
-  public static final DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
-      .appendValue(ChronoField.YEAR, 4).appendLiteral('-').appendValue(ChronoField.MONTH_OF_YEAR, 2)
-      .appendLiteral('-').appendValue(ChronoField.DAY_OF_MONTH, 2).appendLiteral(' ')
-      .appendValue(ChronoField.HOUR_OF_DAY, 2).appendLiteral(':').appendValue(ChronoField.MINUTE_OF_HOUR, 2)
-      .appendLiteral(':').appendValue(ChronoField.SECOND_OF_MINUTE, 2).appendOffset("+HH", "Z").toFormatter();
+  public static final DateTimeFormatter dateTimeFormatter =
+      new DateTimeFormatterBuilder()
+          .appendValue(ChronoField.YEAR, 4)
+          .appendLiteral('-')
+          .appendValue(ChronoField.MONTH_OF_YEAR, 2)
+          .appendLiteral('-')
+          .appendValue(ChronoField.DAY_OF_MONTH, 2)
+          .appendLiteral(' ')
+          .appendValue(ChronoField.HOUR_OF_DAY, 2)
+          .appendLiteral(':')
+          .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+          .appendLiteral(':')
+          .appendValue(ChronoField.SECOND_OF_MINUTE, 2)
+          .appendOffset("+HH", "Z")
+          .toFormatter();
 
   /**
    * Determines sample project name based on library nomeclature.
-   * 
+   *
    * @see <a href=
-   *      "https://wiki.oicr.on.ca/display/MCPHERSON/LIMS+Guidelines#LIMSGuidelines-LibraryNomencalture">https://wiki.oicr.on.ca/display/MCPHERSON/LIMS+Guidelines#LIMSGuidelines-LibraryNomencalture</a>
-   *      Sample names start with a project name 3 to 5 characters long in
-   *      uppercase terminated with an underscore.
+   *     "https://wiki.oicr.on.ca/display/MCPHERSON/LIMS+Guidelines#LIMSGuidelines-LibraryNomencalture">https://wiki.oicr.on.ca/display/MCPHERSON/LIMS+Guidelines#LIMSGuidelines-LibraryNomencalture</a>
+   *     Sample names start with a project name 3 to 5 characters long in uppercase terminated with
+   *     an underscore.
    */
   @Override
   public String getProject() {
@@ -72,8 +81,7 @@ public class GsleSample extends DefaultSample {
   }
 
   public void setPrepKitName(String name) {
-    if (name != null && !name.equals(""))
-      getOrCreatePreparationKit().setName(name);
+    if (name != null && !name.equals("")) getOrCreatePreparationKit().setName(name);
   }
 
   public void setPrepKitDescription(String description) {
@@ -124,9 +132,9 @@ public class GsleSample extends DefaultSample {
       try {
         setModifiedById(Integer.parseInt(modifiedByIdString));
       } catch (NumberFormatException e) {
-        log.error("The modified by id [{}] is not a valid integer value. {}", modifiedByIdString, e);
+        log.error(
+            "The modified by id [{}] is not a valid integer value. {}", modifiedByIdString, e);
       }
     }
   }
-
 }

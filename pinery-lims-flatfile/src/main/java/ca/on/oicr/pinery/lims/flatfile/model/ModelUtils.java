@@ -15,14 +15,11 @@ public class ModelUtils {
 
   /**
    * Creates a Date object from String representation
-   * 
-   * @param date
-   *          String date representation in format yyyy-mm-ddThh:mm:ss+ZZ:zz
-   *          (e.g. "2012-06-12T14:47:09-04:00")
-   * @return null if date is null or empty; otherwise, the Date represented by the
-   *         provided String
-   * @throws IllegalArgumentException
-   *           if the String does not match the expected format
+   *
+   * @param date String date representation in format yyyy-mm-ddThh:mm:ss+ZZ:zz (e.g.
+   *     "2012-06-12T14:47:09-04:00")
+   * @return null if date is null or empty; otherwise, the Date represented by the provided String
+   * @throws IllegalArgumentException if the String does not match the expected format
    */
   public static Date convertToDate(String date) {
     if (date == null || "".equals(date)) {
@@ -34,9 +31,8 @@ public class ModelUtils {
 
   /**
    * Utility method to eliminate empty Strings
-   * 
-   * @param s
-   *          String to check
+   *
+   * @param s String to check
    * @return null if s is null or an empty String; otherwise s
    */
   public static String nullIfEmpty(String s) {
@@ -45,9 +41,8 @@ public class ModelUtils {
 
   /**
    * Utility method to eliminate zero-valued Integers
-   * 
-   * @param i
-   *          the Integer to check
+   *
+   * @param i the Integer to check
    * @return null if i is null or has a value of 0; otherwise i
    */
   public static Integer nullIfZero(Integer i) {
@@ -55,13 +50,10 @@ public class ModelUtils {
   }
 
   /**
-   * Utility method to avoid setting value of zero when a Float should actually be
-   * null
-   * 
-   * @param floatString
-   *          String representing a Float or null
-   * @return null if floatString is null or an empty String; the Float value
-   *         otherwise
+   * Utility method to avoid setting value of zero when a Float should actually be null
+   *
+   * @param floatString String representing a Float or null
+   * @return null if floatString is null or an empty String; the Float value otherwise
    */
   public static Float nullIfEmptyFloat(String floatString) {
     return floatString == null || floatString.length() == 0 ? null : Float.valueOf(floatString);
@@ -74,9 +66,8 @@ public class ModelUtils {
       return Integer.parseInt(num);
     }
   }
-  
+
   public static Boolean parseBooleanOrNull(String bool) {
     return bool == null ? null : Boolean.parseBoolean(bool);
   }
-
 }

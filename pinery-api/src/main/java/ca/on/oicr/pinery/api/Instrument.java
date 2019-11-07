@@ -4,20 +4,19 @@ import java.util.Date;
 
 public interface Instrument {
 
-   public Integer getId();
+  public Integer getId();
 
-   public void setId(Integer id);
+  public void setId(Integer id);
 
-   public String getName();
+  public String getName();
 
-   public void setName(String name);
+  public void setName(String name);
 
-   public Date getCreated();
+  public Date getCreated();
 
-   public void setCreated(Date created);
+  public void setCreated(Date created);
 
-   public Integer getModelId();
+  public Integer getModelId();
 
-   public void setModelId(Integer modelId);
-
+  public void setModelId(Integer modelId);
 }

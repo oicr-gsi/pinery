@@ -18,5 +18,4 @@ public class TemporaryBoxPositionTest {
     assertNotNull(sut.getPosition());
     assertEquals("F09", sut.getPosition());
   }
-
 }

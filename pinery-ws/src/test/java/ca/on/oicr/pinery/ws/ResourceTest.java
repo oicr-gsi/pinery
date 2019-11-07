@@ -4,18 +4,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import org.junit.Ignore;
-import org.junit.Test;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.Run;
@@ -34,488 +22,497 @@ import ca.on.oicr.ws.dto.OrderDtoSample;
 import ca.on.oicr.ws.dto.RunDto;
 import ca.on.oicr.ws.dto.RunDtoPosition;
 import ca.on.oicr.ws.dto.RunDtoSample;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.springframework.web.util.UriComponentsBuilder;
 
 public class ResourceTest {
 
-    private final Date expectedDate = new Date();
-    
-   @Test
-   public void test_Resource_1() throws Exception {
-      OrderService orderService = mock(OrderService.class);
-      when(orderService.getOrder(1)).thenReturn(getOrder());
-      OrderResource orderResource = new OrderResource();
-      orderResource.setOrderService(orderService);
-      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
+  private final Date expectedDate = new Date();
 
-      assertThat(orderDto, is(notNullValue()));
-   }
+  @Test
+  public void test_Resource_1() throws Exception {
+    OrderService orderService = mock(OrderService.class);
+    when(orderService.getOrder(1)).thenReturn(getOrder());
+    OrderResource orderResource = new OrderResource();
+    orderResource.setOrderService(orderService);
+    OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
 
-   @Test
-   public void test_Resource_2() throws Exception {
-      OrderService orderService = mock(OrderService.class);
-      when(orderService.getOrder(1)).thenReturn(getOrder());
-      OrderResource orderResource = new OrderResource();
-      orderResource.setOrderService(orderService);
-      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
-      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+    assertThat(orderDto, is(notNullValue()));
+  }
 
-      assertThat(orderDto.getCreatedDate(), is(sf.format(expectedDate)));
-   }
+  @Test
+  public void test_Resource_2() throws Exception {
+    OrderService orderService = mock(OrderService.class);
+    when(orderService.getOrder(1)).thenReturn(getOrder());
+    OrderResource orderResource = new OrderResource();
+    orderResource.setOrderService(orderService);
+    OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
+    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
-   @Test
-   public void test_Resource_3() throws Exception {
-      OrderService orderService = mock(OrderService.class);
-      when(orderService.getOrder(1)).thenReturn(getOrder());
-      OrderResource orderResource = new OrderResource();
-      orderResource.setOrderService(orderService);
-      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
+    assertThat(orderDto.getCreatedDate(), is(sf.format(expectedDate)));
+  }
 
-      assertThat(orderDto.getId(), is(2));
-   }
+  @Test
+  public void test_Resource_3() throws Exception {
+    OrderService orderService = mock(OrderService.class);
+    when(orderService.getOrder(1)).thenReturn(getOrder());
+    OrderResource orderResource = new OrderResource();
+    orderResource.setOrderService(orderService);
+    OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
 
-   @Test
-   public void test_Resource_4() throws Exception {
-      OrderService orderService = mock(OrderService.class);
-      when(orderService.getOrder(1)).thenReturn(getOrder());
-      OrderResource orderResource = new OrderResource();
-      orderResource.setOrderService(orderService);
-      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
-      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+    assertThat(orderDto.getId(), is(2));
+  }
 
-      assertThat(orderDto.getModifiedDate(), is(sf.format(expectedDate)));
-   }
+  @Test
+  public void test_Resource_4() throws Exception {
+    OrderService orderService = mock(OrderService.class);
+    when(orderService.getOrder(1)).thenReturn(getOrder());
+    OrderResource orderResource = new OrderResource();
+    orderResource.setOrderService(orderService);
+    OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
+    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
-   @Test
-   public void test_Resource_5() throws Exception {
-      OrderService orderService = mock(OrderService.class);
-      when(orderService.getOrder(1)).thenReturn(getOrder());
-      OrderResource orderResource = new OrderResource();
-      orderResource.setOrderService(orderService);
-      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
+    assertThat(orderDto.getModifiedDate(), is(sf.format(expectedDate)));
+  }
 
-      assertThat(orderDto.getPlatform(), is("Illumina HiSeq 2000"));
-   }
+  @Test
+  public void test_Resource_5() throws Exception {
+    OrderService orderService = mock(OrderService.class);
+    when(orderService.getOrder(1)).thenReturn(getOrder());
+    OrderResource orderResource = new OrderResource();
+    orderResource.setOrderService(orderService);
+    OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
 
-   @Test
-   public void test_Resource_6() throws Exception {
-      OrderService orderService = mock(OrderService.class);
-      when(orderService.getOrder(1)).thenReturn(getOrder());
-      OrderResource orderResource = new OrderResource();
-      orderResource.setOrderService(orderService);
-      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
+    assertThat(orderDto.getPlatform(), is("Illumina HiSeq 2000"));
+  }
 
-      assertThat(orderDto.getProject(), is("HALT"));
-   }
+  @Test
+  public void test_Resource_6() throws Exception {
+    OrderService orderService = mock(OrderService.class);
+    when(orderService.getOrder(1)).thenReturn(getOrder());
+    OrderResource orderResource = new OrderResource();
+    orderResource.setOrderService(orderService);
+    OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
 
-   @Test
-   public void test_Resource_7() throws Exception {
-      OrderService orderService = mock(OrderService.class);
-      when(orderService.getOrder(1)).thenReturn(getOrder());
-      OrderResource orderResource = new OrderResource();
-      orderResource.setOrderService(orderService);
-      OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
+    assertThat(orderDto.getProject(), is("HALT"));
+  }
 
-      assertThat(orderDto.getStatus(), is("Complete"));
-   }
+  @Test
+  public void test_Resource_7() throws Exception {
+    OrderService orderService = mock(OrderService.class);
+    when(orderService.getOrder(1)).thenReturn(getOrder());
+    OrderResource orderResource = new OrderResource();
+    orderResource.setOrderService(orderService);
+    OrderDto orderDto = orderResource.getOrder(getUriBuilder(), 1);
 
-   @Test
-   public void test_Resource_8() throws Exception {
-      boolean status;
-      AttributeDto attributeDto = new AttributeDto();
-      Set<AttributeDto> attributeDtoSet = Sets.newHashSet();
-      OrderDtoSample orderDtoSample = new OrderDtoSample();
-      attributeDto.setName("read length");
-      attributeDtoSet.add(attributeDto);
-      orderDtoSample.setAttributes(attributeDtoSet);
-      status = attributeContainsName(orderDtoSample.getAttributes(), attributeDto.getName());
+    assertThat(orderDto.getStatus(), is("Complete"));
+  }
 
-      assertThat(status, is(true));
-   }
+  @Test
+  public void test_Resource_8() throws Exception {
+    boolean status;
+    AttributeDto attributeDto = new AttributeDto();
+    Set<AttributeDto> attributeDtoSet = Sets.newHashSet();
+    OrderDtoSample orderDtoSample = new OrderDtoSample();
+    attributeDto.setName("read length");
+    attributeDtoSet.add(attributeDto);
+    orderDtoSample.setAttributes(attributeDtoSet);
+    status = attributeContainsName(orderDtoSample.getAttributes(), attributeDto.getName());
 
-   @Test
-   public void test_Resource_9() throws Exception {
-      boolean status;
-      AttributeDto attributeDto = new AttributeDto();
-      Set<AttributeDto> attributeDtoSet = Sets.newHashSet();
-      OrderDtoSample orderDtoSample = new OrderDtoSample();
-      attributeDto.setValue("2x101");
-      attributeDtoSet.add(attributeDto);
-      orderDtoSample.setAttributes(attributeDtoSet);
-      status = attributeContainsValue(orderDtoSample.getAttributes(), attributeDto.getValue());
+    assertThat(status, is(true));
+  }
 
-      assertThat(status, is(true));
-   }
+  @Test
+  public void test_Resource_9() throws Exception {
+    boolean status;
+    AttributeDto attributeDto = new AttributeDto();
+    Set<AttributeDto> attributeDtoSet = Sets.newHashSet();
+    OrderDtoSample orderDtoSample = new OrderDtoSample();
+    attributeDto.setValue("2x101");
+    attributeDtoSet.add(attributeDto);
+    orderDtoSample.setAttributes(attributeDtoSet);
+    status = attributeContainsValue(orderDtoSample.getAttributes(), attributeDto.getValue());
 
-   @Test
-   public void test_Resource_10() throws Exception {
-      OrderService orderService = mock(OrderService.class);
-      when(orderService.getOrder()).thenReturn(getListOrder());
-      OrderResource orderResource = new OrderResource();
-      orderResource.setOrderService(orderService);
-      List<OrderDto> orderDto = orderResource.getOrders(getUriBuilder());
+    assertThat(status, is(true));
+  }
 
-      assertThat(orderDto, is(notNullValue()));
-   }
+  @Test
+  public void test_Resource_10() throws Exception {
+    OrderService orderService = mock(OrderService.class);
+    when(orderService.getOrder()).thenReturn(getListOrder());
+    OrderResource orderResource = new OrderResource();
+    orderResource.setOrderService(orderService);
+    List<OrderDto> orderDto = orderResource.getOrders(getUriBuilder());
 
-   @Test
-   public void test_Resource_11() throws Exception {
-      OrderService orderService = mock(OrderService.class);
-      when(orderService.getOrder()).thenReturn(getListOrder());
-      OrderResource orderResource = new OrderResource();
-      orderResource.setOrderService(orderService);
+    assertThat(orderDto, is(notNullValue()));
+  }
 
-      List<OrderDto> originalListOrderDto = orderResource.getOrders(getUriBuilder());
-      OrderDto orderDto = new OrderDto();
-      List<OrderDto> listOrderDto = Lists.newArrayList();
-      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+  @Test
+  public void test_Resource_11() throws Exception {
+    OrderService orderService = mock(OrderService.class);
+    when(orderService.getOrder()).thenReturn(getListOrder());
+    OrderResource orderResource = new OrderResource();
+    orderResource.setOrderService(orderService);
 
-      Set<OrderDtoSample> orderDtoSampleSet = Sets.newHashSet();
-      OrderDtoSample orderDtoSampleObj = new OrderDtoSample();
-      orderDtoSampleObj.setUrl("http://test/sample/2");
-      orderDtoSampleSet.add(orderDtoSampleObj);
+    List<OrderDto> originalListOrderDto = orderResource.getOrders(getUriBuilder());
+    OrderDto orderDto = new OrderDto();
+    List<OrderDto> listOrderDto = Lists.newArrayList();
+    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
-      orderDto.setCreatedDate(sf.format(expectedDate));
-      orderDto.setId(2);
-      orderDto.setModifiedDate(sf.format(expectedDate));
-      orderDto.setPlatform("Illumina HiSeq 2000");
-      orderDto.setProject("HALT");
-      orderDto.setStatus("Complete");
-      orderDto.setUrl("http://test/order/2");
+    Set<OrderDtoSample> orderDtoSampleSet = Sets.newHashSet();
+    OrderDtoSample orderDtoSampleObj = new OrderDtoSample();
+    orderDtoSampleObj.setUrl("http://test/sample/2");
+    orderDtoSampleSet.add(orderDtoSampleObj);
 
-      for (OrderDtoSample orderDtoSample : orderDtoSampleSet) {
-         orderDtoSample.setId("2");
+    orderDto.setCreatedDate(sf.format(expectedDate));
+    orderDto.setId(2);
+    orderDto.setModifiedDate(sf.format(expectedDate));
+    orderDto.setPlatform("Illumina HiSeq 2000");
+    orderDto.setProject("HALT");
+    orderDto.setStatus("Complete");
+    orderDto.setUrl("http://test/order/2");
+
+    for (OrderDtoSample orderDtoSample : orderDtoSampleSet) {
+      orderDtoSample.setId("2");
+    }
+
+    orderDto.setSamples(orderDtoSampleSet);
+
+    listOrderDto.add(orderDto);
+
+    assertThat(originalListOrderDto, containsInAnyOrder(listOrderDto.toArray()));
+  }
+
+  private Order getOrder() {
+    Order order = new DefaultOrder();
+
+    Set<OrderSample> orderSampleSet = Sets.newHashSet();
+    OrderSample orderSampleObj = new DefaultOrderSample();
+    orderSampleSet.add(orderSampleObj);
+
+    order.setCreatedDate(expectedDate);
+    order.setId(2);
+    order.setModifiedDate(expectedDate);
+    order.setPlatform("Illumina HiSeq 2000");
+    order.setProject("HALT");
+    order.setStatus("Complete");
+    for (OrderSample orderSample : orderSampleSet) {
+      orderSample.setId("45");
+    }
+    order.setSample(orderSampleSet);
+    return order;
+  }
+
+  public boolean attributeContainsName(Set<AttributeDto> attribute, String attributeName) {
+
+    for (AttributeDto dto : attribute) {
+      if (dto.getName().equals(attributeName)) {
+        return true;
       }
+    }
+    return false;
+  }
 
-      orderDto.setSamples(orderDtoSampleSet);
+  public boolean attributeContainsValue(Set<AttributeDto> attribute, String attributeValue) {
 
-      listOrderDto.add(orderDto);
-
-      assertThat(originalListOrderDto, containsInAnyOrder(listOrderDto.toArray()));
-   }
-
-   private Order getOrder() {
-      Order order = new DefaultOrder();
-
-      Set<OrderSample> orderSampleSet = Sets.newHashSet();
-      OrderSample orderSampleObj = new DefaultOrderSample();
-      orderSampleSet.add(orderSampleObj);
-
-      order.setCreatedDate(expectedDate);
-      order.setId(2);
-      order.setModifiedDate(expectedDate);
-      order.setPlatform("Illumina HiSeq 2000");
-      order.setProject("HALT");
-      order.setStatus("Complete");
-      for (OrderSample orderSample : orderSampleSet) {
-         orderSample.setId("45");
+    for (AttributeDto dto : attribute) {
+      if (dto.getValue().equals(attributeValue)) {
+        return true;
       }
-      order.setSample(orderSampleSet);
-      return order;
-   }
+    }
+    return false;
+  }
 
-   public boolean attributeContainsName(Set<AttributeDto> attribute, String attributeName) {
+  private List<Order> getListOrder() {
+    Order order = new DefaultOrder();
+    List<Order> list = Lists.newArrayList();
 
-      for (AttributeDto dto : attribute) {
-         if (dto.getName().equals(attributeName)) {
-            return true;
-         }
+    Set<OrderSample> orderSampleSet = Sets.newHashSet();
+    OrderSample orderSampleObj = new DefaultOrderSample();
+    orderSampleSet.add(orderSampleObj);
+
+    order.setCreatedDate(expectedDate);
+    order.setId(2);
+    order.setModifiedDate(expectedDate);
+    order.setPlatform("Illumina HiSeq 2000");
+    order.setProject("HALT");
+    order.setStatus("Complete");
+
+    for (OrderSample orderSample : orderSampleSet) {
+      orderSample.setId("2");
+    }
+    order.setSample(orderSampleSet);
+
+    list.add(order);
+
+    return list;
+  }
+
+  @Test
+  public void test_Resource__Run_1() throws Exception {
+    RunService runService = mock(RunService.class);
+    when(runService.getRun(1)).thenReturn(getRun());
+    RunResource runResource = new RunResource();
+    runResource.setRunService(runService);
+    RunDto runDto = runResource.getRun(getUriBuilder(), 1);
+
+    assertThat(runDto, is(notNullValue()));
+  }
+
+  @Test
+  public void test_Resource__Run_2() throws Exception {
+    RunService runService = mock(RunService.class);
+    when(runService.getRun(1)).thenReturn(getRun());
+    RunResource runResource = new RunResource();
+    runResource.setRunService(runService);
+    RunDto runDto = runResource.getRun(getUriBuilder(), 1);
+    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+    assertThat(runDto.getCreatedDate(), is(sf.format(expectedDate)));
+  }
+
+  @Test
+  public void test_Resource_Run_3() throws Exception {
+    RunService runService = mock(RunService.class);
+    when(runService.getRun(1)).thenReturn(getRun());
+    RunResource runResource = new RunResource();
+    runResource.setRunService(runService);
+    RunDto runDto = runResource.getRun(getUriBuilder(), 1);
+
+    assertThat(runDto.getId(), is(2));
+  }
+
+  @Test
+  public void test_Resource_Run_4() throws Exception {
+    RunService runService = mock(RunService.class);
+    when(runService.getRun(1)).thenReturn(getRun());
+    RunResource runResource = new RunResource();
+    runResource.setRunService(runService);
+    RunDto runDto = runResource.getRun(getUriBuilder(), 1);
+
+    assertThat(runDto.getState(), is("Complete"));
+  }
+
+  @Test
+  public void test_Resource_Run_5() throws Exception {
+    RunService runService = mock(RunService.class);
+    when(runService.getRun(1)).thenReturn(getRun());
+    RunResource runResource = new RunResource();
+    runResource.setRunService(runService);
+    RunDto runDto = runResource.getRun(getUriBuilder(), 1);
+
+    assertThat(runDto.getName(), is("130906_SN203_0196_AC2D4DACXX"));
+  }
+
+  @Test
+  public void test_Resource_Run_6() throws Exception {
+    RunService runService = mock(RunService.class);
+    when(runService.getRun(1)).thenReturn(getRun());
+    RunResource runResource = new RunResource();
+    runResource.setRunService(runService);
+    RunDto runDto = runResource.getRun(getUriBuilder(), 1);
+
+    assertThat(runDto.getBarcode(), is("C2D8J"));
+  }
+
+  @Test
+  public void test_Resource_Run_7() throws Exception {
+    boolean status;
+    RunDtoSample runDtoSample = new RunDtoSample();
+    Set<RunDtoSample> runDtoSampleSet = Sets.newHashSet();
+    RunDtoPosition runDtoPosition = new RunDtoPosition();
+    runDtoSample.setBarcode("C2D8J");
+    runDtoSampleSet.add(runDtoSample);
+    runDtoPosition.setSamples(runDtoSampleSet);
+    status = runContainsBarcode(runDtoPosition.getSamples(), runDtoSample.getBarcode());
+
+    assertThat(status, is(true));
+  }
+
+  @Test
+  public void test_Resource_Run_8() throws Exception {
+    boolean status;
+    RunDtoSample runDtoSample = new RunDtoSample();
+    Set<RunDtoSample> runDtoSampleSet = Sets.newHashSet();
+    RunDtoPosition runDtoPosition = new RunDtoPosition();
+    runDtoSample.setUrl("https://pinery.res.oicr.on.ca:8443/pinery/sample/45");
+    runDtoSampleSet.add(runDtoSample);
+    runDtoPosition.setSamples(runDtoSampleSet);
+    status = runContainsUrl(runDtoPosition.getSamples(), runDtoSample.getUrl());
+
+    assertThat(status, is(true));
+  }
+
+  @Test
+  public void test_Resource_Run_9() throws Exception {
+    boolean status;
+    RunDtoSample runDtoSample = new RunDtoSample();
+    Set<RunDtoSample> runDtoSampleSet = Sets.newHashSet();
+    RunDtoPosition runDtoPosition = new RunDtoPosition();
+    runDtoSample.setId("12");
+    runDtoSampleSet.add(runDtoSample);
+    runDtoPosition.setSamples(runDtoSampleSet);
+    status = runContainsId(runDtoPosition.getSamples(), runDtoSample.getId());
+
+    assertThat(status, is(true));
+  }
+
+  @Test
+  public void test_Resource_Run_10() throws Exception {
+    RunService runService = mock(RunService.class);
+    when(runService.getRun()).thenReturn(getListRun());
+    RunResource runResource = new RunResource();
+    runResource.setRunService(runService);
+    List<RunDto> runDto = runResource.getRuns(getUriBuilder());
+
+    assertThat(runDto, is(notNullValue()));
+  }
+
+  @Ignore
+  public void test_Resource_Run_11() throws Exception {
+    RunService runService = mock(RunService.class);
+    when(runService.getRun()).thenReturn(getListRun());
+    RunResource runResource = new RunResource();
+    runResource.setRunService(runService);
+
+    List<RunDto> originalListRunDto = runResource.getRuns(getUriBuilder());
+    RunDto runDto = new RunDto();
+    List<RunDto> listRunDto = Lists.newArrayList();
+    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+    runDto.setCreatedDate(sf.format(expectedDate));
+    runDto.setId(2);
+    runDto.setName("130906_SN804_0130_AC2D8JACXX");
+    runDto.setBarcode("C2D8J");
+    runDto.setState("Complete");
+    runDto.setUrl("http://test/run//2");
+
+    RunDtoPosition runPosition = new RunDtoPosition();
+    Set<RunDtoPosition> positions = Sets.newHashSet();
+    positions.add(runPosition);
+
+    RunDtoSample sampleObj = new RunDtoSample();
+    Set<RunDtoSample> runSample = Sets.newHashSet();
+    runSample.add(sampleObj);
+
+    for (RunDtoPosition position : positions) {
+      position.setPosition(54);
+      for (RunDtoSample sample : runSample) {
+        sample.setBarcode("ABC");
+        sample.setId("45");
+        sample.setUrl("http://test/run/45");
       }
-      return false;
-   }
+      position.setSamples(runSample);
+    }
 
-   public boolean attributeContainsValue(Set<AttributeDto> attribute, String attributeValue) {
+    runDto.setPositions(positions);
 
-      for (AttributeDto dto : attribute) {
-         if (dto.getValue().equals(attributeValue)) {
-            return true;
-         }
+    listRunDto.add(runDto);
+
+    assertThat(originalListRunDto, containsInAnyOrder(listRunDto.toArray()));
+  }
+
+  private Run getRun() {
+    Run run = new DefaultRun();
+    run.setCreatedDate(expectedDate);
+    run.setId(2);
+    run.setBarcode("C2D8J");
+    run.setName("130906_SN203_0196_AC2D4DACXX");
+    run.setState("Complete");
+
+    RunPosition runPosition = new DefaultRunPosition();
+    Set<RunPosition> positions = Sets.newHashSet();
+    positions.add(runPosition);
+
+    RunSample sampleObj = new DefaultRunSample();
+    Set<RunSample> runSample = Sets.newHashSet();
+    runSample.add(sampleObj);
+
+    for (RunPosition position : positions) {
+      position.setPosition(54);
+      for (RunSample sample : runSample) {
+        sample.setBarcode("ABC");
+        sample.setId("45");
       }
-      return false;
-   }
+      position.setRunSample(runSample);
+    }
 
-   private List<Order> getListOrder() {
-      Order order = new DefaultOrder();
-      List<Order> list = Lists.newArrayList();
+    run.setSample(positions);
+    return run;
+  }
 
-      Set<OrderSample> orderSampleSet = Sets.newHashSet();
-      OrderSample orderSampleObj = new DefaultOrderSample();
-      orderSampleSet.add(orderSampleObj);
+  public boolean runContainsBarcode(Set<RunDtoSample> run, String runBarcode) {
 
-      order.setCreatedDate(expectedDate);
-      order.setId(2);
-      order.setModifiedDate(expectedDate);
-      order.setPlatform("Illumina HiSeq 2000");
-      order.setProject("HALT");
-      order.setStatus("Complete");
-
-      for (OrderSample orderSample : orderSampleSet) {
-         orderSample.setId("2");
+    for (RunDtoSample dto : run) {
+      if (dto.getBarcode().equals(runBarcode)) {
+        return true;
       }
-      order.setSample(orderSampleSet);
+    }
+    return false;
+  }
 
-      list.add(order);
+  public boolean runContainsUrl(Set<RunDtoSample> run, String runUrl) {
 
-      return list;
-   }
-
-   @Test
-   public void test_Resource__Run_1() throws Exception {
-      RunService runService = mock(RunService.class);
-      when(runService.getRun(1)).thenReturn(getRun());
-      RunResource runResource = new RunResource();
-      runResource.setRunService(runService);
-      RunDto runDto = runResource.getRun(getUriBuilder(), 1);
-
-      assertThat(runDto, is(notNullValue()));
-   }
-
-   @Test
-   public void test_Resource__Run_2() throws Exception {
-      RunService runService = mock(RunService.class);
-      when(runService.getRun(1)).thenReturn(getRun());
-      RunResource runResource = new RunResource();
-      runResource.setRunService(runService);
-      RunDto runDto = runResource.getRun(getUriBuilder(), 1);
-      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-
-      assertThat(runDto.getCreatedDate(), is(sf.format(expectedDate)));
-   }
-
-   @Test
-   public void test_Resource_Run_3() throws Exception {
-      RunService runService = mock(RunService.class);
-      when(runService.getRun(1)).thenReturn(getRun());
-      RunResource runResource = new RunResource();
-      runResource.setRunService(runService);
-      RunDto runDto = runResource.getRun(getUriBuilder(), 1);
-
-      assertThat(runDto.getId(), is(2));
-   }
-
-   @Test
-   public void test_Resource_Run_4() throws Exception {
-      RunService runService = mock(RunService.class);
-      when(runService.getRun(1)).thenReturn(getRun());
-      RunResource runResource = new RunResource();
-      runResource.setRunService(runService);
-      RunDto runDto = runResource.getRun(getUriBuilder(), 1);
-
-      assertThat(runDto.getState(), is("Complete"));
-   }
-
-   @Test
-   public void test_Resource_Run_5() throws Exception {
-      RunService runService = mock(RunService.class);
-      when(runService.getRun(1)).thenReturn(getRun());
-      RunResource runResource = new RunResource();
-      runResource.setRunService(runService);
-      RunDto runDto = runResource.getRun(getUriBuilder(), 1);
-
-      assertThat(runDto.getName(), is("130906_SN203_0196_AC2D4DACXX"));
-   }
-
-   @Test
-   public void test_Resource_Run_6() throws Exception {
-      RunService runService = mock(RunService.class);
-      when(runService.getRun(1)).thenReturn(getRun());
-      RunResource runResource = new RunResource();
-      runResource.setRunService(runService);
-      RunDto runDto = runResource.getRun(getUriBuilder(), 1);
-
-      assertThat(runDto.getBarcode(), is("C2D8J"));
-   }
-
-   @Test
-   public void test_Resource_Run_7() throws Exception {
-      boolean status;
-      RunDtoSample runDtoSample = new RunDtoSample();
-      Set<RunDtoSample> runDtoSampleSet = Sets.newHashSet();
-      RunDtoPosition runDtoPosition = new RunDtoPosition();
-      runDtoSample.setBarcode("C2D8J");
-      runDtoSampleSet.add(runDtoSample);
-      runDtoPosition.setSamples(runDtoSampleSet);
-      status = runContainsBarcode(runDtoPosition.getSamples(), runDtoSample.getBarcode());
-
-      assertThat(status, is(true));
-   }
-
-   @Test
-   public void test_Resource_Run_8() throws Exception {
-      boolean status;
-      RunDtoSample runDtoSample = new RunDtoSample();
-      Set<RunDtoSample> runDtoSampleSet = Sets.newHashSet();
-      RunDtoPosition runDtoPosition = new RunDtoPosition();
-      runDtoSample.setUrl("https://pinery.res.oicr.on.ca:8443/pinery/sample/45");
-      runDtoSampleSet.add(runDtoSample);
-      runDtoPosition.setSamples(runDtoSampleSet);
-      status = runContainsUrl(runDtoPosition.getSamples(), runDtoSample.getUrl());
-
-      assertThat(status, is(true));
-   }
-
-   @Test
-   public void test_Resource_Run_9() throws Exception {
-      boolean status;
-      RunDtoSample runDtoSample = new RunDtoSample();
-      Set<RunDtoSample> runDtoSampleSet = Sets.newHashSet();
-      RunDtoPosition runDtoPosition = new RunDtoPosition();
-      runDtoSample.setId("12");
-      runDtoSampleSet.add(runDtoSample);
-      runDtoPosition.setSamples(runDtoSampleSet);
-      status = runContainsId(runDtoPosition.getSamples(), runDtoSample.getId());
-
-      assertThat(status, is(true));
-   }
-
-   @Test
-   public void test_Resource_Run_10() throws Exception {
-      RunService runService = mock(RunService.class);
-      when(runService.getRun()).thenReturn(getListRun());
-      RunResource runResource = new RunResource();
-      runResource.setRunService(runService);
-      List<RunDto> runDto = runResource.getRuns(getUriBuilder());
-
-      assertThat(runDto, is(notNullValue()));
-   }
-
-   @Ignore
-   public void test_Resource_Run_11() throws Exception {
-      RunService runService = mock(RunService.class);
-      when(runService.getRun()).thenReturn(getListRun());
-      RunResource runResource = new RunResource();
-      runResource.setRunService(runService);
-
-      List<RunDto> originalListRunDto = runResource.getRuns(getUriBuilder());
-      RunDto runDto = new RunDto();
-      List<RunDto> listRunDto = Lists.newArrayList();
-      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-
-      runDto.setCreatedDate(sf.format(expectedDate));
-      runDto.setId(2);
-      runDto.setName("130906_SN804_0130_AC2D8JACXX");
-      runDto.setBarcode("C2D8J");
-      runDto.setState("Complete");
-      runDto.setUrl("http://test/run//2");
-
-      RunDtoPosition runPosition = new RunDtoPosition();
-      Set<RunDtoPosition> positions = Sets.newHashSet();
-      positions.add(runPosition);
-
-      RunDtoSample sampleObj = new RunDtoSample();
-      Set<RunDtoSample> runSample = Sets.newHashSet();
-      runSample.add(sampleObj);
-
-      for (RunDtoPosition position : positions) {
-         position.setPosition(54);
-         for (RunDtoSample sample : runSample) {
-            sample.setBarcode("ABC");
-            sample.setId("45");
-            sample.setUrl("http://test/run/45");
-         }
-         position.setSamples(runSample);
+    for (RunDtoSample dto : run) {
+      if (dto.getUrl().equals(runUrl)) {
+        return true;
       }
+    }
+    return false;
+  }
 
-      runDto.setPositions(positions);
+  public boolean runContainsId(Set<RunDtoSample> runSamples, String runSampleId) {
 
-      listRunDto.add(runDto);
-
-      assertThat(originalListRunDto, containsInAnyOrder(listRunDto.toArray()));
-   }
-
-   private Run getRun() {
-      Run run = new DefaultRun();
-      run.setCreatedDate(expectedDate);
-      run.setId(2);
-      run.setBarcode("C2D8J");
-      run.setName("130906_SN203_0196_AC2D4DACXX");
-      run.setState("Complete");
-
-      RunPosition runPosition = new DefaultRunPosition();
-      Set<RunPosition> positions = Sets.newHashSet();
-      positions.add(runPosition);
-
-      RunSample sampleObj = new DefaultRunSample();
-      Set<RunSample> runSample = Sets.newHashSet();
-      runSample.add(sampleObj);
-
-      for (RunPosition position : positions) {
-         position.setPosition(54);
-         for (RunSample sample : runSample) {
-            sample.setBarcode("ABC");
-            sample.setId("45");
-         }
-         position.setRunSample(runSample);
+    for (RunDtoSample dto : runSamples) {
+      if (dto.getId().equals(runSampleId)) {
+        return true;
       }
+    }
+    return false;
+  }
 
-      run.setSample(positions);
-      return run;
-   }
+  private List<Run> getListRun() {
+    Run run = new DefaultRun();
+    List<Run> list = Lists.newArrayList();
 
-   public boolean runContainsBarcode(Set<RunDtoSample> run, String runBarcode) {
+    run.setCreatedDate(expectedDate);
+    run.setId(2);
+    run.setName("130906_SN804_0130_AC2D8JACXX");
+    run.setBarcode("C2D8J");
+    run.setState("Complete");
 
-      for (RunDtoSample dto : run) {
-         if (dto.getBarcode().equals(runBarcode)) {
-            return true;
-         }
+    RunPosition runPosition = new DefaultRunPosition();
+    Set<RunPosition> positions = Sets.newHashSet();
+    positions.add(runPosition);
+
+    RunSample sampleObj = new DefaultRunSample();
+    Set<RunSample> runSample = Sets.newHashSet();
+    runSample.add(sampleObj);
+
+    for (RunPosition position : positions) {
+      position.setPosition(54);
+      for (RunSample sample : runSample) {
+        sample.setBarcode("ABC");
+        sample.setId("45");
       }
-      return false;
-   }
+      position.setRunSample(runSample);
+    }
 
-   public boolean runContainsUrl(Set<RunDtoSample> run, String runUrl) {
+    run.setSample(positions);
 
-      for (RunDtoSample dto : run) {
-         if (dto.getUrl().equals(runUrl)) {
-            return true;
-         }
-      }
-      return false;
-   }
+    list.add(run);
 
-   public boolean runContainsId(Set<RunDtoSample> runSamples, String runSampleId) {
+    return list;
+  }
 
-      for (RunDtoSample dto : runSamples) {
-         if (dto.getId().equals(runSampleId)) {
-            return true;
-         }
-      }
-      return false;
-   }
-
-   private List<Run> getListRun() {
-      Run run = new DefaultRun();
-      List<Run> list = Lists.newArrayList();
-
-      run.setCreatedDate(expectedDate);
-      run.setId(2);
-      run.setName("130906_SN804_0130_AC2D8JACXX");
-      run.setBarcode("C2D8J");
-      run.setState("Complete");
-
-      RunPosition runPosition = new DefaultRunPosition();
-      Set<RunPosition> positions = Sets.newHashSet();
-      positions.add(runPosition);
-
-      RunSample sampleObj = new DefaultRunSample();
-      Set<RunSample> runSample = Sets.newHashSet();
-      runSample.add(sampleObj);
-
-      for (RunPosition position : positions) {
-         position.setPosition(54);
-         for (RunSample sample : runSample) {
-            sample.setBarcode("ABC");
-            sample.setId("45");
-         }
-         position.setRunSample(runSample);
-      }
-
-      run.setSample(positions);
-
-      list.add(run);
-
-      return list;
-   }
-   
-   private UriComponentsBuilder getUriBuilder() {
-     return UriComponentsBuilder.fromHttpUrl("http://test");
-   }
+  private UriComponentsBuilder getUriBuilder() {
+    return UriComponentsBuilder.fromHttpUrl("http://test");
+  }
 }

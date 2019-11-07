@@ -1,11 +1,5 @@
 package ca.on.oicr.pinery.lims.flatfile;
 
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Box;
 import ca.on.oicr.pinery.api.ChangeLog;
@@ -26,25 +20,21 @@ import ca.on.oicr.pinery.lims.flatfile.dao.RunDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.SampleDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.SampleProjectDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.UserDao;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FlatfileClient implements Lims {
-  
-  @Autowired
-  private InstrumentDao instrumentDao;
-  @Autowired
-  private OrderDao orderDao;
-  @Autowired
-  private RunDao runDao;
-  @Autowired
-  private SampleDao sampleDao;
-  @Autowired
-  private SampleProjectDao sampleProjectDao;
-  @Autowired
-  private UserDao userDao;
-  @Autowired
-  private ChangeDao changeDao;
-  @Autowired
-  private BoxDao boxDao;
+
+  @Autowired private InstrumentDao instrumentDao;
+  @Autowired private OrderDao orderDao;
+  @Autowired private RunDao runDao;
+  @Autowired private SampleDao sampleDao;
+  @Autowired private SampleProjectDao sampleProjectDao;
+  @Autowired private UserDao userDao;
+  @Autowired private ChangeDao changeDao;
+  @Autowired private BoxDao boxDao;
 
   @Override
   public Sample getSample(String id) {
@@ -57,8 +47,12 @@ public class FlatfileClient implements Lims {
   }
 
   @Override
-  public List<Sample> getSamples(Boolean archived, Set<String> projects,
-      Set<String> types, ZonedDateTime before, ZonedDateTime after) {
+  public List<Sample> getSamples(
+      Boolean archived,
+      Set<String> projects,
+      Set<String> types,
+      ZonedDateTime before,
+      ZonedDateTime after) {
     return sampleDao.getSamplesFiltered(archived, projects, types, before, after);
   }
 
@@ -146,5 +140,4 @@ public class FlatfileClient implements Lims {
   public List<Box> getBoxes() {
     return boxDao.getAllBoxes();
   }
-
 }

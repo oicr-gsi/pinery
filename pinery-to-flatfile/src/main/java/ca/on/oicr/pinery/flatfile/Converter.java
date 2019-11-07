@@ -1,8 +1,5 @@
 package ca.on.oicr.pinery.flatfile;
 
-import java.io.File;
-import java.io.IOException;
-
 import ca.on.oicr.pinery.client.HttpResponseException;
 import ca.on.oicr.pinery.client.PineryClient;
 import ca.on.oicr.pinery.flatfile.writer.BoxWriter;
@@ -14,10 +11,10 @@ import ca.on.oicr.pinery.flatfile.writer.SampleWriter;
 import ca.on.oicr.pinery.flatfile.writer.SequencerRunWriter;
 import ca.on.oicr.pinery.flatfile.writer.UserWriter;
 import ca.on.oicr.pinery.flatfile.writer.Writer;
+import java.io.File;
+import java.io.IOException;
 
-/**
- * This class handles the interaction between Pinery and the flatfile Writers
- */
+/** This class handles the interaction between Pinery and the flatfile Writers */
 public class Converter {
 
   private final PineryClient client;
@@ -25,10 +22,10 @@ public class Converter {
   private char separator = '\t';
   private char quoteChar = '"';
   private char escapeChar = '\\';
-  
+
   /**
    * Creates a new Converter instance
-   * 
+   *
    * @param client the Pinery client to use for retrieving input data
    * @param outputDir the directory to write output files to
    */
@@ -36,17 +33,19 @@ public class Converter {
     this.client = client;
     this.outputDir = outputDir;
   }
-  
+
   /**
    * Creates a new Converter instance
-   * 
+   *
    * @param client the Pinery client to use for retrieving input data
    * @param outputDir the directory to write output files to
    * @param separator delimiter to use in output files
    * @param quoteChar quote character to wrap fields with
-   * @param escapeChar character to escape the delimiter, quote, and escape characters when used within a field
+   * @param escapeChar character to escape the delimiter, quote, and escape characters when used
+   *     within a field
    */
-  public Converter(PineryClient client, File outputDir, char separator, char quoteChar, char escapeChar) {
+  public Converter(
+      PineryClient client, File outputDir, char separator, char quoteChar, char escapeChar) {
     this(client, outputDir);
     this.separator = separator;
     this.quoteChar = quoteChar;
@@ -55,19 +54,20 @@ public class Converter {
 
   /**
    * Reads all instrument and instrument model data from Pinery and writes it to a flat file
-   * 
+   *
    * @param filename output file name
    * @throws HttpResponseException if there is an error communicating with Pinery
    * @throws IOException if there is an error writing to file
    */
   public void convertInstruments(String filename) throws HttpResponseException, IOException {
-    Writer writer = new InstrumentWriter(client.getInstrument().all(), client.getInstrumentModel().all());
+    Writer writer =
+        new InstrumentWriter(client.getInstrument().all(), client.getInstrumentModel().all());
     writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
-  
+
   /**
    * Reads all sample data from Pinery and writes it to a flat file
-   * 
+   *
    * @param filename output file name
    * @throws HttpResponseException if there is an error communicating with Pinery
    * @throws IOException if there is an error writing to file
@@ -76,10 +76,10 @@ public class Converter {
     Writer writer = new SampleWriter(client.getSample().all());
     writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
-  
+
   /**
    * Reads all sample change log data from Pinery and writes it to a flat file
-   * 
+   *
    * @param filename output file name
    * @throws HttpResponseException if there is an error communicating with Pinery
    * @throws IOException if there is an error writing to file
@@ -88,10 +88,10 @@ public class Converter {
     Writer writer = new ChangeWriter(client.getChangeLog().all());
     writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
-  
+
   /**
    * Reads all user data from Pinery and writes it to a flat file
-   * 
+   *
    * @param filename output file name
    * @throws HttpResponseException if there is an error communicating with Pinery
    * @throws IOException if there is an error writing to file
@@ -100,10 +100,10 @@ public class Converter {
     Writer writer = new UserWriter(client.getUser().all());
     writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
-  
+
   /**
    * Reads all sequencer run data from Pinery and writes it to a flat file
-   * 
+   *
    * @param filename output file name
    * @throws HttpResponseException if there is an error communicating with Pinery
    * @throws IOException if there is an error writing to file
@@ -112,10 +112,10 @@ public class Converter {
     Writer writer = new SequencerRunWriter(client.getSequencerRun().all());
     writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
-  
+
   /**
    * Reads all order data from Pinery and writes it to a flat file
-   * 
+   *
    * @param filename output file name
    * @throws HttpResponseException if there is an error communicating with Pinery
    * @throws IOException if there is an error writing to file
@@ -124,10 +124,10 @@ public class Converter {
     Writer writer = new OrderWriter(client.getOrder().all());
     writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
-  
+
   /**
    * Reads all box data from Pinery and writes it to a flat file
-   * 
+   *
    * @param filename output file name
    * @throws HttpResponseException if there is an error communicating with Pinery
    * @throws IOException if there is an error writing to file
@@ -136,10 +136,10 @@ public class Converter {
     Writer writer = new BoxWriter(client.getBox().all());
     writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
-  
+
   /**
    * Reads all project data from Pinery and writes it to a flat file
-   * 
+   *
    * @param filename output file name
    * @throws HttpResponseException if there is an error communicating with Pinery
    * @throws IOException if there is an error writing to file

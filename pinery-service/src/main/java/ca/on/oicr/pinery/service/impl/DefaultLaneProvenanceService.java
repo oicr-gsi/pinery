@@ -20,62 +20,60 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- *
- * @author mlaszloffy
- */
+/** @author mlaszloffy */
 @Service
 public class DefaultLaneProvenanceService implements LaneProvenanceService {
 
-    Logger log = LoggerFactory.getLogger(DefaultLaneProvenanceService.class);
+  Logger log = LoggerFactory.getLogger(DefaultLaneProvenanceService.class);
 
-    private final Lims lims;
+  private final Lims lims;
 
-    @Autowired
-    public DefaultLaneProvenanceService(Lims lims) {
-        this.lims = lims;
+  @Autowired
+  public DefaultLaneProvenanceService(Lims lims) {
+    this.lims = lims;
+  }
+
+  @Override
+  public List<LaneProvenance> getLaneProvenance() {
+    Map<Integer, Instrument> instrumentById = new HashMap<>();
+    for (Instrument instrument : lims.getInstruments()) {
+      if (instrumentById.put(instrument.getId(), instrument) != null) {
+        log.warn("Duplicate Instrument id: " + instrument.getId());
+      }
     }
 
-    @Override
-    public List<LaneProvenance> getLaneProvenance() {
-        Map<Integer, Instrument> instrumentById = new HashMap<>();
-        for (Instrument instrument : lims.getInstruments()) {
-            if (instrumentById.put(instrument.getId(), instrument) != null) {
-                log.warn("Duplicate Instrument id: " + instrument.getId());
-            }
-        }
-
-        Map<Integer, InstrumentModel> instrumentModelById = new HashMap<>();
-        for (InstrumentModel instrumentModel : lims.getInstrumentModels()) {
-            if (instrumentModelById.put(instrumentModel.getId(), instrumentModel) != null) {
-                log.warn("Duplicate Instrument Model id: " + instrumentModel.getId());
-            }
-        }
-
-        //iterate over all sequencer runs -> lanes to build sample provenance
-        List<LaneProvenance> lps = new ArrayList<>();
-        List<Run> sequencerRuns = lims.getRuns();
-        for (Run sequencerRun : sequencerRuns) {
-
-            Instrument instrument = instrumentById.get(sequencerRun.getInstrumentId());
-            InstrumentModel instrumentModel = instrument == null ? null : instrumentModelById.get(instrument.getModelId());
-
-            Set<RunPosition> lanes = sequencerRun.getSamples();
-            if (lanes == null || lanes.isEmpty()) {
-                log.warn("Run [{}] does not have any lanes", sequencerRun.getName());
-            } else {
-                for (RunPosition lane : lanes) {
-                    DefaultLaneProvenance lp = new DefaultLaneProvenance();
-                    lp.setLane(lane);
-                    lp.setSequencerRun(sequencerRun);
-                    lp.setInstrument(instrument);
-                    lp.setInstrumentModel(instrumentModel);
-                    lps.add(lp);
-                }
-            }
-        }
-
-        Collections.sort(lps, new LimsProvenanceComparator());
-        return lps;
+    Map<Integer, InstrumentModel> instrumentModelById = new HashMap<>();
+    for (InstrumentModel instrumentModel : lims.getInstrumentModels()) {
+      if (instrumentModelById.put(instrumentModel.getId(), instrumentModel) != null) {
+        log.warn("Duplicate Instrument Model id: " + instrumentModel.getId());
+      }
     }
+
+    // iterate over all sequencer runs -> lanes to build sample provenance
+    List<LaneProvenance> lps = new ArrayList<>();
+    List<Run> sequencerRuns = lims.getRuns();
+    for (Run sequencerRun : sequencerRuns) {
+
+      Instrument instrument = instrumentById.get(sequencerRun.getInstrumentId());
+      InstrumentModel instrumentModel =
+          instrument == null ? null : instrumentModelById.get(instrument.getModelId());
+
+      Set<RunPosition> lanes = sequencerRun.getSamples();
+      if (lanes == null || lanes.isEmpty()) {
+        log.warn("Run [{}] does not have any lanes", sequencerRun.getName());
+      } else {
+        for (RunPosition lane : lanes) {
+          DefaultLaneProvenance lp = new DefaultLaneProvenance();
+          lp.setLane(lane);
+          lp.setSequencerRun(sequencerRun);
+          lp.setInstrument(instrument);
+          lp.setInstrumentModel(instrumentModel);
+          lps.add(lp);
+        }
+      }
+    }
+
+    Collections.sort(lps, new LimsProvenanceComparator());
+    return lps;
+  }
 }

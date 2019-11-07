@@ -5,88 +5,87 @@ import java.util.Set;
 
 public interface Run {
 
-   public String getState();
+  public String getState();
 
-   public void setState(String state);
+  public void setState(String state);
 
-   public String getName();
+  public String getName();
 
-   public void setName(String name);
+  public void setName(String name);
 
-   public String getBarcode();
+  public String getBarcode();
 
-   public void setBarcode(String barcode);
+  public void setBarcode(String barcode);
 
-   public String getBarcodeTwo();
+  public String getBarcodeTwo();
 
-   public void setBarcodeTwo(String barcodeTwo);
+  public void setBarcodeTwo(String barcodeTwo);
 
-   public Set<RunPosition> getSamples();
+  public Set<RunPosition> getSamples();
 
-   public void setSample(Set<RunPosition> samples);
+  public void setSample(Set<RunPosition> samples);
 
-   public Date getCreatedDate();
+  public Date getCreatedDate();
 
-   public void setCreatedDate(Date createdDate);
+  public void setCreatedDate(Date createdDate);
 
-   public Integer getId();
+  public Integer getId();
 
-   public void setId(Integer id);
+  public void setId(Integer id);
 
-   public Integer getCreatedById();
+  public Integer getCreatedById();
 
-   public void setCreatedById(Integer createdById);
+  public void setCreatedById(Integer createdById);
 
-   public Integer getInstrumentId();
+  public Integer getInstrumentId();
 
-   public void setInstrumentId(Integer instrumentId);
-   
-   public String getInstrumentName();
-   
-   public void setInstrumentName(String instrumentName);
-   
-   public String getReadLength();
-   
-   public void setReadLength(String readLength);
-   
-   public Date getStartDate();
-   
-   public void setStartDate(Date startDate);
-   
-   public Date getCompletionDate();
-   
-   public void setCompletionDate(Date endDate);
+  public void setInstrumentId(Integer instrumentId);
 
-   public Date getModified();
+  public String getInstrumentName();
 
-   public void setModified(Date modified);
+  public void setInstrumentName(String instrumentName);
 
-   public Integer getModifiedById();
+  public String getReadLength();
 
-   public void setModifiedById(Integer modifiedById);
-   
-   public String getRunDirectory();
-   
-   public void setRunDirectory(String runDirectory);
-   
-   public String getRunBasesMask();
-   
-   public void setRunBasesMask(String runBasesMask);
-   
-   public String getSequencingParameters();
-   
-   public void setSequencingParameters(String sequencingParameters);
-   
-   public String getWorkflowType();
-   
-   public void setWorkflowType(String workflowType);
-   
-   public String getContainerModel();
-   
-   public void setContainerModel(String containerModel);
-   
-   public String getSequencingKit();
-   
-   public void setSequencingKit(String sequencingKit);
-   
+  public void setReadLength(String readLength);
+
+  public Date getStartDate();
+
+  public void setStartDate(Date startDate);
+
+  public Date getCompletionDate();
+
+  public void setCompletionDate(Date endDate);
+
+  public Date getModified();
+
+  public void setModified(Date modified);
+
+  public Integer getModifiedById();
+
+  public void setModifiedById(Integer modifiedById);
+
+  public String getRunDirectory();
+
+  public void setRunDirectory(String runDirectory);
+
+  public String getRunBasesMask();
+
+  public void setRunBasesMask(String runBasesMask);
+
+  public String getSequencingParameters();
+
+  public void setSequencingParameters(String sequencingParameters);
+
+  public String getWorkflowType();
+
+  public void setWorkflowType(String workflowType);
+
+  public String getContainerModel();
+
+  public void setContainerModel(String containerModel);
+
+  public String getSequencingKit();
+
+  public void setSequencingKit(String sequencingKit);
 }

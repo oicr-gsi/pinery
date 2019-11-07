@@ -1,7 +1,8 @@
 package ca.on.oicr.pinery.lims.flatfile.dao.exception;
 
 /**
- * Runtime exception for data access. Will be thrown if multiple objects match a key that is expected to be unique
+ * Runtime exception for data access. Will be thrown if multiple objects match a key that is
+ * expected to be unique
  */
 public class NonUniqueKeyException extends RuntimeException {
 
@@ -11,8 +12,8 @@ public class NonUniqueKeyException extends RuntimeException {
     super();
   }
 
-  public NonUniqueKeyException(String message, Throwable cause,
-      boolean enableSuppression, boolean writableStackTrace) {
+  public NonUniqueKeyException(
+      String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
   }
 
@@ -27,5 +28,4 @@ public class NonUniqueKeyException extends RuntimeException {
   public NonUniqueKeyException(Throwable cause) {
     super(cause);
   }
-
 }
