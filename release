@@ -12,11 +12,13 @@ rm version.temp
 git checkout -b v${PINERY_VERSION_NEXT}_pr
 mvn clean install
 mvn versions:set -DnewVersion=${PINERY_VERSION} -DgenerateBackupPoms=false
-git commit -a -m "Pinery ${PINERY_VERSION} release"
+git add -u
+git commit -m "Pinery ${PINERY_VERSION} release"
 git tag -a v${PINERY_VERSION} -m "Pinery ${PINERY_VERSION} release"
 mvn deploy
 mvn versions:set -DnewVersion=${PINERY_VERSION_NEXT} -DgenerateBackupPoms=false
-git commit -a -m "prepared for next development iteration"
+git add -u
+git commit -m "prepared for next development iteration"
 git push origin v${PINERY_VERSION}
 git push -u origin v${PINERY_VERSION_NEXT}_pr
 set +x
