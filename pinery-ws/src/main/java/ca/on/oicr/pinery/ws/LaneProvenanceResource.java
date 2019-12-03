@@ -75,6 +75,7 @@ public class LaneProvenanceResource {
       =
           new MapBuilder<String, VersionTransformer<LaneProvenance, ? extends LaneProvenance>>() //
               .put("latest", noopTransformer) //
+              .put("v6", noopTransformer) //
               .put("v5", noopTransformer) //
               .put("v4", v3Transformer) //
               .put("v3", v3Transformer) //
@@ -82,7 +83,7 @@ public class LaneProvenanceResource {
               .put("v1", v1Transformer) //
               .build();
 
-  private static final String versions = "latest, v5, v4, v3, v2, v1";
+  private static final String versions = "latest, v6, v5, v4, v3, v2, v1";
 
   @Autowired private LaneProvenanceService laneProvenanceService;
 

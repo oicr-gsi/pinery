@@ -187,6 +187,16 @@ public class SampleProvenanceResourceTest {
         "57423efd8747ea9c32d61511e6a9e6a9c11ef7601a8806c1bfb5153174a72db3", sp.getVersion());
   }
 
+  @Test
+  public void testV6ProvenanceTransform() {
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
+        SampleProvenanceResource.transformers.get("v6");
+    SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
+    // This hash must never change
+    assertEquals(
+        "0c28a978c36929861383b39b584a2e5291e5a8494b79ee71cc19fb71174a36c8", sp.getVersion());
+  }
+
   private SampleProvenance makeBaseSampleProvenance() {
     DefaultSampleProvenance sp = new DefaultSampleProvenance();
 
@@ -256,6 +266,7 @@ public class SampleProvenanceResourceTest {
     attrs.add(makeAttribute("UMIs", "True"));
     attrs.add(makeAttribute("RIN", "5.7"));
     attrs.add(makeAttribute("DV200", "91.7"));
+    attrs.add(makeAttribute("Sex", "FEMALE"));
     s.setAttributes(attrs);
 
     return s;

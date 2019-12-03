@@ -33,7 +33,8 @@ public enum LimsSampleAttribute {
   INSTITUTE("institute", "Institute"),
   UMIS("umis", "UMIs"),
   RIN("rin", "RIN"),
-  DV200("dv200", "DV200");
+  DV200("dv200", "DV200"),
+  SEX("sex", "Sex");
 
   private final Set<String> inputTerms;
   private final String outputTerm;
