@@ -37,9 +37,16 @@ public class SampleProvenanceResource {
   private static final VersionTransformer<SampleProvenance, SampleProvenance> noopTransformer =
       input -> input;
 
-  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v4Transformer =
+  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v5Transformer =
       input -> {
         SimpleSampleProvenance modified = SimpleSampleProvenance.from(input);
+        modified.getSampleAttributes().remove(LimsSampleAttribute.SEX.toString());
+        return modified;
+      };
+
+  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v4Transformer =
+      input -> {
+        SimpleSampleProvenance modified = v5Transformer.transform(input);
         modified.getSampleAttributes().remove(LimsSampleAttribute.DV200.toString());
         modified.getSampleAttributes().remove(LimsSampleAttribute.RIN.toString());
         modified
@@ -92,14 +99,15 @@ public class SampleProvenanceResource {
           new MapBuilder<
                   String, VersionTransformer<SampleProvenance, ? extends SampleProvenance>>() //
               .put("latest", noopTransformer) //
-              .put("v5", noopTransformer) //
+              .put("v6", noopTransformer) //
+              .put("v5", v5Transformer) //
               .put("v4", v4Transformer) //
               .put("v3", v3Transformer) //
               .put("v2", v2Transformer) //
               .put("v1", v1Transformer) //
               .build();
 
-  private static final String versions = "latest, v5, v4, v3, v2, v1";
+  private static final String versions = "latest, v6, v5, v4, v3, v2, v1";
 
   @Autowired private SampleProvenanceService sampleProvenanceService;
 

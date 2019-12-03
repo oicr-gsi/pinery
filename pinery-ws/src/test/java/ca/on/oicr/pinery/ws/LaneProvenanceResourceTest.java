@@ -173,6 +173,16 @@ public class LaneProvenanceResourceTest {
         "8ed7a679a7027964844433713ff08119229b4c9be5d296a54c20b1a3d0594447", lp.getVersion());
   }
 
+  @Test
+  public void testV6ProvenanceTransform() {
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer =
+        LaneProvenanceResource.transformers.get("v6");
+    LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
+    // This hash must never change
+    assertEquals(
+        "8ed7a679a7027964844433713ff08119229b4c9be5d296a54c20b1a3d0594447", lp.getVersion());
+  }
+
   private LaneProvenance makeBaseLaneProvenance() {
     DefaultLaneProvenance lp = new DefaultLaneProvenance();
     lp.setInstrumentModel(makeBaseInstrumentModel());
