@@ -27,4 +27,8 @@ public interface SampleProject {
   public boolean isActive();
 
   public void setActive(boolean active);
+
+  public boolean isClinical();
+
+  public void setClinical(boolean clinical);
 }

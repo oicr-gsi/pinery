@@ -15,6 +15,7 @@ public class SampleProjectDto {
   private String earliest;
   private String latest;
   private boolean active;
+  private boolean clinical;
 
   public String getName() {
     return name;
@@ -65,6 +66,14 @@ public class SampleProjectDto {
     this.active = active;
   }
 
+  public boolean isClinical() {
+    return clinical;
+  }
+
+  public void setClinical(boolean clinical) {
+    this.clinical = clinical;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -75,6 +84,7 @@ public class SampleProjectDto {
     result = prime * result + ((latest == null) ? 0 : latest.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + Boolean.hashCode(active);
+    result = prime * result + Boolean.hashCode(clinical);
     return result;
   }
 
@@ -100,6 +110,7 @@ public class SampleProjectDto {
       if (other.name != null) return false;
     } else if (!name.equals(other.name)) return false;
     if (active != other.active) return false;
+    if (clinical != other.clinical) return false;
     return true;
   }
 
@@ -117,6 +128,8 @@ public class SampleProjectDto {
         + latest
         + ", active="
         + active
+        + ", clinical="
+        + clinical
         + "]";
   }
 }
