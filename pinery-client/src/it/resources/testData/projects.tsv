@@ -1,4 +1,4 @@
-projectName	active
-TestProject	true
-TestProject2	false
-TestProject3	false
+projectName	active	clinical
+TestProject	true	true
+TestProject2	false	false
+TestProject3	false	false
