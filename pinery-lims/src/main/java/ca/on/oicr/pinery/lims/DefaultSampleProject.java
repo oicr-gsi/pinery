@@ -11,6 +11,7 @@ public class DefaultSampleProject implements SampleProject {
   private Date earliest;
   private Date latest;
   private boolean active = true;
+  private boolean clinical = false;
 
   @Override
   public String getName() {
@@ -73,5 +74,15 @@ public class DefaultSampleProject implements SampleProject {
   @Override
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+  @Override
+  public boolean isClinical() {
+    return clinical;
+  }
+
+  @Override
+  public void setClinical(boolean clinical) {
+    this.clinical = clinical;
   }
 }
