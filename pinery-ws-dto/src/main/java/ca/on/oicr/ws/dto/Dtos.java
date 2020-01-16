@@ -363,6 +363,7 @@ public final class Dtos {
     }
     dto.setQcStatus(from.getQcStatus());
     dto.setAnalysisSkipped(from.isAnalysisSkipped());
+    dto.setRunPurpose(from.getRunPurpose());
     return dto;
   }
 
@@ -386,6 +387,7 @@ public final class Dtos {
     if (!StringUtils.isBlank(from.getBarcodeTwo())) {
       dto.setBarcodeTwo(from.getBarcodeTwo());
     }
+    dto.setRunPurpose(from.getRunPurpose());
     if (!StringUtils.isBlank(from.getUrl())) {
       dto.setUrl(from.getUrl());
     }

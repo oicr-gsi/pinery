@@ -52,4 +52,8 @@ public interface RunPosition {
   public Boolean isAnalysisSkipped();
 
   public void setAnalysisSkipped(Boolean analysisSkipped);
+
+  public String getRunPurpose();
+
+  public void setRunPurpose(String runPurpose);
 }

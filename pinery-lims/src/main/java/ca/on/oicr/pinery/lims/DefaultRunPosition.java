@@ -23,6 +23,7 @@ public class DefaultRunPosition implements RunPosition {
     result = prime * result + ((position == null) ? 0 : position.hashCode());
     result = prime * result + ((qcStatus == null) ? 0 : qcStatus.hashCode());
     result = prime * result + ((runSample == null) ? 0 : runSample.hashCode());
+    result = prime * result + ((runPurpose == null) ? 0 : runPurpose.hashCode());
     return result;
   }
 
@@ -68,6 +69,9 @@ public class DefaultRunPosition implements RunPosition {
     if (runSample == null) {
       if (other.runSample != null) return false;
     } else if (!runSample.equals(other.runSample)) return false;
+    if (runPurpose == null) {
+      if (other.runPurpose != null) return false;
+    } else if (!runPurpose.equals(other.runPurpose)) return false;
     return true;
   }
 
@@ -97,6 +101,8 @@ public class DefaultRunPosition implements RunPosition {
         + qcStatus
         + ", analysisSkipped="
         + analysisSkipped
+        + ", runPurpose="
+        + runPurpose
         + ", hashCode()="
         + hashCode()
         + ", toString()="
@@ -116,6 +122,7 @@ public class DefaultRunPosition implements RunPosition {
   private Date poolModified;
   private String qcStatus;
   private Boolean analysisSkipped;
+  private String runPurpose;
 
   @Override
   public Integer getPosition() {
@@ -235,5 +242,15 @@ public class DefaultRunPosition implements RunPosition {
   @Override
   public void setAnalysisSkipped(Boolean analysisSkipped) {
     this.analysisSkipped = analysisSkipped;
+  }
+
+  @Override
+  public String getRunPurpose() {
+    return runPurpose;
+  }
+
+  @Override
+  public void setRunPurpose(String runPurpose) {
+    this.runPurpose = runPurpose;
   }
 }

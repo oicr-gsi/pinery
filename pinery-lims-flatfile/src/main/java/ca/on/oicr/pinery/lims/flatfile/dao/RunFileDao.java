@@ -77,6 +77,7 @@ public class RunFileDao implements RunDao {
             pos.setPoolModifiedById(ModelUtils.parseIntOrNull(map.get("poolModifiedById")));
             pos.setPoolModified(ModelUtils.convertToDate(map.get("poolModified")));
             pos.setAnalysisSkipped(ModelUtils.parseBooleanOrNull(map.get("analysisSkipped")));
+            pos.setRunPurpose(ModelUtils.nullIfEmpty(map.get("runPurpose")));
             pos.setRunSample(parseRunSamples(map.get("samples")));
             positions.add(pos);
           }
@@ -91,10 +92,9 @@ public class RunFileDao implements RunDao {
             Map<String, String> sampleMap = DaoUtils.parseKeyValuePairs(sampleString);
             RunSample sample = new DefaultRunSample();
             sample.setId((sampleMap.get("id")));
-            if (sampleMap.containsKey("barcode"))
-              sample.setBarcode(ModelUtils.nullIfEmpty(sampleMap.get("barcode")));
-            if (sampleMap.containsKey("barcodeTwo"))
-              sample.setBarcodeTwo(ModelUtils.nullIfEmpty(sampleMap.get("barcodeTwo")));
+            sample.setBarcode(ModelUtils.nullIfEmpty(sampleMap.get("barcode")));
+            sample.setBarcodeTwo(ModelUtils.nullIfEmpty(sampleMap.get("barcodeTwo")));
+            sample.setRunPurpose(ModelUtils.nullIfEmpty(sampleMap.get("runPurpose")));
             if (sampleMap.containsKey("attributes"))
               sample.setAttributes(parseAttributes(sampleMap.get("attributes")));
             samples.add(sample);

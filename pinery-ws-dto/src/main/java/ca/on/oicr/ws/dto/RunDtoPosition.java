@@ -22,6 +22,7 @@ public class RunDtoPosition {
   private String poolModified;
   private String qcStatus;
   private Boolean analysisSkipped;
+  private String runPurpose;
 
   public Integer getPosition() {
     return position;
@@ -128,6 +129,14 @@ public class RunDtoPosition {
     this.analysisSkipped = analysisSkipped;
   }
 
+  public String getRunPurpose() {
+    return runPurpose;
+  }
+
+  public void setRunPurpose(String runPurpose) {
+    this.runPurpose = runPurpose;
+  }
+
   @Override
   public String toString() {
     return "RunDtoPosition [runSample="
@@ -154,6 +163,8 @@ public class RunDtoPosition {
         + getQcStatus()
         + ", isAnalysisSkipped()="
         + isAnalysisSkipped()
+        + ", getRunPurpose()="
+        + getRunPurpose()
         + ", getClass()="
         + getClass()
         + ", toString()="
@@ -174,6 +185,7 @@ public class RunDtoPosition {
     result = prime * result + ((poolCreated == null) ? 0 : poolCreated.hashCode());
     result = prime * result + ((qcStatus == null) ? 0 : qcStatus.hashCode());
     result = prime * result + ((analysisSkipped == null) ? 0 : analysisSkipped.hashCode());
+    result = prime * result + ((runPurpose == null) ? 0 : runPurpose.hashCode());
     return result;
   }
 
@@ -210,6 +222,9 @@ public class RunDtoPosition {
     if (analysisSkipped == null) {
       if (other.analysisSkipped != null) return false;
     } else if (!analysisSkipped.equals(other.analysisSkipped)) return false;
+    if (runPurpose == null) {
+      if (other.runPurpose != null) return false;
+    } else if (!runPurpose.equals(other.runPurpose)) return false;
     return true;
   }
 }

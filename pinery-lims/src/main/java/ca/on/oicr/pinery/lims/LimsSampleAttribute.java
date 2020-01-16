@@ -34,7 +34,13 @@ public enum LimsSampleAttribute {
   UMIS("umis", "UMIs"),
   RIN("rin", "RIN"),
   DV200("dv200", "DV200"),
-  SEX("sex", "Sex");
+  SEX("sex", "Sex"),
+  TARGET_CELL_RECOVERY("target_cell_recovery", "Target Cell Recovery"),
+  CELL_VIABILITY("cell_viability", "Cell Viability"),
+  SPIKE_IN("spike_in", "Spike-In"),
+  SPIKE_IN_DILUTION("spike_in_dilution_factor", "Spike-In Dilution Factor"),
+  SPIKE_IN_VOLUME("spike_in_volume_ul", "Spike-In-Volume (uL)"),
+  RUN_PURPOSE("run_purpose");
 
   private final Set<String> inputTerms;
   private final String outputTerm;

@@ -114,6 +114,10 @@ public class DefaultLaneProvenance implements LaneProvenance {
       attrs.put(LimsLaneAttribute.QC_STATUS.getKey(), lane.getQcStatus());
     }
 
+    if (lane.getRunPurpose() != null && !lane.getQcStatus().isEmpty()) {
+      attrs.put(LimsLaneAttribute.RUN_PURPOSE.getKey(), lane.getRunPurpose());
+    }
+
     return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
   }
 

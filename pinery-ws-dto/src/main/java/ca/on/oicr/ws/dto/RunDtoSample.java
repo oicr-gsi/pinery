@@ -12,6 +12,7 @@ public class RunDtoSample {
 
   private String barcode;
   private String barcodeTwo;
+  private String runPurpose;
   private String id;
   private String url;
   private Set<AttributeDto> attributes;
@@ -49,6 +50,14 @@ public class RunDtoSample {
     this.barcodeTwo = barcodeTwo;
   }
 
+  public String getRunPurpose() {
+    return runPurpose;
+  }
+
+  public void setRunPurpose(String runPurpose) {
+    this.runPurpose = runPurpose;
+  }
+
   public Set<AttributeDto> getAttributes() {
     return attributes;
   }
@@ -65,6 +74,7 @@ public class RunDtoSample {
     result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
     result = prime * result + ((barcodeTwo == null) ? 0 : barcodeTwo.hashCode());
     result = prime * result + ((id == null) ? 0 : id.hashCode());
+    result = prime * result + ((runPurpose == null) ? 0 : runPurpose.hashCode());
     return result;
   }
 
@@ -86,6 +96,9 @@ public class RunDtoSample {
     if (id == null) {
       if (other.id != null) return false;
     } else if (!id.equals(other.id)) return false;
+    if (runPurpose == null) {
+      if (other.runPurpose != null) return false;
+    } else if (!runPurpose.equals(other.runPurpose)) return false;
     return true;
   }
 
@@ -95,6 +108,8 @@ public class RunDtoSample {
         + barcode
         + ", barcodeTwo="
         + barcodeTwo
+        + ", runPurpose="
+        + runPurpose
         + ", id="
         + id
         + ", url="
