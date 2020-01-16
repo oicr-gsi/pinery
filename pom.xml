@@ -642,26 +642,6 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-        <repository>
-            <id>repository.jboss.org-public</id>
-            <name>JBoss repository</name>
-            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
-        </repository>
-        <repository>
-            <id>org.codehaus.plexus</id>
-            <name>Plexus</name>
-            <url>http://repo1.maven.org/maven2/org/codehaus/plexus/</url>
-        </repository>
-        <repository>
-            <id>maven-restlet</id>
-            <name>Public online Restlet repository</name>
-            <url>http://maven.restlet.org/</url>
-        </repository>
-        <repository>
-            <id>apache-releases</id>
-            <name>Apache Releases repository</name>
-            <url>https://repository.apache.org/content/repositories/releases/</url>
-        </repository>
     </repositories>
     <distributionManagement>
         <repository>
