@@ -114,7 +114,7 @@ public class DefaultLaneProvenance implements LaneProvenance {
       attrs.put(LimsLaneAttribute.QC_STATUS.getKey(), lane.getQcStatus());
     }
 
-    if (lane.getRunPurpose() != null && !lane.getQcStatus().isEmpty()) {
+    if (lane.getRunPurpose() != null && !lane.getRunPurpose().isEmpty()) {
       attrs.put(LimsLaneAttribute.RUN_PURPOSE.getKey(), lane.getRunPurpose());
     }
 
