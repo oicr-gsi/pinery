@@ -37,9 +37,22 @@ public class SampleProvenanceResource {
   private static final VersionTransformer<SampleProvenance, SampleProvenance> noopTransformer =
       input -> input;
 
-  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v5Transformer =
+  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v6Transformer =
       input -> {
         SimpleSampleProvenance modified = SimpleSampleProvenance.from(input);
+        modified.getSampleAttributes().remove(LimsSampleAttribute.TARGET_CELL_RECOVERY.toString());
+        modified.getSampleAttributes().remove(LimsSampleAttribute.CELL_VIABILITY.toString());
+        modified.getSampleAttributes().remove(LimsSampleAttribute.SPIKE_IN.toString());
+        modified.getSampleAttributes().remove(LimsSampleAttribute.SPIKE_IN_DILUTION.toString());
+        modified.getSampleAttributes().remove(LimsSampleAttribute.SPIKE_IN_VOLUME.toString());
+        modified.getSampleAttributes().remove(LimsSampleAttribute.RUN_PURPOSE.toString());
+        modified.getLaneAttributes().remove(LimsLaneAttribute.RUN_PURPOSE.getKey());
+        return modified;
+      };
+
+  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v5Transformer =
+      input -> {
+        SimpleSampleProvenance modified = v6Transformer.transform(input);
         modified.getSampleAttributes().remove(LimsSampleAttribute.SEX.toString());
         return modified;
       };
@@ -99,7 +112,8 @@ public class SampleProvenanceResource {
           new MapBuilder<
                   String, VersionTransformer<SampleProvenance, ? extends SampleProvenance>>() //
               .put("latest", noopTransformer) //
-              .put("v6", noopTransformer) //
+              .put("v7", noopTransformer)
+              .put("v6", v6Transformer) //
               .put("v5", v5Transformer) //
               .put("v4", v4Transformer) //
               .put("v3", v3Transformer) //
@@ -107,7 +121,7 @@ public class SampleProvenanceResource {
               .put("v1", v1Transformer) //
               .build();
 
-  private static final String versions = "latest, v6, v5, v4, v3, v2, v1";
+  private static final String versions = "latest, v7, v6, v5, v4, v3, v2, v1";
 
   @Autowired private SampleProvenanceService sampleProvenanceService;
 

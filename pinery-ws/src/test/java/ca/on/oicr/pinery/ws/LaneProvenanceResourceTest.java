@@ -183,6 +183,16 @@ public class LaneProvenanceResourceTest {
         "8ed7a679a7027964844433713ff08119229b4c9be5d296a54c20b1a3d0594447", lp.getVersion());
   }
 
+  @Test
+  public void testV7ProvenanceTransform() {
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer =
+        LaneProvenanceResource.transformers.get("v7");
+    LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
+    // This hash must never change
+    assertEquals(
+        "110ea1253a65abb6253116a6caa1f9eb4b349a115429af312cc387f6a107fdf0", lp.getVersion());
+  }
+
   private LaneProvenance makeBaseLaneProvenance() {
     DefaultLaneProvenance lp = new DefaultLaneProvenance();
     lp.setInstrumentModel(makeBaseInstrumentModel());
@@ -223,6 +233,7 @@ public class LaneProvenanceResourceTest {
     l.setRunSample(Sets.newHashSet(makeBaseRunSample()));
     l.setAnalysisSkipped(true);
     l.setQcStatus("Failed: Other problem");
+    l.setRunPurpose("Production");
     return l;
   }
 
@@ -231,6 +242,7 @@ public class LaneProvenanceResourceTest {
     s.setId("LDI100");
     s.setBarcode("ACGTACGT");
     s.setBarcodeTwo("TGCATGCA");
+    s.setRunPurpose("QC");
 
     Attribute tarseq = new DefaultAttribute();
     tarseq.setName("Targeted Resequencing");

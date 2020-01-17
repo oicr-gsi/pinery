@@ -6,6 +6,7 @@ public class DefaultRunSample extends DefaultSample implements RunSample {
 
   private String barcode;
   private String barcodeTwo;
+  private String runPurpose;
 
   @Override
   public String getBarcode() {
@@ -28,11 +29,22 @@ public class DefaultRunSample extends DefaultSample implements RunSample {
   }
 
   @Override
+  public String getRunPurpose() {
+    return runPurpose;
+  }
+
+  @Override
+  public void setRunPurpose(String runPurpose) {
+    this.runPurpose = runPurpose;
+  }
+
+  @Override
   public int hashCode() {
     final int prime = 31;
     int result = super.hashCode();
     result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
     result = prime * result + ((barcodeTwo == null) ? 0 : barcodeTwo.hashCode());
+    result = prime * result + ((runPurpose == null) ? 0 : runPurpose.hashCode());
     return result;
   }
 
@@ -48,11 +60,20 @@ public class DefaultRunSample extends DefaultSample implements RunSample {
     if (barcodeTwo == null) {
       if (other.barcodeTwo != null) return false;
     } else if (!barcodeTwo.equals(other.barcodeTwo)) return false;
+    if (runPurpose == null) {
+      if (other.runPurpose != null) return false;
+    } else if (!runPurpose.equals(other.runPurpose)) return false;
     return true;
   }
 
   @Override
   public String toString() {
-    return "DefaultRunSample [barcode=" + barcode + ", barcodeTwo=" + barcodeTwo + "]";
+    return "DefaultRunSample [barcode="
+        + barcode
+        + ", barcodeTwo="
+        + barcodeTwo
+        + ", runPurpose="
+        + runPurpose
+        + "]";
   }
 }

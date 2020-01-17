@@ -174,6 +174,12 @@ public class DefaultSampleProvenance implements SampleProvenance {
           LimsSampleAttribute.RUN_ID_AND_POSITION.toString(),
           sequencerRun.getId() + "_" + lane.getPosition());
     }
+    if (runSample.getRunPurpose() != null && !runSample.getRunPurpose().isEmpty()) {
+      attrsAll.put(LimsSampleAttribute.RUN_PURPOSE.toString(), runSample.getRunPurpose());
+    } else if (lane.getRunPurpose() != null && !lane.getRunPurpose().isEmpty()) {
+      attrsAll.put(LimsSampleAttribute.RUN_PURPOSE.toString(), lane.getRunPurpose());
+    }
+
     if (sample.getSampleType() != null) {
       attrsAll.put(LimsSampleAttribute.SAMPLE_TYPE.toString(), sample.getSampleType());
     }
@@ -281,6 +287,10 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
     if (lane.getQcStatus() != null && !lane.getQcStatus().isEmpty()) {
       attrs.put(LimsLaneAttribute.QC_STATUS.getKey(), lane.getQcStatus());
+    }
+
+    if (lane.getRunPurpose() != null && !lane.getRunPurpose().isEmpty()) {
+      attrs.put(LimsLaneAttribute.RUN_PURPOSE.getKey(), lane.getRunPurpose());
     }
 
     return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);

@@ -197,6 +197,16 @@ public class SampleProvenanceResourceTest {
         "0c28a978c36929861383b39b584a2e5291e5a8494b79ee71cc19fb71174a36c8", sp.getVersion());
   }
 
+  @Test
+  public void testV7ProvenanceTransform() {
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
+        SampleProvenanceResource.transformers.get("v7");
+    SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
+    // This hash must never change
+    assertEquals(
+        "1de6cebecdad9f3d694934eafe48961ea88908b6b7de24b245438b01731eb25c", sp.getVersion());
+  }
+
   private SampleProvenance makeBaseSampleProvenance() {
     DefaultSampleProvenance sp = new DefaultSampleProvenance();
 
@@ -240,7 +250,7 @@ public class SampleProvenanceResourceTest {
     s.setStatus(status);
 
     // Should include all attributes from LimsSampleAttribute enum except
-    // TEMPLATE_TYPE, RUN_ID_AND_POSITION, PREPARATION_KIT: constructed
+    // TEMPLATE_TYPE, RUN_ID_AND_POSITION, PREPARATION_KIT, RUN_PURPOSE: constructed
     // separately
     // LIBRARY_SIZE: doesn't seem to actually be set anywhere
     Set<Attribute> attrs = Sets.newHashSet();
@@ -267,6 +277,11 @@ public class SampleProvenanceResourceTest {
     attrs.add(makeAttribute("RIN", "5.7"));
     attrs.add(makeAttribute("DV200", "91.7"));
     attrs.add(makeAttribute("Sex", "FEMALE"));
+    attrs.add(makeAttribute("Target Cell Recovery", "56.78"));
+    attrs.add(makeAttribute("Cell Viability", "98.76"));
+    attrs.add(makeAttribute("Spike-In", "ERCC Mix 1"));
+    attrs.add(makeAttribute("Spike-In Dilution Factor", "1:1000"));
+    attrs.add(makeAttribute("Spike-In-Volume (uL)", "12.34"));
     s.setAttributes(attrs);
 
     return s;
@@ -284,6 +299,7 @@ public class SampleProvenanceResourceTest {
     s.setId("LDI100");
     s.setBarcode("ACGTACGT");
     s.setBarcodeTwo("TGCATGCA");
+    s.setRunPurpose("QC");
 
     Attribute tarseq = new DefaultAttribute();
     tarseq.setName("Targeted Resequencing");
@@ -305,6 +321,7 @@ public class SampleProvenanceResourceTest {
     l.setRunSample(Sets.newHashSet(makeBaseRunSample()));
     l.setAnalysisSkipped(true);
     l.setQcStatus("Failed: Other problem");
+    l.setRunPurpose("Production");
     return l;
   }
 

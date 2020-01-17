@@ -99,6 +99,7 @@ public class SequencerRunWriter extends Writer {
     sb.appendNonNull("poolModifiedById", pos.getPoolModifiedById());
     sb.appendNonNull("poolModified", pos.getPoolModified());
     sb.appendNonNull("analysisSkipped", pos.isAnalysisSkipped());
+    sb.appendNonNull("runPurpose", pos.getRunPurpose());
     sb.append("samples", getPositionSamplesString(pos));
     return sb.toString();
   }
@@ -119,6 +120,7 @@ public class SequencerRunWriter extends Writer {
     sb.append("id", sample.getId());
     if (sample.getBarcode() != null) sb.append("barcode", sample.getBarcode());
     if (sample.getBarcodeTwo() != null) sb.append("barcodeTwo", sample.getBarcodeTwo());
+    if (sample.getRunPurpose() != null) sb.append("runPurpose", sample.getRunPurpose());
     if (sample.getAttributes() != null && !sample.getAttributes().isEmpty()) {
       sb.append("attributes", getPositionSampleAttributesString(sample));
     }
