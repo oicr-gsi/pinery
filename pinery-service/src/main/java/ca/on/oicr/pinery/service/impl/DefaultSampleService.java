@@ -2,7 +2,6 @@ package ca.on.oicr.pinery.service.impl;
 
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.ChangeLog;
-import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DefaultSampleService implements SampleService {
 
-  @Autowired private Lims lims;
+  @Autowired private CacheOrLims lims;
 
   @Override
   public Sample getSample(String id) {

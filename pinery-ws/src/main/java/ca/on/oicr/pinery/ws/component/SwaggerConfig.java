@@ -1,6 +1,7 @@
 package ca.on.oicr.pinery.ws.component;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Collections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +35,8 @@ public class SwaggerConfig {
         .apiInfo(metaData())
         .globalResponseMessage(
             RequestMethod.GET,
-            ImmutableList.of(new ResponseMessageBuilder().code(200).message("OK").build()));
+            ImmutableList.of(new ResponseMessageBuilder().code(200).message("OK").build()))
+        .globalResponseMessage(RequestMethod.POST, Collections.emptyList());
   }
 
   private ApiInfo metaData() {

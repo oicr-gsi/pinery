@@ -1,8 +1,6 @@
 package ca.on.oicr.pinery.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;

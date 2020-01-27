@@ -1,0 +1,357 @@
+package ca.on.oicr.pinery.service.impl;
+
+import ca.on.oicr.gsi.provenance.model.LaneProvenance;
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
+import ca.on.oicr.pinery.api.AttributeName;
+import ca.on.oicr.pinery.api.Box;
+import ca.on.oicr.pinery.api.ChangeLog;
+import ca.on.oicr.pinery.api.DataProvider;
+import ca.on.oicr.pinery.api.Instrument;
+import ca.on.oicr.pinery.api.InstrumentModel;
+import ca.on.oicr.pinery.api.Lims;
+import ca.on.oicr.pinery.api.Order;
+import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.Sample;
+import ca.on.oicr.pinery.api.SampleProject;
+import ca.on.oicr.pinery.api.Type;
+import ca.on.oicr.pinery.api.User;
+import io.prometheus.client.Gauge;
+import io.prometheus.client.Histogram;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+@Service
+public class Cache implements DataProvider {
+
+  private static final Logger log = LoggerFactory.getLogger(Cache.class);
+
+  private static final Histogram cacheUpdateTime =
+      Histogram.build()
+          .name("pinery_cache_update_time")
+          .help("Time to update the cache (in seconds)")
+          .buckets(60, 180, 300, 600, 900, 1200, 1800, 3600)
+          .register();
+  private static final Gauge cacheUpdateFailures =
+      Gauge.build()
+          .name("pinery_cache_update_failures")
+          .help("Number of consecutive cache update failures")
+          .register();
+
+  @Autowired private Lims lims;
+
+  private List<Sample> samples;
+  private List<SampleProject> projects;
+  private List<User> users;
+  private List<Order> orders;
+  private List<AttributeName> sampleAttributes;
+  private List<ChangeLog> changeLogs;
+  private List<Run> runs;
+  private List<Type> sampleTypes;
+  private List<Instrument> instruments;
+  private List<InstrumentModel> instrumentModels;
+  private List<Box> boxes;
+  private List<SampleProvenance> sampleProvenance;
+  private List<LaneProvenance> laneProvenance;
+
+  @Value("${pinery.cache.enabled:false}")
+  private boolean enabled;
+
+  private boolean cacheComplete = false;
+  private boolean updating = false;
+  private Instant lastUpdated = null;
+
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  public Instant getLastUpdateTime() {
+    return lastUpdated;
+  }
+
+  @Scheduled(initialDelay = 0, fixedDelayString = "${pinery.cache.interval:900000}")
+  public void update() {
+    if (!isEnabled()) {
+      return;
+    }
+    log.debug("Update called");
+    boolean doUpdate;
+    synchronized (this) {
+      doUpdate = !updating;
+      if (doUpdate) {
+        updating = true;
+      } else if (!cacheComplete) {
+        while (updating) {
+          try {
+            log.debug("Waiting for previous update attempt to complete");
+            wait();
+          } catch (InterruptedException e) {
+            log.error("Interrupted while waiting for update", e);
+            throw new RuntimeException(e);
+          }
+        }
+        log.debug("Previous update attempt completed");
+        if (!cacheComplete) {
+          doUpdate = true;
+        }
+      }
+    }
+
+    if (doUpdate) {
+      Histogram.Timer cacheUpdateTimer = cacheUpdateTime.startTimer();
+      try {
+        log.debug("Attempting update");
+        List<Sample> newSamples = lims.getSamples(null, null, null, null, null);
+        List<SampleProject> newProjects = lims.getSampleProjects();
+        List<User> newUsers = lims.getUsers();
+        List<Order> newOrders = lims.getOrders();
+        List<Run> newRuns = lims.getRuns();
+        List<Type> newSampleTypes = lims.getTypes();
+        List<AttributeName> newSampleAttributes = lims.getAttributeNames();
+        List<ChangeLog> newChangeLogs = lims.getChangeLogs();
+        List<Instrument> newInstruments = lims.getInstruments();
+        List<InstrumentModel> newInstrumentModels = lims.getInstrumentModels();
+        List<Box> newBoxes = lims.getBoxes();
+
+        List<SampleProvenance> newSampleProvenance =
+            ProvenanceUtils.buildSampleProvenance(
+                newProjects, newInstruments, newInstrumentModels, newOrders, newSamples, newRuns);
+        List<LaneProvenance> newLaneProvenance =
+            ProvenanceUtils.buildLaneProvenance(newInstruments, newInstrumentModels, newRuns);
+
+        synchronized (this) {
+          this.samples = newSamples;
+          this.projects = newProjects;
+          this.users = newUsers;
+          this.orders = newOrders;
+          this.runs = newRuns;
+          this.sampleTypes = newSampleTypes;
+          this.sampleAttributes = newSampleAttributes;
+          this.changeLogs = newChangeLogs;
+          this.instruments = newInstruments;
+          this.instrumentModels = newInstrumentModels;
+          this.boxes = newBoxes;
+          this.sampleProvenance = newSampleProvenance;
+          this.laneProvenance = newLaneProvenance;
+
+          cacheComplete = true;
+          lastUpdated = Instant.now();
+          cacheUpdateFailures.set(0);
+          log.debug("Update successful");
+        }
+      } catch (RuntimeException e) {
+        cacheUpdateFailures.inc();
+        throw e;
+      } finally {
+        synchronized (this) {
+          cacheUpdateTimer.observeDuration();
+          log.debug("Update attempt completed; notifying others");
+          updating = false;
+          notifyAll();
+        }
+      }
+    }
+  }
+
+  public synchronized void updateIfEmpty() {
+    if (!enabled) {
+      throw new IllegalStateException("Cannot retrieve data from disabled cache");
+    }
+    if (!cacheComplete) {
+      update();
+    }
+  }
+
+  @Override
+  public synchronized Sample getSample(String id) {
+    updateIfEmpty();
+    return getBy(samples, Sample::getId, id);
+  }
+
+  @Override
+  public synchronized List<SampleProject> getSampleProjects() {
+    updateIfEmpty();
+    return projects;
+  }
+
+  @Override
+  public synchronized List<Sample> getSamples(
+      Boolean archived,
+      Set<String> projects,
+      Set<String> types,
+      ZonedDateTime before,
+      ZonedDateTime after) {
+    updateIfEmpty();
+
+    Set<String> normalizedProjects = normalizeSet(projects);
+    Set<String> normalizedTypes = normalizeSet(types);
+    Date beforeDate = before == null ? null : Date.from(before.toInstant());
+    Date afterDate = after == null ? null : Date.from(after.toInstant());
+
+    return samples.stream()
+        .filter(
+            sample -> {
+              if (archived != null && !archived.equals(sample.getArchived())) {
+                return false;
+              }
+              if (normalizedProjects != null
+                  && normalizedProjects.stream()
+                      .noneMatch(project -> project.equals(sample.getProject()))) {
+                return false;
+              }
+              if (normalizedTypes != null
+                  && normalizedTypes.stream()
+                      .noneMatch(type -> type.equals(sample.getSampleType()))) {
+                return false;
+              }
+              if (beforeDate != null && beforeDate.after(sample.getCreated())) {
+                return false;
+              }
+              if (afterDate != null && afterDate.before(sample.getModified())) {
+                return false;
+              }
+              return true;
+            })
+        .collect(Collectors.toList());
+  }
+
+  private Set<String> normalizeSet(Set<String> original) {
+    if (original == null || original.isEmpty()) {
+      return null;
+    }
+    Set<String> filtered = original.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+    return filtered.isEmpty() ? null : filtered;
+  }
+
+  @Override
+  public synchronized List<User> getUsers() {
+    updateIfEmpty();
+    return users;
+  }
+
+  @Override
+  public synchronized User getUser(Integer id) {
+    updateIfEmpty();
+    return getBy(users, User::getId, id);
+  }
+
+  @Override
+  public synchronized List<Order> getOrders() {
+    updateIfEmpty();
+    return orders;
+  }
+
+  @Override
+  public synchronized Order getOrder(Integer id) {
+    updateIfEmpty();
+    return getBy(orders, Order::getId, id);
+  }
+
+  @Override
+  public synchronized List<Run> getRuns() {
+    updateIfEmpty();
+    return runs;
+  }
+
+  @Override
+  public synchronized Run getRun(Integer id) {
+    updateIfEmpty();
+    return getBy(runs, Run::getId, id);
+  }
+
+  @Override
+  public synchronized Run getRun(String runName) {
+    updateIfEmpty();
+    return getBy(runs, Run::getName, runName);
+  }
+
+  @Override
+  public synchronized List<Type> getTypes() {
+    updateIfEmpty();
+    return sampleTypes;
+  }
+
+  @Override
+  public synchronized List<AttributeName> getAttributeNames() {
+    updateIfEmpty();
+    return sampleAttributes;
+  }
+
+  @Override
+  public synchronized List<ChangeLog> getChangeLogs() {
+    updateIfEmpty();
+    return changeLogs;
+  }
+
+  @Override
+  public synchronized ChangeLog getChangeLog(String id) {
+    updateIfEmpty();
+    return getBy(changeLogs, ChangeLog::getSampleId, id);
+  }
+
+  @Override
+  public synchronized List<InstrumentModel> getInstrumentModels() {
+    updateIfEmpty();
+    return instrumentModels;
+  }
+
+  @Override
+  public synchronized InstrumentModel getInstrumentModel(Integer id) {
+    updateIfEmpty();
+    return getBy(instrumentModels, InstrumentModel::getId, id);
+  }
+
+  @Override
+  public synchronized List<Instrument> getInstruments() {
+    updateIfEmpty();
+    return instruments;
+  }
+
+  @Override
+  public synchronized Instrument getInstrument(Integer instrumentId) {
+    updateIfEmpty();
+    return getBy(instruments, Instrument::getId, instrumentId);
+  }
+
+  @Override
+  public synchronized List<Instrument> getInstrumentModelInstrument(Integer id) {
+    updateIfEmpty();
+    return instruments.stream()
+        .filter(instrument -> id == null ? false : id.equals(instrument.getModelId()))
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public synchronized List<Box> getBoxes() {
+    updateIfEmpty();
+    return boxes;
+  }
+
+  public synchronized List<SampleProvenance> getSampleProvenance() {
+    updateIfEmpty();
+    return sampleProvenance;
+  }
+
+  public synchronized List<LaneProvenance> getLaneProvenance() {
+    updateIfEmpty();
+    return laneProvenance;
+  }
+
+  private <K, V> V getBy(List<V> items, Function<V, K> getter, K value) {
+    return items.stream()
+        .filter(item -> value == null ? false : value.equals(getter.apply(item)))
+        .findAny()
+        .orElse(null);
+  }
+}

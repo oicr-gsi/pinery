@@ -6,11 +6,14 @@ import ca.on.oicr.gsi.status.NavigationMenu;
 import ca.on.oicr.gsi.status.SectionRenderer;
 import ca.on.oicr.gsi.status.ServerConfig;
 import ca.on.oicr.gsi.status.StatusPage;
+import ca.on.oicr.pinery.service.impl.Cache;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.stream.Stream;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.stream.XMLStreamException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +47,11 @@ public class StatusController {
         }
       };
 
+  @Autowired private Cache cache;
+
+  @Value("${pinery.cache.interval:900000}")
+  private int cacheInterval;
+
   @GetMapping
   public void showStatus(HttpServletResponse response) throws IOException {
     response.setContentType("text/html;charset=utf-8");
@@ -58,7 +66,12 @@ public class StatusController {
 
         @Override
         protected void emitCore(SectionRenderer renderer) throws XMLStreamException {
-          // No information to display.
+          if (cache.isEnabled()) {
+            renderer.line("Cache interval (seconds)", cacheInterval);
+            renderer.lineSpan("Cache last updated", cache.getLastUpdateTime());
+          } else {
+            renderer.line("Cache", "Disabled");
+          }
         }
       }.renderPage(output);
     }

@@ -120,14 +120,16 @@ classpath.
 
 * add an external context config xml as described for _External Configuration_ above. This external
   config should set the active Spring profile to `external`, reference the internal spring config xml,
-  and optionally indicate a properties file if one is required by the implementation. An example of
-  this file should be included with the implementation. Here is an example:
+  and indicate a properties file. The properties file should contain both Pinery's expected properties
+  (see [pinery.properties](src/main/resources/pinery.properties)), and any additional properties relevant
+  to the implementation. An example of this file should be included with the implementation. Here is an
+  example:
 
     ```
     <Context>
         <Parameter name="spring.profiles.active" value="external" override="false"/>
         <Parameter name="pinery.external.springConfigFile" value="mylims-config.xml"/>
-        <Parameter name="mylims.propertiesFile" value="file:${CATALINA_HOME}/conf/Catalina/localhost/pinery-mylims.properties" override="false"/>
+        <Parameter name="pinery.propertiesFile" value="file:${CATALINA_HOME}/conf/Catalina/localhost/pinery-mylims.properties" override="false"/>
     </Context>
     ```
 * build your external implementation and deploy the resulting WAR
