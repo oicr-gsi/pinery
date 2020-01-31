@@ -97,7 +97,7 @@ public class Cache implements DataProvider {
             log.debug("Waiting for previous update attempt to complete");
             wait();
           } catch (InterruptedException e) {
-            log.error("Interrupted while waiting for update", e);
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
           }
         }
@@ -328,7 +328,7 @@ public class Cache implements DataProvider {
   public synchronized List<Instrument> getInstrumentModelInstrument(Integer id) {
     updateIfEmpty();
     return instruments.stream()
-        .filter(instrument -> id == null ? false : id.equals(instrument.getModelId()))
+        .filter(instrument -> id != null && id.equals(instrument.getModelId()))
         .collect(Collectors.toList());
   }
 
@@ -350,7 +350,7 @@ public class Cache implements DataProvider {
 
   private <K, V> V getBy(List<V> items, Function<V, K> getter, K value) {
     return items.stream()
-        .filter(item -> value == null ? false : value.equals(getter.apply(item)))
+        .filter(item -> value != null && value.equals(getter.apply(item)))
         .findAny()
         .orElse(null);
   }

@@ -78,21 +78,21 @@ public class ProvenanceUtils {
     Map<String, SampleProject> projectByName = new HashMap<>();
     for (SampleProject sampleProject : projects) {
       if (projectByName.put(sampleProject.getName(), sampleProject) != null) {
-        log.warn("Duplicate SampleProject name: " + sampleProject.getName());
+        log.warn("Duplicate SampleProject name: {}", sampleProject.getName());
       }
     }
 
     Map<Integer, Instrument> instrumentById = new HashMap<>();
     for (Instrument instrument : instruments) {
       if (instrumentById.put(instrument.getId(), instrument) != null) {
-        log.warn("Duplicate Instrument id: " + instrument.getId());
+        log.warn("Duplicate Instrument id: {}", instrument.getId());
       }
     }
 
     Map<Integer, InstrumentModel> instrumentModelById = new HashMap<>();
     for (InstrumentModel instrumentModel : instrumentModels) {
       if (instrumentModelById.put(instrumentModel.getId(), instrumentModel) != null) {
-        log.warn("Duplicate Instrument Model id: " + instrumentModel.getId());
+        log.warn("Duplicate Instrument Model id: {}", instrumentModel.getId());
       }
     }
 
@@ -115,10 +115,12 @@ public class ProvenanceUtils {
                   // unable to determine the targeted resequencing type for the sample
                   sampleTargetedRequencingTypeFromSampleIdAndBarcode.put(
                       key, "TARGETED RESEQUENCING CONFLICT DETECTED");
-                  log.warn(
-                      "{} conflict detected for sample id: {}",
-                      LimsSampleAttribute.TARGETED_RESEQUENCING.name(),
-                      orderSample.getId());
+                  if (log.isWarnEnabled()) {
+                    log.warn(
+                        "{} conflict detected for sample id: {}",
+                        LimsSampleAttribute.TARGETED_RESEQUENCING.name(),
+                        orderSample.getId());
+                  }
                 }
               } else {
                 sampleTargetedRequencingTypeFromSampleIdAndBarcode.put(key, attr.getValue());
@@ -132,7 +134,7 @@ public class ProvenanceUtils {
     Map<String, Sample> samplesById = new HashMap<>();
     for (Sample sample : samples) {
       if (samplesById.put(sample.getId(), sample) != null) {
-        log.warn("Duplicate Sample id: " + sample.getId());
+        log.warn("Duplicate Sample id: {}", sample.getId());
       }
     }
 
@@ -198,14 +200,14 @@ public class ProvenanceUtils {
     Map<Integer, Instrument> instrumentById = new HashMap<>();
     for (Instrument instrument : instruments) {
       if (instrumentById.put(instrument.getId(), instrument) != null) {
-        log.warn("Duplicate Instrument id: " + instrument.getId());
+        log.warn("Duplicate Instrument id: {}", instrument.getId());
       }
     }
 
     Map<Integer, InstrumentModel> instrumentModelById = new HashMap<>();
     for (InstrumentModel instrumentModel : instrumentModels) {
       if (instrumentModelById.put(instrumentModel.getId(), instrumentModel) != null) {
-        log.warn("Duplicate Instrument Model id: " + instrumentModel.getId());
+        log.warn("Duplicate Instrument Model id: {}", instrumentModel.getId());
       }
     }
 
