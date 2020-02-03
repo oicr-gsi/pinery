@@ -1,4 +1,4 @@
 <Context>
    <Parameter name="spring.profiles.active" value="flatfile" override="false"/>
-   <Parameter name="flatfile.propertiesFile" value="file:${project.build.testOutputDirectory}/test-flatfile.properties" override="false"/>
+   <Parameter name="pinery.propertiesFile" value="file:${project.build.testOutputDirectory}/test-flatfile.properties" override="false"/>
 </Context>
