@@ -48,6 +48,11 @@ public class Cache implements DataProvider {
           .name("pinery_cache_update_failures")
           .help("Number of consecutive cache update failures")
           .register();
+  private static final Gauge cacheLastUpdated =
+      Gauge.build()
+          .name("pinery_cache_last_updated")
+          .help("Timestamp of the last cache update (completion)")
+          .register();
 
   @Autowired private Lims lims;
 
@@ -148,6 +153,7 @@ public class Cache implements DataProvider {
           cacheComplete = true;
           lastUpdated = Instant.now();
           cacheUpdateFailures.set(0);
+          cacheLastUpdated.setToCurrentTime();
           log.debug("Update successful");
         }
       } catch (RuntimeException e) {
@@ -205,14 +211,10 @@ public class Cache implements DataProvider {
               if (archived != null && !archived.equals(sample.getArchived())) {
                 return false;
               }
-              if (normalizedProjects != null
-                  && normalizedProjects.stream()
-                      .noneMatch(project -> project.equals(sample.getProject()))) {
+              if (normalizedProjects != null && !normalizedProjects.contains(sample.getProject())) {
                 return false;
               }
-              if (normalizedTypes != null
-                  && normalizedTypes.stream()
-                      .noneMatch(type -> type.equals(sample.getSampleType()))) {
+              if (normalizedTypes != null && !normalizedTypes.contains(sample.getSampleType())) {
                 return false;
               }
               if (beforeDate != null && beforeDate.after(sample.getCreated())) {
