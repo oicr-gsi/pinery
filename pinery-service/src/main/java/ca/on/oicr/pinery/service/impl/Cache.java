@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -70,7 +69,7 @@ public class Cache implements DataProvider {
   private List<SampleProvenance> sampleProvenance;
   private List<LaneProvenance> laneProvenance;
 
-  @Value("${pinery.cache.enabled:false}")
+  @Value("${pinery.cache.enabled}")
   private boolean enabled;
 
   private boolean cacheComplete = false;
@@ -85,18 +84,14 @@ public class Cache implements DataProvider {
     return lastUpdated;
   }
 
-  @Scheduled(initialDelay = 0, fixedDelayString = "${pinery.cache.interval:900000}")
   public void update() {
     if (!isEnabled()) {
       return;
     }
     log.debug("Update called");
-    boolean doUpdate;
+    boolean doUpdate = false;
     synchronized (this) {
-      doUpdate = !updating;
-      if (doUpdate) {
-        updating = true;
-      } else if (!cacheComplete) {
+      if (updating) {
         while (updating) {
           try {
             log.debug("Waiting for previous update attempt to complete");
@@ -108,8 +103,12 @@ public class Cache implements DataProvider {
         }
         log.debug("Previous update attempt completed");
         if (!cacheComplete) {
+          updating = true;
           doUpdate = true;
         }
+      } else {
+        updating = true;
+        doUpdate = true;
       }
     }
 
