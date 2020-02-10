@@ -1,6 +1,8 @@
 package ca.on.oicr.pinery.service.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
@@ -41,7 +43,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 /** @author mlaszloffy */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/test-context.xml")
-public class DefaultSampleProvenanceServiceTest {
+public class DefaultSampleProvenanceServiceTest extends AbstractServiceTest {
 
   @Autowired private SampleProvenanceService sampleProvenanceService;
 
