@@ -5,4 +5,5 @@ bin
 *.swp
 pinery.log
 nb-configuration.xml
+org.eclipse.wst.common.component
 

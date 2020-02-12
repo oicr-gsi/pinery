@@ -1,6 +1,5 @@
 package ca.on.oicr.pinery.service.impl;
 
-import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.User;
 import ca.on.oicr.pinery.service.UserService;
 import java.util.List;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DefaultUserService implements UserService {
 
-  @Autowired private Lims lims;
+  @Autowired private CacheOrLims lims;
 
   @Override
   public User getUser(Integer id) {

@@ -32,7 +32,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 /** @author mlaszloffy */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/test-context.xml")
-public class DefaultLaneProvenanceServiceTest {
+public class DefaultLaneProvenanceServiceTest extends AbstractServiceTest {
 
   @Autowired private LaneProvenanceService laneProvenanceService;
 

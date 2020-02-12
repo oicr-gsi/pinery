@@ -52,7 +52,7 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration("classpath:test-spring-servlet.xml")
-public class LaneProvenanceResourceTest {
+public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
   @Autowired private WebApplicationContext wac;
 

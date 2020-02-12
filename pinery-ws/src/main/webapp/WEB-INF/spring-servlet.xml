@@ -4,17 +4,19 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:context="http://www.springframework.org/schema/context"
    xmlns:aop="http://www.springframework.org/schema/aop"
+   xmlns:task="http://www.springframework.org/schema/task"
    xmlns:tx="http://www.springframework.org/schema/tx"
    xmlns:mvc="http://www.springframework.org/schema/mvc"
    xmlns:util="http://www.springframework.org/schema/util"
    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+      http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
    
-   <context:property-placeholder location="classpath:project.properties" ignore-unresolvable="true"/>
+   <context:property-placeholder location="classpath:project.properties,${pinery.propertiesFile}" ignore-unresolvable="true"/>
    <context:component-scan base-package="ca.on.oicr.pinery" />
    
     <mvc:annotation-driven>
@@ -44,6 +46,8 @@
    <mvc:resources location="classpath:/META-INF/resources/webjars/" mapping="/webjars/**"/>
    
    <bean class="ca.on.oicr.pinery.ws.component.SwaggerConfig"/>
+   
+   <task:annotation-driven/>
    
    <!-- Profiles (keep below all other beans) -->
    <beans profile="gsle">
