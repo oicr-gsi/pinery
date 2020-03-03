@@ -76,6 +76,7 @@ public class RunFileDao implements RunDao {
             pos.setPoolCreated(ModelUtils.convertToDate(map.get("poolCreated")));
             pos.setPoolModifiedById(ModelUtils.parseIntOrNull(map.get("poolModifiedById")));
             pos.setPoolModified(ModelUtils.convertToDate(map.get("poolModified")));
+            pos.setQcStatus(map.get("qcStatus"));
             pos.setAnalysisSkipped(ModelUtils.parseBooleanOrNull(map.get("analysisSkipped")));
             pos.setRunPurpose(ModelUtils.nullIfEmpty(map.get("runPurpose")));
             pos.setRunSample(parseRunSamples(map.get("samples")));

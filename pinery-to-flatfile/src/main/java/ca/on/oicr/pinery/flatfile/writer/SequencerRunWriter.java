@@ -98,6 +98,7 @@ public class SequencerRunWriter extends Writer {
     sb.appendNonNull("poolCreated", pos.getPoolCreated());
     sb.appendNonNull("poolModifiedById", pos.getPoolModifiedById());
     sb.appendNonNull("poolModified", pos.getPoolModified());
+    sb.appendNonNull("qcStatus", pos.getQcStatus());
     sb.appendNonNull("analysisSkipped", pos.isAnalysisSkipped());
     sb.appendNonNull("runPurpose", pos.getRunPurpose());
     sb.append("samples", getPositionSamplesString(pos));
