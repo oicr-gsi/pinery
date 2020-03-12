@@ -12,6 +12,7 @@ public class DefaultSampleProject implements SampleProject {
   private Date latest;
   private boolean active = true;
   private boolean clinical = false;
+  private boolean secondaryNamingScheme;
 
   @Override
   public String getName() {
@@ -84,5 +85,15 @@ public class DefaultSampleProject implements SampleProject {
   @Override
   public void setClinical(boolean clinical) {
     this.clinical = clinical;
+  }
+
+  @Override
+  public boolean isSecondaryNamingScheme() {
+    return secondaryNamingScheme;
+  }
+
+  @Override
+  public void setSecondaryNamingScheme(boolean secondaryNamingScheme) {
+    this.secondaryNamingScheme = secondaryNamingScheme;
   }
 }
