@@ -31,4 +31,8 @@ public interface SampleProject {
   public boolean isClinical();
 
   public void setClinical(boolean clinical);
+
+  public boolean isSecondaryNamingScheme();
+
+  public void setSecondaryNamingScheme(boolean secondaryNamingScheme);
 }

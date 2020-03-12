@@ -15,8 +15,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 public class SampleProjectFileDao implements SampleProjectDao {
 
-  private static final String queryProjectList =
-      "SELECT projectName, active, clinical FROM projects";
+  private static final String queryProjectList = "SELECT * FROM projects";
   private static final String querySampleStats =
       "SELECT projectName, COUNT(*) AS count,"
           + " COUNT(CASE archived WHEN 'true' THEN 1 ELSE NULL END) As archivedCount,"
@@ -33,7 +32,7 @@ public class SampleProjectFileDao implements SampleProjectDao {
           p.setName(rs.getString("projectName"));
           p.setActive(rs.getBoolean("active"));
           p.setClinical(rs.getBoolean("clinical"));
-
+          p.setSecondaryNamingScheme(rs.getBoolean("secondaryNamingScheme"));
           return p;
         }
       };

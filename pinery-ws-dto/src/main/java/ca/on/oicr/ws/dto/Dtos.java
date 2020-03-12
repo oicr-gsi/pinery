@@ -161,6 +161,7 @@ public final class Dtos {
     dto.setCount(from.getCount());
     dto.setActive(from.isActive());
     dto.setClinical(from.isClinical());
+    dto.setSecondaryNamingSCheme(from.isSecondaryNamingScheme());
     if (from.getEarliest() != null) {
       dto.setEarliest(format(from.getEarliest()));
     }

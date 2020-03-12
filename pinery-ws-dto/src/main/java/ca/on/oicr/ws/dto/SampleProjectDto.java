@@ -16,6 +16,7 @@ public class SampleProjectDto {
   private String latest;
   private boolean active;
   private boolean clinical;
+  private boolean secondaryNamingScheme;
 
   public String getName() {
     return name;
@@ -74,6 +75,15 @@ public class SampleProjectDto {
     this.clinical = clinical;
   }
 
+  @JsonProperty("secondary_naming_scheme")
+  public boolean isSecondaryNamingSCheme() {
+    return secondaryNamingScheme;
+  }
+
+  public void setSecondaryNamingSCheme(boolean secondaryNamingSCheme) {
+    this.secondaryNamingScheme = secondaryNamingSCheme;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -85,6 +95,7 @@ public class SampleProjectDto {
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + Boolean.hashCode(active);
     result = prime * result + Boolean.hashCode(clinical);
+    result = prime * result + Boolean.hashCode(secondaryNamingScheme);
     return result;
   }
 
@@ -111,6 +122,7 @@ public class SampleProjectDto {
     } else if (!name.equals(other.name)) return false;
     if (active != other.active) return false;
     if (clinical != other.clinical) return false;
+    if (secondaryNamingScheme != other.secondaryNamingScheme) return false;
     return true;
   }
 
@@ -130,6 +142,8 @@ public class SampleProjectDto {
         + active
         + ", clinical="
         + clinical
+        + ", secondaryNamingScheme="
+        + secondaryNamingScheme
         + "]";
   }
 }

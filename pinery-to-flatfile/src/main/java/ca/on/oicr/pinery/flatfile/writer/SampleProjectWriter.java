@@ -5,7 +5,9 @@ import java.util.List;
 
 public class SampleProjectWriter extends Writer {
 
-  private static final String[] headers = {"projectName", "active", "clinical"};
+  private static final String[] headers = {
+    "projectName", "active", "clinical", "secondaryNamingScheme"
+  };
 
   private final List<SampleProjectDto> projects;
 
@@ -30,7 +32,8 @@ public class SampleProjectWriter extends Writer {
     String[] data = {
       project.getName(),
       Boolean.toString(project.isActive()),
-      Boolean.toString(project.isClinical())
+      Boolean.toString(project.isClinical()),
+      Boolean.toString(project.isSecondaryNamingSCheme())
     };
 
     return data;
