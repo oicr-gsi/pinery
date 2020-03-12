@@ -1,4 +1,4 @@
-projectName	active	clinical
-TestProject	true	true
-TestProject2	false	false
-TestProject3	false	false
+projectName	active	clinical	secondaryNamingScheme
+TestProject	true	true	false
+TestProject2	false	false	false
+TestProject3	false	false	false
