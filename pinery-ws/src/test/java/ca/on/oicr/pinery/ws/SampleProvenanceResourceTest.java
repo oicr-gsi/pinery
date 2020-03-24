@@ -7,6 +7,35 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Instrument;
@@ -33,32 +62,6 @@ import ca.on.oicr.pinery.lims.LimsSampleAttribute;
 import ca.on.oicr.pinery.service.SampleProvenanceService;
 import ca.on.oicr.pinery.ws.util.VersionTransformer;
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 /** @author mlaszloffy */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -204,7 +207,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
-        "1de6cebecdad9f3d694934eafe48961ea88908b6b7de24b245438b01731eb25c", sp.getVersion());
+        "1b29d66ed00c9476d78aba3072459b9a7d2763bbc97502820f960c5f5cb97e1f", sp.getVersion());
   }
 
   private SampleProvenance makeBaseSampleProvenance() {
@@ -282,6 +285,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     attrs.add(makeAttribute("Spike-In", "ERCC Mix 1"));
     attrs.add(makeAttribute("Spike-In Dilution Factor", "1:1000"));
     attrs.add(makeAttribute("Spike-In-Volume (uL)", "12.34"));
+    attrs.add(makeAttribute("Sequencing Control Type", "Positive"));
     s.setAttributes(attrs);
 
     return s;

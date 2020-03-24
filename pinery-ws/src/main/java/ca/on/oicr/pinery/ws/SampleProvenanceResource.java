@@ -1,5 +1,20 @@
 package ca.on.oicr.pinery.ws;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.annotations.VisibleForTesting;
+
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.lims.LimsLaneAttribute;
 import ca.on.oicr.pinery.lims.LimsSampleAttribute;
@@ -11,23 +26,12 @@ import ca.on.oicr.pinery.ws.util.MapBuilder;
 import ca.on.oicr.pinery.ws.util.VersionTransformer;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
-import com.google.common.annotations.VisibleForTesting;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -46,6 +50,7 @@ public class SampleProvenanceResource {
         modified.getSampleAttributes().remove(LimsSampleAttribute.SPIKE_IN_DILUTION.toString());
         modified.getSampleAttributes().remove(LimsSampleAttribute.SPIKE_IN_VOLUME.toString());
         modified.getSampleAttributes().remove(LimsSampleAttribute.RUN_PURPOSE.toString());
+        modified.getSampleAttributes().remove(LimsSampleAttribute.SEQUENCING_CONTROL_TYPE.toString());
         modified.getLaneAttributes().remove(LimsLaneAttribute.RUN_PURPOSE.getKey());
         return modified;
       };
