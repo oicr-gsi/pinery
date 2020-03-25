@@ -40,7 +40,8 @@ public enum LimsSampleAttribute {
   SPIKE_IN("spike_in", "Spike-In"),
   SPIKE_IN_DILUTION("spike_in_dilution_factor", "Spike-In Dilution Factor"),
   SPIKE_IN_VOLUME("spike_in_volume_ul", "Spike-In-Volume (uL)"),
-  RUN_PURPOSE("run_purpose");
+  RUN_PURPOSE("run_purpose"),
+  SEQUENCING_CONTROL_TYPE("sequencing_control_type", "Sequencing Control Type");
 
   private final Set<String> inputTerms;
   private final String outputTerm;

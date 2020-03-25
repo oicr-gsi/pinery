@@ -204,7 +204,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
-        "1de6cebecdad9f3d694934eafe48961ea88908b6b7de24b245438b01731eb25c", sp.getVersion());
+        "1b29d66ed00c9476d78aba3072459b9a7d2763bbc97502820f960c5f5cb97e1f", sp.getVersion());
   }
 
   private SampleProvenance makeBaseSampleProvenance() {
@@ -282,6 +282,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     attrs.add(makeAttribute("Spike-In", "ERCC Mix 1"));
     attrs.add(makeAttribute("Spike-In Dilution Factor", "1:1000"));
     attrs.add(makeAttribute("Spike-In-Volume (uL)", "12.34"));
+    attrs.add(makeAttribute("Sequencing Control Type", "Positive"));
     s.setAttributes(attrs);
 
     return s;

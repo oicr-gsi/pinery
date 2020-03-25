@@ -46,6 +46,9 @@ public class SampleProvenanceResource {
         modified.getSampleAttributes().remove(LimsSampleAttribute.SPIKE_IN_DILUTION.toString());
         modified.getSampleAttributes().remove(LimsSampleAttribute.SPIKE_IN_VOLUME.toString());
         modified.getSampleAttributes().remove(LimsSampleAttribute.RUN_PURPOSE.toString());
+        modified
+            .getSampleAttributes()
+            .remove(LimsSampleAttribute.SEQUENCING_CONTROL_TYPE.toString());
         modified.getLaneAttributes().remove(LimsLaneAttribute.RUN_PURPOSE.getKey());
         return modified;
       };
