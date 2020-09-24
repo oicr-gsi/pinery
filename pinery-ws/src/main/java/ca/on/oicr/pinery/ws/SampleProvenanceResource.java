@@ -37,9 +37,16 @@ public class SampleProvenanceResource {
   private static final VersionTransformer<SampleProvenance, SampleProvenance> noopTransformer =
       input -> input;
 
-  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v6Transformer =
+  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v7Transformer =
       input -> {
         SimpleSampleProvenance modified = SimpleSampleProvenance.from(input);
+        modified.getSampleAttributes().remove(LimsSampleAttribute.BARCODE_KIT.toString());
+        return modified;
+      };
+
+  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v6Transformer =
+      input -> {
+        SimpleSampleProvenance modified = v7Transformer.transform(input);
         modified.getSampleAttributes().remove(LimsSampleAttribute.TARGET_CELL_RECOVERY.toString());
         modified.getSampleAttributes().remove(LimsSampleAttribute.CELL_VIABILITY.toString());
         modified.getSampleAttributes().remove(LimsSampleAttribute.SPIKE_IN.toString());
@@ -115,7 +122,8 @@ public class SampleProvenanceResource {
           new MapBuilder<
                   String, VersionTransformer<SampleProvenance, ? extends SampleProvenance>>() //
               .put("latest", noopTransformer) //
-              .put("v7", noopTransformer)
+              .put("v8", noopTransformer) //
+              .put("v7", v7Transformer) //
               .put("v6", v6Transformer) //
               .put("v5", v5Transformer) //
               .put("v4", v4Transformer) //
@@ -124,7 +132,7 @@ public class SampleProvenanceResource {
               .put("v1", v1Transformer) //
               .build();
 
-  private static final String versions = "latest, v7, v6, v5, v4, v3, v2, v1";
+  private static final String versions = "latest, v8, v7, v6, v5, v4, v3, v2, v1";
 
   @Autowired private SampleProvenanceService sampleProvenanceService;
 

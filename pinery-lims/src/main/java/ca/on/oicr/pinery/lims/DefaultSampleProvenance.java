@@ -101,7 +101,6 @@ public class DefaultSampleProvenance implements SampleProvenance {
   @Override
   public SortedMap<String, SortedSet<String>> getStudyAttributes() {
     SortedSetMultimap<String, String> attrs = TreeMultimap.create();
-    // sampleProject.getAttributes();
     return (SortedMap<String, SortedSet<String>>) Multimaps.asMap(attrs);
   }
 
