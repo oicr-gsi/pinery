@@ -6,4 +6,5 @@ bin
 pinery.log
 nb-configuration.xml
 org.eclipse.wst.common.component
+.DS_Store
 
