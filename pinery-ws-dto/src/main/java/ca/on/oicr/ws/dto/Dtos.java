@@ -355,6 +355,7 @@ public final class Dtos {
     dto.setPoolName(from.getPoolName());
     dto.setPoolBarcode(from.getPoolBarcode());
     dto.setPoolDescription(from.getPoolDescription());
+    dto.setPoolStatus(asDto(from.getPoolStatus()));
     dto.setPoolCreatedById(from.getPoolCreatedById());
     if (from.getPoolCreated() != null) dto.setPoolCreated(format(from.getPoolCreated()));
     dto.setPoolModifiedById(from.getPoolModifiedById());
@@ -391,6 +392,9 @@ public final class Dtos {
     dto.setRunPurpose(from.getRunPurpose());
     if (!StringUtils.isBlank(from.getUrl())) {
       dto.setUrl(from.getUrl());
+    }
+    if (from.getStatus() != null) {
+      dto.setStatus(asDto(from.getStatus()));
     }
     return dto;
   }

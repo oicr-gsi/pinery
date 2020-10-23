@@ -25,6 +25,10 @@ public interface RunPosition {
 
   public void setPoolDescription(String poolDescription);
 
+  public Status getPoolStatus();
+
+  public void setPoolStatus(Status poolStatus);
+
   public Integer getPoolCreatedById();
 
   public void setPoolCreatedById(Integer poolCreatedById);

@@ -16,6 +16,7 @@ public class RunDtoSample {
   private String id;
   private String url;
   private Set<AttributeDto> attributes;
+  private StatusDto status;
 
   public String getId() {
     return id;
@@ -66,6 +67,14 @@ public class RunDtoSample {
     this.attributes = attributes;
   }
 
+  public StatusDto getStatus() {
+    return status;
+  }
+
+  public void setStatus(StatusDto status) {
+    this.status = status;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -74,6 +83,7 @@ public class RunDtoSample {
     result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
     result = prime * result + ((barcodeTwo == null) ? 0 : barcodeTwo.hashCode());
     result = prime * result + ((id == null) ? 0 : id.hashCode());
+    result = prime * result + ((status == null) ? 0 : status.hashCode());
     result = prime * result + ((runPurpose == null) ? 0 : runPurpose.hashCode());
     return result;
   }
@@ -96,6 +106,9 @@ public class RunDtoSample {
     if (id == null) {
       if (other.id != null) return false;
     } else if (!id.equals(other.id)) return false;
+    if (status == null) {
+      if (other.status != null) return false;
+    } else if (!status.equals(other.status)) return false;
     if (runPurpose == null) {
       if (other.runPurpose != null) return false;
     } else if (!runPurpose.equals(other.runPurpose)) return false;
@@ -112,6 +125,8 @@ public class RunDtoSample {
         + runPurpose
         + ", id="
         + id
+        + ", status="
+        + status
         + ", url="
         + url
         + ", attributes="

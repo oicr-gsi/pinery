@@ -16,6 +16,7 @@ public class RunDtoPosition {
   private String poolName;
   private String poolDescription;
   private String poolBarcode;
+  private StatusDto poolStatus;
   private Integer poolCreatedById;
   private String poolCreated;
   private Integer poolModifiedById;
@@ -73,6 +74,15 @@ public class RunDtoPosition {
 
   public void setPoolDescription(String poolDescription) {
     this.poolDescription = poolDescription;
+  }
+
+  @JsonProperty("pool_status")
+  public StatusDto getPoolStatus() {
+    return poolStatus;
+  }
+
+  public void setPoolStatus(StatusDto poolStatus) {
+    this.poolStatus = poolStatus;
   }
 
   @JsonProperty("pool_created_by_id")
@@ -155,6 +165,8 @@ public class RunDtoPosition {
         + getPoolBarcode()
         + ", getPoolDescription()="
         + getPoolDescription()
+        + ", getPoolStatus()="
+        + getPoolStatus()
         + ", getPoolCreatedById()="
         + getPoolCreatedById()
         + ", getPoolCreated()="
@@ -181,6 +193,7 @@ public class RunDtoPosition {
     result = prime * result + ((poolName == null) ? 0 : poolName.hashCode());
     result = prime * result + ((poolBarcode == null) ? 0 : poolBarcode.hashCode());
     result = prime * result + ((poolDescription == null) ? 0 : poolDescription.hashCode());
+    result = prime * result + ((poolStatus == null) ? 0 : poolStatus.hashCode());
     result = prime * result + ((poolCreatedById == null) ? 0 : poolCreatedById.hashCode());
     result = prime * result + ((poolCreated == null) ? 0 : poolCreated.hashCode());
     result = prime * result + ((qcStatus == null) ? 0 : qcStatus.hashCode());
@@ -210,6 +223,9 @@ public class RunDtoPosition {
     if (poolDescription == null) {
       if (other.poolDescription != null) return false;
     } else if (!poolDescription.equals(other.poolDescription)) return false;
+    if (poolStatus == null) {
+      if (other.poolStatus != null) return false;
+    } else if (!poolStatus.equals(other.poolStatus)) return false;
     if (poolCreatedById == null) {
       if (other.poolCreatedById != null) return false;
     } else if (!poolCreatedById.equals(other.poolCreatedById)) return false;
