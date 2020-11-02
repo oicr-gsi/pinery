@@ -355,7 +355,9 @@ public final class Dtos {
     dto.setPoolName(from.getPoolName());
     dto.setPoolBarcode(from.getPoolBarcode());
     dto.setPoolDescription(from.getPoolDescription());
-    dto.setPoolStatus(asDto(from.getPoolStatus()));
+    if (from.getPoolStatus() != null) {
+      dto.setPoolStatus(asDto(from.getPoolStatus()));
+    }
     dto.setPoolCreatedById(from.getPoolCreatedById());
     if (from.getPoolCreated() != null) dto.setPoolCreated(format(from.getPoolCreated()));
     dto.setPoolModifiedById(from.getPoolModifiedById());
