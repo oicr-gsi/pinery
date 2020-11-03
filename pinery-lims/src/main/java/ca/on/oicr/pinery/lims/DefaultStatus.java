@@ -31,18 +31,22 @@ public class DefaultStatus implements Status {
   private String name;
   private String state;
 
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public void setName(String name) {
     this.name = name;
   }
 
+  @Override
   public String getState() {
     return state;
   }
 
+  @Override
   public void setState(String state) {
     this.state = state;
   }

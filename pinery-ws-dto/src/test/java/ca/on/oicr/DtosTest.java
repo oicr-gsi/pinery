@@ -265,7 +265,7 @@ public class DtosTest {
   }
 
   @Test
-  public void testRunPosition_too_RunDtoPsotion_11() throws Exception {
+  public void testRunPosition_too_RunDtoPostion_11() throws Exception {
     boolean status;
     RunPosition runPosition = new DefaultRunPosition();
     RunSample runSample = new DefaultRunSample();
@@ -281,7 +281,7 @@ public class DtosTest {
   }
 
   @Test
-  public void testRunPosition_too_RunDtoPsotion_12() throws Exception {
+  public void testRunPosition_too_RunDtoPostion_12() throws Exception {
     boolean status;
     RunPosition runPosition = new DefaultRunPosition();
     RunSample runSample = new DefaultRunSample();

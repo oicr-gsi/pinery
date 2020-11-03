@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.lims;
 
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
+import ca.on.oicr.pinery.api.Status;
 import java.util.Date;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ public class DefaultRunPosition implements RunPosition {
     result = prime * result + ((poolDescription == null) ? 0 : poolDescription.hashCode());
     result = prime * result + ((poolId == null) ? 0 : poolId.hashCode());
     result = prime * result + ((poolName == null) ? 0 : poolName.hashCode());
+    result = prime * result + ((poolStatus == null) ? 0 : poolStatus.hashCode());
     result = prime * result + ((position == null) ? 0 : position.hashCode());
     result = prime * result + ((qcStatus == null) ? 0 : qcStatus.hashCode());
     result = prime * result + ((runSample == null) ? 0 : runSample.hashCode());
@@ -57,6 +59,9 @@ public class DefaultRunPosition implements RunPosition {
     if (poolName == null) {
       if (other.poolName != null) return false;
     } else if (!poolName.equals(other.poolName)) return false;
+    if (poolStatus == null) {
+      if (other.poolStatus != null) return false;
+    } else if (!poolStatus.equals(other.poolStatus)) return false;
     if (poolId == null) {
       if (other.poolId != null) return false;
     } else if (!poolId.equals(other.poolId)) return false;
@@ -89,6 +94,8 @@ public class DefaultRunPosition implements RunPosition {
         + poolDescription
         + ", poolBarcode="
         + poolBarcode
+        + ", poolStatus="
+        + poolStatus
         + ", poolCreatedById="
         + poolCreatedById
         + ", poolCreated="
@@ -116,6 +123,7 @@ public class DefaultRunPosition implements RunPosition {
   private String poolName;
   private String poolDescription;
   private String poolBarcode;
+  private Status poolStatus;
   private Integer poolCreatedById;
   private Date poolCreated;
   private Integer poolModifiedById;
@@ -182,6 +190,16 @@ public class DefaultRunPosition implements RunPosition {
   @Override
   public void setPoolDescription(String poolDescription) {
     this.poolDescription = poolDescription;
+  }
+
+  @Override
+  public Status getPoolStatus() {
+    return poolStatus;
+  }
+
+  @Override
+  public void setPoolStatus(Status poolStatus) {
+    this.poolStatus = poolStatus;
   }
 
   @Override
