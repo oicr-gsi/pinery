@@ -1,5 +1,7 @@
 package ca.on.oicr.pinery.lims.flatfile.dao;
 
+import ca.on.oicr.pinery.api.Status;
+import ca.on.oicr.pinery.lims.DefaultStatus;
 import ca.on.oicr.pinery.lims.flatfile.dao.exception.NonUniqueKeyException;
 import ca.on.oicr.pinery.lims.flatfile.dao.exception.ParseException;
 import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
@@ -228,5 +230,15 @@ public class DaoUtils {
       return null;
     }
     return ModelUtils.nullIfEmpty(rs.getString(columnName));
+  }
+
+  public static Status parseStatus(String string) {
+    Map<String, String> map = DaoUtils.parseKeyValuePairs(string);
+    if (map.isEmpty()) return null;
+
+    Status status = new DefaultStatus();
+    status.setName(ModelUtils.nullIfEmpty(map.get("name")));
+    status.setState(ModelUtils.nullIfEmpty(map.get("state")));
+    return status;
   }
 }
