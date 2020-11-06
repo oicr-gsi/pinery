@@ -6,7 +6,6 @@ import ca.on.oicr.ws.dto.AttributeDto;
 import ca.on.oicr.ws.dto.RunDto;
 import ca.on.oicr.ws.dto.RunDtoPosition;
 import ca.on.oicr.ws.dto.RunDtoSample;
-import ca.on.oicr.ws.dto.StatusDto;
 import java.util.List;
 
 public class SequencerRunWriter extends Writer {
@@ -99,23 +98,14 @@ public class SequencerRunWriter extends Writer {
     sb.appendNonNull("poolCreated", pos.getPoolCreated());
     sb.appendNonNull("poolModifiedById", pos.getPoolModifiedById());
     sb.appendNonNull("poolModified", pos.getPoolModified());
-    sb.appendNonNull("poolStatus", toStatusString(pos.getPoolStatus()));
+    if (pos.getPoolStatus() != null) {
+      sb.appendNonNull("poolStatusName", pos.getPoolStatus().getName());
+      sb.appendNonNull("poolStatusState", pos.getPoolStatus().getState());
+    }
     sb.appendNonNull("qcStatus", pos.getQcStatus());
     sb.appendNonNull("analysisSkipped", pos.isAnalysisSkipped());
     sb.appendNonNull("runPurpose", pos.getRunPurpose());
     sb.append("samples", getPositionSamplesString(pos));
-    return sb.toString();
-  }
-
-  private static String toStatusString(StatusDto status) {
-    if (status == null) {
-      return null;
-    }
-    KeyValueStringBuilder sb = new KeyValueStringBuilder();
-    if (status != null) {
-      sb.append("name", status.getName());
-      sb.append("state", status.getState());
-    }
     return sb.toString();
   }
 
@@ -139,7 +129,10 @@ public class SequencerRunWriter extends Writer {
     if (sample.getAttributes() != null && !sample.getAttributes().isEmpty()) {
       sb.append("attributes", getPositionSampleAttributesString(sample));
     }
-    sb.appendNonNull("status", toStatusString(sample.getStatus()));
+    if (sample.getStatus() != null) {
+      sb.appendNonNull("statusName", sample.getStatus().getName());
+      sb.appendNonNull("statusState", sample.getStatus().getState());
+    }
 
     return sb.toString();
   }
