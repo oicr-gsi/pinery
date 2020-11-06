@@ -6,10 +6,12 @@ import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
+import ca.on.oicr.pinery.api.Status;
 import ca.on.oicr.pinery.lims.DefaultAttribute;
 import ca.on.oicr.pinery.lims.DefaultRun;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
+import ca.on.oicr.pinery.lims.DefaultStatus;
 import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -72,7 +74,14 @@ public class RunFileDao implements RunDao {
             pos.setPoolName(map.get("poolName"));
             pos.setPoolBarcode(map.get("poolBarcode"));
             pos.setPoolDescription(map.get("poolDescription"));
-            pos.setPoolStatus(DaoUtils.parseStatus(map.get("poolStatus")));
+
+            if (map.containsKey("poolStatusName") || map.containsKey("poolStatusState")) {
+              Status status = new DefaultStatus();
+              status.setName(map.get("poolStatusName"));
+              status.setState(map.get("poolStatusState"));
+              pos.setPoolStatus(status);
+            }
+
             pos.setPoolCreatedById(ModelUtils.parseIntOrNull(map.get("poolCreatedById")));
             pos.setPoolCreated(ModelUtils.convertToDate(map.get("poolCreated")));
             pos.setPoolModifiedById(ModelUtils.parseIntOrNull(map.get("poolModifiedById")));
@@ -97,9 +106,15 @@ public class RunFileDao implements RunDao {
             sample.setBarcode(ModelUtils.nullIfEmpty(sampleMap.get("barcode")));
             sample.setBarcodeTwo(ModelUtils.nullIfEmpty(sampleMap.get("barcodeTwo")));
             sample.setRunPurpose(ModelUtils.nullIfEmpty(sampleMap.get("runPurpose")));
-            if (sampleMap.containsKey("attributes"))
+            if (sampleMap.containsKey("attributes")) {
               sample.setAttributes(parseAttributes(sampleMap.get("attributes")));
-            sample.setStatus(DaoUtils.parseStatus(sampleMap.get("status")));
+            }
+            if (sampleMap.containsKey("statusName") || sampleMap.containsKey("statusState")) {
+              Status status = new DefaultStatus();
+              status.setName(sampleMap.get("statusName"));
+              status.setState(sampleMap.get("statusState"));
+              sample.setStatus(status);
+            }
             samples.add(sample);
           }
           return samples;

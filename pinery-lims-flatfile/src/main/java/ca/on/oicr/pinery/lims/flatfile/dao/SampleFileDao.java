@@ -4,11 +4,13 @@ import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.PreparationKit;
 import ca.on.oicr.pinery.api.Sample;
+import ca.on.oicr.pinery.api.Status;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.lims.DefaultAttribute;
 import ca.on.oicr.pinery.lims.DefaultAttributeName;
 import ca.on.oicr.pinery.lims.DefaultPreparationKit;
 import ca.on.oicr.pinery.lims.DefaultSample;
+import ca.on.oicr.pinery.lims.DefaultStatus;
 import ca.on.oicr.pinery.lims.DefaultType;
 import ca.on.oicr.pinery.lims.flatfile.model.ModelUtils;
 import java.sql.ResultSet;
@@ -84,7 +86,7 @@ public class SampleFileDao implements SampleDao {
           s.setConcentration(ModelUtils.nullIfEmptyFloat(rs.getString("concentration")));
 
           s.setPreparationKit(parsePreparationKit(rs.getString("preparationKit")));
-          s.setStatus(DaoUtils.parseStatus(rs.getString("status")));
+          s.setStatus(parseStatus(rs.getString("status")));
           s.setAttributes(parseAttributes(rs.getString("attributes")));
 
           return s;
@@ -105,6 +107,16 @@ public class SampleFileDao implements SampleDao {
           if (list.isEmpty()) return null;
           Set<String> ids = new HashSet<>(list);
           return ids;
+        }
+
+        private Status parseStatus(String string) {
+          Map<String, String> map = DaoUtils.parseKeyValuePairs(string);
+          if (map.isEmpty()) return null;
+
+          Status status = new DefaultStatus();
+          status.setName(ModelUtils.nullIfEmpty(map.get("name")));
+          status.setState(ModelUtils.nullIfEmpty(map.get("state")));
+          return status;
         }
 
         private Set<Attribute> parseAttributes(String string) {
