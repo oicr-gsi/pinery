@@ -32,6 +32,7 @@ public class SampleProjectFileDao implements SampleProjectDao {
           p.setName(rs.getString("projectName"));
           p.setActive(rs.getBoolean("active"));
           p.setClinical(rs.getBoolean("clinical"));
+          p.setPipeline(rs.getString("pipeline"));
           p.setSecondaryNamingScheme(rs.getBoolean("secondaryNamingScheme"));
           return p;
         }
@@ -52,9 +53,11 @@ public class SampleProjectFileDao implements SampleProjectDao {
             project = new DefaultSampleProject();
             project.setName(rs.getString("projectName"));
             project.setActive(false);
+            projects.add(project);
+            projectsByName.put(project.getName(), project);
           }
-          project.setCount(ModelUtils.nullIfZero(rs.getInt("count")));
-          project.setArchivedCount(ModelUtils.nullIfZero(rs.getInt("archivedCount")));
+          project.setCount(rs.getInt("count"));
+          project.setArchivedCount(rs.getInt("archivedCount"));
           project.setEarliest(ModelUtils.convertToDate(rs.getString("earliest")));
           project.setLatest(ModelUtils.convertToDate(rs.getString("latest")));
         });

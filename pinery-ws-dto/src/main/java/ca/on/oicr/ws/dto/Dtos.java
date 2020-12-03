@@ -159,8 +159,10 @@ public final class Dtos {
     SampleProjectDto dto = new SampleProjectDto();
     dto.setName(from.getName());
     dto.setCount(from.getCount());
+    dto.setArchivedCount(from.getArchivedCount());
     dto.setActive(from.isActive());
     dto.setClinical(from.isClinical());
+    dto.setPipeline(from.getPipeline());
     dto.setSecondaryNamingSCheme(from.isSecondaryNamingScheme());
     if (from.getEarliest() != null) {
       dto.setEarliest(format(from.getEarliest()));

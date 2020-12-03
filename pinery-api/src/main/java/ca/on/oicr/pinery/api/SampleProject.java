@@ -32,6 +32,10 @@ public interface SampleProject {
 
   public void setClinical(boolean clinical);
 
+  public String getPipeline();
+
+  public void setPipeline(String pipeline);
+
   public boolean isSecondaryNamingScheme();
 
   public void setSecondaryNamingScheme(boolean secondaryNamingScheme);

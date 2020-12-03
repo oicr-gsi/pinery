@@ -16,6 +16,7 @@ public class SampleProjectDto {
   private String latest;
   private boolean active;
   private boolean clinical;
+  private String pipeline;
   private boolean secondaryNamingScheme;
 
   public String getName() {
@@ -67,12 +68,22 @@ public class SampleProjectDto {
     this.active = active;
   }
 
+  @Deprecated
   public boolean isClinical() {
     return clinical;
   }
 
+  @Deprecated
   public void setClinical(boolean clinical) {
     this.clinical = clinical;
+  }
+
+  public String getPipeline() {
+    return pipeline;
+  }
+
+  public void setPipeline(String pipeline) {
+    this.pipeline = pipeline;
   }
 
   @JsonProperty("secondary_naming_scheme")
