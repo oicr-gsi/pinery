@@ -6,12 +6,13 @@ import java.util.Date;
 public class DefaultSampleProject implements SampleProject {
 
   private String name;
-  private Integer count;
-  private Integer archivedCount;
+  private Integer count = 0;
+  private Integer archivedCount = 0;
   private Date earliest;
   private Date latest;
   private boolean active = true;
   private boolean clinical = false;
+  private String pipeline;
   private boolean secondaryNamingScheme;
 
   @Override
@@ -85,6 +86,16 @@ public class DefaultSampleProject implements SampleProject {
   @Override
   public void setClinical(boolean clinical) {
     this.clinical = clinical;
+  }
+
+  @Override
+  public String getPipeline() {
+    return pipeline;
+  }
+
+  @Override
+  public void setPipeline(String pipeline) {
+    this.pipeline = pipeline;
   }
 
   @Override

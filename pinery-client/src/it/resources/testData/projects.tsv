@@ -1,4 +1,4 @@
-projectName	active	clinical	secondaryNamingScheme
-TestProject	true	true	false
-TestProject2	false	false	false
-TestProject3	false	false	false
+projectName	active	clinical	pipeline	secondaryNamingScheme
+TestProject	true	true	Accredited	false
+TestProject2	false	false	Default	false
+TestProject3	false	false	Default	false
