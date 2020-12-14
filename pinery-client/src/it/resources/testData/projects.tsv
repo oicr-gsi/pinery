@@ -1,4 +1,4 @@
-projectName	active	clinical	pipeline	secondaryNamingScheme
-TestProject	true	true	Accredited	false
-TestProject2	false	false	Default	false
-TestProject3	false	false	Default	false
+projectName	active	clinical	pipeline	secondaryNamingScheme	created	rebNumber	rebExpiry	description	samplesExpected	contactName	contactEmail
+TestProject	true	true	Accredited	false	"2020-12-09T15:45:00-04:00"	"1234"	"2021-12-09T15:45:00-04:00"	""	"120"	""	""
+TestProject2	false	false	Default	false	"2020-12-09T15:45:00-04:00"	""	""	"desc2"	""	"Project Contact"	"contact@example.com"
+TestProject3	false	false	Default	false	"2020-12-09T15:45:00-04:00"	""	""	"desc3"	""	""	""

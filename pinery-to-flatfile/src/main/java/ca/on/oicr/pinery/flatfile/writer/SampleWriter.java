@@ -1,12 +1,12 @@
 package ca.on.oicr.pinery.flatfile.writer;
 
 import ca.on.oicr.pinery.flatfile.util.ArrayStringBuilder;
+import ca.on.oicr.pinery.flatfile.util.ConverterUtils;
 import ca.on.oicr.pinery.flatfile.util.KeyValueStringBuilder;
 import ca.on.oicr.ws.dto.AttributeDto;
 import ca.on.oicr.ws.dto.PreparationKitDto;
 import ca.on.oicr.ws.dto.SampleDto;
 import ca.on.oicr.ws.dto.SampleReferenceDto;
-import ca.on.oicr.ws.dto.StatusDto;
 import java.util.List;
 import java.util.Set;
 
@@ -69,7 +69,7 @@ public class SampleWriter extends Writer {
       getIdsString(sample.getChildren()),
       sample.getProjectName(),
       sample.getArchived().toString(),
-      getStatusString(sample),
+      ConverterUtils.getStatusString(sample.getStatus()),
       sample.getVolume() == null ? "" : sample.getVolume().toString(),
       sample.getConcentration() == null ? "" : sample.getConcentration().toString(),
       getPreparationKitString(sample),
@@ -95,16 +95,6 @@ public class SampleWriter extends Writer {
       for (SampleReferenceDto sample : samples) {
         sb.append(sample.getId());
       }
-    }
-    return sb.toString();
-  }
-
-  private static String getStatusString(SampleDto sample) {
-    StatusDto status = sample.getStatus();
-    KeyValueStringBuilder sb = new KeyValueStringBuilder();
-    if (status != null) {
-      sb.append("name", status.getName());
-      sb.append("state", status.getState());
     }
     return sb.toString();
   }

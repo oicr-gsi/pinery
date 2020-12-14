@@ -34,6 +34,8 @@ public class RunDto {
   private String workflowType;
   private String containerModel;
   private String sequencingKit;
+  private StatusDto status;
+  private String dataReview;
 
   public String getState() {
     return state;
@@ -243,6 +245,23 @@ public class RunDto {
     this.sequencingKit = sequencingKit;
   }
 
+  public StatusDto getStatus() {
+    return status;
+  }
+
+  public void setStatus(StatusDto status) {
+    this.status = status;
+  }
+
+  @JsonProperty("data_review")
+  public String getDataReview() {
+    return dataReview;
+  }
+
+  public void setDataReview(String dataReview) {
+    this.dataReview = dataReview;
+  }
+
   @Override
   public String toString() {
     return "RunDto [state="
@@ -317,6 +336,8 @@ public class RunDto {
     result = prime * result + ((workflowType == null) ? 0 : workflowType.hashCode());
     result = prime * result + ((containerModel == null) ? 0 : containerModel.hashCode());
     result = prime * result + ((sequencingKit == null) ? 0 : sequencingKit.hashCode());
+    result = prime * result + ((status == null) ? 0 : status.hashCode());
+    result = prime * result + ((dataReview == null) ? 0 : dataReview.hashCode());
     return result;
   }
 
@@ -380,6 +401,12 @@ public class RunDto {
     if (sequencingKit == null) {
       if (other.sequencingKit != null) return false;
     } else if (!sequencingKit.equals(other.sequencingKit)) return false;
+    if (status == null) {
+      if (other.status != null) return false;
+    } else if (!status.equals(other.status)) return false;
+    if (dataReview == null) {
+      if (other.dataReview != null) return false;
+    } else if (!dataReview.equals(other.dataReview)) return false;
     return true;
   }
 }

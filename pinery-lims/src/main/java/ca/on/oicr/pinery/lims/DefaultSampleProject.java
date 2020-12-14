@@ -14,6 +14,13 @@ public class DefaultSampleProject implements SampleProject {
   private boolean clinical = false;
   private String pipeline;
   private boolean secondaryNamingScheme;
+  private Date created;
+  private String rebNumber;
+  private Date rebExpiry;
+  private String description;
+  private Integer samplesExpected;
+  private String contactName;
+  private String contactEmail;
 
   @Override
   public String getName() {
@@ -106,5 +113,75 @@ public class DefaultSampleProject implements SampleProject {
   @Override
   public void setSecondaryNamingScheme(boolean secondaryNamingScheme) {
     this.secondaryNamingScheme = secondaryNamingScheme;
+  }
+
+  @Override
+  public Date getCreated() {
+    return created;
+  }
+
+  @Override
+  public void setCreated(Date created) {
+    this.created = created;
+  }
+
+  @Override
+  public String getRebNumber() {
+    return rebNumber;
+  }
+
+  @Override
+  public void setRebNumber(String rebNumber) {
+    this.rebNumber = rebNumber;
+  }
+
+  @Override
+  public Date getRebExpiry() {
+    return rebExpiry;
+  }
+
+  @Override
+  public void setRebExpiry(Date rebExpiry) {
+    this.rebExpiry = rebExpiry;
+  }
+
+  @Override
+  public String getDescription() {
+    return description;
+  }
+
+  @Override
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  @Override
+  public Integer getSamplesExpected() {
+    return samplesExpected;
+  }
+
+  @Override
+  public void setSamplesExpected(Integer samplesExpected) {
+    this.samplesExpected = samplesExpected;
+  }
+
+  @Override
+  public String getContactName() {
+    return contactName;
+  }
+
+  @Override
+  public void setContactName(String contactName) {
+    this.contactName = contactName;
+  }
+
+  @Override
+  public String getContactEmail() {
+    return contactEmail;
+  }
+
+  @Override
+  public void setContactEmail(String contactEmail) {
+    this.contactEmail = contactEmail;
   }
 }
