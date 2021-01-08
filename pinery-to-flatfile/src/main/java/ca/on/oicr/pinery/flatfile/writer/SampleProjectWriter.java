@@ -1,12 +1,25 @@
 package ca.on.oicr.pinery.flatfile.writer;
 
+import static ca.on.oicr.pinery.flatfile.util.ConverterUtils.*;
+
 import ca.on.oicr.ws.dto.SampleProjectDto;
 import java.util.List;
 
 public class SampleProjectWriter extends Writer {
 
   private static final String[] headers = {
-    "projectName", "active", "clinical", "pipeline", "secondaryNamingScheme"
+    "projectName",
+    "active",
+    "clinical",
+    "pipeline",
+    "secondaryNamingScheme",
+    "created",
+    "rebNumber",
+    "rebExpiry",
+    "description",
+    "samplesExpected",
+    "contactName",
+    "contactEmail"
   };
 
   private final List<SampleProjectDto> projects;
@@ -34,7 +47,14 @@ public class SampleProjectWriter extends Writer {
       Boolean.toString(project.isActive()),
       Boolean.toString(project.isClinical()),
       project.getPipeline(),
-      Boolean.toString(project.isSecondaryNamingSCheme())
+      Boolean.toString(project.isSecondaryNamingSCheme()),
+      project.getCreatedDate(),
+      project.getRebNumber(),
+      project.getRebExpiry(),
+      project.getDescription(),
+      toStringOrNull(project.getSamplesExpected()),
+      project.getContactName(),
+      project.getContactEmail()
     };
 
     return data;

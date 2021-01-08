@@ -1,5 +1,6 @@
 package ca.on.oicr.pinery.flatfile.util;
 
+import ca.on.oicr.ws.dto.StatusDto;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,5 +35,18 @@ public class ConverterUtils {
      * @return the item's ID
      */
     public Integer getId(T item);
+  }
+
+  public static String getStatusString(StatusDto status) {
+    KeyValueStringBuilder sb = new KeyValueStringBuilder();
+    if (status != null) {
+      sb.append("name", status.getName());
+      sb.append("state", status.getState());
+    }
+    return sb.toString();
+  }
+
+  public static String toStringOrNull(Object object) {
+    return object == null ? null : object.toString();
   }
 }

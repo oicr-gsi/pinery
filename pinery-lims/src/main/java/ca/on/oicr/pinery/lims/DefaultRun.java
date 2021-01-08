@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.lims;
 
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.RunPosition;
+import ca.on.oicr.pinery.api.Status;
 import java.util.Date;
 import java.util.Set;
 
@@ -29,6 +30,8 @@ public class DefaultRun implements Run {
   private String workflowType;
   private String containerModel;
   private String sequencingKit;
+  private Status status;
+  private Boolean dataReview;
 
   @Override
   public String getState() {
@@ -241,6 +244,26 @@ public class DefaultRun implements Run {
   }
 
   @Override
+  public Status getStatus() {
+    return status;
+  }
+
+  @Override
+  public void setStatus(Status status) {
+    this.status = status;
+  }
+
+  @Override
+  public Boolean getDataReview() {
+    return dataReview;
+  }
+
+  @Override
+  public void setDataReview(Boolean dataReview) {
+    this.dataReview = dataReview;
+  }
+
+  @Override
   public String toString() {
     return "DefaultRun [state="
         + state
@@ -316,6 +339,8 @@ public class DefaultRun implements Run {
     result = prime * result + ((workflowType == null) ? 0 : workflowType.hashCode());
     result = prime * result + ((containerModel == null) ? 0 : containerModel.hashCode());
     result = prime * result + ((sequencingKit == null) ? 0 : sequencingKit.hashCode());
+    result = prime * result + ((status == null) ? 0 : status.hashCode());
+    result = prime * result + ((dataReview == null) ? 0 : dataReview.hashCode());
     return result;
   }
 
@@ -391,6 +416,12 @@ public class DefaultRun implements Run {
     if (sequencingKit == null) {
       if (other.sequencingKit != null) return false;
     } else if (!sequencingKit.equals(other.sequencingKit)) return false;
+    if (status == null) {
+      if (other.status != null) return false;
+    } else if (!status.equals(other.status)) return false;
+    if (dataReview == null) {
+      if (other.dataReview != null) return false;
+    } else if (!dataReview.equals(other.dataReview)) return false;
     return true;
   }
 }

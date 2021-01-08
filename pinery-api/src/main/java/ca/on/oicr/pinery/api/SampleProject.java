@@ -39,4 +39,32 @@ public interface SampleProject {
   public boolean isSecondaryNamingScheme();
 
   public void setSecondaryNamingScheme(boolean secondaryNamingScheme);
+
+  public Date getCreated();
+
+  public void setCreated(Date created);
+
+  public String getRebNumber();
+
+  public void setRebNumber(String rebNumber);
+
+  public Date getRebExpiry();
+
+  public void setRebExpiry(Date rebExpiry);
+
+  public String getDescription();
+
+  public void setDescription(String description);
+
+  public Integer getSamplesExpected();
+
+  public void setSamplesExpected(Integer samplesExpected);
+
+  public String getContactName();
+
+  public void setContactName(String contactName);
+
+  public String getContactEmail();
+
+  public void setContactEmail(String contactEmail);
 }

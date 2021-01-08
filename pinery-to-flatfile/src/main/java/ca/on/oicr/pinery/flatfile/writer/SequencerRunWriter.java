@@ -1,6 +1,7 @@
 package ca.on.oicr.pinery.flatfile.writer;
 
 import ca.on.oicr.pinery.flatfile.util.ArrayStringBuilder;
+import ca.on.oicr.pinery.flatfile.util.ConverterUtils;
 import ca.on.oicr.pinery.flatfile.util.KeyValueStringBuilder;
 import ca.on.oicr.ws.dto.AttributeDto;
 import ca.on.oicr.ws.dto.RunDto;
@@ -29,7 +30,9 @@ public class SequencerRunWriter extends Writer {
     "sequencingKit",
     "containerModel",
     "workflowType",
-    "positions"
+    "positions",
+    "status",
+    "dataReview"
   };
 
   private final List<RunDto> runs;
@@ -71,7 +74,9 @@ public class SequencerRunWriter extends Writer {
       run.getSequencingKit(),
       run.getContainerModel(),
       run.getWorkflowType(),
-      getPositionsString(run)
+      getPositionsString(run),
+      ConverterUtils.getStatusString(run.getStatus()),
+      run.getDataReview() == null ? "" : run.getDataReview().toString()
     };
 
     return data;

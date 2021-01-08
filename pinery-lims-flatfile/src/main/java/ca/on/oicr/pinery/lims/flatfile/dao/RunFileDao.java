@@ -56,6 +56,8 @@ public class RunFileDao implements RunDao {
           r.setWorkflowType(getStringIfPresent(rs, "workflowType"));
           r.setContainerModel(getStringIfPresent(rs, "containerModel"));
           r.setSequencingKit(getStringIfPresent(rs, "sequencingKit"));
+          r.setStatus(ModelUtils.parseStatus(rs.getString("status")));
+          r.setDataReview(ModelUtils.parseBooleanOrNull("dataReview"));
 
           r.setSample(parseRunPositions(rs.getString("positions")));
 

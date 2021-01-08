@@ -1,8 +1,12 @@
 package ca.on.oicr.pinery.lims.flatfile.model;
 
+import ca.on.oicr.pinery.api.Status;
+import ca.on.oicr.pinery.lims.DefaultStatus;
+import ca.on.oicr.pinery.lims.flatfile.dao.DaoUtils;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Map;
 
 public class ModelUtils {
 
@@ -68,6 +72,16 @@ public class ModelUtils {
   }
 
   public static Boolean parseBooleanOrNull(String bool) {
-    return bool == null ? null : Boolean.parseBoolean(bool);
+    return bool == null || bool.isEmpty() ? null : Boolean.parseBoolean(bool);
+  }
+
+  public static Status parseStatus(String string) {
+    Map<String, String> map = DaoUtils.parseKeyValuePairs(string);
+    if (map.isEmpty()) return null;
+
+    Status status = new DefaultStatus();
+    status.setName(ModelUtils.nullIfEmpty(map.get("name")));
+    status.setState(ModelUtils.nullIfEmpty(map.get("state")));
+    return status;
   }
 }

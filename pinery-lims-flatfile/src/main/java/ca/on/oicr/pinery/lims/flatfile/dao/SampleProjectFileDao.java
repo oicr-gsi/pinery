@@ -34,6 +34,16 @@ public class SampleProjectFileDao implements SampleProjectDao {
           p.setClinical(rs.getBoolean("clinical"));
           p.setPipeline(rs.getString("pipeline"));
           p.setSecondaryNamingScheme(rs.getBoolean("secondaryNamingScheme"));
+          p.setCreated(ModelUtils.convertToDate(rs.getString("created")));
+          p.setRebNumber(ModelUtils.nullIfEmpty(rs.getString("rebNumber")));
+          p.setRebExpiry(ModelUtils.convertToDate(rs.getString("rebExpiry")));
+          p.setDescription(ModelUtils.nullIfEmpty(rs.getString("description")));
+          String samplesExpected = rs.getString("samplesExpected");
+          if (samplesExpected != null && !samplesExpected.isEmpty()) {
+            p.setSamplesExpected(Integer.parseInt(samplesExpected));
+          }
+          p.setContactName(ModelUtils.nullIfEmpty(rs.getString("contactName")));
+          p.setContactEmail(ModelUtils.nullIfEmpty(rs.getString("contactEmail")));
           return p;
         }
       };

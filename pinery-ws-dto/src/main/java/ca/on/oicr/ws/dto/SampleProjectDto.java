@@ -18,6 +18,13 @@ public class SampleProjectDto {
   private boolean clinical;
   private String pipeline;
   private boolean secondaryNamingScheme;
+  private String createdDate;
+  private String rebNumber;
+  private String rebExpiry;
+  private String description;
+  private Integer samplesExpected;
+  private String contactName;
+  private String contactEmail;
 
   public String getName() {
     return name;
@@ -95,6 +102,68 @@ public class SampleProjectDto {
     this.secondaryNamingScheme = secondaryNamingSCheme;
   }
 
+  @JsonProperty("created_date")
+  public String getCreatedDate() {
+    return createdDate;
+  }
+
+  public void setCreatedDate(String createdDate) {
+    this.createdDate = createdDate;
+  }
+
+  @JsonProperty("reb_number")
+  public String getRebNumber() {
+    return rebNumber;
+  }
+
+  public void setRebNumber(String rebNumber) {
+    this.rebNumber = rebNumber;
+  }
+
+  @JsonProperty("reb_expiry")
+  public String getRebExpiry() {
+    return rebExpiry;
+  }
+
+  public void setRebExpiry(String rebExpiry) {
+    this.rebExpiry = rebExpiry;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  @JsonProperty("samples_expected")
+  public Integer getSamplesExpected() {
+    return samplesExpected;
+  }
+
+  public void setSamplesExpected(Integer samplesExpected) {
+    this.samplesExpected = samplesExpected;
+  }
+
+  @JsonProperty("contact_name")
+  public String getContactName() {
+    return contactName;
+  }
+
+  public void setContactName(String contactName) {
+    this.contactName = contactName;
+  }
+
+  @JsonProperty("contact_email")
+  public String getContactEmail() {
+    return contactEmail;
+  }
+
+  public void setContactEmail(String contactEmail) {
+    this.contactEmail = contactEmail;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -107,6 +176,13 @@ public class SampleProjectDto {
     result = prime * result + Boolean.hashCode(active);
     result = prime * result + Boolean.hashCode(clinical);
     result = prime * result + Boolean.hashCode(secondaryNamingScheme);
+    result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
+    result = prime * result + ((rebNumber == null) ? 0 : rebNumber.hashCode());
+    result = prime * result + ((rebExpiry == null) ? 0 : rebExpiry.hashCode());
+    result = prime * result + ((description == null) ? 0 : description.hashCode());
+    result = prime * result + ((samplesExpected == null) ? 0 : samplesExpected.hashCode());
+    result = prime * result + ((contactName == null) ? 0 : contactName.hashCode());
+    result = prime * result + ((contactEmail == null) ? 0 : contactEmail.hashCode());
     return result;
   }
 
@@ -134,6 +210,27 @@ public class SampleProjectDto {
     if (active != other.active) return false;
     if (clinical != other.clinical) return false;
     if (secondaryNamingScheme != other.secondaryNamingScheme) return false;
+    if (createdDate == null) {
+      if (other.createdDate != null) return false;
+    } else if (!createdDate.equals(other.createdDate)) return false;
+    if (rebNumber == null) {
+      if (other.rebNumber != null) return false;
+    } else if (!rebNumber.equals(other.rebNumber)) return false;
+    if (rebExpiry == null) {
+      if (other.rebExpiry != null) return false;
+    } else if (!rebExpiry.equals(other.rebExpiry)) return false;
+    if (description == null) {
+      if (other.description != null) return false;
+    } else if (!description.equals(other.description)) return false;
+    if (samplesExpected == null) {
+      if (other.samplesExpected != null) return false;
+    } else if (!samplesExpected.equals(other.samplesExpected)) return false;
+    if (contactName == null) {
+      if (other.contactName != null) return false;
+    } else if (!contactName.equals(other.contactName)) return false;
+    if (contactEmail == null) {
+      if (other.contactEmail != null) return false;
+    } else if (!contactEmail.equals(other.contactEmail)) return false;
     return true;
   }
 

@@ -88,4 +88,12 @@ public interface Run {
   public String getSequencingKit();
 
   public void setSequencingKit(String sequencingKit);
+
+  public Status getStatus();
+
+  public void setStatus(Status status);
+
+  public Boolean getDataReview();
+
+  public void setDataReview(Boolean dataReview);
 }

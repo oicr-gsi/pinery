@@ -164,12 +164,15 @@ public final class Dtos {
     dto.setClinical(from.isClinical());
     dto.setPipeline(from.getPipeline());
     dto.setSecondaryNamingSCheme(from.isSecondaryNamingScheme());
-    if (from.getEarliest() != null) {
-      dto.setEarliest(format(from.getEarliest()));
-    }
-    if (from.getLatest() != null) {
-      dto.setLatest(format(from.getLatest()));
-    }
+    dto.setEarliest(format(from.getEarliest()));
+    dto.setLatest(format(from.getLatest()));
+    dto.setCreatedDate(format(from.getCreated()));
+    dto.setRebNumber(from.getRebNumber());
+    dto.setRebExpiry(format(from.getRebExpiry()));
+    dto.setDescription(from.getDescription());
+    dto.setSamplesExpected(from.getSamplesExpected());
+    dto.setContactName(from.getContactName());
+    dto.setContactEmail(from.getContactEmail());
     return dto;
   }
 
@@ -338,6 +341,14 @@ public final class Dtos {
     dto.setWorkflowType(from.getWorkflowType());
     dto.setContainerModel(from.getContainerModel());
     dto.setSequencingKit(from.getSequencingKit());
+    if (from.getStatus() != null) {
+      dto.setStatus(asDto(from.getStatus()));
+    }
+    if (from.getDataReview() == null) {
+      dto.setDataReview("Pending");
+    } else {
+      dto.setDataReview(from.getDataReview() ? "Passed" : "Failed");
+    }
     return dto;
   }
 
@@ -542,6 +553,9 @@ public final class Dtos {
   }
 
   private static String format(Date date) {
+    if (date == null) {
+      return null;
+    }
     return ZonedDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault())
         .truncatedTo(ChronoUnit.SECONDS)
         .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
