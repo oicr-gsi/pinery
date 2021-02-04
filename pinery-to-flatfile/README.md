@@ -13,9 +13,9 @@ are compatible for use in a flatfile-sourced Pinery service.
     
 | Parameter | Description | Example | Required? |
 | --------- | ----------- | ------- | --------- |
-| pinery-base-url | Base URL of Pinery service to pull data from | http://localhost:8080/pinery-gsle | yes |
+| pinery-base-url | Base URL of Pinery service to pull data from | http://localhost:8080/pinery | yes |
 | output-dir | Local directory to write files to | ~/flatfiles | yes |
-| filename-suffix | Tag to include in filenames; Filenames will end in "_\<suffix\>.tsv" instead of just ".tsv" | gsle | no |
+| filename-suffix | Tag to include in filenames; Filenames will end in "_\<suffix\>.tsv" instead of just ".tsv" | dump | no |
 
 ## File Format
 

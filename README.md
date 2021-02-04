@@ -19,7 +19,7 @@ Build all modules, running all unit tests and integration tests:
 ### Webservice
 
 Pinery is a read-only webservice that pulls information from a LIMS. This repository includes
-implementations that read data from Geospiza GeneSifter Lab Edition (GSLE), and .tsv flat files.
+an implementation that read data from .tsv flat files.
 
 [More Info](pinery-ws/README.md)
 
@@ -37,7 +37,7 @@ The Pinery-to-FlatFile utility creates a dump of all data from one LIMS into a s
 
 ## Contributing
 
-* Maven 3 and JDK 7 are required
+* Maven 3 and JDK 8 are required
 * Nothing should be committed directly to a versioned branch. Make a pull request when your work
   is ready to be merged
 * Pull requests must pass the continuous integration (CI) build, and be reviewed before merging

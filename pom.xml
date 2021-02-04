@@ -75,7 +75,6 @@
         <module>pinery-ws-dto</module>
         <module>pinery-ws</module>
         <module>pinery-lims</module>
-        <module>pinery-lims-gsle</module>
         <module>pinery-lims-flatfile</module>
         <module>pinery-client</module>
         <module>pinery-to-flatfile</module>
@@ -100,11 +99,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>${log4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
@@ -145,11 +139,6 @@
             <dependency>
                 <groupId>ca.on.oicr</groupId>
                 <artifactId>pinery-ws-dto</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ca.on.oicr</groupId>
-                <artifactId>pinery-lims-gsle</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

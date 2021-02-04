@@ -50,10 +50,6 @@
    <task:annotation-driven/>
    
    <!-- Profiles (keep below all other beans) -->
-   <beans profile="gsle">
-      <import resource="classpath:gsle-config.xml"/>
-   </beans>
-   
    <beans profile="flatfile">
       <import resource="classpath:flatfile-config.xml"/>
    </beans>
