@@ -21,10 +21,6 @@
             <artifactId>pinery-lims-flatfile</artifactId>
         </dependency>
         <dependency>
-            <groupId>ca.on.oicr</groupId>
-            <artifactId>pinery-lims-gsle</artifactId>
-        </dependency>
-        <dependency>
             <groupId>ca.on.oicr.gsi</groupId>
             <artifactId>server-utils</artifactId>
         </dependency>

@@ -1,7 +1,7 @@
 # Pinery Webservice
 
 Pinery is a read-only webservice that pulls information from a LIMS. This repository includes
-implementations that read data from Geospiza GeneSifter Lab Edition (GSLE), and .tsv flat files.
+an implementation that reads data from .tsv flat files.
 
 ## Minimum Requirements
 
@@ -10,9 +10,9 @@ implementations that read data from Geospiza GeneSifter Lab Edition (GSLE), and 
 
 ## Configuration
 
-Each LIMS has its own set of options, which are detailed in the appropriate module.
+Each LIMS may have its own set of options, so you should see the documentation
+for the specific Pinery implementation you are using.
 
-* [GSLE](../pinery-lims-gsle)
 * [Flat Files](../pinery-lims-flatfile)
 * External modules may also be used
 
@@ -28,7 +28,7 @@ values are listed in the table below.
     ```
     <context-param>
       <param-name>spring.profiles.default</param-name>
-      <param-value>gsle</param-value>
+      <param-value>flatfile</param-value>
     </context-param>
     ```
 
@@ -37,7 +37,6 @@ as listed in the table below.
 
 | Source LIMS | Spring Profile | Properties File |
 | ----------- | -------------- | --------------- |
-| Geospiza | gsle | pinery-lims-gsle/src/main/resources/gsle.properties |
 | Flat Files | flatfile | pinery-lims-flatfile/src/main/resources/flatfile.properties |
 
 ### External Configuration
@@ -50,7 +49,7 @@ credentials every time.
 of the pinery-lims-<LIMS> module for the LIMS you're using to **$CATALINA_HOME/conf/Catalina/localhost/**,
 where **$CATALINA_HOME** is your Tomcat base directory
 2. rename **context-example.xml** to match the context root of your deployment. E.g. if you're
-deploying to **/pinery-gsle**, call the context file **pinery-gsle.xml**
+deploying to **/pinery-file**, call the context file **pinery-file.xml**
 3. Configure options specific to the source LIMS in the properties file
 
 ### Running with Jetty
@@ -81,8 +80,8 @@ JAVA_OPTS="-Duser.timezone=GMT -Djava.awt.headless=true -Xmx6144m -XX:MaxPermSiz
 3. Copy the **.war** file from **pinery/pinery-ws/target/** into your webapps directory. If Tomcat is
 configured to autodeploy, the webapp will be (re)deployed automatically; otherwise, deploy the webapp manually
    * The name of the XML file should match the name of the context root, which by default will be the same
-   as the WAR name. If you would like to deploy to /pinery-gsle, name your WAR file **pinery-gsle.war**, and your
-   context file **pinery-gsle.xml**
+   as the WAR name. If you would like to deploy to /pinery-file, name your WAR file **pinery-file.war**, and your
+   context file **pinery-file.xml**
    * **WARNING**: In some cases with autodeploy enabled, Tomcat may delete the context XML during redeployment.
    You can prevent this by stopping tomcat before copying the WAR into the webapps directory, or by making the
    file immutable via `chattr +i <filename>`

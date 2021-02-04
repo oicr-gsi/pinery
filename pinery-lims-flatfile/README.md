@@ -12,8 +12,8 @@ The [properties file](src/main/resources/flatfile.properties) contains the follo
 * **flatfile.dir**: directory to read from (use absolute path). A complete set of flat files
 must be included in this directory
 * **flatfile.suffix**: useful if you have multiple sets of LIMS flat files in the same directory.
-If you have a **samples_gsle.tsv** and a **samples_miso.tsv**, you can set
-`flatfile.suffix=_gsle.tsv` to read only the files ending with **_gsle.tsv**
+If you have a **samples_lims1.tsv** and a **samples_lims2.tsv**, you can set
+`flatfile.suffix=_lims1.tsv` to read only the files ending with **_lims1.tsv**
 
 ## Installation
 
