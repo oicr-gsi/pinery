@@ -31,7 +31,6 @@
         <log4j-core.version>2.13.2</log4j-core.version>
         <joda-time.version>2.1</joda-time.version>
         <mockito.version>1.10.19</mockito.version>
-        <powermock.version>1.6.3</powermock.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <httpclient.version>4.5.2</httpclient.version>
         <jetty.version>9.3.0.M1</jetty.version>
@@ -296,12 +295,6 @@
                 <artifactId>mockito-all</artifactId>
                 <version>${mockito.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-mockito-release-full</artifactId>
-                <classifier>full</classifier>
-                <version>${powermock.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.jayway.jsonpath</groupId>

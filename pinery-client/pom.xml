@@ -74,12 +74,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-mockito-release-full</artifactId>
-            <classifier>full</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>ca.on.oicr</groupId>
             <artifactId>pinery-ws</artifactId>
             <scope>test</scope>
