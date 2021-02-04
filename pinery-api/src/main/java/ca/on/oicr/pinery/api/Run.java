@@ -1,5 +1,6 @@
 package ca.on.oicr.pinery.api;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -96,4 +97,8 @@ public interface Run {
   public Boolean getDataReview();
 
   public void setDataReview(Boolean dataReview);
+
+  public LocalDate getDataReviewDate();
+
+  public void setDataReviewDate(LocalDate dataReviewDate);
 }

@@ -19,6 +19,7 @@ public class StatusDto {
     int result = 1;
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + ((state == null) ? 0 : state.hashCode());
+    result = prime * result + ((date == null) ? 0 : date.hashCode());
     return result;
   }
 
@@ -34,11 +35,15 @@ public class StatusDto {
     if (state == null) {
       if (other.state != null) return false;
     } else if (!state.equals(other.state)) return false;
+    if (date == null) {
+      if (other.date != null) return false;
+    } else if (!date.equals(other.date)) return false;
     return true;
   }
 
   private String name;
   private String state;
+  private String date;
 
   public String getName() {
     return name;
@@ -54,5 +59,13 @@ public class StatusDto {
 
   public void setState(String state) {
     this.state = state;
+  }
+
+  public String getDate() {
+    return date;
+  }
+
+  public void setDate(String date) {
+    this.date = date;
   }
 }

@@ -36,6 +36,7 @@ public class RunDto {
   private String sequencingKit;
   private StatusDto status;
   private String dataReview;
+  private String dataReviewDate;
 
   public String getState() {
     return state;
@@ -262,6 +263,15 @@ public class RunDto {
     this.dataReview = dataReview;
   }
 
+  @JsonProperty("data_review_date")
+  public String getDataReviewDate() {
+    return dataReviewDate;
+  }
+
+  public void setDataReviewDate(String dataReviewDate) {
+    this.dataReviewDate = dataReviewDate;
+  }
+
   @Override
   public String toString() {
     return "RunDto [state="
@@ -338,6 +348,7 @@ public class RunDto {
     result = prime * result + ((sequencingKit == null) ? 0 : sequencingKit.hashCode());
     result = prime * result + ((status == null) ? 0 : status.hashCode());
     result = prime * result + ((dataReview == null) ? 0 : dataReview.hashCode());
+    result = prime * result + ((dataReviewDate == null) ? 0 : dataReviewDate.hashCode());
     return result;
   }
 
@@ -407,6 +418,9 @@ public class RunDto {
     if (dataReview == null) {
       if (other.dataReview != null) return false;
     } else if (!dataReview.equals(other.dataReview)) return false;
+    if (dataReviewDate == null) {
+      if (other.dataReviewDate != null) return false;
+    } else if (!dataReviewDate.equals(other.dataReviewDate)) return false;
     return true;
   }
 }
