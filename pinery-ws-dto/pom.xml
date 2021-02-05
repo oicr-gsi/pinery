@@ -62,7 +62,7 @@
               <configuration>
                 <archive>
                   <manifestEntries>
-                    <Automatic-Module-Name>ca.oicr.gsi.pinery.wsdto</Automatic-Module-Name>
+                    <Automatic-Module-Name>ca.on.oicr.gsi.pinery.wsdto</Automatic-Module-Name>
                   </manifestEntries>
                 </archive>
               </configuration>
