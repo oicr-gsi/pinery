@@ -47,7 +47,7 @@
               <configuration>
                 <archive>
                   <manifestEntries>
-                    <Automatic-Module-Name>ca.oicr.gsi.pinery.lims</Automatic-Module-Name>
+                    <Automatic-Module-Name>ca.on.oicr.gsi.pinery.lims</Automatic-Module-Name>
                   </manifestEntries>
                 </archive>
               </configuration>
