@@ -7,24 +7,13 @@ git:
     depth: 3
 env: > 
       MAVEN_OPTS="-Xms1g -Xmx2g" 
-addons:
-    sonarcloud:
-        organization: "oicr-gsi"
-        token:
-            secure: "nFuAZYShhnImHBicrSVaKuSO9zD7NmfNABxDvaOgTetZzKZ17UkSaUlIwve3+Mm/3Chw1sqf6epmbUCbL2WKgywinoWAWv073NJ+omrUGf7PYcapriW5oOE/ooa5U+B+E3ym/cDy0t+SXiwopJ+i++Z9c1+z5jvQgoxUZQPXpspEQQvk54eb5mG8FqOQY/56EuIJqHanpI1Q01xQy1kLMfzwiZrhp75Xmfo1UBcKg3/cQUn/UpTnRo0Xb1lJ2Hxw4B5ztRHZdeI6H4fEMxh6C0/Ln02ozL0X4/cJPrQEK5VT6uelbaKzjdNPKKR9Ak2+l1v5z8g+MxYXt7np7i1a+rmyIRXujkqmgzbSv6hu3rEcDz6Nu+t90oq1FWyDdpH43k09ZCcNWp0bKYePFK8IFLfK86w4EQdcAd5EU3JO38iluIvkY2hhBFZY69X+W5DEGFmiDFDcUJrqxuJehR4lNVzSfBTDGWipQWxkNf6A0Feyzz/njOIMPj4hymUGzI3v0XAmOjmnTNLhhojlHFmetuZuEEX/7y9QC/JGGo1JEdwmT2GbPm0DqmNj0MtCzorKHGqCpMYYT6a808DRdco41zjtmX2qfSYkwUcFzGie0rHL0nmQGbIeLabjHnTqmGI0/M/wChvk+oxhSI79GmevOfknOMzQdsoN03p8M0uc7B8="
 
 before_script:
 - export TZ=Canada/Eastern
 
 script:
   - mvn clean install -DskipITs=false
-  - 'if [[ ${TRAVIS_PULL_REQUEST} == "false" ]] || [[ ${TRAVIS_PULL_REQUEST_SLUG} == ${TRAVIS_REPO_SLUG} ]] ; then
-        mvn org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar ;
-     else
-        echo "[WARN] SonarCloud cannot run on pull requests from forks." ;
-     fi'
 
 cache:
     directories:
     - "$HOME/.m2"
-    - "$HOME/.sonar/cache"
