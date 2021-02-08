@@ -10,7 +10,7 @@ are compatible for use in a flatfile-sourced Pinery service.
 ## Usage
 
     java -jar pinery-to-flatfile.jar <pinery-base-url> <output-dir> [filename-suffix]
-    
+
 | Parameter | Description | Example | Required? |
 | --------- | ----------- | ------- | --------- |
 | pinery-base-url | Base URL of Pinery service to pull data from | http://localhost:8080/pinery | yes |
@@ -61,9 +61,9 @@ Contains all sample data. Fields:
 | childIds | List of int | IDs of child samples |
 | projectName | String |  |
 | archived | boolean |  |
-| status | key:value set | contains exactly 2 keys: 'name' and 'state' |
+| status | key:value set | always contains 'name' and 'state' key. May contain 'date' as well. Date format: 2021-02-08 |
 | volume | Float |  |
-| concentration |  |
+| concentration | Float |  |
 | preparationKit | key:value set | possible keys: 'name' and 'description' |
 | attributes | key:value set | Any additional sample attributes. Attribute names are used as the keys |
 
@@ -89,6 +89,7 @@ Contains all instrument data. Fields:
 | createdDate | Date | format: 2015-12-01T17:16:32-04:00 |
 | modelId | int | LIMS ID of this instrument's instrument model |
 | modelName | String | Instrument model name |
+| modelPlatform | String | Sequencing platform |
 | modelCreatedDate | Date | format: 2015-12-01T17:16:32-04:00 |
 | modelCreatedUserId | int | ID of user who created the InstrumentModel |
 | modelModifiedDate | Date | format: 2015-12-01T17:16:32-04:00 |
@@ -102,17 +103,28 @@ Contains all sequencer run data. Fields:
 | ----- | ---- | ----- |
 | id | int | ID from LIMS |
 | name | String | Run name |
+| startDate | Date | format: 2015-12-01T17:16:32-04:00 |
+| completionDate | Date | format: 2015-12-01T17:16:32-04:00 |
 | createdDate | Date | format: 2015-12-01T17:16:32-04:00 |
 | createdUserId | ID of user who created this run |
 | instrumentId | int | LIMS ID of instrument used for this run |
 | instrumentName | String | Name of instrument usec for this run |
 | state | String | Current state of run. Should be one of {Running, Completed, Failed, Unknown} |
 | barcode | String | Run barcode |
+| runDirectory | String |  |
+| runBasesMask | String |  |
+| sequencingParameters | String |  |
+| sequencingKit | String |  |
+| containerModel | String |  |
+| workflowType | String |  |
 | positions | List\* | See below |
+| status | key:value set | always contains 'name' and 'state' key. May contain 'date' as well. Date format: 2021-02-08 |
+| dataReview | String |  |
+| dataReviewDate | Date | format: 2021-02-08 |
 
 \* positions field contains a list containing key:value pair sets, which contain more lists containing key:value pair sets!
 
-    [{position=1|samples=[{id=123}]},{position=2|samples=[{id=200|barcode=AAAAAA},{id=201|barcode=CCCCCC}]}]
+    [{position=1|samples=[{id=123}]},{position=2|samples=[{id=200|barcode=AAAAAA},{id=201|barcode=CCCCCC||statusName=Ready|statusState=Ready}]}]
 
 #### orders.tsv
 
@@ -133,6 +145,17 @@ Contains all order data. Fields:
 \* samples field example:
 
     [{id=123|barcode=AAAAAA|attributes={Read Length=2x151|Reference=Human hg19 random}},{id=14737|barcode=TAGCTT|attributes={Read Length=2x151|Reference=Human hg19 random}}]
+
+Possible keys in run-position sample:
+
+| Key | Format |
+| barcode | String |
+| barcodeTwo | String |
+| runPurpose | String |
+| attributes | key:value pairs |
+| statusName | String |
+| statusState | String |
+| statusDate | 2021-02-08 | Targeted Resequencing |
 
 #### users.tsv
 
