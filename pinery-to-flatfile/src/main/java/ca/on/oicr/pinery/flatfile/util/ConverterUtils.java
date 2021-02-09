@@ -42,6 +42,7 @@ public class ConverterUtils {
     if (status != null) {
       sb.append("name", status.getName());
       sb.append("state", status.getState());
+      sb.appendNonNull("date", status.getDate());
     }
     return sb.toString();
   }

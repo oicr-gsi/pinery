@@ -25,6 +25,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,6 +39,8 @@ import org.apache.commons.lang.StringUtils;
 
 /** Methods to convert between domain objects and dtos. */
 public final class Dtos {
+
+  private static DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
   public static SampleDto asDto(Sample from) {
     SampleDto dto = new SampleDto();
@@ -146,12 +149,9 @@ public final class Dtos {
 
   public static StatusDto asDto(Status from) {
     StatusDto dto = new StatusDto();
-    if (from.getName() != null) {
-      dto.setName(from.getName());
-    }
-    if (from.getState() != null) {
-      dto.setState(from.getState());
-    }
+    dto.setName(from.getName());
+    dto.setState(from.getState());
+    dto.setDate(format(from.getDate()));
     return dto;
   }
 
@@ -349,6 +349,7 @@ public final class Dtos {
     } else {
       dto.setDataReview(from.getDataReview() ? "Passed" : "Failed");
     }
+    dto.setDataReviewDate(format(from.getDataReviewDate()));
     return dto;
   }
 
@@ -559,5 +560,12 @@ public final class Dtos {
     return ZonedDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault())
         .truncatedTo(ChronoUnit.SECONDS)
         .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+  }
+
+  private static final String format(LocalDate date) {
+    if (date == null) {
+      return null;
+    }
+    return date.format(dateFormatter);
   }
 }

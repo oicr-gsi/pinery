@@ -32,7 +32,8 @@ public class SequencerRunWriter extends Writer {
     "workflowType",
     "positions",
     "status",
-    "dataReview"
+    "dataReview",
+    "dataReviewDate"
   };
 
   private final List<RunDto> runs;
@@ -76,7 +77,8 @@ public class SequencerRunWriter extends Writer {
       run.getWorkflowType(),
       getPositionsString(run),
       ConverterUtils.getStatusString(run.getStatus()),
-      run.getDataReview() == null ? "" : run.getDataReview().toString()
+      run.getDataReview() == null ? "" : run.getDataReview().toString(),
+      run.getDataReviewDate() == null ? "" : run.getDataReviewDate()
     };
 
     return data;
@@ -137,6 +139,7 @@ public class SequencerRunWriter extends Writer {
     if (sample.getStatus() != null) {
       sb.appendNonNull("statusName", sample.getStatus().getName());
       sb.appendNonNull("statusState", sample.getStatus().getState());
+      sb.appendNonNull("statusDate", sample.getStatus().getDate());
     }
 
     return sb.toString();

@@ -3,6 +3,7 @@ package ca.on.oicr.pinery.lims.flatfile.model;
 import ca.on.oicr.pinery.api.Status;
 import ca.on.oicr.pinery.lims.DefaultStatus;
 import ca.on.oicr.pinery.lims.flatfile.dao.DaoUtils;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -12,6 +13,7 @@ public class ModelUtils {
 
   // "2012-06-12T14:47:09-04:00"
   public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
+  public static final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
   private ModelUtils() {
     throw new AssertionError("Util class is not meant to be instantiated");
@@ -30,6 +32,14 @@ public class ModelUtils {
       return null;
     } else {
       return Date.from(ZonedDateTime.parse(date, dateTimeFormatter).toInstant());
+    }
+  }
+
+  public static LocalDate convertToLocalDate(String date) {
+    if (date == null || "".equals(date)) {
+      return null;
+    } else {
+      return LocalDate.parse(date, dateFormatter);
     }
   }
 
@@ -82,6 +92,7 @@ public class ModelUtils {
     Status status = new DefaultStatus();
     status.setName(ModelUtils.nullIfEmpty(map.get("name")));
     status.setState(ModelUtils.nullIfEmpty(map.get("state")));
+    status.setDate(ModelUtils.convertToLocalDate(map.get("date")));
     return status;
   }
 }

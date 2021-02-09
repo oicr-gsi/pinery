@@ -1,5 +1,7 @@
 package ca.on.oicr.pinery.api;
 
+import java.time.LocalDate;
+
 public interface Status {
 
   public String getName();
@@ -9,4 +11,8 @@ public interface Status {
   public String getState();
 
   public void setState(String state);
+
+  public LocalDate getDate();
+
+  public void setDate(LocalDate date);
 }

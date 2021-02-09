@@ -1,6 +1,7 @@
 package ca.on.oicr.pinery.lims;
 
 import ca.on.oicr.pinery.api.Status;
+import java.time.LocalDate;
 
 public class DefaultStatus implements Status {
 
@@ -10,6 +11,7 @@ public class DefaultStatus implements Status {
     int result = 1;
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + ((state == null) ? 0 : state.hashCode());
+    result = prime * result + ((date == null) ? 0 : date.hashCode());
     return result;
   }
 
@@ -25,11 +27,15 @@ public class DefaultStatus implements Status {
     if (state == null) {
       if (other.state != null) return false;
     } else if (!state.equals(other.state)) return false;
+    if (date == null) {
+      if (other.date != null) return false;
+    } else if (!date.equals(other.date)) return false;
     return true;
   }
 
   private String name;
   private String state;
+  private LocalDate date;
 
   @Override
   public String getName() {
@@ -49,5 +55,15 @@ public class DefaultStatus implements Status {
   @Override
   public void setState(String state) {
     this.state = state;
+  }
+
+  @Override
+  public LocalDate getDate() {
+    return date;
+  }
+
+  @Override
+  public void setDate(LocalDate date) {
+    this.date = date;
   }
 }

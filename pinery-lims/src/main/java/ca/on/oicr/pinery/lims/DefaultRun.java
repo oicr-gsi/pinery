@@ -3,6 +3,7 @@ package ca.on.oicr.pinery.lims;
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.Status;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -32,6 +33,7 @@ public class DefaultRun implements Run {
   private String sequencingKit;
   private Status status;
   private Boolean dataReview;
+  private LocalDate dataReviewDate;
 
   @Override
   public String getState() {
@@ -264,6 +266,16 @@ public class DefaultRun implements Run {
   }
 
   @Override
+  public LocalDate getDataReviewDate() {
+    return dataReviewDate;
+  }
+
+  @Override
+  public void setDataReviewDate(LocalDate dataReviewDate) {
+    this.dataReviewDate = dataReviewDate;
+  }
+
+  @Override
   public String toString() {
     return "DefaultRun [state="
         + state
@@ -341,6 +353,7 @@ public class DefaultRun implements Run {
     result = prime * result + ((sequencingKit == null) ? 0 : sequencingKit.hashCode());
     result = prime * result + ((status == null) ? 0 : status.hashCode());
     result = prime * result + ((dataReview == null) ? 0 : dataReview.hashCode());
+    result = prime * result + ((dataReviewDate == null) ? 0 : dataReviewDate.hashCode());
     return result;
   }
 
@@ -422,6 +435,9 @@ public class DefaultRun implements Run {
     if (dataReview == null) {
       if (other.dataReview != null) return false;
     } else if (!dataReview.equals(other.dataReview)) return false;
+    if (dataReviewDate == null) {
+      if (other.dataReviewDate != null) return false;
+    } else if (!dataReviewDate.equals(other.dataReviewDate)) return false;
     return true;
   }
 }
