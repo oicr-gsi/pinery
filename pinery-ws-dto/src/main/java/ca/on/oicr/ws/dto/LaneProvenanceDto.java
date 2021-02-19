@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.ZonedDateTime;
 import java.util.SortedMap;
 import java.util.SortedSet;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 
 /** @author mlaszloffy */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -23,6 +21,21 @@ public class LaneProvenanceDto implements LaneProvenance {
   private String version;
   private ZonedDateTime lastModified;
   private ZonedDateTime createdDate;
+
+  public LaneProvenanceDto() {}
+
+  public LaneProvenanceDto(LaneProvenance from) {
+    sequencerRunName = from.getSequencerRunName();
+    sequencerRunAttributes = from.getSequencerRunAttributes();
+    sequencerRunPlatformModel = from.getSequencerRunPlatformModel();
+    laneNumber = from.getLaneNumber();
+    laneAttributes = from.getLaneAttributes();
+    skip = from.getSkip();
+    laneProvenanceId = from.getLaneProvenanceId();
+    version = from.getVersion();
+    lastModified = from.getLastModified();
+    createdDate = from.getCreatedDate();
+  }
 
   @Override
   public String getSequencerRunName() {
@@ -123,6 +136,32 @@ public class LaneProvenanceDto implements LaneProvenance {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    return "LaneProvenanceDto{"
+        + "sequencerRunName='"
+        + sequencerRunName
+        + '\''
+        + ", sequencerRunAttributes="
+        + sequencerRunAttributes
+        + ", sequencerRunPlatformModel='"
+        + sequencerRunPlatformModel
+        + '\''
+        + ", laneNumber='"
+        + laneNumber
+        + '\''
+        + ", laneAttributes="
+        + laneAttributes
+        + ", skip="
+        + skip
+        + ", laneProvenanceId='"
+        + laneProvenanceId
+        + '\''
+        + ", version='"
+        + version
+        + '\''
+        + ", lastModified="
+        + lastModified
+        + ", createdDate="
+        + createdDate
+        + '}';
   }
 }

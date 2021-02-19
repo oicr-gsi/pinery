@@ -102,7 +102,7 @@
                 <artifactId>log4j-core</artifactId>
                 <version>${log4j-core.version}</version>
             </dependency>
-           <dependency>
+            <dependency>
                 <groupId>ca.on.oicr</groupId>
                 <artifactId>pinery-api</artifactId>
                 <version>${project.version}</version>
