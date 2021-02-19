@@ -2,7 +2,6 @@ package ca.on.oicr.pinery.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.common.annotations.VisibleForTesting;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -69,8 +68,7 @@ public class PineryClient implements AutoCloseable {
         ignoreHttpsWarnings ? PineryClient.getInsecureClient() : PineryClient.getSecureClient());
   }
 
-  @VisibleForTesting
-  protected PineryClient(String baseUrl, Client client) {
+  public PineryClient(String baseUrl, Client client) {
     this.pineryBaseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
     this.client = client;
     // Register provider manually because it Was not registering automatically in dependent projects
