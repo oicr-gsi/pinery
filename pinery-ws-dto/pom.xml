@@ -27,13 +27,9 @@
             <groupId>ca.on.oicr</groupId>
             <artifactId>pinery-api</artifactId>
         </dependency>
-       <dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
         </dependency>
         <dependency>
             <groupId>ca.on.oicr</groupId>
@@ -43,11 +39,6 @@
         <dependency>
             <groupId>ca.on.oicr.gsi</groupId>
             <artifactId>provenance-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <type>jar</type>
         </dependency>
     </dependencies>
     <build>

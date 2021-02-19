@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.ZonedDateTime;
 import java.util.SortedMap;
 import java.util.SortedSet;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 
 /** @author mlaszloffy */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -30,6 +28,28 @@ public class SampleProvenanceDto implements SampleProvenance {
   private String version;
   private ZonedDateTime lastModified;
   private ZonedDateTime createdDate;
+
+  public SampleProvenanceDto() {}
+
+  public SampleProvenanceDto(SampleProvenance from) {
+    studyTitle = from.getStudyTitle();
+    studyAttributes = from.getStudyAttributes();
+    rootSampleName = from.getRootSampleName();
+    parentSampleName = from.getParentSampleName();
+    sampleName = from.getSampleName();
+    sampleAttributes = from.getSampleAttributes();
+    sequencerRunName = from.getSequencerRunName();
+    sequencerRunAttributes = from.getSequencerRunAttributes();
+    sequencerRunPlatformModel = from.getSequencerRunPlatformModel();
+    laneNumber = from.getLaneNumber();
+    laneAttributes = from.getLaneAttributes();
+    iusTag = from.getIusTag();
+    skip = from.getSkip();
+    sampleProvenanceId = from.getSampleProvenanceId();
+    version = from.getVersion();
+    lastModified = from.getLastModified();
+    createdDate = from.getCreatedDate();
+  }
 
   @Override
   public String getStudyTitle() {
@@ -193,6 +213,51 @@ public class SampleProvenanceDto implements SampleProvenance {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    return "SampleProvenanceDto{"
+        + "studyTitle='"
+        + studyTitle
+        + '\''
+        + ", studyAttributes="
+        + studyAttributes
+        + ", rootSampleName='"
+        + rootSampleName
+        + '\''
+        + ", parentSampleName='"
+        + parentSampleName
+        + '\''
+        + ", sampleName='"
+        + sampleName
+        + '\''
+        + ", sampleAttributes="
+        + sampleAttributes
+        + ", sequencerRunName='"
+        + sequencerRunName
+        + '\''
+        + ", sequencerRunAttributes="
+        + sequencerRunAttributes
+        + ", sequencerRunPlatformModel='"
+        + sequencerRunPlatformModel
+        + '\''
+        + ", laneNumber='"
+        + laneNumber
+        + '\''
+        + ", laneAttributes="
+        + laneAttributes
+        + ", iusTag='"
+        + iusTag
+        + '\''
+        + ", skip="
+        + skip
+        + ", sampleProvenanceId='"
+        + sampleProvenanceId
+        + '\''
+        + ", version='"
+        + version
+        + '\''
+        + ", lastModified="
+        + lastModified
+        + ", createdDate="
+        + createdDate
+        + '}';
   }
 }
