@@ -9,15 +9,12 @@ import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
-import com.google.common.base.Charsets;
-import com.google.common.base.Joiner;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.hash.Hashing;
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +28,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -109,7 +107,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
     if (parentSamples == null || parentSamples.isEmpty()) {
       return null;
     } else {
-      return Iterables.getLast(parentSamples).getName();
+      return parentSamples.stream().reduce((first, second) -> second).get().getName();
     }
   }
 
@@ -122,7 +120,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
       for (Sample s : parentSamples) {
         parentSampleNames.add(s.getName());
       }
-      return Joiner.on(":").skipNulls().join(parentSampleNames);
+      return parentSampleNames.stream().filter(Objects::nonNull).collect(Collectors.joining(":"));
     }
   }
 
@@ -147,8 +145,10 @@ public class DefaultSampleProvenance implements SampleProvenance {
     SortedSetMultimap<String, String> attrsAll = TreeMultimap.create();
     if (parentSamples != null) {
 
-      // parentSamples is ordered - reserse the order to get ancestors
-      for (Sample parentSample : Lists.reverse(Lists.newArrayList(parentSamples))) {
+      // parentSamples is ordered - reverse the order to get ancestors
+      final List<Sample> reversedParents = new ArrayList<>(parentSamples);
+      Collections.reverse(reversedParents);
+      for (Sample parentSample : reversedParents) {
         for (Entry<String, Collection<String>> e :
             processSampleAttributes(parentSample).asMap().entrySet()) {
           attrsAll.replaceValues(e.getKey(), e.getValue());
@@ -343,7 +343,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
     sb.append(getLaneAttributes());
     sb.append(getIusTag());
     String s = sb.toString();
-    return Hashing.sha256().hashString(s, Charsets.UTF_8).toString();
+    return Hashing.sha256().hashString(s, StandardCharsets.UTF_8).toString();
   }
 
   @Override

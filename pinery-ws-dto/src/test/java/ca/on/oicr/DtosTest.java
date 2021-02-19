@@ -22,9 +22,9 @@ import ca.on.oicr.ws.dto.OrderDtoSample;
 import ca.on.oicr.ws.dto.RunDto;
 import ca.on.oicr.ws.dto.RunDtoPosition;
 import ca.on.oicr.ws.dto.RunDtoSample;
-import com.google.common.collect.Sets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
 
@@ -84,7 +84,7 @@ public class DtosTest {
   @Test
   public void testOrder9() throws Exception {
     Order input = new DefaultOrder();
-    Set<OrderSample> samples = Sets.newHashSet();
+    Set<OrderSample> samples = new HashSet<>();
     OrderSample orderSample = new DefaultOrderSample();
     orderSample.setBarcode("ACTGGCCCATG");
     samples.add(orderSample);
@@ -96,7 +96,7 @@ public class DtosTest {
   @Test
   public void testOrder10() throws Exception {
     Order input = new DefaultOrder();
-    Set<OrderSample> samples = Sets.newHashSet();
+    Set<OrderSample> samples = new HashSet<>();
     OrderSample orderSample = new DefaultOrderSample();
     orderSample.setBarcode("ACTGGCCCATG");
     samples.add(orderSample);
@@ -118,7 +118,7 @@ public class DtosTest {
     boolean status;
     OrderSample orderSample = new DefaultOrderSample();
     Attribute attribute = new DefaultAttribute();
-    Set<Attribute> attributes = Sets.newHashSet();
+    Set<Attribute> attributes = new HashSet<>();
     attribute.setName("read length");
     attribute.setValue("2x101");
     attributes.add(attribute);
@@ -135,7 +135,7 @@ public class DtosTest {
     boolean status;
     OrderSample orderSample = new DefaultOrderSample();
     Attribute attribute = new DefaultAttribute();
-    Set<Attribute> attributes = Sets.newHashSet();
+    Set<Attribute> attributes = new HashSet<>();
     attribute.setValue("2x101");
     attributes.add(attribute);
     orderSample.setAttributes(attributes);
@@ -148,7 +148,7 @@ public class DtosTest {
 
   @Test
   public void testSetOrderSample_too_OrderSample() throws Exception {
-    Set<OrderSample> input = Sets.newHashSet();
+    Set<OrderSample> input = new HashSet<>();
     OrderSample orderSample = new DefaultOrderSample();
     orderSample.setBarcode("ABC");
     input.add(orderSample);
@@ -221,7 +221,7 @@ public class DtosTest {
   @Test
   public void testRun7() throws Exception {
     Run input = new DefaultRun();
-    Set<RunPosition> sample = Sets.newHashSet();
+    Set<RunPosition> sample = new HashSet<>();
     RunPosition runPosition = new DefaultRunPosition();
     runPosition.setPosition(23);
     sample.add(runPosition);
@@ -240,7 +240,7 @@ public class DtosTest {
 
   @Test
   public void testSetRunPosition_too_RunDtoPosition_9() throws Exception {
-    Set<RunPosition> input = Sets.newHashSet();
+    Set<RunPosition> input = new HashSet<>();
     RunPosition runPosition = new DefaultRunPosition();
     runPosition.setPosition(12);
     input.add(runPosition);
@@ -253,7 +253,7 @@ public class DtosTest {
     boolean status;
     RunPosition runPosition = new DefaultRunPosition();
     RunSample runSample = new DefaultRunSample();
-    Set<RunSample> runSamples = Sets.newHashSet();
+    Set<RunSample> runSamples = new HashSet<>();
     runSample.setBarcode("C2D8J");
     runSamples.add(runSample);
     runPosition.setRunSample(runSamples);
@@ -269,7 +269,7 @@ public class DtosTest {
     boolean status;
     RunPosition runPosition = new DefaultRunPosition();
     RunSample runSample = new DefaultRunSample();
-    Set<RunSample> runSamples = Sets.newHashSet();
+    Set<RunSample> runSamples = new HashSet<>();
     runSample.setUrl("https://pinery.res.oicr.on.ca:8443/pinery/sample/45");
     runSamples.add(runSample);
     runPosition.setRunSample(runSamples);
@@ -285,7 +285,7 @@ public class DtosTest {
     boolean status;
     RunPosition runPosition = new DefaultRunPosition();
     RunSample runSample = new DefaultRunSample();
-    Set<RunSample> runSamples = Sets.newHashSet();
+    Set<RunSample> runSamples = new HashSet<>();
     runSample.setId("12");
     runSamples.add(runSample);
     runPosition.setRunSample(runSamples);

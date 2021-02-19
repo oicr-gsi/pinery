@@ -1,8 +1,8 @@
 package ca.on.oicr.pinery.lims;
 
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
-import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -62,7 +62,7 @@ public class SimpleLaneProvenance implements LaneProvenance {
     sb.append(getLaneNumber());
     sb.append(getLaneAttributes());
     String s = sb.toString();
-    return Hashing.sha256().hashString(s, Charsets.UTF_8).toString();
+    return Hashing.sha256().hashString(s, StandardCharsets.UTF_8).toString();
   }
 
   @Override
