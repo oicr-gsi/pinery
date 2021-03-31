@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = {"Sample Provenance"})
 public class SampleProvenanceResource {
 

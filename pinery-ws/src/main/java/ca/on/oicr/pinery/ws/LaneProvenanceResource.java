@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** @author mlaszloffy */
 @RestController
-@RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = {"Lane Provenance"})
 public class LaneProvenanceResource {
 
