@@ -15,7 +15,6 @@ public class SampleProjectDto {
   private String earliest;
   private String latest;
   private boolean active;
-  private boolean clinical;
   private String pipeline;
   private boolean secondaryNamingScheme;
   private String createdDate;
@@ -73,16 +72,6 @@ public class SampleProjectDto {
 
   public void setActive(boolean active) {
     this.active = active;
-  }
-
-  @Deprecated
-  public boolean isClinical() {
-    return clinical;
-  }
-
-  @Deprecated
-  public void setClinical(boolean clinical) {
-    this.clinical = clinical;
   }
 
   public String getPipeline() {
@@ -174,7 +163,6 @@ public class SampleProjectDto {
     result = prime * result + ((latest == null) ? 0 : latest.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + Boolean.hashCode(active);
-    result = prime * result + Boolean.hashCode(clinical);
     result = prime * result + Boolean.hashCode(secondaryNamingScheme);
     result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
     result = prime * result + ((rebNumber == null) ? 0 : rebNumber.hashCode());
@@ -208,7 +196,6 @@ public class SampleProjectDto {
       if (other.name != null) return false;
     } else if (!name.equals(other.name)) return false;
     if (active != other.active) return false;
-    if (clinical != other.clinical) return false;
     if (secondaryNamingScheme != other.secondaryNamingScheme) return false;
     if (createdDate == null) {
       if (other.createdDate != null) return false;
@@ -248,8 +235,6 @@ public class SampleProjectDto {
         + latest
         + ", active="
         + active
-        + ", clinical="
-        + clinical
         + ", secondaryNamingScheme="
         + secondaryNamingScheme
         + "]";
