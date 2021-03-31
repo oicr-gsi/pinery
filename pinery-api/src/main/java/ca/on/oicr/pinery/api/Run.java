@@ -78,6 +78,10 @@ public interface Run {
 
   public void setSequencingParameters(String sequencingParameters);
 
+  public String getChemistry();
+
+  public void setChemistry(String chemistry);
+
   public String getWorkflowType();
 
   public void setWorkflowType(String workflowType);
