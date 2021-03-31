@@ -37,9 +37,16 @@ public class SampleProvenanceResource {
   private static final VersionTransformer<SampleProvenance, SampleProvenance> noopTransformer =
       input -> input;
 
-  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v7Transformer =
+  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v8Transformer =
       input -> {
         SimpleSampleProvenance modified = SimpleSampleProvenance.from(input);
+        modified.getSampleAttributes().remove(LimsSampleAttribute.TIMEPOINT.toString());
+        return modified;
+      };
+
+  private static final VersionTransformer<SampleProvenance, SimpleSampleProvenance> v7Transformer =
+      input -> {
+        SimpleSampleProvenance modified = v8Transformer.transform(input);
         modified.getSampleAttributes().remove(LimsSampleAttribute.BARCODE_KIT.toString());
         return modified;
       };
@@ -117,12 +124,12 @@ public class SampleProvenanceResource {
   @VisibleForTesting
   protected static final Map<
           String, VersionTransformer<SampleProvenance, ? extends SampleProvenance>>
-      transformers //
-      =
+      transformers =
           new MapBuilder<
                   String, VersionTransformer<SampleProvenance, ? extends SampleProvenance>>() //
               .put("latest", noopTransformer) //
-              .put("v8", noopTransformer) //
+              .put("v9", noopTransformer) //
+              .put("v8", v8Transformer) //
               .put("v7", v7Transformer) //
               .put("v6", v6Transformer) //
               .put("v5", v5Transformer) //
@@ -132,9 +139,18 @@ public class SampleProvenanceResource {
               .put("v1", v1Transformer) //
               .build();
 
-  private static final String versions = "latest, v8, v7, v6, v5, v4, v3, v2, v1";
+  private static final String versions = "latest, v9, v8, v7, v6, v5, v4, v3, v2, v1";
 
   @Autowired private SampleProvenanceService sampleProvenanceService;
+
+  @GetMapping("/provenance/versions")
+  @ApiOperation(
+      value = "List available provenance versions",
+      response = String.class,
+      responseContainer = "List")
+  public List<String> getProvenanceVersions() {
+    return transformers.keySet().stream().sorted().collect(Collectors.toList());
+  }
 
   @GetMapping("/provenance/{version}/sample-provenance")
   @ApiOperation(

@@ -217,6 +217,16 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
         "27e0beaf1caf31127329a2d82792b82eb647fb9161d97a6968f0f9f8474ada1a", sp.getVersion());
   }
 
+  @Test
+  public void testV9ProvenanceTransform() {
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
+        SampleProvenanceResource.transformers.get("v9");
+    SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
+    // This hash must never change
+    assertEquals(
+        "ce65b78aa8506298c46e3816eaa2467efcf15f94a2c1f4bdb0625b8a8624de03", sp.getVersion());
+  }
+
   private SampleProvenance makeBaseSampleProvenance() {
     DefaultSampleProvenance sp = new DefaultSampleProvenance();
 
@@ -294,6 +304,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     attrs.add(makeAttribute("Spike-In-Volume (uL)", "12.34"));
     attrs.add(makeAttribute("Sequencing Control Type", "Positive"));
     attrs.add(makeAttribute("Barcode Kit", "Kit xyz"));
+    attrs.add(makeAttribute("Timepoint", "first collection"));
     s.setAttributes(attrs);
 
     return s;
