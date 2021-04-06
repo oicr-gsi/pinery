@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** @author mlaszloffy */
 @RestController
-@RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = {"Lane Provenance"})
 public class LaneProvenanceResource {
 
@@ -79,8 +79,9 @@ public class LaneProvenanceResource {
   @VisibleForTesting
   protected static final Map<String, VersionTransformer<LaneProvenance, ? extends LaneProvenance>>
       transformers =
-          new MapBuilder<String, VersionTransformer<LaneProvenance, ? extends LaneProvenance>>() //
+          new MapBuilder<String, VersionTransformer<LaneProvenance, ? extends LaneProvenance>>()
               .put("latest", noopTransformer) //
+              .put("v9", noopTransformer) //
               .put("v8", noopTransformer) //
               .put("v7", noopTransformer) //
               .put("v6", v6Transformer) //
@@ -91,7 +92,7 @@ public class LaneProvenanceResource {
               .put("v1", v1Transformer) //
               .build();
 
-  private static final String versions = "latest, v8, v7, v6, v5, v4, v3, v2, v1";
+  private static final String versions = "latest, v9, v8, v7, v6, v5, v4, v3, v2, v1";
 
   @Autowired private LaneProvenanceService laneProvenanceService;
 
