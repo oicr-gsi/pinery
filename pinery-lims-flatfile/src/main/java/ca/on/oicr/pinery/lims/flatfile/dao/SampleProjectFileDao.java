@@ -31,7 +31,6 @@ public class SampleProjectFileDao implements SampleProjectDao {
           SampleProject p = new DefaultSampleProject();
           p.setName(rs.getString("projectName"));
           p.setActive(rs.getBoolean("active"));
-          p.setClinical(rs.getBoolean("clinical"));
           p.setPipeline(rs.getString("pipeline"));
           p.setSecondaryNamingScheme(rs.getBoolean("secondaryNamingScheme"));
           p.setCreated(ModelUtils.convertToDate(rs.getString("created")));
