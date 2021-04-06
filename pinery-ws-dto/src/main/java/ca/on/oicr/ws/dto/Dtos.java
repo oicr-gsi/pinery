@@ -158,7 +158,6 @@ public final class Dtos {
     dto.setCount(from.getCount());
     dto.setArchivedCount(from.getArchivedCount());
     dto.setActive(from.isActive());
-    dto.setClinical(from.isClinical());
     dto.setPipeline(from.getPipeline());
     dto.setSecondaryNamingSCheme(from.isSecondaryNamingScheme());
     dto.setEarliest(format(from.getEarliest()));
@@ -335,6 +334,7 @@ public final class Dtos {
     dto.setRunDirectory(from.getRunDirectory());
     dto.setRunBasesMask(from.getRunBasesMask());
     dto.setSequencingParameters(from.getSequencingParameters());
+    dto.setChemistry(from.getChemistry());
     dto.setWorkflowType(from.getWorkflowType());
     dto.setContainerModel(from.getContainerModel());
     dto.setSequencingKit(from.getSequencingKit());

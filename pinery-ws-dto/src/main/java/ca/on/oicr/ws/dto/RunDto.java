@@ -31,6 +31,7 @@ public class RunDto {
   private String runDirectory;
   private String runBasesMask;
   private String sequencingParameters;
+  private String chemistry;
   private String workflowType;
   private String containerModel;
   private String sequencingKit;
@@ -219,6 +220,14 @@ public class RunDto {
 
   public void setSequencingParameters(String sequencingParameters) {
     this.sequencingParameters = sequencingParameters;
+  }
+
+  public String getChemistry() {
+    return chemistry;
+  }
+
+  public void setChemistry(String chemistry) {
+    this.chemistry = chemistry;
   }
 
   @JsonProperty("workflow_type")

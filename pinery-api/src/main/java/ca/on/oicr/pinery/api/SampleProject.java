@@ -28,10 +28,6 @@ public interface SampleProject {
 
   public void setActive(boolean active);
 
-  public boolean isClinical();
-
-  public void setClinical(boolean clinical);
-
   public String getPipeline();
 
   public void setPipeline(String pipeline);
