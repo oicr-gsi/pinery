@@ -53,6 +53,7 @@ public class RunFileDao implements RunDao {
           r.setRunDirectory(ModelUtils.nullIfEmpty(rs.getString("runDirectory")));
           r.setRunBasesMask(ModelUtils.nullIfEmpty(rs.getString("runBasesMask")));
           r.setSequencingParameters(ModelUtils.nullIfEmpty(rs.getString("sequencingParameters")));
+          r.setChemistry(ModelUtils.nullIfEmpty(rs.getString("chemistry")));
           r.setWorkflowType(getStringIfPresent(rs, "workflowType"));
           r.setContainerModel(getStringIfPresent(rs, "containerModel"));
           r.setSequencingKit(getStringIfPresent(rs, "sequencingKit"));

@@ -28,6 +28,7 @@ public class DefaultRun implements Run {
   private String runDirectory;
   private String runBasesMask;
   private String sequencingParameters;
+  private String chemistry;
   private String workflowType;
   private String containerModel;
   private String sequencingKit;
@@ -213,6 +214,16 @@ public class DefaultRun implements Run {
   @Override
   public void setSequencingParameters(String sequencingParameters) {
     this.sequencingParameters = sequencingParameters;
+  }
+
+  @Override
+  public String getChemistry() {
+    return chemistry;
+  }
+
+  @Override
+  public void setChemistry(String chemistry) {
+    this.chemistry = chemistry;
   }
 
   @Override

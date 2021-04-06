@@ -335,6 +335,7 @@ public final class Dtos {
     dto.setRunDirectory(from.getRunDirectory());
     dto.setRunBasesMask(from.getRunBasesMask());
     dto.setSequencingParameters(from.getSequencingParameters());
+    dto.setChemistry(from.getChemistry());
     dto.setWorkflowType(from.getWorkflowType());
     dto.setContainerModel(from.getContainerModel());
     dto.setSequencingKit(from.getSequencingKit());
