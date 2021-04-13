@@ -37,7 +37,7 @@ The Pinery-to-FlatFile utility creates a dump of all data from one LIMS into a s
 
 ## Contributing
 
-* Maven 3 and JDK 8 are required
+* Maven 3 and JDK 11 or later are required
 * Nothing should be committed directly to a versioned branch. Make a pull request when your work
   is ready to be merged
 * Pull requests must pass the continuous integration (CI) build, and be reviewed before merging

@@ -6,7 +6,7 @@ an implementation that reads data from .tsv flat files.
 ## Minimum Requirements
 
 * Maven 3
-* JDK 7
+* JDK 11
 
 ## Configuration
 
@@ -65,7 +65,7 @@ option requires internal configuration and does not support external Lims implem
 
 ### Running in Tomcat
 
-Tomcat 7/8 is the recommended servlet container for Pinery as it offers greater flexibility, mainly
+Tomcat 7 or later is the recommended servlet container for Pinery as it offers greater flexibility, mainly
 related to using external configuration.
 
 You may wish to set the timezone explicitly, as not all source LIMS provide a time zone. It may also
