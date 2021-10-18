@@ -52,17 +52,6 @@ where **$CATALINA_HOME** is your Tomcat base directory
 deploying to **/pinery-file**, call the context file **pinery-file.xml**
 3. Configure options specific to the source LIMS in the properties file
 
-### Running with Jetty
-
-For a simple deployment, a standalone Jetty server can be launched via Maven. Note that this
-option requires internal configuration and does not support external Lims implementations.
-
-1. Configure Pinery using internal configuration, as detailed above
-2. Build the entire Pinery project: `mvn clean install -DskipITs=false`)
-3. Navigate to pinery/pinery-ws/
-4. Run command mvn jetty:run
-5. Jetty will display the resulting webservice base URL and port
-
 ### Running in Tomcat
 
 Tomcat 7 or later is the recommended servlet container for Pinery as it offers greater flexibility, mainly

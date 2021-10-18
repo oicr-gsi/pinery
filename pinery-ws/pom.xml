@@ -115,24 +115,6 @@
         </dependency>
     </dependencies>
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <configuration>
-                    <httpConnector> 
-                        <port>8888</port>
-                        <idleTimeout>60000</idleTimeout>
-                    </httpConnector>
-                    <webApp>
-                        <contextPath>/pinery-ws</contextPath>
-                        <!-- this overrides or adds configuration from web.xml-->
-                        <overrideDescriptor>${overrideDescriptor}</overrideDescriptor>
-                    </webApp>
-                </configuration>
-            </plugin>
-        </plugins>
-            
         <!-- copy maven properties into project.properties -->
         <resources>
             <resource>
