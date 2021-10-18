@@ -31,7 +31,6 @@
         <mockito.version>1.10.19</mockito.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <httpclient.version>4.5.2</httpclient.version>
-        <jetty.version>9.3.0.M1</jetty.version>
         <opencsv.version>3.6</opencsv.version>
         <csvjdbc.version>1.0.28</csvjdbc.version>
         <json-path-assert.version>2.4.0</json-path-assert.version>
@@ -42,7 +41,6 @@
         <prometheus.jmx.version>0.9</prometheus.jmx.version>
         
         <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
-        <jetty-maven-plugin.version>9.3.7.v20160115</jetty-maven-plugin.version>
         <maven-release-plugin.version>2.5</maven-release-plugin.version>
         <maven-war-plugin.version>2.4</maven-war-plugin.version>
         <maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
@@ -282,31 +280,6 @@
                 <artifactId>json-path-assert</artifactId>
                 <version>${json-path-assert.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-server</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-webapp</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jsp</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jndi</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-util</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>commons-lang</groupId>
@@ -360,11 +333,6 @@
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>${maven-assembly-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-maven-plugin</artifactId>
-                    <version>${jetty-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
