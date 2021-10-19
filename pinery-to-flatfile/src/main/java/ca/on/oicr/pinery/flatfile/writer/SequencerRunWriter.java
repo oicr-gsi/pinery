@@ -34,7 +34,8 @@ public class SequencerRunWriter extends Writer {
     "positions",
     "status",
     "dataReview",
-    "dataReviewDate"
+    "dataReviewDate",
+    "dataReviewerId"
   };
 
   private final List<RunDto> runs;
@@ -80,7 +81,8 @@ public class SequencerRunWriter extends Writer {
       getPositionsString(run),
       ConverterUtils.getStatusString(run.getStatus()),
       run.getDataReview() == null ? "" : run.getDataReview().toString(),
-      run.getDataReviewDate() == null ? "" : run.getDataReviewDate()
+      run.getDataReviewDate() == null ? "" : run.getDataReviewDate(),
+      run.getDataReviewerId() == null ? "" : run.getDataReviewerId().toString()
     };
 
     return data;
@@ -142,7 +144,11 @@ public class SequencerRunWriter extends Writer {
       sb.appendNonNull("statusName", sample.getStatus().getName());
       sb.appendNonNull("statusState", sample.getStatus().getState());
       sb.appendNonNull("statusDate", sample.getStatus().getDate());
+      sb.appendNonNull("statusUserId", sample.getStatus().getUserId());
     }
+    sb.appendNonNull("dataReview", sample.getDataReview());
+    sb.appendNonNull("dataReviewDate", sample.getDataReviewDate());
+    sb.appendNonNull("dataReviewerId", sample.getDataReviewerId());
 
     return sb.toString();
   }

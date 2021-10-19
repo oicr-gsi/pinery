@@ -58,8 +58,9 @@ public class RunFileDao implements RunDao {
           r.setContainerModel(getStringIfPresent(rs, "containerModel"));
           r.setSequencingKit(getStringIfPresent(rs, "sequencingKit"));
           r.setStatus(ModelUtils.parseStatus(rs.getString("status")));
-          r.setDataReview(ModelUtils.parseBooleanOrNull("dataReview"));
+          r.setDataReview(ModelUtils.parseBooleanOrNull(rs.getString("dataReview")));
           r.setDataReviewDate(ModelUtils.convertToLocalDate(rs.getString("dataReviewDate")));
+          r.setDataReviewerId(ModelUtils.parseIntOrNull(rs.getString("dataReviewerId")));
 
           r.setSample(parseRunPositions(rs.getString("positions")));
 
@@ -118,8 +119,13 @@ public class RunFileDao implements RunDao {
               status.setName(sampleMap.get("statusName"));
               status.setState(sampleMap.get("statusState"));
               status.setDate(ModelUtils.convertToLocalDate(sampleMap.get("statusDate")));
+              status.setUserId(ModelUtils.parseIntOrNull(sampleMap.get("statusUserId")));
               sample.setStatus(status);
             }
+            sample.setDataReview(ModelUtils.parseBooleanOrNull(sampleMap.get("dataReview")));
+            sample.setDataReviewDate(
+                ModelUtils.convertToLocalDate(sampleMap.get("dataReviewDate")));
+            sample.setDataReviewerId(ModelUtils.parseIntOrNull(sampleMap.get("dataReviewerId")));
             samples.add(sample);
           }
           return samples;

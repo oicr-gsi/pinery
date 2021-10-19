@@ -93,6 +93,7 @@ public class ModelUtils {
     status.setName(ModelUtils.nullIfEmpty(map.get("name")));
     status.setState(ModelUtils.nullIfEmpty(map.get("state")));
     status.setDate(ModelUtils.convertToLocalDate(map.get("date")));
+    status.setUserId(ModelUtils.parseIntOrNull("userId"));
     return status;
   }
 }

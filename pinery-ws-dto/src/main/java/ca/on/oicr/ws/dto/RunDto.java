@@ -38,6 +38,7 @@ public class RunDto {
   private StatusDto status;
   private String dataReview;
   private String dataReviewDate;
+  private Integer dataReviewerId;
 
   public String getState() {
     return state;
@@ -281,6 +282,15 @@ public class RunDto {
     this.dataReviewDate = dataReviewDate;
   }
 
+  @JsonProperty("data_reviewer_id")
+  public Integer getDataReviewerId() {
+    return dataReviewerId;
+  }
+
+  public void setDataReviewerId(Integer dataReviewerId) {
+    this.dataReviewerId = dataReviewerId;
+  }
+
   @Override
   public String toString() {
     return "RunDto [state="
@@ -358,6 +368,7 @@ public class RunDto {
     result = prime * result + ((status == null) ? 0 : status.hashCode());
     result = prime * result + ((dataReview == null) ? 0 : dataReview.hashCode());
     result = prime * result + ((dataReviewDate == null) ? 0 : dataReviewDate.hashCode());
+    result = prime * result + ((dataReviewerId == null) ? 0 : dataReviewerId.hashCode());
     return result;
   }
 
@@ -430,6 +441,9 @@ public class RunDto {
     if (dataReviewDate == null) {
       if (other.dataReviewDate != null) return false;
     } else if (!dataReviewDate.equals(other.dataReviewDate)) return false;
+    if (dataReviewerId == null) {
+      if (other.dataReviewerId != null) return false;
+    } else if (!dataReviewerId.equals(other.dataReviewerId)) return false;
     return true;
   }
 }

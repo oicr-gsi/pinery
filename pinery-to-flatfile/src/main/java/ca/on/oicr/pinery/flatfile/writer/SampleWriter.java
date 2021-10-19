@@ -30,6 +30,7 @@ public class SampleWriter extends Writer {
     "status",
     "volume",
     "concentration",
+    "concentrationUnits",
     "preparationKit",
     "attributes"
   };
@@ -72,6 +73,9 @@ public class SampleWriter extends Writer {
       ConverterUtils.getStatusString(sample.getStatus()),
       sample.getVolume() == null ? "" : sample.getVolume().toString(),
       sample.getConcentration() == null ? "" : sample.getConcentration().toString(),
+      sample.getConcentration() == null || sample.getConcentrationUnits() == null
+          ? ""
+          : sample.getConcentrationUnits(),
       getPreparationKitString(sample),
       getAttributesString(sample)
     };

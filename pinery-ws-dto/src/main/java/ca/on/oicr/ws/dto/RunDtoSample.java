@@ -17,6 +17,9 @@ public class RunDtoSample {
   private String url;
   private Set<AttributeDto> attributes;
   private StatusDto status;
+  private String dataReview;
+  private String dataReviewDate;
+  private Integer dataReviewerId;
 
   public String getId() {
     return id;
@@ -75,6 +78,33 @@ public class RunDtoSample {
     this.status = status;
   }
 
+  @JsonProperty("data_review")
+  public String getDataReview() {
+    return dataReview;
+  }
+
+  public void setDataReview(String dataReview) {
+    this.dataReview = dataReview;
+  }
+
+  @JsonProperty("data_review_date")
+  public String getDataReviewDate() {
+    return dataReviewDate;
+  }
+
+  public void setDataReviewDate(String dataReviewDate) {
+    this.dataReviewDate = dataReviewDate;
+  }
+
+  @JsonProperty("data_reviewer_id")
+  public Integer getDataReviewerId() {
+    return dataReviewerId;
+  }
+
+  public void setDataReviewerId(Integer dataReviewerId) {
+    this.dataReviewerId = dataReviewerId;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -85,6 +115,9 @@ public class RunDtoSample {
     result = prime * result + ((id == null) ? 0 : id.hashCode());
     result = prime * result + ((status == null) ? 0 : status.hashCode());
     result = prime * result + ((runPurpose == null) ? 0 : runPurpose.hashCode());
+    result = prime * result + ((dataReview == null) ? 0 : dataReview.hashCode());
+    result = prime * result + ((dataReviewDate == null) ? 0 : dataReviewDate.hashCode());
+    result = prime * result + ((dataReviewerId == null) ? 0 : dataReviewerId.hashCode());
     return result;
   }
 
@@ -112,6 +145,15 @@ public class RunDtoSample {
     if (runPurpose == null) {
       if (other.runPurpose != null) return false;
     } else if (!runPurpose.equals(other.runPurpose)) return false;
+    if (dataReview == null) {
+      if (other.dataReview != null) return false;
+    } else if (!dataReview.equals(other.dataReview)) return false;
+    if (dataReviewDate == null) {
+      if (other.dataReviewDate != null) return false;
+    } else if (!dataReviewDate.equals(other.dataReviewDate)) return false;
+    if (dataReviewerId == null) {
+      if (other.dataReviewerId != null) return false;
+    } else if (!dataReviewerId.equals(other.dataReviewerId)) return false;
     return true;
   }
 
