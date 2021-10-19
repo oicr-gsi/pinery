@@ -17,6 +17,7 @@ public class DefaultSample implements Sample {
     result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
     result = prime * result + ((children == null) ? 0 : children.hashCode());
     result = prime * result + ((concentration == null) ? 0 : concentration.hashCode());
+    result = prime * result + ((concentrationUnits == null) ? 0 : concentrationUnits.hashCode());
     result = prime * result + ((created == null) ? 0 : created.hashCode());
     result = prime * result + ((createdById == null) ? 0 : createdById.hashCode());
     result = prime * result + ((description == null) ? 0 : description.hashCode());
@@ -55,6 +56,9 @@ public class DefaultSample implements Sample {
     if (concentration == null) {
       if (other.concentration != null) return false;
     } else if (!concentration.equals(other.concentration)) return false;
+    if (concentrationUnits == null) {
+      if (other.concentrationUnits != null) return false;
+    } else if (!concentrationUnits.equals(other.concentrationUnits)) return false;
     if (created == null) {
       if (other.created != null) return false;
     } else if (!created.equals(other.created)) return false;
@@ -125,8 +129,9 @@ public class DefaultSample implements Sample {
   protected Date modified;
   protected Integer modifiedById;
   protected String tubeBarcode;
-  protected Float volume; // Why no units.
+  protected Float volume;
   protected Float concentration;
+  protected String concentrationUnits;
   protected String storageLocation;
   protected PreparationKit preparationKit;
   protected Status status;
@@ -315,6 +320,16 @@ public class DefaultSample implements Sample {
   @Override
   public void setConcentration(Float concentration) {
     this.concentration = concentration;
+  }
+
+  @Override
+  public String getConcentrationUnits() {
+    return concentrationUnits;
+  }
+
+  @Override
+  public void setConcentrationUnits(String concentrationUnits) {
+    this.concentrationUnits = concentrationUnits;
   }
 
   @Override

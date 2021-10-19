@@ -69,6 +69,10 @@ public interface Sample {
 
   public void setConcentration(Float concentration);
 
+  public String getConcentrationUnits();
+
+  public void setConcentrationUnits(String concentrationUnits);
+
   public String getStorageLocation();
 
   public void setStorageLocation(String storageLocation);

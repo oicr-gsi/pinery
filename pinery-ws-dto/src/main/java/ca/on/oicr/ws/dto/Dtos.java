@@ -72,6 +72,7 @@ public final class Dtos {
     if (from.getConcentration() != null) {
       dto.setConcentration(from.getConcentration());
     }
+    dto.setConcentrationUnits(from.getConcentrationUnits());
     if (from.getStorageLocation() != null) {
       dto.setStorageLocation(from.getStorageLocation());
     }
@@ -149,6 +150,7 @@ public final class Dtos {
     dto.setName(from.getName());
     dto.setState(from.getState());
     dto.setDate(format(from.getDate()));
+    dto.setUserId(from.getUserId());
     return dto;
   }
 
@@ -347,6 +349,7 @@ public final class Dtos {
       dto.setDataReview(from.getDataReview() ? "Passed" : "Failed");
     }
     dto.setDataReviewDate(format(from.getDataReviewDate()));
+    dto.setDataReviewerId(from.getDataReviewerId());
     return dto;
   }
 
@@ -409,6 +412,13 @@ public final class Dtos {
     if (from.getStatus() != null) {
       dto.setStatus(asDto(from.getStatus()));
     }
+    if (from.getDataReview() == null) {
+      dto.setDataReview("Pending");
+    } else {
+      dto.setDataReview(from.getDataReview() ? "Passed" : "Failed");
+    }
+    dto.setDataReviewDate(format(from.getDataReviewDate()));
+    dto.setDataReviewerId(from.getDataReviewerId());
     return dto;
   }
 

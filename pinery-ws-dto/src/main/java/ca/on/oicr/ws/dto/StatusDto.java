@@ -3,6 +3,7 @@ package ca.on.oicr.ws.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,6 +21,7 @@ public class StatusDto {
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + ((state == null) ? 0 : state.hashCode());
     result = prime * result + ((date == null) ? 0 : date.hashCode());
+    result = prime * result + ((userId == null) ? 0 : userId.hashCode());
     return result;
   }
 
@@ -38,12 +40,16 @@ public class StatusDto {
     if (date == null) {
       if (other.date != null) return false;
     } else if (!date.equals(other.date)) return false;
+    if (userId == null) {
+      if (other.userId != null) return false;
+    } else if (!userId.equals(other.userId)) return false;
     return true;
   }
 
   private String name;
   private String state;
   private String date;
+  private Integer userId;
 
   public String getName() {
     return name;
@@ -67,5 +73,14 @@ public class StatusDto {
 
   public void setDate(String date) {
     this.date = date;
+  }
+
+  @JsonProperty("user_id")
+  public Integer getUserId() {
+    return userId;
+  }
+
+  public void setUserId(Integer userId) {
+    this.userId = userId;
   }
 }

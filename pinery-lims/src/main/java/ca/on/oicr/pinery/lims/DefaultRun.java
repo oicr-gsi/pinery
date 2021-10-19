@@ -35,6 +35,7 @@ public class DefaultRun implements Run {
   private Status status;
   private Boolean dataReview;
   private LocalDate dataReviewDate;
+  private Integer dataReviewerId;
 
   @Override
   public String getState() {
@@ -287,6 +288,16 @@ public class DefaultRun implements Run {
   }
 
   @Override
+  public Integer getDataReviewerId() {
+    return dataReviewerId;
+  }
+
+  @Override
+  public void setDataReviewerId(Integer dataReviewerId) {
+    this.dataReviewerId = dataReviewerId;
+  }
+
+  @Override
   public String toString() {
     return "DefaultRun [state="
         + state
@@ -365,6 +376,7 @@ public class DefaultRun implements Run {
     result = prime * result + ((status == null) ? 0 : status.hashCode());
     result = prime * result + ((dataReview == null) ? 0 : dataReview.hashCode());
     result = prime * result + ((dataReviewDate == null) ? 0 : dataReviewDate.hashCode());
+    result = prime * result + ((dataReviewerId == null) ? 0 : dataReviewerId.hashCode());
     return result;
   }
 
@@ -449,6 +461,9 @@ public class DefaultRun implements Run {
     if (dataReviewDate == null) {
       if (other.dataReviewDate != null) return false;
     } else if (!dataReviewDate.equals(other.dataReviewDate)) return false;
+    if (dataReviewerId == null) {
+      if (other.dataReviewerId != null) return false;
+    } else if (!dataReviewerId.equals(other.dataReviewerId)) return false;
     return true;
   }
 }

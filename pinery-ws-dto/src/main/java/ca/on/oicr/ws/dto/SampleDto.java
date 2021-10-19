@@ -16,6 +16,7 @@ public class SampleDto {
   private String tubeBarcode;
   private Float volume;
   private Float concentration;
+  private String concentrationUnits;
   private String storageLocation;
   private String createdDate;
   private Integer createdById;
@@ -133,6 +134,15 @@ public class SampleDto {
 
   public void setConcentration(Float concentration) {
     this.concentration = concentration;
+  }
+
+  @JsonProperty("concentration_units")
+  public String getConcentrationUnits() {
+    return concentrationUnits;
+  }
+
+  public void setConcentrationUnits(String concentrationUnits) {
+    this.concentrationUnits = concentrationUnits;
   }
 
   @JsonProperty("project_name")

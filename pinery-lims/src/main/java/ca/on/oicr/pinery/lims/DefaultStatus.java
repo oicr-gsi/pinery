@@ -36,6 +36,7 @@ public class DefaultStatus implements Status {
   private String name;
   private String state;
   private LocalDate date;
+  private Integer userId;
 
   @Override
   public String getName() {
@@ -65,5 +66,15 @@ public class DefaultStatus implements Status {
   @Override
   public void setDate(LocalDate date) {
     this.date = date;
+  }
+
+  @Override
+  public Integer getUserId() {
+    return userId;
+  }
+
+  @Override
+  public void setUserId(Integer userId) {
+    this.userId = userId;
   }
 }

@@ -15,4 +15,8 @@ public interface Status {
   public LocalDate getDate();
 
   public void setDate(LocalDate date);
+
+  public Integer getUserId();
+
+  public void setUserId(Integer userId);
 }

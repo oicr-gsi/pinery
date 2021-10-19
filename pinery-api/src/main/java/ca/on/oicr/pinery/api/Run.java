@@ -105,4 +105,8 @@ public interface Run {
   public LocalDate getDataReviewDate();
 
   public void setDataReviewDate(LocalDate dataReviewDate);
+
+  public Integer getDataReviewerId();
+
+  public void setDataReviewerId(Integer dataReviewerId);
 }
