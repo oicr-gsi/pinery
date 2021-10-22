@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.service.impl;
 
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
+import ca.on.oicr.pinery.api.Assay;
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Box;
 import ca.on.oicr.pinery.api.ChangeLog;
@@ -10,6 +11,7 @@ import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Order;
+import ca.on.oicr.pinery.api.Requisition;
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
@@ -66,6 +68,8 @@ public class Cache implements DataProvider {
   private List<Instrument> instruments;
   private List<InstrumentModel> instrumentModels;
   private List<Box> boxes;
+  private List<Assay> assays;
+  private List<Requisition> requisitions;
   private List<SampleProvenance> sampleProvenance;
   private List<LaneProvenance> laneProvenance;
 
@@ -127,6 +131,8 @@ public class Cache implements DataProvider {
         List<Instrument> newInstruments = lims.getInstruments();
         List<InstrumentModel> newInstrumentModels = lims.getInstrumentModels();
         List<Box> newBoxes = lims.getBoxes();
+        List<Assay> newAssays = lims.getAssays();
+        List<Requisition> newRequisitions = lims.getRequisitions();
 
         List<SampleProvenance> newSampleProvenance =
             ProvenanceUtils.buildSampleProvenance(
@@ -146,6 +152,8 @@ public class Cache implements DataProvider {
           this.instruments = newInstruments;
           this.instrumentModels = newInstrumentModels;
           this.boxes = newBoxes;
+          this.assays = newAssays;
+          this.requisitions = newRequisitions;
           this.sampleProvenance = newSampleProvenance;
           this.laneProvenance = newLaneProvenance;
 
@@ -337,6 +345,36 @@ public class Cache implements DataProvider {
   public synchronized List<Box> getBoxes() {
     updateIfEmpty();
     return boxes;
+  }
+
+  @Override
+  public List<Assay> getAssays() {
+    updateIfEmpty();
+    return assays;
+  }
+
+  @Override
+  public Assay getAssay(Integer id) {
+    updateIfEmpty();
+    return getBy(assays, Assay::getId, id);
+  }
+
+  @Override
+  public List<Requisition> getRequisitions() {
+    updateIfEmpty();
+    return requisitions;
+  }
+
+  @Override
+  public Requisition getRequisition(Integer id) {
+    updateIfEmpty();
+    return getBy(requisitions, Requisition::getId, id);
+  }
+
+  @Override
+  public Requisition getRequisition(String name) {
+    updateIfEmpty();
+    return getBy(requisitions, Requisition::getName, name);
   }
 
   public synchronized List<SampleProvenance> getSampleProvenance() {

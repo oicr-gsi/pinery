@@ -1,0 +1,3 @@
+id	name	assayId	sampleIds	signOffs
+1	REQ-1	1	[1,2]	[{name=Informatics Review|passed=true|date=2021-10-22|userId=1}]
+2	REQ-2	2	[3,4]	[]

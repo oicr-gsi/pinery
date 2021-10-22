@@ -56,4 +56,14 @@ public interface DataProvider {
   public List<Instrument> getInstrumentModelInstrument(Integer id);
 
   public List<Box> getBoxes();
+
+  public List<Assay> getAssays();
+
+  public Assay getAssay(Integer id);
+
+  public List<Requisition> getRequisitions();
+
+  public Requisition getRequisition(Integer id);
+
+  public Requisition getRequisition(String name);
 }

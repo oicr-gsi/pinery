@@ -1,0 +1,3 @@
+id	name	description	version	metrics
+1	"Assay One"	"First assay"	"1.0"	"[{name=Container intact|category=RECEIPT|thresholdType=BOOLEAN|sortPriority=10},{name=Yield|category=EXTRACTION|subcategoryName=Fluorometric Quantification (Qubit or Plate Reader)|subcategorySortPriority=10|units=ng|thresholdType=GE|minimum=60.0|sortPriority=40|nucleicAcidType=RNA|tissueMaterial=Fresh Frozen}]"
+2	"Assay Two"	"Second assay"	"1.2"	""
