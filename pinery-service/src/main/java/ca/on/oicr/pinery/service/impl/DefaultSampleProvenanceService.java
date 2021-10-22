@@ -28,7 +28,7 @@ public class DefaultSampleProvenanceService implements SampleProvenanceService {
       List<InstrumentModel> instrumentModels = lims.getInstrumentModels();
       List<Order> orders = lims.getOrders();
       List<Sample> samples = lims.getSamples(null, null, null, null, null);
-      List<Run> runs = lims.getRuns();
+      List<Run> runs = lims.getRuns(null);
       return ProvenanceUtils.buildSampleProvenance(
           projects, instruments, instrumentModels, orders, samples, runs);
     }

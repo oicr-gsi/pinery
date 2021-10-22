@@ -31,7 +31,7 @@ public interface DataProvider {
 
   public Order getOrder(Integer id);
 
-  public List<Run> getRuns();
+  public List<Run> getRuns(Set<String> sampleIds);
 
   public Run getRun(Integer id);
 

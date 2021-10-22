@@ -79,8 +79,8 @@ public class CacheOrLims implements DataProvider {
   }
 
   @Override
-  public List<Run> getRuns() {
-    return get(DataProvider::getRuns);
+  public List<Run> getRuns(Set<String> sampleIds) {
+    return get(provider -> provider.getRuns(sampleIds));
   }
 
   @Override

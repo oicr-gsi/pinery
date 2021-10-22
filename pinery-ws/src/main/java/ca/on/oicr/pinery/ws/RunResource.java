@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,8 +44,11 @@ public class RunResource {
       value = "List all sequencer runs",
       response = RunDto.class,
       responseContainer = "List")
-  public List<RunDto> getRuns(UriComponentsBuilder uriBuilder) {
-    List<Run> runs = runService.getRun();
+  public List<RunDto> getRuns(
+      UriComponentsBuilder uriBuilder,
+      @ApiParam(value = "filter by sampleId(s)") @RequestParam(name = "sampleId", required = false)
+          Set<String> sampleIds) {
+    List<Run> runs = runService.getAll(sampleIds);
     List<RunDto> result = Lists.newArrayList();
     for (Run run : runs) {
       RunDto dto = Dtos.asDto(run);

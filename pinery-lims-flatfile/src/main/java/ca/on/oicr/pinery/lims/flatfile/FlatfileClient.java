@@ -83,8 +83,8 @@ public class FlatfileClient implements Lims {
   }
 
   @Override
-  public List<Run> getRuns() {
-    return runDao.getAllRuns();
+  public List<Run> getRuns(Set<String> sampleIds) {
+    return runDao.getAllRuns(sampleIds);
   }
 
   @Override

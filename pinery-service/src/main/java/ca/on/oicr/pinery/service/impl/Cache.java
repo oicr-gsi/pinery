@@ -124,7 +124,7 @@ public class Cache implements DataProvider {
         List<SampleProject> newProjects = lims.getSampleProjects();
         List<User> newUsers = lims.getUsers();
         List<Order> newOrders = lims.getOrders();
-        List<Run> newRuns = lims.getRuns();
+        List<Run> newRuns = lims.getRuns(null);
         List<Type> newSampleTypes = lims.getTypes();
         List<AttributeName> newSampleAttributes = lims.getAttributeNames();
         List<ChangeLog> newChangeLogs = lims.getChangeLogs();
@@ -268,9 +268,19 @@ public class Cache implements DataProvider {
   }
 
   @Override
-  public synchronized List<Run> getRuns() {
+  public synchronized List<Run> getRuns(Set<String> sampleIds) {
     updateIfEmpty();
-    return runs;
+    if (sampleIds == null) {
+      return runs;
+    } else {
+      return runs.stream()
+          .filter(
+              run ->
+                  run.getSamples().stream()
+                      .flatMap(pos -> pos.getRunSample().stream())
+                      .anyMatch(sample -> sampleIds.contains(sample.getId())))
+          .collect(Collectors.toList());
+    }
   }
 
   @Override

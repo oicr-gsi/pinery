@@ -3,6 +3,7 @@ package ca.on.oicr.pinery.service.impl;
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.service.RunService;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +13,8 @@ public class DefaultRunService implements RunService {
   @Autowired private CacheOrLims lims;
 
   @Override
-  public List<Run> getRun() {
-    return lims.getRuns();
+  public List<Run> getAll(Set<String> sampleIds) {
+    return lims.getRuns(sampleIds);
   }
 
   @Override

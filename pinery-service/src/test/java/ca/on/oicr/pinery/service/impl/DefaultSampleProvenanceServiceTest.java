@@ -112,7 +112,7 @@ public class DefaultSampleProvenanceServiceTest extends AbstractServiceTest {
 
     when(lims.getSampleProjects()).thenReturn(Lists.newArrayList(project));
     when(lims.getSamples(null, null, null, null, null)).thenReturn(samples);
-    when(lims.getRuns()).thenReturn(Lists.newArrayList(run));
+    when(lims.getRuns(null)).thenReturn(Lists.newArrayList(run));
     when(lims.getOrders()).thenReturn(Lists.newArrayList(order));
     before = Dtos.asDto(getSampleProvenanceById("1_1_1"));
   }
