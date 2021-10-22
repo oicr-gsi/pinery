@@ -64,25 +64,33 @@ public class ModelUtils {
   }
 
   /**
+   * Utility method to avoid setting value of zero when an Integer should actually be null
+   *
+   * @param intString String representing an Integer or null
+   * @return null if intString is null or an empty String; the Integer value otherwise
+   */
+  public static Integer parseIntOrNull(String intString) {
+    return intString == null || intString.isEmpty() ? null : Integer.valueOf(intString);
+  }
+
+  /**
    * Utility method to avoid setting value of zero when a Float should actually be null
    *
    * @param floatString String representing a Float or null
    * @return null if floatString is null or an empty String; the Float value otherwise
    */
-  public static Float nullIfEmptyFloat(String floatString) {
-    return floatString == null || floatString.length() == 0 ? null : Float.valueOf(floatString);
+  public static Float parseFloatOrNull(String floatString) {
+    return floatString == null || floatString.isEmpty() ? null : Float.valueOf(floatString);
   }
 
-  public static Integer parseIntOrNull(String num) {
-    if (num == null) {
-      return null;
-    } else {
-      return Integer.parseInt(num);
-    }
-  }
-
-  public static Boolean parseBooleanOrNull(String bool) {
-    return bool == null || bool.isEmpty() ? null : Boolean.parseBoolean(bool);
+  /**
+   * Utility method to avoid setting value of false when a Boolean should actually be null
+   *
+   * @param boolString String representing a Boolean or null
+   * @return null if boolString is null or an empty String; the Boolean value otherwise
+   */
+  public static Boolean parseBooleanOrNull(String boolString) {
+    return boolString == null || boolString.isEmpty() ? null : Boolean.parseBoolean(boolString);
   }
 
   public static Status parseStatus(String string) {
@@ -93,7 +101,7 @@ public class ModelUtils {
     status.setName(ModelUtils.nullIfEmpty(map.get("name")));
     status.setState(ModelUtils.nullIfEmpty(map.get("state")));
     status.setDate(ModelUtils.convertToLocalDate(map.get("date")));
-    status.setUserId(ModelUtils.parseIntOrNull("userId"));
+    status.setUserId(ModelUtils.parseIntOrNull(map.get("userId")));
     return status;
   }
 }

@@ -1,7 +1,7 @@
-package ca.on.oicr;
+package ca.on.oicr.ws.dto;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Order;
@@ -15,13 +15,7 @@ import ca.on.oicr.pinery.lims.DefaultOrderSample;
 import ca.on.oicr.pinery.lims.DefaultRun;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
-import ca.on.oicr.ws.dto.AttributeDto;
-import ca.on.oicr.ws.dto.Dtos;
-import ca.on.oicr.ws.dto.OrderDto;
-import ca.on.oicr.ws.dto.OrderDtoSample;
-import ca.on.oicr.ws.dto.RunDto;
-import ca.on.oicr.ws.dto.RunDtoPosition;
-import ca.on.oicr.ws.dto.RunDtoSample;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -324,5 +318,16 @@ public class DtosTest {
       }
     }
     return false;
+  }
+
+  @Test
+  public void testFormatBigDecimal() {
+    assertEquals("0.102", Dtos.format(new BigDecimal("0.102000")));
+    assertEquals("10.1", Dtos.format(new BigDecimal("010.10000")));
+    assertEquals("0.0002", Dtos.format(new BigDecimal("000.0002000")));
+    assertEquals("0.1001001001", Dtos.format(new BigDecimal("0.1001001001000")));
+    assertEquals("0.0", Dtos.format(new BigDecimal("00000.00000")));
+    assertEquals("0.0", Dtos.format(new BigDecimal("0")));
+    assertEquals("1000.0", Dtos.format(new BigDecimal("1000")));
   }
 }

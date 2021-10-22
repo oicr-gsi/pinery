@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.service.impl;
 
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
+import ca.on.oicr.pinery.api.Assay;
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Box;
 import ca.on.oicr.pinery.api.ChangeLog;
@@ -10,6 +11,7 @@ import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Order;
+import ca.on.oicr.pinery.api.Requisition;
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
@@ -139,6 +141,31 @@ public class CacheOrLims implements DataProvider {
   @Override
   public List<Box> getBoxes() {
     return get(DataProvider::getBoxes);
+  }
+
+  @Override
+  public List<Assay> getAssays() {
+    return get(DataProvider::getAssays);
+  }
+
+  @Override
+  public Assay getAssay(Integer id) {
+    return get(provider -> provider.getAssay(id));
+  }
+
+  @Override
+  public List<Requisition> getRequisitions() {
+    return get(DataProvider::getRequisitions);
+  }
+
+  @Override
+  public Requisition getRequisition(Integer id) {
+    return get(provider -> provider.getRequisition(id));
+  }
+
+  @Override
+  public Requisition getRequisition(String name) {
+    return get(provider -> provider.getRequisition(name));
   }
 
   public List<SampleProvenance> getCachedSampleProvenance() {

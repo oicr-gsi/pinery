@@ -2,10 +2,12 @@ package ca.on.oicr.pinery.flatfile;
 
 import ca.on.oicr.pinery.client.HttpResponseException;
 import ca.on.oicr.pinery.client.PineryClient;
+import ca.on.oicr.pinery.flatfile.writer.AssayWriter;
 import ca.on.oicr.pinery.flatfile.writer.BoxWriter;
 import ca.on.oicr.pinery.flatfile.writer.ChangeWriter;
 import ca.on.oicr.pinery.flatfile.writer.InstrumentWriter;
 import ca.on.oicr.pinery.flatfile.writer.OrderWriter;
+import ca.on.oicr.pinery.flatfile.writer.RequisitionWriter;
 import ca.on.oicr.pinery.flatfile.writer.SampleProjectWriter;
 import ca.on.oicr.pinery.flatfile.writer.SampleWriter;
 import ca.on.oicr.pinery.flatfile.writer.SequencerRunWriter;
@@ -62,7 +64,7 @@ public class Converter {
   public void convertInstruments(String filename) throws HttpResponseException, IOException {
     Writer writer =
         new InstrumentWriter(client.getInstrument().all(), client.getInstrumentModel().all());
-    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
+    write(writer, filename);
   }
 
   /**
@@ -74,7 +76,7 @@ public class Converter {
    */
   public void convertSamples(String filename) throws HttpResponseException, IOException {
     Writer writer = new SampleWriter(client.getSample().all());
-    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
+    write(writer, filename);
   }
 
   /**
@@ -86,7 +88,7 @@ public class Converter {
    */
   public void convertChangeLogs(String filename) throws HttpResponseException, IOException {
     Writer writer = new ChangeWriter(client.getChangeLog().all());
-    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
+    write(writer, filename);
   }
 
   /**
@@ -98,7 +100,7 @@ public class Converter {
    */
   public void convertUsers(String filename) throws HttpResponseException, IOException {
     Writer writer = new UserWriter(client.getUser().all());
-    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
+    write(writer, filename);
   }
 
   /**
@@ -110,7 +112,7 @@ public class Converter {
    */
   public void convertRuns(String filename) throws HttpResponseException, IOException {
     Writer writer = new SequencerRunWriter(client.getSequencerRun().all());
-    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
+    write(writer, filename);
   }
 
   /**
@@ -122,7 +124,7 @@ public class Converter {
    */
   public void convertOrders(String filename) throws HttpResponseException, IOException {
     Writer writer = new OrderWriter(client.getOrder().all());
-    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
+    write(writer, filename);
   }
 
   /**
@@ -134,7 +136,7 @@ public class Converter {
    */
   public void convertBoxes(String filename) throws HttpResponseException, IOException {
     Writer writer = new BoxWriter(client.getBox().all());
-    writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
+    write(writer, filename);
   }
 
   /**
@@ -146,6 +148,34 @@ public class Converter {
    */
   public void convertProjects(String filename) throws HttpResponseException, IOException {
     Writer writer = new SampleProjectWriter(client.getSampleProject().all());
+    write(writer, filename);
+  }
+
+  /**
+   * Reads all assay data from Pinery and writes it to a flat file
+   *
+   * @param filename output file name
+   * @throws HttpResponseException if there is an error communicating with Pinery
+   * @throws IOException if there is an error writing to file
+   */
+  public void convertAssays(String filename) throws HttpResponseException, IOException {
+    Writer writer = new AssayWriter(client.getAssay().all());
+    write(writer, filename);
+  }
+
+  /**
+   * Reads all requisition data from Pinery and writes it to a flat file
+   *
+   * @param filename output file name
+   * @throws HttpResponseException if there is an error communicating with Pinery
+   * @throws IOException if there is an error writing to file
+   */
+  public void convertRequisitions(String filename) throws HttpResponseException, IOException {
+    Writer writer = new RequisitionWriter(client.getRequisition().all());
+    write(writer, filename);
+  }
+
+  private void write(Writer writer, String filename) throws IOException {
     writer.writeFile(new File(outputDir, filename), separator, quoteChar, escapeChar);
   }
 }

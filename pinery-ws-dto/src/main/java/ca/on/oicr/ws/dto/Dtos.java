@@ -2,6 +2,9 @@ package ca.on.oicr.ws.dto;
 
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
+import ca.on.oicr.pinery.api.Assay;
+import ca.on.oicr.pinery.api.AssayMetric;
+import ca.on.oicr.pinery.api.AssayMetricSubcategory;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Box;
@@ -13,16 +16,19 @@ import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.PreparationKit;
+import ca.on.oicr.pinery.api.Requisition;
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
+import ca.on.oicr.pinery.api.SignOff;
 import ca.on.oicr.pinery.api.Status;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -33,6 +39,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /** Methods to convert between domain objects and dtos. */
 public final class Dtos {
@@ -548,6 +555,71 @@ public final class Dtos {
     return to;
   }
 
+  public static AssayMetricDto asDto(AssayMetric from) {
+    AssayMetricDto to = new AssayMetricDto();
+    to.setName(from.getName());
+    to.setCategory(from.getCategory());
+    if (from.getSubcategory() != null) {
+      AssayMetricSubcategoryDto toSub = new AssayMetricSubcategoryDto();
+      AssayMetricSubcategory fromSub = from.getSubcategory();
+      toSub.setName(fromSub.getName());
+      toSub.setSortPriority(fromSub.getSortPriority());
+      toSub.setDesignCode(fromSub.getDesignCode());
+      to.setSubcategory(toSub);
+    }
+    to.setUnits(from.getUnits());
+    to.setThresholdType(from.getThresholdType());
+    to.setMinimum(format(from.getMinimum()));
+    to.setMaximum(format(from.getMaximum()));
+    to.setSortPriority(from.getSortPriority());
+    to.setNucleicAcidType(from.getNucleicAcidType());
+    to.setTissueMaterial(from.getTissueMaterial());
+    to.setTissueType(from.getTissueType());
+    if (to.getTissueType() != null) {
+      to.setNegateTissueType(from.getNegateTissueType());
+    }
+    to.setTissueOrigin(from.getTissueOrigin());
+    to.setContainerModel(from.getContainerModel());
+    to.setReadLength(from.getReadLength());
+    to.setReadLength2(from.getReadLength2());
+    return to;
+  }
+
+  public static AssayDto asDto(Assay from) {
+    AssayDto to = new AssayDto();
+    to.setId(from.getId());
+    to.setName(from.getName());
+    to.setDescription(from.getDescription());
+    to.setVersion(from.getVersion());
+    if (from.getMetrics() != null && !from.getMetrics().isEmpty()) {
+      to.setMetrics(from.getMetrics().stream().map(Dtos::asDto).collect(Collectors.toSet()));
+    }
+    return to;
+  }
+
+  public static SignOffDto asDto(SignOff from) {
+    SignOffDto to = new SignOffDto();
+    to.setName(from.getName());
+    to.setPassed(from.getPassed());
+    to.setDate(format(from.getDate()));
+    to.setUserId(from.getUserId());
+    return to;
+  }
+
+  public static RequisitionDto asDto(Requisition from) {
+    RequisitionDto to = new RequisitionDto();
+    to.setId(from.getId());
+    to.setName(from.getName());
+    to.setAssayId(from.getAssayId());
+    if (from.getSampleIds() != null) {
+      to.setSampleIds(new HashSet<>(from.getSampleIds()));
+    }
+    if (from.getSignOffs() != null) {
+      to.setSignOffs(from.getSignOffs().stream().map(Dtos::asDto).collect(Collectors.toList()));
+    }
+    return to;
+  }
+
   private static boolean isBlank(String str) {
     if (str == null || str.isEmpty()) {
       return true;
@@ -569,5 +641,17 @@ public final class Dtos {
       return null;
     }
     return date.format(dateFormatter);
+  }
+
+  protected static String format(BigDecimal decimal) {
+    if (decimal == null) {
+      return null;
+    }
+
+    String nice = decimal.toPlainString().replaceFirst("^(.*\\..*?\\d)0+$", "$1");
+    if (!nice.contains(".")) {
+      nice += ".0";
+    }
+    return nice;
   }
 }

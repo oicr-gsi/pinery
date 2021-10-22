@@ -80,8 +80,8 @@ public class SampleFileDao implements SampleDao {
 
           s.setProject(ModelUtils.nullIfEmpty(rs.getString("projectName")));
           s.setArchived(rs.getBoolean("archived"));
-          s.setVolume(ModelUtils.nullIfEmptyFloat(rs.getString("volume")));
-          s.setConcentration(ModelUtils.nullIfEmptyFloat(rs.getString("concentration")));
+          s.setVolume(ModelUtils.parseFloatOrNull(rs.getString("volume")));
+          s.setConcentration(ModelUtils.parseFloatOrNull(rs.getString("concentration")));
           s.setConcentrationUnits(ModelUtils.nullIfEmpty(rs.getString("concentrationUnits")));
 
           s.setPreparationKit(parsePreparationKit(rs.getString("preparationKit")));

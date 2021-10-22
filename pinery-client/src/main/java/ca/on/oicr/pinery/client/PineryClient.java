@@ -40,6 +40,8 @@ public class PineryClient implements AutoCloseable {
   private InstrumentModelClient instrumentModels;
   private OrderClient orders;
   private BoxClient boxes;
+  private AssayClient assays;
+  private RequisitionClient requisitions;
   private SampleProvenanceClient sampleProvenance;
   private LaneProvenanceClient laneProvenance;
 
@@ -246,6 +248,22 @@ public class PineryClient implements AutoCloseable {
     return boxes;
   }
 
+  public AssayClient getAssay() {
+    checkIfOpen();
+    if (assays == null) {
+      assays = new AssayClient(this);
+    }
+    return assays;
+  }
+
+  public RequisitionClient getRequisition() {
+    checkIfOpen();
+    if (requisitions == null) {
+      requisitions = new RequisitionClient(this);
+    }
+    return requisitions;
+  }
+
   /**
    * @return an SampleProvenanceClient to be used for retrieving SampleProvenance resources from
    *     this Pinery client.
@@ -305,6 +323,8 @@ public class PineryClient implements AutoCloseable {
       instrumentModels = null;
       orders = null;
       boxes = null;
+      assays = null;
+      requisitions = null;
       sampleProvenance = null;
       laneProvenance = null;
     }

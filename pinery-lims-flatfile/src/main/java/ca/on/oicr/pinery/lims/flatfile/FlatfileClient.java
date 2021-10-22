@@ -1,5 +1,6 @@
 package ca.on.oicr.pinery.lims.flatfile;
 
+import ca.on.oicr.pinery.api.Assay;
 import ca.on.oicr.pinery.api.AttributeName;
 import ca.on.oicr.pinery.api.Box;
 import ca.on.oicr.pinery.api.ChangeLog;
@@ -7,15 +8,18 @@ import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Order;
+import ca.on.oicr.pinery.api.Requisition;
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
+import ca.on.oicr.pinery.lims.flatfile.dao.AssayDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.BoxDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.ChangeDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.InstrumentDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.OrderDao;
+import ca.on.oicr.pinery.lims.flatfile.dao.RequisitionDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.RunDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.SampleDao;
 import ca.on.oicr.pinery.lims.flatfile.dao.SampleProjectDao;
@@ -35,6 +39,8 @@ public class FlatfileClient implements Lims {
   @Autowired private UserDao userDao;
   @Autowired private ChangeDao changeDao;
   @Autowired private BoxDao boxDao;
+  @Autowired private AssayDao assayDao;
+  @Autowired private RequisitionDao requisitionDao;
 
   @Override
   public Sample getSample(String id) {
@@ -139,5 +145,30 @@ public class FlatfileClient implements Lims {
   @Override
   public List<Box> getBoxes() {
     return boxDao.getAllBoxes();
+  }
+
+  @Override
+  public List<Assay> getAssays() {
+    return assayDao.getAll();
+  }
+
+  @Override
+  public Assay getAssay(Integer id) {
+    return assayDao.get(id);
+  }
+
+  @Override
+  public List<Requisition> getRequisitions() {
+    return requisitionDao.getAll();
+  }
+
+  @Override
+  public Requisition getRequisition(Integer id) {
+    return requisitionDao.get(id);
+  }
+
+  @Override
+  public Requisition getRequisition(String name) {
+    return requisitionDao.getByName(name);
   }
 }

@@ -48,6 +48,12 @@ public class Main {
       System.out.println("Writing projects file...");
       converter.convertProjects("projects" + suffix + ".tsv");
 
+      System.out.println("Writing assays file...");
+      converter.convertAssays("assays" + suffix + ".tsv");
+
+      System.out.println("Writing requisitions file...");
+      converter.convertRequisitions("requisitions" + suffix + ".tsv");
+
       System.out.println("Finished writing all files.");
 
     } catch (HttpResponseException e) {
