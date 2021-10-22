@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,6 +27,8 @@ import org.springframework.jdbc.core.RowMapper;
 public class RunFileDao implements RunDao {
 
   private static final String queryAllRuns = "SELECT * FROM runs";
+  private static final String queryRunsBySampleCriterion = " WHERE positions LIKE ?";
+  private static final String queryRunsByAnotherSampleCriterion = " OR positions LIKE ?";
 
   private static final String queryRunById = queryAllRuns + " WHERE id LIKE ?";
 
@@ -148,8 +151,23 @@ public class RunFileDao implements RunDao {
   @Autowired private JdbcTemplate template;
 
   @Override
-  public List<Run> getAllRuns() {
-    return template.query(queryAllRuns, runMapper);
+  public List<Run> getAllRuns(Set<String> sampleIds) {
+    if (sampleIds == null || sampleIds.isEmpty()) {
+      return template.query(queryAllRuns, runMapper);
+    } else {
+      StringBuilder sb = new StringBuilder();
+      sb.append(queryAllRuns);
+      sb.append(queryRunsBySampleCriterion);
+      for (int i = 1; i < sampleIds.size(); i++) {
+        sb.append(queryRunsByAnotherSampleCriterion);
+      }
+      Object[] params =
+          sampleIds.stream()
+              .map(id -> String.format("%%id=%s%%", id))
+              .collect(Collectors.toSet())
+              .toArray();
+      return template.query(sb.toString(), params, runMapper);
+    }
   }
 
   @Override

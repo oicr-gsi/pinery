@@ -26,7 +26,7 @@ public class DefaultLaneProvenanceService implements LaneProvenanceService {
     } else {
       List<Instrument> instruments = lims.getInstruments();
       List<InstrumentModel> instrumentModels = lims.getInstrumentModels();
-      List<Run> runs = lims.getRuns();
+      List<Run> runs = lims.getRuns(null);
       return ProvenanceUtils.buildLaneProvenance(instruments, instrumentModels, runs);
     }
   }

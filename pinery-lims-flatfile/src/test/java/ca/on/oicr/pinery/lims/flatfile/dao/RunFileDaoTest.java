@@ -1,9 +1,13 @@
 package ca.on.oicr.pinery.lims.flatfile.dao;
 
+import static org.junit.Assert.*;
+
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,7 +75,36 @@ public class RunFileDaoTest {
 
   @Test
   public void testGetAllRuns() {
-    List<Run> runs = dao.getAllRuns();
+    List<Run> runs = dao.getAllRuns(null);
     Assert.assertEquals(2, runs.size());
+  }
+
+  @Test
+  public void testGetRunsBySamplesSingle() {
+    Set<String> sampleIds = new HashSet<>();
+    sampleIds.add("4");
+    List<Run> runs = dao.getAllRuns(sampleIds);
+    assertEquals(1, runs.size());
+    for (Run run : runs) {
+      assertTrue(
+          run.getSamples().stream()
+              .flatMap(pos -> pos.getRunSample().stream())
+              .anyMatch(sample -> sampleIds.contains(sample.getId())));
+    }
+  }
+
+  @Test
+  public void testGetRunsBySamplesMultiple() {
+    Set<String> sampleIds = new HashSet<>();
+    sampleIds.add("2");
+    sampleIds.add("3");
+    List<Run> runs = dao.getAllRuns(sampleIds);
+    assertEquals(2, runs.size());
+    for (Run run : runs) {
+      assertTrue(
+          run.getSamples().stream()
+              .flatMap(pos -> pos.getRunSample().stream())
+              .anyMatch(sample -> sampleIds.contains(sample.getId())));
+    }
   }
 }

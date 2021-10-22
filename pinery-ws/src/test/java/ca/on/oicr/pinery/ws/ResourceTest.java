@@ -367,10 +367,10 @@ public class ResourceTest {
   @Test
   public void test_Resource_Run_10() throws Exception {
     RunService runService = mock(RunService.class);
-    when(runService.getRun()).thenReturn(getListRun());
+    when(runService.getAll(null)).thenReturn(getListRun());
     RunResource runResource = new RunResource();
     runResource.setRunService(runService);
-    List<RunDto> runDto = runResource.getRuns(getUriBuilder());
+    List<RunDto> runDto = runResource.getRuns(getUriBuilder(), null);
 
     assertThat(runDto, is(notNullValue()));
   }
@@ -378,11 +378,11 @@ public class ResourceTest {
   @Ignore
   public void test_Resource_Run_11() throws Exception {
     RunService runService = mock(RunService.class);
-    when(runService.getRun()).thenReturn(getListRun());
+    when(runService.getAll(null)).thenReturn(getListRun());
     RunResource runResource = new RunResource();
     runResource.setRunService(runService);
 
-    List<RunDto> originalListRunDto = runResource.getRuns(getUriBuilder());
+    List<RunDto> originalListRunDto = runResource.getRuns(getUriBuilder(), null);
     RunDto runDto = new RunDto();
     List<RunDto> listRunDto = Lists.newArrayList();
     SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");

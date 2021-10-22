@@ -2,11 +2,15 @@ package ca.on.oicr.pinery.lims.flatfile.dao;
 
 import ca.on.oicr.pinery.api.Run;
 import java.util.List;
+import java.util.Set;
 
 public interface RunDao {
 
-  /** @return a List of all sequencer Runs */
-  public List<Run> getAllRuns();
+  /**
+   * @param sampleIds filter to include only runs containing these samples if not null
+   * @return a List of all sequencer Runs
+   */
+  public List<Run> getAllRuns(Set<String> sampleIds);
 
   /**
    * Retrieves a single sequencer Run by Run ID

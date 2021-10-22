@@ -66,7 +66,7 @@ public class DefaultLaneProvenanceServiceTest extends AbstractServiceTest {
     run.setInstrumentId(111);
     run.setInstrumentName("asdasd");
 
-    when(lims.getRuns()).thenReturn(Lists.newArrayList(run));
+    when(lims.getRuns(null)).thenReturn(Lists.newArrayList(run));
     when(lims.getInstruments()).thenReturn(Lists.newArrayList(instrument));
     when(lims.getInstrumentModels()).thenReturn(Lists.newArrayList(instrumentModel));
 
