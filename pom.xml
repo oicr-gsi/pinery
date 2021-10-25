@@ -31,7 +31,7 @@
         <mockito.version>1.10.19</mockito.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <httpclient.version>4.5.2</httpclient.version>
-        <jetty.version>9.3.0.M1</jetty.version>
+        <jetty.version>9.4.34.v20201102</jetty.version>
         <opencsv.version>3.6</opencsv.version>
         <csvjdbc.version>1.0.28</csvjdbc.version>
         <json-path-assert.version>2.4.0</json-path-assert.version>
