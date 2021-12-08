@@ -84,7 +84,7 @@ public class AssayMetricDto {
     this.maximum = maximum;
   }
 
-  @JsonProperty("sort_proproty")
+  @JsonProperty("sort_priority")
   public Integer getSortPriority() {
     return sortPriority;
   }
