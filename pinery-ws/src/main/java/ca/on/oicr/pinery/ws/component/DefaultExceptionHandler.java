@@ -2,7 +2,8 @@ package ca.on.oicr.pinery.ws.component;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
 
-  private static final Logger log = Logger.getLogger(DefaultExceptionHandler.class);
+  private static final Logger log = LoggerFactory.getLogger(DefaultExceptionHandler.class);
 
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<Object> toResponse(Exception exception) {

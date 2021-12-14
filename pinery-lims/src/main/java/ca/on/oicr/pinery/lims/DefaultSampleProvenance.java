@@ -30,13 +30,13 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** @author mlaszloffy */
 public class DefaultSampleProvenance implements SampleProvenance {
 
-  private final Logger log = LogManager.getLogger(DefaultSampleProvenance.class);
+  private final Logger log = LoggerFactory.getLogger(DefaultSampleProvenance.class);
 
   private Instrument instrument;
   private InstrumentModel instrumentModel;
