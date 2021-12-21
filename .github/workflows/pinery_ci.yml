@@ -18,4 +18,4 @@ jobs:
       - name: Build and Test
         run: |
           export TZ=Canada/Eastern \
-          && mvn clean install -DskipITs=false
+          && mvn clean install

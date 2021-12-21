@@ -1,3 +1,0 @@
-id	projectName	status	platformName	createdDate	createdUserId	modifiedDate	modifiedUserId	samples
-1	TestProject	Completed	Illumina HiSeq	2011-11-03T10:50:12-04:00	2	2011-11-03T10:50:12-04:00	2	[{id=2|barcode=AACCGG|attributes={Barcode=AACCGG|Organism=Homo sapiens}},{id=3|barcode=AAACCC|attributes={Barcode=AAACCC|Organism=Homo sapiens}}]
-2	TestProject	Completed	Illumina HiSeq	2011-11-03T10:50:12-04:00	2	2011-11-03T10:50:12-04:00	2	[{id=4|barcode=GGGTTT|attributes={Barcode=GGGTTT|Organism=Homo sapiens}},{id=5|barcode=CCCAAA|attributes={Barcode=CCCAAA|Organism=Homo sapiens}}]

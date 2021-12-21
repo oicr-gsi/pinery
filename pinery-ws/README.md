@@ -1,97 +1,41 @@
 # Pinery Webservice
 
-Pinery is a read-only webservice that pulls information from a LIMS. This repository includes
-an implementation that reads data from .tsv flat files.
+Pinery is a read-only webservice that pulls information from a LIMS. This is an API that requires
+implementation such as the one by [MISO-LIMS](https://github.com/miso-lims/miso-lims/tree/develop/pinery-miso).
 
 ## Minimum Requirements
 
 * Maven 3
 * JDK 11
 
-## Configuration
-
-Each LIMS may have its own set of options, so you should see the documentation
-for the specific Pinery implementation you are using.
-
-* [Flat Files](../pinery-lims-flatfile)
-* External modules may also be used
-
-### Internal Configuration
-
-With internal configuration, all configuration is included in the WAR file. Pinery must be packaged
-separately for each data source, and rebuilt if any properties are changed. Internal configuration
-is not possible if using an external LIMS implementation.
-
-1. Change the spring default profile in **pinery-ws/src/main/webapp/WEB-INF/web.xml**. Acceptable
-values are listed in the table below.
-
-    ```
-    <context-param>
-      <param-name>spring.profiles.default</param-name>
-      <param-value>flatfile</param-value>
-    </context-param>
-    ```
-
-2. Configure options specific to the source LIMS in the properties file specific to the implementation,
-as listed in the table below.
-
-| Source LIMS | Spring Profile | Properties File |
-| ----------- | -------------- | --------------- |
-| Flat Files | flatfile | pinery-lims-flatfile/src/main/resources/flatfile.properties |
-
-### External Configuration
-
-External configuration makes it simpler to manage multiple Pinery instances and redeploy them without
-having to modify files in the git repository and risk accidentally committing API keys or database
-credentials every time.
-
-1. copy the **.properties** file and **context-example.xml** from the **src/main/resources directory**
-of the pinery-lims-<LIMS> module for the LIMS you're using to **$CATALINA_HOME/conf/Catalina/localhost/**,
-where **$CATALINA_HOME** is your Tomcat base directory
-2. rename **context-example.xml** to match the context root of your deployment. E.g. if you're
-deploying to **/pinery-file**, call the context file **pinery-file.xml**
-3. Configure options specific to the source LIMS in the properties file
-
-### Running in Tomcat
-
-Tomcat 7 or later is the recommended servlet container for Pinery as it offers greater flexibility, mainly
-related to using external configuration.
-
-You may wish to set the timezone explicitly, as not all source LIMS provide a time zone. It may also
-be necessary to increase the JVM memory. You can alter these by configuring Tomcat's JAVA_OPTS. e.g.
-
-```
-JAVA_OPTS="-Duser.timezone=GMT -Djava.awt.headless=true -Xmx6144m -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC"
-```
-
-1. Configure Pinery using either internal or external configuration, as detailed above
-2. Build the entire Pinery project: `mvn clean install -DskipITs=false`
-3. Copy the **.war** file from **pinery/pinery-ws/target/** into your webapps directory. If Tomcat is
-configured to autodeploy, the webapp will be (re)deployed automatically; otherwise, deploy the webapp manually
-   * The name of the XML file should match the name of the context root, which by default will be the same
-   as the WAR name. If you would like to deploy to /pinery-file, name your WAR file **pinery-file.war**, and your
-   context file **pinery-file.xml**
-   * **WARNING**: In some cases with autodeploy enabled, Tomcat may delete the context XML during redeployment.
-   You can prevent this by stopping tomcat before copying the WAR into the webapps directory, or by making the
-   file immutable via `chattr +i <filename>`
-
-### External LIMS Implementations
-
-LIMS implementations external to this project may be used with the `external` Spring profile.
-
-#### External project requirements
+## Writing a New Implementation
 
 * Provide an implementation of the `ca.on.oicr.pinery.api.Lims` interface
-* Include an internal spring config XML in **src/main/resources/** declaring a bean of the Lims
-implementation type. Any other wiring necessary for the implementation may be included. This file should
-be named specifically to avoid collisions. **pinery-mylims-config.xml** is an ideal name, whereas
-a name like **context.xml** is more likely to cause problems with other similarly named files in the
-classpath.
+* Include an internal spring config XML in `src/main/resources/` declaring a bean of the `Lims`
+  implementation type. Any other wiring necessary for the implementation may be included. This file
+  should be named specifically to avoid collisions. `pinery-mylims-config.xml` is an ideal name,
+  whereas a name like `context.xml` is more likely to cause problems with other similarly named
+  files in the classpath.
+* Include an example external `context.xml` that can be copied when deploying to Tomcat. This file
+  should set the active Spring profile to `external`, and provide the names of the internal spring
+  config XML described above and the properties file that will contain any other configuration. For
+  example:
+
+  ```
+  <Context>
+    <Parameter name="spring.profiles.active" value="external" override="false"/>
+    <Parameter name="pinery.external.springConfigFile" value="mylims-config.xml"/>
+    <Parameter name="pinery.propertiesFile" value="file:${CATALINA_HOME}/conf/Catalina/localhost/pinery-mylims.properties" override="false"/>
+  </Context>
+  ```
+
+* Include an example properties file containing any options that are necessary (DB connection info,
+  API keys, etc.)
 * Package the external module as a war and include pinery-ws as an overlay. Example Maven config:
 
     ```
     <packaging>war</packaging>
-    
+
     <dependencies>
       <dependency>
         <groupId>ca.on.oicr</groupId>
@@ -104,20 +48,31 @@ classpath.
     </dependencies>
     ```
 
-#### Deploying to Tomcat
+## Deploying to Tomcat
 
-* add an external context config xml as described for _External Configuration_ above. This external
-  config should set the active Spring profile to `external`, reference the internal spring config xml,
-  and indicate a properties file. The properties file should contain both Pinery's expected properties
-  (see [pinery.properties](src/main/resources/pinery.properties)), and any additional properties relevant
-  to the implementation. An example of this file should be included with the implementation. Here is an
-  example:
+### Tomcat Configuration
 
-    ```
-    <Context>
-        <Parameter name="spring.profiles.active" value="external" override="false"/>
-        <Parameter name="pinery.external.springConfigFile" value="mylims-config.xml"/>
-        <Parameter name="pinery.propertiesFile" value="file:${CATALINA_HOME}/conf/Catalina/localhost/pinery-mylims.properties" override="false"/>
-    </Context>
-    ```
-* build your external implementation and deploy the resulting WAR
+Tomcat 9 or is the recommended servlet container for Pinery.
+
+You may wish to set the timezone explicitly, as not all source LIMS provide a time zone. It may also
+be necessary to increase the JVM memory. You can alter these by configuring Tomcat's JAVA_OPTS. e.g.
+
+```
+JAVA_OPTS="-Duser.timezone=GMT -Djava.awt.headless=true -Xmx6144m -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC"
+```
+
+### Deploying
+
+1. copy the example `.properties` file and external `context.xml` from the Pinery implementation
+   you're using to `$CATALINA_HOME/conf/Catalina/localhost/`, where `$CATALINA_HOME` is your Tomcat
+   base directory
+2. rename `context.xml` to match the context root of your deployment. E.g. if you're deploying to
+   `/pinery`, call the context file `pinery.xml`. If you're deploying to the root address, call the
+   file `ROOT.xml`
+3. Configure options specific to the source LIMS in the properties file
+4. Copy the built `.war` file from the Pinery implemention to `$CATALINA_HOME/webapps/`, naming it
+   to match your `context.xml` above. If Tomcat is configured to autodeploy, the webapp will be
+   (re)deployed automatically; otherwise, deploy the webapp manually
+   * **WARNING**: In some cases with autodeploy enabled, Tomcat may delete the context XML during redeployment.
+     You can prevent this by stopping tomcat before copying the WAR into the webapps directory, or by making the
+     file immutable via `chattr +i <filename>`

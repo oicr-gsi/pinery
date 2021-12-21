@@ -50,14 +50,6 @@
    <task:annotation-driven/>
    
    <!-- Profiles (keep below all other beans) -->
-   <beans profile="flatfile">
-      <import resource="classpath:flatfile-config.xml"/>
-   </beans>
-
-   <beans profile="mock">
-      <import resource="classpath:mock-config.xml"/>
-   </beans>
-   
    <beans profile="external">
       <import resource="classpath:${pinery.external.springConfigFile}"/>
    </beans>
