@@ -62,17 +62,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>ca.on.oicr</groupId>
-            <artifactId>pinery-ws</artifactId>
-            <scope>test</scope>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>ca.on.oicr</groupId>
-            <artifactId>pinery-lims-flatfile</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
           <groupId>org.apache.logging.log4j</groupId>
           <artifactId>log4j-slf4j-impl</artifactId>
           <scope>test</scope>
@@ -81,38 +70,6 @@
     </dependencies>
 
     <build>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>test.properties</include>
-                </includes>
-            </testResource>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <filtering>false</filtering>
-                <excludes>
-                    <exclude>test.properties</exclude>
-                </excludes>
-            </testResource>
-            <testResource>
-                <directory>src/it/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>test-flatfile.properties</include>
-                    <include>test-context.xml</include>
-                </includes>
-            </testResource>
-            <testResource>
-                <directory>src/it/resources</directory>
-                <filtering>false</filtering>
-                <excludes>
-                    <exclude>test-flatfile.properties</exclude>
-                    <exclude>test-context.xml</exclude>
-                </excludes>
-            </testResource>
-        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -132,76 +89,6 @@
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <configuration>
-                    <port>8888</port>
-                    <path>/</path>
-                    <contextFile>${project.build.testOutputDirectory}/test-context.xml</contextFile>
-                    <webapps>
-                        <webapp>
-                            <groupId>ca.on.oicr</groupId>
-                            <artifactId>pinery-ws</artifactId>
-                            <version>${project.version}</version>
-                            <type>war</type>
-                            <asWebapp>true</asWebapp>
-                        </webapp>
-                    </webapps>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>start-tomcat</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run-war</goal>
-                        </goals>
-                        <configuration>
-                            <fork>true</fork>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>stop-tomcat</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>shutdown</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>add-it-folder</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/it/java</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>           
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-jar-plugin</artifactId>

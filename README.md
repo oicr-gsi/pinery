@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/oicr-gsi/pinery.svg?branch=master)](https://travis-ci.org/oicr-gsi/pinery) 
+[![Build Status](https://travis-ci.org/oicr-gsi/pinery.svg?branch=master)](https://travis-ci.org/oicr-gsi/pinery)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=ca.on.oicr%3Apinery&metric=alert_status)](https://sonarcloud.io/dashboard?id=ca.on.oicr%3Apinery)
 
 # Pinery
@@ -18,8 +18,8 @@ Build all modules, running all unit tests and integration tests:
 
 ### Webservice
 
-Pinery is a read-only webservice that pulls information from a LIMS. This repository includes
-an implementation that read data from .tsv flat files.
+Pinery is a read-only webservice that pulls information from a LIMS. This is an API that requires
+implementation such as the one by [MISO-LIMS](https://github.com/miso-lims/miso-lims/tree/develop/pinery-miso).
 
 [More Info](pinery-ws/README.md)
 
@@ -29,12 +29,6 @@ The Java Client simplifies consumption of the Pinery webservice from within a Ja
 
 [More Info](pinery-client/README.md)
 
-### Flat file writer
-
-The Pinery-to-FlatFile utility creates a dump of all data from one LIMS into a set of flat files.
-
-[More Info](pinery-to-flatfile/README.md)
-
 ## Contributing
 
 * Maven 3 and JDK 11 or later are required
@@ -42,10 +36,7 @@ The Pinery-to-FlatFile utility creates a dump of all data from one LIMS into a s
   is ready to be merged
 * Pull requests must pass the continuous integration (CI) build, and be reviewed before merging
 
-**WARNING**: Be careful not to commit your own API keys or database credentials. To better avoid
-this, favour external configuration, as detailed in the [webservice README](pinery-ws/README.md). 
-
-## License 
+## License
 
 Pinery is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
