@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/oicr-gsi/pinery.svg?branch=master)](https://travis-ci.org/oicr-gsi/pinery)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=ca.on.oicr%3Apinery&metric=alert_status)](https://sonarcloud.io/dashboard?id=ca.on.oicr%3Apinery)
+![Build Status](https://github.com/oicr-gsi/pinery/actions/workflows/pinery_ci.yml/badge.svg)
 
 # Pinery
 
