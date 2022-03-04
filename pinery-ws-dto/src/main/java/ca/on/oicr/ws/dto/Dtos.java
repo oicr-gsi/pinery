@@ -2,30 +2,7 @@ package ca.on.oicr.ws.dto;
 
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
-import ca.on.oicr.pinery.api.Assay;
-import ca.on.oicr.pinery.api.AssayMetric;
-import ca.on.oicr.pinery.api.AssayMetricSubcategory;
-import ca.on.oicr.pinery.api.Attribute;
-import ca.on.oicr.pinery.api.AttributeName;
-import ca.on.oicr.pinery.api.Box;
-import ca.on.oicr.pinery.api.BoxPosition;
-import ca.on.oicr.pinery.api.Change;
-import ca.on.oicr.pinery.api.ChangeLog;
-import ca.on.oicr.pinery.api.Instrument;
-import ca.on.oicr.pinery.api.InstrumentModel;
-import ca.on.oicr.pinery.api.Order;
-import ca.on.oicr.pinery.api.OrderSample;
-import ca.on.oicr.pinery.api.PreparationKit;
-import ca.on.oicr.pinery.api.Requisition;
-import ca.on.oicr.pinery.api.Run;
-import ca.on.oicr.pinery.api.RunPosition;
-import ca.on.oicr.pinery.api.RunSample;
-import ca.on.oicr.pinery.api.Sample;
-import ca.on.oicr.pinery.api.SampleProject;
-import ca.on.oicr.pinery.api.SignOff;
-import ca.on.oicr.pinery.api.Status;
-import ca.on.oicr.pinery.api.Type;
-import ca.on.oicr.pinery.api.User;
+import ca.on.oicr.pinery.api.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.math.BigDecimal;
@@ -555,6 +532,19 @@ public final class Dtos {
     return to;
   }
 
+  public static AssayTestDto asDto(AssayTest from) {
+    AssayTestDto to = new AssayTestDto();
+    to.setName(from.getName());
+    to.setTissueType(from.getTissueType());
+    to.setNegateTissueType(from.getNegateTissueType());
+    to.setExtractionSampleType(from.getExtractionSampleType());
+    to.setLibrarySourceTemplateType(from.getLibrarySourceTemplateType());
+    to.setLibraryQualificationMethod(from.getLibraryQualificationMethod());
+    to.setLibraryQualificationSourceTemplateType(from.getLibraryQualificationSourceTemplateType());
+    to.setRepeatPerTimepoint(from.getRepeatPerTimepoint());
+    return to;
+  }
+
   public static AssayMetricDto asDto(AssayMetric from) {
     AssayMetricDto to = new AssayMetricDto();
     to.setName(from.getName());
@@ -591,6 +581,9 @@ public final class Dtos {
     to.setName(from.getName());
     to.setDescription(from.getDescription());
     to.setVersion(from.getVersion());
+    if (from.getTests() != null && !from.getTests().isEmpty()) {
+      to.setTests(from.getTests().stream().map(Dtos::asDto).collect(Collectors.toSet()));
+    }
     if (from.getMetrics() != null && !from.getMetrics().isEmpty()) {
       to.setMetrics(from.getMetrics().stream().map(Dtos::asDto).collect(Collectors.toSet()));
     }

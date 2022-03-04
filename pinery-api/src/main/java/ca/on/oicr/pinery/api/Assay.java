@@ -20,6 +20,12 @@ public interface Assay {
 
   void setVersion(String version);
 
+  Set<AssayTest> getTests();
+
+  void setTests(Set<AssayTest> tests);
+
+  void addTest(AssayTest test);
+
   Set<AssayMetric> getMetrics();
 
   void setMetrics(Set<AssayMetric> metrics);
