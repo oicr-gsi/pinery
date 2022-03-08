@@ -123,7 +123,15 @@ public class DefaultLaneProvenance implements LaneProvenance {
 
   @Override
   public Boolean getSkip() {
-    return lane.isAnalysisSkipped();
+    if ((sequencerRun.getStatus() == null
+            || "Not Ready".equals(sequencerRun.getStatus().getState()))
+        && lane.isAnalysisSkipped() == null) {
+      return null;
+    } else {
+      return (sequencerRun.getStatus() != null
+              && "Failed".equals(sequencerRun.getStatus().getState()))
+          || Boolean.TRUE.equals(lane.isAnalysisSkipped());
+    }
   }
 
   @Override

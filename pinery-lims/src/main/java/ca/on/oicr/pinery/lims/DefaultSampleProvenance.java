@@ -314,12 +314,16 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
   @Override
   public Boolean getSkip() {
-    if (lane.isAnalysisSkipped() == null
+    if ((sequencerRun.getStatus() == null
+            || "Not Ready".equals(sequencerRun.getStatus().getState()))
+        && lane.isAnalysisSkipped() == null
         && (runSample.getStatus() == null
             || "Not Ready".equals(runSample.getStatus().getState()))) {
       return null;
     } else {
-      return Boolean.TRUE.equals(lane.isAnalysisSkipped())
+      return (sequencerRun.getStatus() != null
+              && "Failed".equals(sequencerRun.getStatus().getState()))
+          || Boolean.TRUE.equals(lane.isAnalysisSkipped())
           || (runSample.getStatus() != null && "Failed".equals(runSample.getStatus().getState()));
     }
   }
