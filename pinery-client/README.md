@@ -29,12 +29,6 @@ After importing the client into your code, usage as as simple as creating a Pine
 
         pinery.close();
 
-## Testing
-
-The Pinery client includes unit tests and integration tests. Unit tests are enabled, but integration tests are disabled by default because they require a real running Pinery service with known data to compare to. The server url and test data is configured in **/src/it/resources/it.properties**. The included integration test data comes from [OICR Staging LIMS](http://plims3.res.oicr.on.ca) and expects a Pinery service on localhost:8888. See [Pinery Development](https://wiki.oicr.on.ca/display/SEQPROD/Pinery+Development) for information on running a local Pinery webservice. To run the integration tests:
-
-    MAVEN_OPTS="-Xmx2048m -XX:MaxPermSize=1024m" mvn verify -DskipITs=false
-
 ## Support
 
 For support, please file an issue on the [Github project](https://github.com/oicr-gsi/pinery) or send an email to gsi@oicr.on.ca .
