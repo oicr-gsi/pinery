@@ -28,4 +28,8 @@ public interface Requisition {
   void setSignOffs(List<SignOff> signOffs);
 
   void addSignOff(SignOff signOff);
+
+  boolean isStopped();
+
+  void setStopped(boolean stopped);
 }

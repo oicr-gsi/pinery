@@ -17,6 +17,7 @@ public class RequisitionDto {
   private Integer assayId;
   private Set<String> sampleIds;
   private List<SignOffDto> signOffs;
+  private boolean stopped = false;
 
   public Integer getId() {
     return id;
@@ -61,9 +62,17 @@ public class RequisitionDto {
     this.signOffs = signOffs;
   }
 
+  public boolean isStopped() {
+    return stopped;
+  }
+
+  public void setStopped(boolean stopped) {
+    this.stopped = stopped;
+  }
+
   @Override
   public int hashCode() {
-    return Objects.hash(assayId, id, name, sampleIds, signOffs);
+    return Objects.hash(assayId, id, name, sampleIds, signOffs, stopped);
   }
 
   @Override
@@ -76,6 +85,7 @@ public class RequisitionDto {
         && Objects.equals(id, other.id)
         && Objects.equals(name, other.name)
         && Objects.equals(sampleIds, other.sampleIds)
-        && Objects.equals(signOffs, other.signOffs);
+        && Objects.equals(signOffs, other.signOffs)
+        && Objects.equals(stopped, other.stopped);
   }
 }

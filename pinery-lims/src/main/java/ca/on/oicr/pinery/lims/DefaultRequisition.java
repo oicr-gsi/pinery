@@ -15,6 +15,7 @@ public class DefaultRequisition implements Requisition {
   private Integer assayId;
   private Set<String> sampleIds;
   private List<SignOff> signOffs;
+  private boolean stopped = false;
 
   @Override
   public Integer getId() {
@@ -83,8 +84,18 @@ public class DefaultRequisition implements Requisition {
   }
 
   @Override
+  public boolean isStopped() {
+    return stopped;
+  }
+
+  @Override
+  public void setStopped(boolean stopped) {
+    this.stopped = stopped;
+  }
+
+  @Override
   public int hashCode() {
-    return Objects.hash(assayId, id, name, sampleIds, signOffs);
+    return Objects.hash(assayId, id, name, sampleIds, signOffs, stopped);
   }
 
   @Override
@@ -97,6 +108,7 @@ public class DefaultRequisition implements Requisition {
         && Objects.equals(id, other.id)
         && Objects.equals(name, other.name)
         && Objects.equals(sampleIds, other.sampleIds)
-        && Objects.equals(signOffs, other.signOffs);
+        && Objects.equals(signOffs, other.signOffs)
+        && Objects.equals(stopped, other.stopped);
   }
 }
