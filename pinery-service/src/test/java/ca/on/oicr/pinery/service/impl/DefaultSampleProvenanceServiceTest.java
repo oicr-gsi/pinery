@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.api.Attribute;
-import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.Run;
@@ -23,7 +22,6 @@ import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
 import ca.on.oicr.pinery.lims.DefaultSample;
 import ca.on.oicr.pinery.lims.DefaultSampleProject;
-import ca.on.oicr.pinery.service.SampleProvenanceService;
 import ca.on.oicr.ws.dto.Dtos;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -36,18 +34,20 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /** @author mlaszloffy */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/test-context.xml")
-public class DefaultSampleProvenanceServiceTest extends AbstractServiceTest {
+@RunWith(MockitoJUnitRunner.class)
+public class DefaultSampleProvenanceServiceTest {
 
-  @Autowired private SampleProvenanceService sampleProvenanceService;
+  @InjectMocks
+  private DefaultSampleProvenanceService sampleProvenanceService;
 
-  @Autowired private Lims lims;
+  @Mock
+  private CacheOrLims lims;
 
   List<Sample> samples;
   SampleProject project;
@@ -65,6 +65,8 @@ public class DefaultSampleProvenanceServiceTest extends AbstractServiceTest {
 
   @Before
   public void setup() {
+    MockitoAnnotations.initMocks(this);
+
     samples = new ArrayList<>();
 
     project = new DefaultSampleProject();
@@ -72,14 +74,14 @@ public class DefaultSampleProvenanceServiceTest extends AbstractServiceTest {
 
     String parentSampleId = "2";
     parentSample = new DefaultSample();
-    parentSample.setAttributes(Collections.<Attribute>emptySet());
+    parentSample.setAttributes(Collections.<Attribute> emptySet());
     parentSample.setId(parentSampleId);
     samples.add(parentSample);
 
     sample = new DefaultSample();
     sample.setProject("TEST_PROJECT");
     sample.setName("TEST_SAMPLE");
-    sample.setAttributes(Collections.<Attribute>emptySet());
+    sample.setAttributes(Collections.<Attribute> emptySet());
     sample.setId(sampleId);
     sample.setModified(Date.from(ZonedDateTime.parse("2015-01-01T00:00:00.000Z").toInstant()));
     samples.add(sample);
@@ -90,7 +92,7 @@ public class DefaultSampleProvenanceServiceTest extends AbstractServiceTest {
     runSample = new DefaultRunSample();
     runSample.setId(sampleId);
     runSample.setBarcode("ATCGATCG");
-    runSample.setAttributes(Collections.<Attribute>emptySet());
+    runSample.setAttributes(Collections.<Attribute> emptySet());
 
     lane = new DefaultRunPosition();
     lane.setPosition(1);
@@ -105,7 +107,7 @@ public class DefaultSampleProvenanceServiceTest extends AbstractServiceTest {
     orderSample = new DefaultOrderSample();
     orderSample.setId(sampleId);
     orderSample.setBarcode("ATCGATCG");
-    orderSample.setAttributes(Collections.<Attribute>emptySet());
+    orderSample.setAttributes(Collections.<Attribute> emptySet());
 
     order = new DefaultOrder();
     order.setSample(ImmutableSet.of(orderSample));
@@ -236,7 +238,7 @@ public class DefaultSampleProvenanceServiceTest extends AbstractServiceTest {
     parentSample = new DefaultSample();
     parentSample.setName(parentExpected);
     parentSample.setId("2");
-    parentSample.setAttributes(Collections.<Attribute>emptySet());
+    parentSample.setAttributes(Collections.<Attribute> emptySet());
     samples.add(parentSample);
     sample.setParents(Sets.newHashSet(parentSample.getId()));
 
@@ -249,7 +251,7 @@ public class DefaultSampleProvenanceServiceTest extends AbstractServiceTest {
     Sample rootSample = new DefaultSample();
     rootSample.setName(rootExpected);
     rootSample.setId("3");
-    rootSample.setAttributes(Collections.<Attribute>emptySet());
+    rootSample.setAttributes(Collections.<Attribute> emptySet());
     samples.add(rootSample);
     parentSample.setParents(Sets.newHashSet(rootSample.getId()));
 
@@ -269,13 +271,13 @@ public class DefaultSampleProvenanceServiceTest extends AbstractServiceTest {
     Sample p1 = new DefaultSample();
     p1.setName(parent1);
     p1.setId("10");
-    p1.setAttributes(Collections.<Attribute>emptySet());
+    p1.setAttributes(Collections.<Attribute> emptySet());
     samples.add(p1);
 
     Sample p2 = new DefaultSample();
     p2.setName(parent2);
     p2.setId("11");
-    p2.setAttributes(Collections.<Attribute>emptySet());
+    p2.setAttributes(Collections.<Attribute> emptySet());
     samples.add(p2);
 
     sample.setParents(Sets.newHashSet(p1.getId(), p2.getId()));
@@ -283,7 +285,7 @@ public class DefaultSampleProvenanceServiceTest extends AbstractServiceTest {
     Sample r = new DefaultSample();
     r.setName(root);
     r.setId("12");
-    r.setAttributes(Collections.<Attribute>emptySet());
+    r.setAttributes(Collections.<Attribute> emptySet());
     samples.add(r);
     p1.setParents(Sets.newHashSet(r.getId()));
     p2.setParents(Sets.newHashSet(r.getId()));
@@ -304,13 +306,13 @@ public class DefaultSampleProvenanceServiceTest extends AbstractServiceTest {
     Sample r1 = new DefaultSample();
     r1.setName(root1);
     r1.setId("10");
-    r1.setAttributes(Collections.<Attribute>emptySet());
+    r1.setAttributes(Collections.<Attribute> emptySet());
     samples.add(r1);
 
     Sample r2 = new DefaultSample();
     r2.setName(root2);
     r2.setId("11");
-    r2.setAttributes(Collections.<Attribute>emptySet());
+    r2.setAttributes(Collections.<Attribute> emptySet());
     samples.add(r2);
 
     sample.setParents(Sets.newHashSet(r1.getId(), r2.getId()));

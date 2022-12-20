@@ -30,10 +30,10 @@ The Java Client simplifies consumption of the Pinery webservice from within a Ja
 
 ## Contributing
 
-* Maven 3 and JDK 11 or later are required
-* Nothing should be committed directly to a versioned branch. Make a pull request when your work
+- Maven 3 and JDK 17 or later are required
+- Nothing should be committed directly to a versioned branch. Make a pull request when your work
   is ready to be merged
-* Pull requests must pass the continuous integration (CI) build, and be reviewed before merging
+- Pull requests must pass the continuous integration (CI) build, and be reviewed before merging
 
 ## License
 
@@ -44,7 +44,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 Pinery is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 The GNU General Public License Version 3 is included in this repository as [LICENSE](LICENSE).

@@ -46,41 +46,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 /** @author mlaszloffy */
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration("classpath:test-spring-servlet.xml")
 public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
-  @Autowired private WebApplicationContext wac;
-
-  @Autowired private SampleProvenanceService sampleProvenanceService;
-
-  private MockMvc mockMvc;
-
-  @Before
-  public void setup() {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-  }
-
-  @After
-  public void resetMocks() {
-    Mockito.reset(sampleProvenanceService);
-  }
+  @Autowired // mock defined in TestConfig class
+  private SampleProvenanceService sampleProvenanceService;
 
   @Test
   public void testEmptyResultSet() throws Exception {
@@ -88,7 +62,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
     when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
 
-    mockMvc
+    getMockMvc()
         .perform(
             get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
@@ -107,7 +81,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
     when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
 
-    mockMvc
+    getMockMvc()
         .perform(
             get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
@@ -125,7 +99,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
     when(sampleProvenanceService.getSampleProvenance()).thenReturn(sps);
 
-    mockMvc
+    getMockMvc()
         .perform(
             get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
@@ -139,8 +113,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
    */
   @Test
   public void testV1ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
-        SampleProvenanceResource.transformers.get("v1");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v1");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -149,8 +122,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV2ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
-        SampleProvenanceResource.transformers.get("v2");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v2");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -159,8 +131,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV3ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
-        SampleProvenanceResource.transformers.get("v3");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v3");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -169,8 +140,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV4ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
-        SampleProvenanceResource.transformers.get("v4");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v4");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -179,8 +149,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV5ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
-        SampleProvenanceResource.transformers.get("v5");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v5");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -189,8 +158,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV6ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
-        SampleProvenanceResource.transformers.get("v6");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v6");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -199,8 +167,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV7ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
-        SampleProvenanceResource.transformers.get("v7");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v7");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -209,8 +176,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV8ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
-        SampleProvenanceResource.transformers.get("v8");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v8");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -219,8 +185,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV9ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer =
-        SampleProvenanceResource.transformers.get("v9");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v9");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -238,7 +203,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     sp.setInstrumentModel(makeBaseInstrumentModel());
     sp.setSampleProject(makeBaseProject());
     sp.setAdditionalSampleAttributes(
-        ImmutableMap.<LimsSampleAttribute, Set<String>>of(
+        ImmutableMap.<LimsSampleAttribute, Set<String>> of(
             LimsSampleAttribute.TARGETED_RESEQUENCING, ImmutableSet.of("tarseq")));
     sp.setParentSamples(makeBaseSampleParents());
 
@@ -413,13 +378,12 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
   }
 
   private List<Sample> makeBaseSampleParents() {
-    List<Sample> parents =
-        Lists.newArrayList(
-            makeEmptySample("library"),
-            makeEmptySample("aliquot"),
-            makeEmptySample("stock"),
-            makeEmptySample("tissue"),
-            makeEmptySample("identity"));
+    List<Sample> parents = Lists.newArrayList(
+        makeEmptySample("library"),
+        makeEmptySample("aliquot"),
+        makeEmptySample("stock"),
+        makeEmptySample("tissue"),
+        makeEmptySample("identity"));
     return parents;
   }
 

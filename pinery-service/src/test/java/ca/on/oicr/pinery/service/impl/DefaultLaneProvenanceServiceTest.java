@@ -8,35 +8,35 @@ import static org.mockito.Mockito.when;
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
-import ca.on.oicr.pinery.api.Lims;
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.lims.DefaultInstrument;
 import ca.on.oicr.pinery.lims.DefaultInstrumentModel;
 import ca.on.oicr.pinery.lims.DefaultRun;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
-import ca.on.oicr.pinery.service.LaneProvenanceService;
 import ca.on.oicr.ws.dto.Dtos;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.time.ZonedDateTime;
 import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /** @author mlaszloffy */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/test-context.xml")
-public class DefaultLaneProvenanceServiceTest extends AbstractServiceTest {
+@RunWith(MockitoJUnitRunner.class)
+public class DefaultLaneProvenanceServiceTest {
 
-  @Autowired private LaneProvenanceService laneProvenanceService;
+  @InjectMocks
+  private DefaultLaneProvenanceService laneProvenanceService;
 
-  @Autowired private Lims lims;
+  @Mock
+  private CacheOrLims lims;
 
   Instrument instrument;
   InstrumentModel instrumentModel;
@@ -46,7 +46,6 @@ public class DefaultLaneProvenanceServiceTest extends AbstractServiceTest {
 
   @Before
   public void setup() {
-
     instrument = new DefaultInstrument();
     instrument.setName("h001");
     instrument.setModelId(1);
