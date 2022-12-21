@@ -34,41 +34,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 /** @author mlaszloffy */
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration("classpath:test-spring-servlet.xml")
 public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
-  @Autowired private WebApplicationContext wac;
-
-  @Autowired private LaneProvenanceService laneProvenanceService;
-
-  private MockMvc mockMvc;
-
-  @Before
-  public void setup() {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-  }
-
-  @After
-  public void resetMocks() {
-    Mockito.reset(laneProvenanceService);
-  }
+  @Autowired // mock defined in TestConfig class
+  private LaneProvenanceService laneProvenanceService;
 
   @Test
   public void testEmptyResultSet() throws Exception {
@@ -76,7 +50,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
     when(laneProvenanceService.getLaneProvenance()).thenReturn(lps);
 
-    mockMvc
+    getMockMvc()
         .perform(get("/provenance/latest/lane-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -94,7 +68,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
     when(laneProvenanceService.getLaneProvenance()).thenReturn(lps);
 
-    mockMvc
+    getMockMvc()
         .perform(get("/provenance/latest/lane-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -112,7 +86,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
     when(laneProvenanceService.getLaneProvenance()).thenReturn(lps);
 
-    mockMvc
+    getMockMvc()
         .perform(get("/provenance/latest/lane-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -125,8 +99,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
    */
   @Test
   public void testV1ProvenanceTransform() {
-    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer =
-        LaneProvenanceResource.transformers.get("v1");
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v1");
     LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
     // This hash must never change
     assertEquals(
@@ -135,8 +108,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV2ProvenanceTransform() {
-    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer =
-        LaneProvenanceResource.transformers.get("v2");
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v2");
     LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
     // This hash must never change
     assertEquals(
@@ -145,8 +117,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV3ProvenanceTransform() {
-    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer =
-        LaneProvenanceResource.transformers.get("v3");
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v3");
     LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
     // This hash must never change
     assertEquals(
@@ -155,8 +126,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV4ProvenanceTransform() {
-    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer =
-        LaneProvenanceResource.transformers.get("v4");
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v4");
     LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
     // This hash must never change
     assertEquals(
@@ -165,8 +135,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV5ProvenanceTransform() {
-    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer =
-        LaneProvenanceResource.transformers.get("v5");
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v5");
     LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
     // This hash must never change
     assertEquals(
@@ -175,8 +144,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV6ProvenanceTransform() {
-    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer =
-        LaneProvenanceResource.transformers.get("v6");
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v6");
     LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
     // This hash must never change
     assertEquals(
@@ -185,8 +153,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV7ProvenanceTransform() {
-    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer =
-        LaneProvenanceResource.transformers.get("v7");
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v7");
     LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
     // This hash must never change
     assertEquals(
@@ -195,8 +162,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV8ProvenanceTransform() {
-    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer =
-        LaneProvenanceResource.transformers.get("v8");
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v8");
     LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
     // This hash must never change
     assertEquals(
@@ -205,8 +171,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV9ProvenanceTransform() {
-    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer =
-        LaneProvenanceResource.transformers.get("v9");
+    VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = LaneProvenanceResource.transformers.get("v9");
     LaneProvenance lp = transformer.transform(makeBaseLaneProvenance());
     // This hash must never change
     assertEquals(
