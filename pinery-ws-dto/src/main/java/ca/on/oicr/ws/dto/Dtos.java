@@ -607,6 +607,9 @@ public final class Dtos {
     if (from.getSampleIds() != null) {
       to.setSampleIds(new HashSet<>(from.getSampleIds()));
     }
+    if (from.getSupplementalSampleIds() != null) {
+      to.setSupplementalSampleIds(new HashSet<>(from.getSupplementalSampleIds()));
+    }
     if (from.getSignOffs() != null) {
       to.setSignOffs(from.getSignOffs().stream().map(Dtos::asDto).collect(Collectors.toList()));
     }

@@ -16,6 +16,7 @@ public class RequisitionDto {
   private String name;
   private Integer assayId;
   private Set<String> sampleIds;
+  private Set<String> supplementalSampleIds;
   private List<SignOffDto> signOffs;
   private boolean stopped = false;
 
@@ -51,6 +52,15 @@ public class RequisitionDto {
 
   public void setSampleIds(Set<String> sampleIds) {
     this.sampleIds = sampleIds;
+  }
+
+  @JsonProperty("supplemental_sample_ids")
+  public Set<String> getSupplementalSampleIds() {
+    return supplementalSampleIds;
+  }
+
+  public void setSupplementalSampleIds(Set<String> supplementalSampleIds) {
+    this.supplementalSampleIds = supplementalSampleIds;
   }
 
   @JsonProperty("sign_offs")

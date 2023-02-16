@@ -14,6 +14,7 @@ public class DefaultRequisition implements Requisition {
   private String name;
   private Integer assayId;
   private Set<String> sampleIds;
+  private Set<String> supplementalSampleIds;
   private List<SignOff> signOffs;
   private boolean stopped = false;
 
@@ -63,6 +64,24 @@ public class DefaultRequisition implements Requisition {
       sampleIds = new HashSet<>();
     }
     sampleIds.add(sampleId);
+  }
+
+  @Override
+  public Set<String> getSupplementalSampleIds() {
+    return supplementalSampleIds;
+  }
+
+  @Override
+  public void setSupplementalSampleIds(Set<String> supplementalSampleIds) {
+    this.supplementalSampleIds = supplementalSampleIds;
+  }
+
+  @Override
+  public void addSupplementalSampleId(String supplementalSampleId) {
+    if (supplementalSampleIds == null) {
+      supplementalSampleIds = new HashSet<>();
+    }
+    supplementalSampleIds.add(supplementalSampleId);
   }
 
   @Override
