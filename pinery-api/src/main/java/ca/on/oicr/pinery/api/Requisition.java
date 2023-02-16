@@ -23,6 +23,12 @@ public interface Requisition {
 
   void addSampleId(String sampleId);
 
+  Set<String> getSupplementalSampleIds();
+
+  void setSupplementalSampleIds(Set<String> supplementalSampleIds);
+
+  void addSupplementalSampleId(String supplementalSampleId);
+
   List<SignOff> getSignOffs();
 
   void setSignOffs(List<SignOff> signOffs);
