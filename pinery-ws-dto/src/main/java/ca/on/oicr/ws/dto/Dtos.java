@@ -614,6 +614,7 @@ public final class Dtos {
       to.setSignOffs(from.getSignOffs().stream().map(Dtos::asDto).collect(Collectors.toList()));
     }
     to.setStopped(from.isStopped());
+    to.setStopReason(from.getStopReason());
     return to;
   }
 
