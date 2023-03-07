@@ -38,4 +38,8 @@ public interface Requisition {
   boolean isStopped();
 
   void setStopped(boolean stopped);
+
+  String getStopReason();
+
+  void setStopReason(String stopReason);
 }
