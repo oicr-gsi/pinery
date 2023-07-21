@@ -33,4 +33,8 @@ public interface AssayTest {
   Boolean getRepeatPerTimepoint();
 
   void setRepeatPerTimepoint(Boolean repeatPerTimepoint);
+
+  String getPermittedSamples();
+
+  void setPermittedSamples(String permittedSamples);
 }

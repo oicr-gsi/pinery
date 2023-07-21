@@ -12,6 +12,7 @@ public class DefaultAssayTest implements AssayTest {
   private String libraryQualificationMethod;
   private String libraryQualificationSourceTemplateType;
   private Boolean repeatPerTimepoint;
+  private String permittedSamples;
 
   @Override
   public String getName() {
@@ -92,5 +93,15 @@ public class DefaultAssayTest implements AssayTest {
   @Override
   public void setRepeatPerTimepoint(Boolean repeatPerTimepoint) {
     this.repeatPerTimepoint = repeatPerTimepoint;
+  }
+
+  @Override
+  public String getPermittedSamples() {
+    return permittedSamples;
+  }
+
+  @Override
+  public void setPermittedSamples(String permittedSamples) {
+    this.permittedSamples = permittedSamples;
   }
 }

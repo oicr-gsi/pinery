@@ -542,6 +542,7 @@ public final class Dtos {
     to.setLibraryQualificationMethod(from.getLibraryQualificationMethod());
     to.setLibraryQualificationSourceTemplateType(from.getLibraryQualificationSourceTemplateType());
     to.setRepeatPerTimepoint(from.getRepeatPerTimepoint());
+    to.setPermittedSamples(from.getPermittedSamples());
     return to;
   }
 

@@ -17,6 +17,7 @@ public class AssayTestDto {
   private String libraryQualificationMethod;
   private String libraryQualificationSourceTemplateType;
   private Boolean repeatPerTimepoint;
+  private String permittedSamples;
 
   public String getName() {
     return name;
@@ -88,6 +89,15 @@ public class AssayTestDto {
 
   public void setRepeatPerTimepoint(Boolean repeatPerTimepoint) {
     this.repeatPerTimepoint = repeatPerTimepoint;
+  }
+
+  @JsonProperty("permitted_samples")
+  public String getPermittedSamples() {
+    return permittedSamples;
+  }
+
+  public void setPermittedSamples(String permittedSamples) {
+    this.permittedSamples = permittedSamples;
   }
 
   @Override
