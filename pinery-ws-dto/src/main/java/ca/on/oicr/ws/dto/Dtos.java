@@ -133,6 +133,7 @@ public final class Dtos {
     StatusDto dto = new StatusDto();
     dto.setName(from.getName());
     dto.setState(from.getState());
+    dto.setNote(from.getNote());
     dto.setDate(format(from.getDate()));
     dto.setUserId(from.getUserId());
     return dto;

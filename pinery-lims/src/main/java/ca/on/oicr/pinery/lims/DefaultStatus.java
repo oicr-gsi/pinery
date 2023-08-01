@@ -11,7 +11,9 @@ public class DefaultStatus implements Status {
     int result = 1;
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + ((state == null) ? 0 : state.hashCode());
+    result = prime * result + ((note == null) ? 0 : note.hashCode());
     result = prime * result + ((date == null) ? 0 : date.hashCode());
+    result = prime * result + ((userId == null) ? 0 : userId.hashCode());
     return result;
   }
 
@@ -27,14 +29,21 @@ public class DefaultStatus implements Status {
     if (state == null) {
       if (other.state != null) return false;
     } else if (!state.equals(other.state)) return false;
+    if (note == null) {
+      if (other.note != null) return false;
+    } else if (!note.equals(other.note)) return false;
     if (date == null) {
       if (other.date != null) return false;
     } else if (!date.equals(other.date)) return false;
+    if (userId == null) {
+      if (other.userId != null) return false;
+    } else if (!userId.equals(other.userId)) return false;
     return true;
   }
 
   private String name;
   private String state;
+  private String note;
   private LocalDate date;
   private Integer userId;
 
@@ -56,6 +65,16 @@ public class DefaultStatus implements Status {
   @Override
   public void setState(String state) {
     this.state = state;
+  }
+
+  @Override
+  public String getNote() {
+    return note;
+  }
+
+  @Override
+  public void setNote(String note) {
+    this.note = note;
   }
 
   @Override
