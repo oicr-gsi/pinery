@@ -20,6 +20,7 @@ public class StatusDto {
     int result = 1;
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + ((state == null) ? 0 : state.hashCode());
+    result = prime * result + ((note == null) ? 0 : note.hashCode());
     result = prime * result + ((date == null) ? 0 : date.hashCode());
     result = prime * result + ((userId == null) ? 0 : userId.hashCode());
     return result;
@@ -37,6 +38,9 @@ public class StatusDto {
     if (state == null) {
       if (other.state != null) return false;
     } else if (!state.equals(other.state)) return false;
+    if (note == null) {
+      if (other.note != null) return false;
+    } else if (!note.equals(other.note)) return false;
     if (date == null) {
       if (other.date != null) return false;
     } else if (!date.equals(other.date)) return false;
@@ -48,6 +52,7 @@ public class StatusDto {
 
   private String name;
   private String state;
+  private String note;
   private String date;
   private Integer userId;
 
@@ -65,6 +70,14 @@ public class StatusDto {
 
   public void setState(String state) {
     this.state = state;
+  }
+
+  public String getNote() {
+    return note;
+  }
+
+  public void setNote(String note) {
+    this.note = note;
   }
 
   public String getDate() {

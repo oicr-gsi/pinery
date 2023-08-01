@@ -4,19 +4,23 @@ import java.time.LocalDate;
 
 public interface Status {
 
-  public String getName();
+  String getName();
 
-  public void setName(String name);
+  void setName(String name);
 
-  public String getState();
+  String getState();
 
-  public void setState(String state);
+  void setState(String state);
 
-  public LocalDate getDate();
+  String getNote();
 
-  public void setDate(LocalDate date);
+  void setNote(String note);
 
-  public Integer getUserId();
+  LocalDate getDate();
 
-  public void setUserId(Integer userId);
+  void setDate(LocalDate date);
+
+  Integer getUserId();
+
+  void setUserId(Integer userId);
 }
