@@ -4,6 +4,7 @@ import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import com.google.common.hash.Hashing;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -27,6 +28,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
   private SortedMap<String, SortedSet<String>> sequencerRunAttributes;
   private ZonedDateTime createdDate;
   private ZonedDateTime lastModified;
+  private List<String> batchIds;
 
   public static SimpleSampleProvenance from(SampleProvenance from) {
     SimpleSampleProvenance to = new SimpleSampleProvenance();
@@ -48,6 +50,7 @@ public class SimpleSampleProvenance implements SampleProvenance {
     to.setSequencerRunAttributes(from.getSequencerRunAttributes());
     to.setCreatedDate(from.getCreatedDate());
     to.setLastModified(from.getLastModified());
+    to.setBatchIds(from.getBatchIds());
 
     return to;
   }
@@ -95,6 +98,11 @@ public class SimpleSampleProvenance implements SampleProvenance {
     sb.append(getLaneNumber());
     sb.append(getLaneAttributes());
     sb.append(getIusTag());
+    // Only include batch IDs if not null. Null is used to omit from old provenance versions
+    List<String> batchIds = getBatchIds();
+    if (batchIds != null) {
+      sb.append(batchIds);
+    }
     String s = sb.toString();
     return Hashing.sha256().hashString(s, StandardCharsets.UTF_8).toString();
   }
@@ -233,5 +241,14 @@ public class SimpleSampleProvenance implements SampleProvenance {
 
   public void setStudyTitle(String studyTitle) {
     this.studyTitle = studyTitle;
+  }
+
+  @Override
+  public List<String> getBatchIds() {
+    return batchIds;
+  }
+
+  public void setBatchIds(List<String> batchIds) {
+    this.batchIds = batchIds;
   }
 }

@@ -3,7 +3,10 @@ package ca.on.oicr.ws.dto;
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
 
@@ -28,8 +31,10 @@ public class SampleProvenanceDto implements SampleProvenance {
   private String version;
   private ZonedDateTime lastModified;
   private ZonedDateTime createdDate;
+  private List<String> batchIds;
 
-  public SampleProvenanceDto() {}
+  public SampleProvenanceDto() {
+  }
 
   public SampleProvenanceDto(SampleProvenance from) {
     studyTitle = from.getStudyTitle();
@@ -49,6 +54,7 @@ public class SampleProvenanceDto implements SampleProvenance {
     version = from.getVersion();
     lastModified = from.getLastModified();
     createdDate = from.getCreatedDate();
+    batchIds = from.getBatchIds();
   }
 
   @Override
@@ -209,6 +215,16 @@ public class SampleProvenanceDto implements SampleProvenance {
 
   public void setCreatedDate(ZonedDateTime createdDate) {
     this.createdDate = createdDate;
+  }
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Override
+  public List<String> getBatchIds() {
+    return this.batchIds;
+  }
+
+  public void setBatchIds(List<String> batchIds) {
+    this.batchIds = batchIds;
   }
 
   @Override

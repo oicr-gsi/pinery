@@ -189,7 +189,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
-        "ce65b78aa8506298c46e3816eaa2467efcf15f94a2c1f4bdb0625b8a8624de03", sp.getVersion());
+        "a0aa98fcc0a800dc02a3f8d3d3bf725c232d34c03e5f4e69ea35e4a1d0b8a2d6", sp.getVersion());
   }
 
   private SampleProvenance makeBaseSampleProvenance() {
@@ -270,6 +270,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     attrs.add(makeAttribute("Sequencing Control Type", "Positive"));
     attrs.add(makeAttribute("Barcode Kit", "Kit xyz"));
     attrs.add(makeAttribute("Timepoint", "first collection"));
+    attrs.add(makeAttribute("Batch ID", "2023-09-21_u1_s1_k1-234"));
     s.setAttributes(attrs);
 
     return s;

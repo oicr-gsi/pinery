@@ -149,8 +149,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
       final List<Sample> reversedParents = new ArrayList<>(parentSamples);
       Collections.reverse(reversedParents);
       for (Sample parentSample : reversedParents) {
-        for (Entry<String, Collection<String>> e :
-            processSampleAttributes(parentSample).asMap().entrySet()) {
+        for (Entry<String, Collection<String>> e : processSampleAttributes(parentSample).asMap().entrySet()) {
           attrsAll.replaceValues(e.getKey(), e.getValue());
         }
       }
@@ -162,8 +161,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
     }
 
     // collect all run sample attributes
-    for (Entry<String, Collection<String>> e :
-        processSampleAttributes(runSample).asMap().entrySet()) {
+    for (Entry<String, Collection<String>> e : processSampleAttributes(runSample).asMap().entrySet()) {
       attrsAll.replaceValues(e.getKey(), e.getValue());
     }
 
@@ -315,14 +313,14 @@ public class DefaultSampleProvenance implements SampleProvenance {
   @Override
   public Boolean getSkip() {
     if ((sequencerRun.getStatus() == null
-            || "Not Ready".equals(sequencerRun.getStatus().getState()))
+        || "Not Ready".equals(sequencerRun.getStatus().getState()))
         && lane.isAnalysisSkipped() == null
         && (runSample.getStatus() == null
             || "Not Ready".equals(runSample.getStatus().getState()))) {
       return null;
     } else {
       return (sequencerRun.getStatus() != null
-              && "Failed".equals(sequencerRun.getStatus().getState()))
+          && "Failed".equals(sequencerRun.getStatus().getState()))
           || Boolean.TRUE.equals(lane.isAnalysisSkipped())
           || (runSample.getStatus() != null && "Failed".equals(runSample.getStatus().getState()));
     }
@@ -353,6 +351,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
     sb.append(getLaneNumber());
     sb.append(getLaneAttributes());
     sb.append(getIusTag());
+    sb.append(getBatchIds());
     String s = sb.toString();
     return Hashing.sha256().hashString(s, StandardCharsets.UTF_8).toString();
   }
@@ -361,20 +360,20 @@ public class DefaultSampleProvenance implements SampleProvenance {
   public ZonedDateTime getLastModified() {
     return Util.optionalDateToZDT(
         Stream.concat(
-                Stream.of(
-                    sequencerRun == null ? null : sequencerRun.getCreatedDate(),
-                    sequencerRun == null ? null : sequencerRun.getCompletionDate(),
-                    sequencerRun == null ? null : sequencerRun.getModified(),
-                    runSample == null ? null : runSample.getCreated(),
-                    runSample == null ? null : runSample.getModified(),
-                    sample == null ? null : sample.getCreated(),
-                    sample == null ? null : sample.getModified(),
-                    lane == null ? null : lane.getPoolCreated(),
-                    lane == null ? null : lane.getPoolModified()),
-                parentSamples == null
-                    ? Stream.empty()
-                    : parentSamples.stream()
-                        .flatMap(p -> Stream.of(p.getCreated(), p.getModified())))
+            Stream.of(
+                sequencerRun == null ? null : sequencerRun.getCreatedDate(),
+                sequencerRun == null ? null : sequencerRun.getCompletionDate(),
+                sequencerRun == null ? null : sequencerRun.getModified(),
+                runSample == null ? null : runSample.getCreated(),
+                runSample == null ? null : runSample.getModified(),
+                sample == null ? null : sample.getCreated(),
+                sample == null ? null : sample.getModified(),
+                lane == null ? null : lane.getPoolCreated(),
+                lane == null ? null : lane.getPoolModified()),
+            parentSamples == null
+                ? Stream.empty()
+                : parentSamples.stream()
+                    .flatMap(p -> Stream.of(p.getCreated(), p.getModified())))
             .filter(Objects::nonNull)
             .max(Date::compareTo));
   }
@@ -465,5 +464,31 @@ public class DefaultSampleProvenance implements SampleProvenance {
     }
 
     return attrs;
+  }
+
+  @Override
+  public List<String> getBatchIds() {
+    // Should return an empty list if there are none. Null is used to omit the attribue from old
+    // provenance versons (see SampleProvenanceDto and SimpleSampleProvenance)
+    List<String> batchIds = new ArrayList<>();
+    addBatchId(sample, batchIds);
+    if (parentSamples != null) {
+      for (Sample parent : parentSamples) {
+        addBatchId(parent, batchIds);
+      }
+    }
+    return batchIds;
+  }
+
+  private static void addBatchId(Sample sample, List<String> list) {
+    if (sample.getAttributes() == null) {
+      return;
+    }
+    Attribute attribute = sample.getAttributes().stream()
+        .filter(x -> "Batch ID".equals(x.getName()))
+        .findFirst().orElse(null);
+    if (attribute != null) {
+      list.add(attribute.getValue());
+    }
   }
 }
