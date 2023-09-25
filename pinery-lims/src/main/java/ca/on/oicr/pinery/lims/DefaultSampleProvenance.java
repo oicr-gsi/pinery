@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -484,11 +485,9 @@ public class DefaultSampleProvenance implements SampleProvenance {
     if (sample.getAttributes() == null) {
       return;
     }
-    Attribute attribute = sample.getAttributes().stream()
+    sample.getAttributes().stream()
         .filter(x -> "Batch ID".equals(x.getName()))
-        .findFirst().orElse(null);
-    if (attribute != null) {
-      list.add(attribute.getValue());
-    }
+        .sorted(Comparator.comparing(Attribute::getValue))
+        .forEach(x -> list.add(x.getValue()));
   }
 }
