@@ -15,7 +15,7 @@
         <github.user>seqprodbio</github.user>
         <github.repo>pinery</github.repo>
 
-        <provenance.version>1.3.2-SNAPSHOT</provenance.version>
+        <provenance.version>1.4.0</provenance.version>
         <spring.version>5.3.27</spring.version>
         <resteasy.version>3.0.13.Final</resteasy.version>
         <server-utils.version>1.0.1</server-utils.version>
