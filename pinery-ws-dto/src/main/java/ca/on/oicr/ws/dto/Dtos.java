@@ -577,6 +577,20 @@ public final class Dtos {
     return to;
   }
 
+  public static AssayTargetsDto asDto(AssayTargets from) {
+    AssayTargetsDto to = new AssayTargetsDto();
+    to.setCaseDays(from.getCaseDays());
+    to.setReceiptDays(from.getReceiptDays());
+    to.setExtractionDays(from.getExtractionDays());
+    to.setLibraryPreparationDays(from.getLibraryPreparationDays());
+    to.setLibraryQualificationDays(from.getLibraryQualificationDays());
+    to.setFullDepthSequencingDays(from.getFullDepthSequencingDays());
+    to.setAnalysisReviewDays(from.getAnalysisReviewDays());
+    to.setReleaseApprovalDays(from.getReleaseApprovalDays());
+    to.setReleaseDays(from.getReleaseDays());
+    return to;
+  }
+
   public static AssayDto asDto(Assay from) {
     AssayDto to = new AssayDto();
     to.setId(from.getId());
@@ -588,6 +602,9 @@ public final class Dtos {
     }
     if (from.getMetrics() != null && !from.getMetrics().isEmpty()) {
       to.setMetrics(from.getMetrics().stream().map(Dtos::asDto).collect(Collectors.toSet()));
+    }
+    if (from.getTargets() != null) {
+      to.setTargets(asDto(from.getTargets()));
     }
     return to;
   }
