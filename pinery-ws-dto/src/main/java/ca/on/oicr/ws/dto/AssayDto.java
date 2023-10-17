@@ -16,6 +16,7 @@ public class AssayDto {
   private String version;
   private Set<AssayTestDto> tests;
   private Set<AssayMetricDto> metrics;
+  private AssayTargetsDto targets;
 
   public Integer getId() {
     return id;
@@ -65,9 +66,17 @@ public class AssayDto {
     this.metrics = metrics;
   }
 
+  public AssayTargetsDto getTargets() {
+    return targets;
+  }
+
+  public void setTargets(AssayTargetsDto targets) {
+    this.targets = targets;
+  }
+
   @Override
   public int hashCode() {
-    return Objects.hash(description, id, metrics, name, tests, version);
+    return Objects.hash(description, id, metrics, name, tests, version, targets);
   }
 
   @Override
@@ -81,6 +90,7 @@ public class AssayDto {
         && Objects.equals(metrics, other.metrics)
         && Objects.equals(name, other.name)
         && Objects.equals(tests, other.tests)
-        && Objects.equals(version, other.version);
+        && Objects.equals(version, other.version)
+        && Objects.equals(targets, other.targets);
   }
 }

@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.lims;
 
 import ca.on.oicr.pinery.api.Assay;
 import ca.on.oicr.pinery.api.AssayMetric;
+import ca.on.oicr.pinery.api.AssayTargets;
 import ca.on.oicr.pinery.api.AssayTest;
 import java.util.HashSet;
 import java.util.Objects;
@@ -15,6 +16,7 @@ public class DefaultAssay implements Assay {
   private String version;
   private Set<AssayTest> tests;
   private Set<AssayMetric> metrics;
+  private AssayTargets targets;
 
   @Override
   public Integer getId() {
@@ -90,6 +92,14 @@ public class DefaultAssay implements Assay {
       metrics = new HashSet<>();
     }
     metrics.add(metric);
+  }
+
+  public AssayTargets getTargets() {
+    return targets;
+  }
+
+  public void setTargets(AssayTargets targets) {
+    this.targets = targets;
   }
 
   @Override

@@ -31,4 +31,8 @@ public interface Assay {
   void setMetrics(Set<AssayMetric> metrics);
 
   void addMetric(AssayMetric metric);
+
+  AssayTargets getTargets();
+
+  void setTargets(AssayTargets targets);
 }
