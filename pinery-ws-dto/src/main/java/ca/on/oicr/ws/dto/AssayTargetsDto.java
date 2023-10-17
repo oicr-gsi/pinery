@@ -61,7 +61,7 @@ public class AssayTargetsDto {
     this.libraryQualificationDays = libraryQualificationDays;
   }
 
-  @JsonProperty("full-depth_sequencing_days")
+  @JsonProperty("full_depth_sequencing_days")
   public Integer getFullDepthSequencingDays() {
     return fullDepthSequencingDays;
   }
