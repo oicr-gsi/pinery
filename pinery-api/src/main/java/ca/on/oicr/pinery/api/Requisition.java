@@ -42,4 +42,10 @@ public interface Requisition {
   String getStopReason();
 
   void setStopReason(String stopReason);
+
+  List<RequisitionPause> getPauses();
+
+  void setPauses(List<RequisitionPause> pauses);
+
+  void addPause(RequisitionPause pause);
 }
