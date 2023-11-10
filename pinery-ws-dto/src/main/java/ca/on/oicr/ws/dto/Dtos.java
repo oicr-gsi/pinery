@@ -358,9 +358,11 @@ public final class Dtos {
       dto.setPoolStatus(asDto(from.getPoolStatus()));
     }
     dto.setPoolCreatedById(from.getPoolCreatedById());
-    if (from.getPoolCreated() != null) dto.setPoolCreated(format(from.getPoolCreated()));
+    if (from.getPoolCreated() != null)
+      dto.setPoolCreated(format(from.getPoolCreated()));
     dto.setPoolModifiedById(from.getPoolModifiedById());
-    if (from.getPoolModified() != null) dto.setPoolModified(format(from.getPoolModified()));
+    if (from.getPoolModified() != null)
+      dto.setPoolModified(format(from.getPoolModified()));
     if (from.getRunSample() != null && !from.getRunSample().isEmpty()) {
       dto.setSamples(asDto3(from.getRunSample()));
     }
@@ -618,6 +620,14 @@ public final class Dtos {
     return to;
   }
 
+  public static RequisitionPauseDto asDto(RequisitionPause from) {
+    RequisitionPauseDto to = new RequisitionPauseDto();
+    to.setStartDate(format(from.getStartDate()));
+    to.setEndDate(format(from.getEndDate()));
+    to.setReason(from.getReason());
+    return to;
+  }
+
   public static RequisitionDto asDto(Requisition from) {
     RequisitionDto to = new RequisitionDto();
     to.setId(from.getId());
@@ -630,7 +640,10 @@ public final class Dtos {
       to.setSupplementalSampleIds(new HashSet<>(from.getSupplementalSampleIds()));
     }
     if (from.getSignOffs() != null) {
-      to.setSignOffs(from.getSignOffs().stream().map(Dtos::asDto).collect(Collectors.toList()));
+      to.setSignOffs(from.getSignOffs().stream().map(Dtos::asDto).toList());
+    }
+    if (from.getPauses() != null) {
+      to.setPauses(from.getPauses().stream().map(Dtos::asDto).toList());
     }
     to.setStopped(from.isStopped());
     to.setStopReason(from.getStopReason());

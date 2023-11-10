@@ -20,6 +20,7 @@ public class RequisitionDto {
   private List<SignOffDto> signOffs;
   private boolean stopped = false;
   private String stopReason;
+  private List<RequisitionPauseDto> pauses;
 
   public Integer getId() {
     return id;
@@ -90,16 +91,27 @@ public class RequisitionDto {
     this.stopReason = stopReason;
   }
 
+  public List<RequisitionPauseDto> getPauses() {
+    return pauses;
+  }
+
+  public void setPauses(List<RequisitionPauseDto> pauses) {
+    this.pauses = pauses;
+  }
+
   @Override
   public int hashCode() {
-    return Objects.hash(assayId, id, name, sampleIds, signOffs, stopped, stopReason);
+    return Objects.hash(assayId, id, name, sampleIds, signOffs, stopped, stopReason, pauses);
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     RequisitionDto other = (RequisitionDto) obj;
     return Objects.equals(assayId, other.assayId)
         && Objects.equals(id, other.id)
@@ -107,6 +119,7 @@ public class RequisitionDto {
         && Objects.equals(sampleIds, other.sampleIds)
         && Objects.equals(signOffs, other.signOffs)
         && Objects.equals(stopped, other.stopped)
-        && Objects.equals(stopReason, other.stopReason);
+        && Objects.equals(stopReason, other.stopReason)
+        && Objects.equals(pauses, other.pauses);
   }
 }
