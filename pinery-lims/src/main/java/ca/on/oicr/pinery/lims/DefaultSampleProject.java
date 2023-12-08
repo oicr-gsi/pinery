@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.lims;
 
 import ca.on.oicr.pinery.api.SampleProject;
 import java.util.Date;
+import java.util.Set;
 
 public class DefaultSampleProject implements SampleProject {
 
@@ -20,6 +21,7 @@ public class DefaultSampleProject implements SampleProject {
   private Integer samplesExpected;
   private String contactName;
   private String contactEmail;
+  private Set<String> deliverables;
 
   @Override
   public String getName() {
@@ -172,5 +174,15 @@ public class DefaultSampleProject implements SampleProject {
   @Override
   public void setContactEmail(String contactEmail) {
     this.contactEmail = contactEmail;
+  }
+
+  @Override
+  public Set<String> getDeliverables() {
+    return deliverables;
+  }
+
+  @Override
+  public void setDeliverables(Set<String> deliverables) {
+    this.deliverables = deliverables;
   }
 }

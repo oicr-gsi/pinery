@@ -1,5 +1,7 @@
 package ca.on.oicr.ws.dto;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -24,6 +26,7 @@ public class SampleProjectDto {
   private Integer samplesExpected;
   private String contactName;
   private String contactEmail;
+  private Set<String> deliverables;
 
   public String getName() {
     return name;
@@ -153,6 +156,14 @@ public class SampleProjectDto {
     this.contactEmail = contactEmail;
   }
 
+  public Set<String> getDeliverables() {
+    return deliverables;
+  }
+
+  public void setDeliverables(Set<String> deliverables) {
+    this.deliverables = deliverables;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -176,48 +187,77 @@ public class SampleProjectDto {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     SampleProjectDto other = (SampleProjectDto) obj;
     if (archivedCount == null) {
-      if (other.archivedCount != null) return false;
-    } else if (!archivedCount.equals(other.archivedCount)) return false;
+      if (other.archivedCount != null)
+        return false;
+    } else if (!archivedCount.equals(other.archivedCount))
+      return false;
     if (count == null) {
-      if (other.count != null) return false;
-    } else if (!count.equals(other.count)) return false;
+      if (other.count != null)
+        return false;
+    } else if (!count.equals(other.count))
+      return false;
     if (earliest == null) {
-      if (other.earliest != null) return false;
-    } else if (!earliest.equals(other.earliest)) return false;
+      if (other.earliest != null)
+        return false;
+    } else if (!earliest.equals(other.earliest))
+      return false;
     if (latest == null) {
-      if (other.latest != null) return false;
-    } else if (!latest.equals(other.latest)) return false;
+      if (other.latest != null)
+        return false;
+    } else if (!latest.equals(other.latest))
+      return false;
     if (name == null) {
-      if (other.name != null) return false;
-    } else if (!name.equals(other.name)) return false;
-    if (active != other.active) return false;
-    if (secondaryNamingScheme != other.secondaryNamingScheme) return false;
+      if (other.name != null)
+        return false;
+    } else if (!name.equals(other.name))
+      return false;
+    if (active != other.active)
+      return false;
+    if (secondaryNamingScheme != other.secondaryNamingScheme)
+      return false;
     if (createdDate == null) {
-      if (other.createdDate != null) return false;
-    } else if (!createdDate.equals(other.createdDate)) return false;
+      if (other.createdDate != null)
+        return false;
+    } else if (!createdDate.equals(other.createdDate))
+      return false;
     if (rebNumber == null) {
-      if (other.rebNumber != null) return false;
-    } else if (!rebNumber.equals(other.rebNumber)) return false;
+      if (other.rebNumber != null)
+        return false;
+    } else if (!rebNumber.equals(other.rebNumber))
+      return false;
     if (rebExpiry == null) {
-      if (other.rebExpiry != null) return false;
-    } else if (!rebExpiry.equals(other.rebExpiry)) return false;
+      if (other.rebExpiry != null)
+        return false;
+    } else if (!rebExpiry.equals(other.rebExpiry))
+      return false;
     if (description == null) {
-      if (other.description != null) return false;
-    } else if (!description.equals(other.description)) return false;
+      if (other.description != null)
+        return false;
+    } else if (!description.equals(other.description))
+      return false;
     if (samplesExpected == null) {
-      if (other.samplesExpected != null) return false;
-    } else if (!samplesExpected.equals(other.samplesExpected)) return false;
+      if (other.samplesExpected != null)
+        return false;
+    } else if (!samplesExpected.equals(other.samplesExpected))
+      return false;
     if (contactName == null) {
-      if (other.contactName != null) return false;
-    } else if (!contactName.equals(other.contactName)) return false;
+      if (other.contactName != null)
+        return false;
+    } else if (!contactName.equals(other.contactName))
+      return false;
     if (contactEmail == null) {
-      if (other.contactEmail != null) return false;
-    } else if (!contactEmail.equals(other.contactEmail)) return false;
+      if (other.contactEmail != null)
+        return false;
+    } else if (!contactEmail.equals(other.contactEmail))
+      return false;
     return true;
   }
 
