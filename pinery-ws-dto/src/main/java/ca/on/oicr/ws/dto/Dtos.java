@@ -156,6 +156,9 @@ public final class Dtos {
     dto.setSamplesExpected(from.getSamplesExpected());
     dto.setContactName(from.getContactName());
     dto.setContactEmail(from.getContactEmail());
+    if (from.getDeliverables() != null) {
+      dto.setDeliverables(from.getDeliverables().stream().collect(Collectors.toSet()));
+    }
     return dto;
   }
 

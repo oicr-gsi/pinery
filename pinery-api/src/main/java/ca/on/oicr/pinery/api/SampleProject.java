@@ -1,66 +1,71 @@
 package ca.on.oicr.pinery.api;
 
 import java.util.Date;
+import java.util.Set;
 
 public interface SampleProject {
 
-  public String getName();
+  String getName();
 
-  public void setName(String name);
+  void setName(String name);
 
-  public Integer getCount();
+  Integer getCount();
 
-  public void setCount(Integer count);
+  void setCount(Integer count);
 
-  public Integer getArchivedCount();
+  Integer getArchivedCount();
 
-  public void setArchivedCount(Integer count);
+  void setArchivedCount(Integer count);
 
-  public Date getEarliest();
+  Date getEarliest();
 
-  public void setEarliest(Date earliest);
+  void setEarliest(Date earliest);
 
-  public Date getLatest();
+  Date getLatest();
 
-  public void setLatest(Date latest);
+  void setLatest(Date latest);
 
-  public boolean isActive();
+  boolean isActive();
 
-  public void setActive(boolean active);
+  void setActive(boolean active);
 
-  public String getPipeline();
+  String getPipeline();
 
-  public void setPipeline(String pipeline);
+  void setPipeline(String pipeline);
 
-  public boolean isSecondaryNamingScheme();
+  boolean isSecondaryNamingScheme();
 
-  public void setSecondaryNamingScheme(boolean secondaryNamingScheme);
+  void setSecondaryNamingScheme(boolean secondaryNamingScheme);
 
-  public Date getCreated();
+  Date getCreated();
 
-  public void setCreated(Date created);
+  void setCreated(Date created);
 
-  public String getRebNumber();
+  String getRebNumber();
 
-  public void setRebNumber(String rebNumber);
+  void setRebNumber(String rebNumber);
 
-  public Date getRebExpiry();
+  Date getRebExpiry();
 
-  public void setRebExpiry(Date rebExpiry);
+  void setRebExpiry(Date rebExpiry);
 
-  public String getDescription();
+  String getDescription();
 
-  public void setDescription(String description);
+  void setDescription(String description);
 
-  public Integer getSamplesExpected();
+  Integer getSamplesExpected();
 
-  public void setSamplesExpected(Integer samplesExpected);
+  void setSamplesExpected(Integer samplesExpected);
 
-  public String getContactName();
+  String getContactName();
 
-  public void setContactName(String contactName);
+  void setContactName(String contactName);
 
-  public String getContactEmail();
+  String getContactEmail();
 
-  public void setContactEmail(String contactEmail);
+  void setContactEmail(String contactEmail);
+
+  Set<String> getDeliverables();
+
+  void setDeliverables(Set<String> deliverables);
 }
