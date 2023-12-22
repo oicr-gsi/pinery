@@ -38,24 +38,22 @@ public class Cache implements DataProvider {
 
   private static final Logger log = LoggerFactory.getLogger(Cache.class);
 
-  private static final Histogram cacheUpdateTime =
-      Histogram.build()
-          .name("pinery_cache_update_time")
-          .help("Time to update the cache (in seconds)")
-          .buckets(60, 180, 300, 600, 900, 1200, 1800, 3600)
-          .register();
-  private static final Gauge cacheUpdateFailures =
-      Gauge.build()
-          .name("pinery_cache_update_failures")
-          .help("Number of consecutive cache update failures")
-          .register();
-  private static final Gauge cacheLastUpdated =
-      Gauge.build()
-          .name("pinery_cache_last_updated")
-          .help("Timestamp of the last cache update (completion)")
-          .register();
+  private static final Histogram cacheUpdateTime = Histogram.build()
+      .name("pinery_cache_update_time")
+      .help("Time to update the cache (in seconds)")
+      .buckets(60, 180, 300, 600, 900, 1200, 1800, 3600)
+      .register();
+  private static final Gauge cacheUpdateFailures = Gauge.build()
+      .name("pinery_cache_update_failures")
+      .help("Number of consecutive cache update failures")
+      .register();
+  private static final Gauge cacheLastUpdated = Gauge.build()
+      .name("pinery_cache_last_updated")
+      .help("Timestamp of the last cache update (completion)")
+      .register();
 
-  @Autowired private Lims lims;
+  @Autowired
+  private Lims lims;
 
   private List<Sample> samples;
   private List<SampleProject> projects;
@@ -120,25 +118,24 @@ public class Cache implements DataProvider {
       Histogram.Timer cacheUpdateTimer = cacheUpdateTime.startTimer();
       try {
         log.debug("Attempting update");
+        List<Requisition> newRequisitions = lims.getRequisitions();
+        List<Run> newRuns = lims.getRuns(null);
+        List<Order> newOrders = lims.getOrders();
+        List<Box> newBoxes = lims.getBoxes();
         List<Sample> newSamples = lims.getSamples(null, null, null, null, null);
         List<SampleProject> newProjects = lims.getSampleProjects();
         List<User> newUsers = lims.getUsers();
-        List<Order> newOrders = lims.getOrders();
-        List<Run> newRuns = lims.getRuns(null);
         List<Type> newSampleTypes = lims.getTypes();
-        List<AttributeName> newSampleAttributes = lims.getAttributeNames();
         List<ChangeLog> newChangeLogs = lims.getChangeLogs();
         List<Instrument> newInstruments = lims.getInstruments();
         List<InstrumentModel> newInstrumentModels = lims.getInstrumentModels();
-        List<Box> newBoxes = lims.getBoxes();
         List<Assay> newAssays = lims.getAssays();
-        List<Requisition> newRequisitions = lims.getRequisitions();
+        List<AttributeName> newSampleAttributes = lims.getAttributeNames();
 
-        List<SampleProvenance> newSampleProvenance =
-            ProvenanceUtils.buildSampleProvenance(
-                newProjects, newInstruments, newInstrumentModels, newOrders, newSamples, newRuns);
-        List<LaneProvenance> newLaneProvenance =
-            ProvenanceUtils.buildLaneProvenance(newInstruments, newInstrumentModels, newRuns);
+        List<SampleProvenance> newSampleProvenance = ProvenanceUtils.buildSampleProvenance(
+            newProjects, newInstruments, newInstrumentModels, newOrders, newSamples, newRuns);
+        List<LaneProvenance> newLaneProvenance = ProvenanceUtils.buildLaneProvenance(newInstruments,
+            newInstrumentModels, newRuns);
 
         synchronized (this) {
           this.samples = newSamples;
@@ -275,10 +272,9 @@ public class Cache implements DataProvider {
     } else {
       return runs.stream()
           .filter(
-              run ->
-                  run.getSamples().stream()
-                      .flatMap(pos -> pos.getRunSample().stream())
-                      .anyMatch(sample -> sampleIds.contains(sample.getId())))
+              run -> run.getSamples().stream()
+                  .flatMap(pos -> pos.getRunSample().stream())
+                  .anyMatch(sample -> sampleIds.contains(sample.getId())))
           .collect(Collectors.toList());
     }
   }
