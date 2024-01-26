@@ -16,7 +16,7 @@
         <github.repo>pinery</github.repo>
 
         <provenance.version>1.4.0</provenance.version>
-        <spring.version>5.3.27</spring.version>
+        <spring.version>6.0.15</spring.version>
         <resteasy.version>3.14.0.Final</resteasy.version>
         <server-utils.version>1.0.1</server-utils.version>
         <springfox.version>2.9.2</springfox.version>
