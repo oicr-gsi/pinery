@@ -1,5 +1,6 @@
 package ca.on.oicr.ws.dto;
 
+import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -27,6 +28,7 @@ public class SampleProjectDto {
   private String contactName;
   private String contactEmail;
   private Set<String> deliverables;
+  private Boolean analysisReviewRequired;
 
   public String getName() {
     return name;
@@ -164,6 +166,15 @@ public class SampleProjectDto {
     this.deliverables = deliverables;
   }
 
+  public Boolean getAnalysisReviewRequired() {
+    return analysisReviewRequired;
+  }
+
+  @JsonProperty("analysis_review_required")
+  public void setAnalysisReviewRequired(Boolean analysisReviewRequired) {
+    this.analysisReviewRequired = analysisReviewRequired;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -182,6 +193,7 @@ public class SampleProjectDto {
     result = prime * result + ((samplesExpected == null) ? 0 : samplesExpected.hashCode());
     result = prime * result + ((contactName == null) ? 0 : contactName.hashCode());
     result = prime * result + ((contactEmail == null) ? 0 : contactEmail.hashCode());
+    result = prime * result + ((analysisReviewRequired == null) ? 0 : analysisReviewRequired.hashCode());
     return result;
   }
 
@@ -258,6 +270,9 @@ public class SampleProjectDto {
         return false;
     } else if (!contactEmail.equals(other.contactEmail))
       return false;
+    if (!Objects.equals(analysisReviewRequired, other.analysisReviewRequired)) {
+      return false;
+    }
     return true;
   }
 

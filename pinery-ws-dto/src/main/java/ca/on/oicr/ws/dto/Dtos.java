@@ -159,6 +159,7 @@ public final class Dtos {
     if (from.getDeliverables() != null) {
       dto.setDeliverables(from.getDeliverables().stream().collect(Collectors.toSet()));
     }
+    dto.setAnalysisReviewRequired(from.getAnalysisReviewRequired());
     return dto;
   }
 
