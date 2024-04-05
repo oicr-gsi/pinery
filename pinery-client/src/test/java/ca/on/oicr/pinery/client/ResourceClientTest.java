@@ -2,15 +2,14 @@ package ca.on.oicr.pinery.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class ResourceClientTest {
 
@@ -20,8 +19,6 @@ public class ResourceClientTest {
       super(String.class, String[].class, mainClient);
     }
   }
-
-  @Rule public final ExpectedException exception = ExpectedException.none();
 
   @Test
   public void testGetResource() throws HttpResponseException {
@@ -42,8 +39,7 @@ public class ResourceClientTest {
     when(pineryClientMock.callPinery("Test")).thenReturn(responseMock);
 
     ResourceClient<String> resourceClient = new TestResourceClient(pineryClientMock);
-    exception.expect(HttpResponseException.class);
-    resourceClient.getResource("Test");
+    assertThrows(HttpResponseException.class, () -> resourceClient.getResource("Test"));
   }
 
   @Test
@@ -53,15 +49,14 @@ public class ResourceClientTest {
         .thenThrow(new HttpResponseException(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
 
     ResourceClient<String> resourceClient = new TestResourceClient(pineryClientMock);
-    exception.expect(HttpResponseException.class);
-    resourceClient.getResource("Test");
+    assertThrows(HttpResponseException.class, () -> resourceClient.getResource("Test"));
   }
 
   @Test
   public void testGetResourceList() throws HttpResponseException {
     PineryClient pineryClientMock = mock(PineryClient.class);
     Response responseMock = mock(Response.class);
-    String[] data = {"Polo1", "Polo2"};
+    String[] data = { "Polo1", "Polo2" };
 
     when(responseMock.readEntity(String[].class)).thenReturn(data);
     when(pineryClientMock.callPinery("Marco")).thenReturn(responseMock);
@@ -94,7 +89,6 @@ public class ResourceClientTest {
         .thenThrow(new HttpResponseException(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
 
     ResourceClient<String> resourceClient = new TestResourceClient(pineryClientMock);
-    exception.expect(HttpResponseException.class);
-    resourceClient.getResourceList("Test");
+    assertThrows(HttpResponseException.class, () -> resourceClient.getResourceList("Test"));
   }
 }

@@ -1,6 +1,7 @@
 package ca.on.oicr.ws.dto;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 
 import ca.on.oicr.pinery.api.Attribute;
