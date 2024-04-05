@@ -22,6 +22,7 @@ public class DefaultSampleProject implements SampleProject {
   private String contactName;
   private String contactEmail;
   private Set<String> deliverables;
+  private Boolean analysisReviewRequired;
 
   @Override
   public String getName() {
@@ -184,5 +185,15 @@ public class DefaultSampleProject implements SampleProject {
   @Override
   public void setDeliverables(Set<String> deliverables) {
     this.deliverables = deliverables;
+  }
+
+  @Override
+  public Boolean getAnalysisReviewRequired() {
+    return analysisReviewRequired;
+  }
+
+  @Override
+  public void setAnalysisReviewRequired(Boolean analysisReviewRequired) {
+    this.analysisReviewRequired = analysisReviewRequired;
   }
 }

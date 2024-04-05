@@ -68,4 +68,8 @@ public interface SampleProject {
   Set<String> getDeliverables();
 
   void setDeliverables(Set<String> deliverables);
+
+  Boolean getAnalysisReviewRequired();
+
+  void setAnalysisReviewRequired(Boolean analysisReviewRequired);
 }
