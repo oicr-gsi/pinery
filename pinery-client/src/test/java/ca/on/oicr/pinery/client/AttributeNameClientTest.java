@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -11,13 +12,9 @@ import ca.on.oicr.ws.dto.AttributeNameDto;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class AttributeNameClientTest {
-
-  @Rule public final ExpectedException exception = ExpectedException.none();
 
   private PineryClient pineryClientMock;
   private AttributeNameClient client;
@@ -59,7 +56,6 @@ public class AttributeNameClientTest {
   public void testGetAllBadStatus() throws HttpResponseException {
     doThrow(new HttpResponseException()).when(client).getResourceList("sample/attributenames");
 
-    exception.expect(HttpResponseException.class);
-    client.all();
+    assertThrows(HttpResponseException.class, () -> client.all());
   }
 }

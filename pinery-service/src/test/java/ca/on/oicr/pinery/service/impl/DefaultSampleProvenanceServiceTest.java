@@ -65,7 +65,7 @@ public class DefaultSampleProvenanceServiceTest {
 
   @Before
   public void setup() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
 
     samples = new ArrayList<>();
 
@@ -74,14 +74,14 @@ public class DefaultSampleProvenanceServiceTest {
 
     String parentSampleId = "2";
     parentSample = new DefaultSample();
-    parentSample.setAttributes(Collections.<Attribute> emptySet());
+    parentSample.setAttributes(Collections.<Attribute>emptySet());
     parentSample.setId(parentSampleId);
     samples.add(parentSample);
 
     sample = new DefaultSample();
     sample.setProject("TEST_PROJECT");
     sample.setName("TEST_SAMPLE");
-    sample.setAttributes(Collections.<Attribute> emptySet());
+    sample.setAttributes(Collections.<Attribute>emptySet());
     sample.setId(sampleId);
     sample.setModified(Date.from(ZonedDateTime.parse("2015-01-01T00:00:00.000Z").toInstant()));
     samples.add(sample);
@@ -92,7 +92,7 @@ public class DefaultSampleProvenanceServiceTest {
     runSample = new DefaultRunSample();
     runSample.setId(sampleId);
     runSample.setBarcode("ATCGATCG");
-    runSample.setAttributes(Collections.<Attribute> emptySet());
+    runSample.setAttributes(Collections.<Attribute>emptySet());
 
     lane = new DefaultRunPosition();
     lane.setPosition(1);
@@ -107,7 +107,7 @@ public class DefaultSampleProvenanceServiceTest {
     orderSample = new DefaultOrderSample();
     orderSample.setId(sampleId);
     orderSample.setBarcode("ATCGATCG");
-    orderSample.setAttributes(Collections.<Attribute> emptySet());
+    orderSample.setAttributes(Collections.<Attribute>emptySet());
 
     order = new DefaultOrder();
     order.setSample(ImmutableSet.of(orderSample));
@@ -238,7 +238,7 @@ public class DefaultSampleProvenanceServiceTest {
     parentSample = new DefaultSample();
     parentSample.setName(parentExpected);
     parentSample.setId("2");
-    parentSample.setAttributes(Collections.<Attribute> emptySet());
+    parentSample.setAttributes(Collections.<Attribute>emptySet());
     samples.add(parentSample);
     sample.setParents(Sets.newHashSet(parentSample.getId()));
 
@@ -251,7 +251,7 @@ public class DefaultSampleProvenanceServiceTest {
     Sample rootSample = new DefaultSample();
     rootSample.setName(rootExpected);
     rootSample.setId("3");
-    rootSample.setAttributes(Collections.<Attribute> emptySet());
+    rootSample.setAttributes(Collections.<Attribute>emptySet());
     samples.add(rootSample);
     parentSample.setParents(Sets.newHashSet(rootSample.getId()));
 
@@ -271,13 +271,13 @@ public class DefaultSampleProvenanceServiceTest {
     Sample p1 = new DefaultSample();
     p1.setName(parent1);
     p1.setId("10");
-    p1.setAttributes(Collections.<Attribute> emptySet());
+    p1.setAttributes(Collections.<Attribute>emptySet());
     samples.add(p1);
 
     Sample p2 = new DefaultSample();
     p2.setName(parent2);
     p2.setId("11");
-    p2.setAttributes(Collections.<Attribute> emptySet());
+    p2.setAttributes(Collections.<Attribute>emptySet());
     samples.add(p2);
 
     sample.setParents(Sets.newHashSet(p1.getId(), p2.getId()));
@@ -285,7 +285,7 @@ public class DefaultSampleProvenanceServiceTest {
     Sample r = new DefaultSample();
     r.setName(root);
     r.setId("12");
-    r.setAttributes(Collections.<Attribute> emptySet());
+    r.setAttributes(Collections.<Attribute>emptySet());
     samples.add(r);
     p1.setParents(Sets.newHashSet(r.getId()));
     p2.setParents(Sets.newHashSet(r.getId()));
@@ -306,13 +306,13 @@ public class DefaultSampleProvenanceServiceTest {
     Sample r1 = new DefaultSample();
     r1.setName(root1);
     r1.setId("10");
-    r1.setAttributes(Collections.<Attribute> emptySet());
+    r1.setAttributes(Collections.<Attribute>emptySet());
     samples.add(r1);
 
     Sample r2 = new DefaultSample();
     r2.setName(root2);
     r2.setId("11");
-    r2.setAttributes(Collections.<Attribute> emptySet());
+    r2.setAttributes(Collections.<Attribute>emptySet());
     samples.add(r2);
 
     sample.setParents(Sets.newHashSet(r1.getId(), r2.getId()));

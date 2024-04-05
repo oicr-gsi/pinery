@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -11,13 +12,9 @@ import ca.on.oicr.ws.dto.ChangeLogDto;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class ChangeLogClientTest {
-
-  @Rule public final ExpectedException exception = ExpectedException.none();
 
   private PineryClient pineryClientMock;
   private ChangeLogClient client;
@@ -57,8 +54,7 @@ public class ChangeLogClientTest {
   public void testGetAllBadStatus() throws HttpResponseException {
     doThrow(new HttpResponseException()).when(client).getResourceList("sample/changelogs");
 
-    exception.expect(HttpResponseException.class);
-    client.all();
+    assertThrows(HttpResponseException.class, () -> client.all());
   }
 
   @Test
@@ -75,7 +71,6 @@ public class ChangeLogClientTest {
   public void testGetByIdBadStatus() throws HttpResponseException {
     doThrow(new HttpResponseException()).when(client).getResource("sample/22/changelog");
 
-    exception.expect(HttpResponseException.class);
-    client.forSample(22);
+    assertThrows(HttpResponseException.class, () -> client.forSample(22));
   }
 }

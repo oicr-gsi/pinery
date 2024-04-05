@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -11,13 +12,9 @@ import ca.on.oicr.ws.dto.OrderDto;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class OrderClientTest {
-
-  @Rule public final ExpectedException exception = ExpectedException.none();
 
   private PineryClient pineryClientMock;
   private OrderClient client;
@@ -41,8 +38,8 @@ public class OrderClientTest {
 
     List<OrderDto> results = client.all();
     assertEquals(2, results.size());
-    assertEquals(new Integer(111), results.get(0).getId());
-    assertEquals(new Integer(222), results.get(1).getId());
+    assertEquals(Integer.valueOf(111), results.get(0).getId());
+    assertEquals(Integer.valueOf(222), results.get(1).getId());
   }
 
   @Test
@@ -57,8 +54,7 @@ public class OrderClientTest {
   public void testGetAllBadStatus() throws HttpResponseException {
     doThrow(new HttpResponseException()).when(client).getResourceList("orders");
 
-    exception.expect(HttpResponseException.class);
-    client.all();
+    assertThrows(HttpResponseException.class, () -> client.all());
   }
 
   @Test
@@ -68,14 +64,13 @@ public class OrderClientTest {
     doReturn(order).when(client).getResource("order/27");
 
     OrderDto result = client.byId(27);
-    assertEquals(new Integer(27), result.getId());
+    assertEquals(Integer.valueOf(27), result.getId());
   }
 
   @Test
   public void testGetByIdBadStatus() throws HttpResponseException {
     doThrow(new HttpResponseException()).when(client).getResource("order/27");
 
-    exception.expect(HttpResponseException.class);
-    client.byId(27);
+    assertThrows(HttpResponseException.class, () -> client.byId(27));
   }
 }

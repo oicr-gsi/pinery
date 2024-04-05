@@ -1,7 +1,7 @@
 package ca.on.oicr.pinery.ws;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 
 import ca.on.oicr.pinery.api.Order;

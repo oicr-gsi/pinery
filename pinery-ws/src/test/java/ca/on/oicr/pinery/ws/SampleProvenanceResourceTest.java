@@ -64,9 +64,9 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
     getMockMvc()
         .perform(
-            get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
+            get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string("[ ]"))
         .andDo(print())
         .andReturn();
@@ -83,9 +83,9 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
     getMockMvc()
         .perform(
-            get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
+            get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.[*].lastModified", everyItem(equalTo("2016-01-01T00:00:00Z"))));
   }
 
@@ -101,19 +101,21 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
     getMockMvc()
         .perform(
-            get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON_UTF8))
+            get("/provenance/latest/sample-provenance").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$", hasSize(100)));
   }
 
   /**
-   * Test that the v1 sample provenance object (and version hash) has not changed. This method
+   * Test that the v1 sample provenance object (and version hash) has not changed.
+   * This method
    * should be replicated for each new provenance version added
    */
   @Test
   public void testV1ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v1");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers
+        .get("v1");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -122,7 +124,8 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV2ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v2");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers
+        .get("v2");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -131,7 +134,8 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV3ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v3");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers
+        .get("v3");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -140,7 +144,8 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV4ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v4");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers
+        .get("v4");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -149,7 +154,8 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV5ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v5");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers
+        .get("v5");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -158,7 +164,8 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV6ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v6");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers
+        .get("v6");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -167,7 +174,8 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV7ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v7");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers
+        .get("v7");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -176,7 +184,8 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV8ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v8");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers
+        .get("v8");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -185,7 +194,8 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   @Test
   public void testV9ProvenanceTransform() {
-    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers.get("v9");
+    VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = SampleProvenanceResource.transformers
+        .get("v9");
     SampleProvenance sp = transformer.transform(makeBaseSampleProvenance());
     // This hash must never change
     assertEquals(
@@ -203,7 +213,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     sp.setInstrumentModel(makeBaseInstrumentModel());
     sp.setSampleProject(makeBaseProject());
     sp.setAdditionalSampleAttributes(
-        ImmutableMap.<LimsSampleAttribute, Set<String>> of(
+        ImmutableMap.<LimsSampleAttribute, Set<String>>of(
             LimsSampleAttribute.TARGETED_RESEQUENCING, ImmutableSet.of("tarseq")));
     sp.setParentSamples(makeBaseSampleParents());
 

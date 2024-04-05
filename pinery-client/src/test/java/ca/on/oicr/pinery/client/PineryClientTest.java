@@ -17,14 +17,16 @@ import org.mockito.MockitoAnnotations;
 
 public class PineryClientTest {
 
-  @Mock private Client clientMock;
-  @Mock private WebTarget targetMock;
+  @Mock
+  private Client clientMock;
+  @Mock
+  private WebTarget targetMock;
 
   private PineryClient sut;
 
   @Before
   public void setup() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     when(clientMock.register(ResteasyJackson2Provider.class)).thenReturn(clientMock);
     sut = new PineryClient("http://pretend.pinery.server/", clientMock);
   }
@@ -72,7 +74,10 @@ public class PineryClientTest {
     when(targetMock.request()).thenReturn(builderMock);
     when(builderMock.get()).thenReturn(responseMock);
 
-    assertThrows(HttpResponseException.class, () -> sut.callPinery("test"));
+    assertThrows(HttpResponseException.class, () -> {
+      try (Response response = sut.callPinery("test")) {
+      }
+    });
   }
 
   @Test

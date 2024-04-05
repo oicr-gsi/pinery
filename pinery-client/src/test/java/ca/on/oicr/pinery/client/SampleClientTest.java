@@ -2,6 +2,7 @@ package ca.on.oicr.pinery.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -16,13 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class SampleClientTest {
-
-  @Rule public final ExpectedException exception = ExpectedException.none();
 
   private PineryClient pineryClientMock;
   private SampleClient client;
@@ -62,8 +59,7 @@ public class SampleClientTest {
   public void testGetAllBadStatus() throws HttpResponseException {
     doThrow(new HttpResponseException()).when(client).getResourceList("samples");
 
-    exception.expect(HttpResponseException.class);
-    client.all();
+    assertThrows(HttpResponseException.class, () -> client.all());
   }
 
   @Test
@@ -80,8 +76,7 @@ public class SampleClientTest {
   public void testGetByIdBadStatus() throws HttpResponseException {
     doThrow(new HttpResponseException()).when(client).getResource("sample/22");
 
-    exception.expect(HttpResponseException.class);
-    client.byId("22");
+    assertThrows(HttpResponseException.class, () -> client.byId("22"));
   }
 
   @Test
@@ -139,13 +134,12 @@ public class SampleClientTest {
     ZonedDateTime date = ZonedDateTime.of(2015, 10, 23, 15, 21, 0, 0, ZoneId.of("Z"));
     List<String> projects = Arrays.asList("Proj1");
     List<String> types = Arrays.asList("Type1");
-    SampleClient.SamplesFilter filter =
-        new SampleClient.SamplesFilter()
-            .withArchived(false)
-            .withDateAfter(date)
-            .withDateBefore(date)
-            .withProjects(projects)
-            .withTypes(types);
+    SampleClient.SamplesFilter filter = new SampleClient.SamplesFilter()
+        .withArchived(false)
+        .withDateAfter(date)
+        .withDateBefore(date)
+        .withProjects(projects)
+        .withTypes(types);
     String url = filter.buildUrl("my.pretend.url");
     assertTrue(url.matches("^my\\.pretend\\.url\\?([^\\?&=]*=[^\\?&=]*&){4}[^\\?&=]*=[^\\?&=]*$"));
   }
@@ -182,7 +176,6 @@ public class SampleClientTest {
     doThrow(new HttpResponseException()).when(client).getResourceList("samples?archived=true");
     SamplesFilter filter = new SamplesFilter().withArchived(true);
 
-    exception.expect(HttpResponseException.class);
-    client.allFiltered(filter);
+    assertThrows(HttpResponseException.class, () -> client.allFiltered(filter));
   }
 }
