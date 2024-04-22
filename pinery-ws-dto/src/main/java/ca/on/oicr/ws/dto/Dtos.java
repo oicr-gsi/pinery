@@ -636,7 +636,9 @@ public final class Dtos {
     RequisitionDto to = new RequisitionDto();
     to.setId(from.getId());
     to.setName(from.getName());
-    to.setAssayId(from.getAssayId());
+    if (from.getAssayIds() != null) {
+      to.setAssayIds(new HashSet<>(from.getAssayIds()));
+    }
     if (from.getSampleIds() != null) {
       to.setSampleIds(new HashSet<>(from.getSampleIds()));
     }

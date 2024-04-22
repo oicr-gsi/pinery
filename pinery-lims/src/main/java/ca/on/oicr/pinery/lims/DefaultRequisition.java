@@ -13,7 +13,7 @@ public class DefaultRequisition implements Requisition {
 
   private Integer id;
   private String name;
-  private Integer assayId;
+  private Set<Integer> assayIds;
   private Set<String> sampleIds;
   private Set<String> supplementalSampleIds;
   private List<SignOff> signOffs;
@@ -42,13 +42,21 @@ public class DefaultRequisition implements Requisition {
   }
 
   @Override
-  public Integer getAssayId() {
-    return assayId;
+  public Set<Integer> getAssayIds() {
+    return assayIds;
   }
 
   @Override
-  public void setAssayId(Integer assayId) {
-    this.assayId = assayId;
+  public void addAssayId(Integer assayId) {
+    if (assayIds == null) {
+      assayIds = new HashSet<>();
+    }
+    assayIds.add(assayId);
+  }
+
+  @Override
+  public void setAssayIds(Set<Integer> assayIds) {
+    this.assayIds = assayIds;
   }
 
   @Override
@@ -145,7 +153,7 @@ public class DefaultRequisition implements Requisition {
 
   @Override
   public int hashCode() {
-    return Objects.hash(assayId, id, name, sampleIds, signOffs, stopped, stopReason);
+    return Objects.hash(assayIds, id, name, sampleIds, signOffs, stopped, stopReason);
   }
 
   @Override
@@ -157,7 +165,7 @@ public class DefaultRequisition implements Requisition {
     if (getClass() != obj.getClass())
       return false;
     DefaultRequisition other = (DefaultRequisition) obj;
-    return Objects.equals(assayId, other.assayId)
+    return Objects.equals(assayIds, other.assayIds)
         && Objects.equals(id, other.id)
         && Objects.equals(name, other.name)
         && Objects.equals(sampleIds, other.sampleIds)
