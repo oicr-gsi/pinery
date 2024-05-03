@@ -13,9 +13,11 @@ public interface Requisition {
 
   void setName(String name);
 
-  Integer getAssayId();
+  Set<Integer> getAssayIds();
 
-  void setAssayId(Integer assayId);
+  void setAssayIds(Set<Integer> assayIds);
+
+  void addAssayId(Integer assayId);
 
   Set<String> getSampleIds();
 

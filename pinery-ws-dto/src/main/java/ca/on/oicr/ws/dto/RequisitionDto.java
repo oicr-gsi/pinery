@@ -14,7 +14,7 @@ public class RequisitionDto {
 
   private Integer id;
   private String name;
-  private Integer assayId;
+  private Set<Integer> assayIds;
   private Set<String> sampleIds;
   private Set<String> supplementalSampleIds;
   private List<SignOffDto> signOffs;
@@ -38,13 +38,13 @@ public class RequisitionDto {
     this.name = name;
   }
 
-  @JsonProperty("assay_id")
-  public Integer getAssayId() {
-    return assayId;
+  @JsonProperty("assay_ids")
+  public Set<Integer> getAssayIds() {
+    return assayIds;
   }
 
-  public void setAssayId(Integer assayId) {
-    this.assayId = assayId;
+  public void setAssayIds(Set<Integer> assayIds) {
+    this.assayIds = assayIds;
   }
 
   @JsonProperty("sample_ids")
@@ -101,7 +101,7 @@ public class RequisitionDto {
 
   @Override
   public int hashCode() {
-    return Objects.hash(assayId, id, name, sampleIds, signOffs, stopped, stopReason, pauses);
+    return Objects.hash(assayIds, id, name, sampleIds, signOffs, stopped, stopReason, pauses);
   }
 
   @Override
@@ -113,7 +113,7 @@ public class RequisitionDto {
     if (getClass() != obj.getClass())
       return false;
     RequisitionDto other = (RequisitionDto) obj;
-    return Objects.equals(assayId, other.assayId)
+    return Objects.equals(assayIds, other.assayIds)
         && Objects.equals(id, other.id)
         && Objects.equals(name, other.name)
         && Objects.equals(sampleIds, other.sampleIds)
