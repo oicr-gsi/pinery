@@ -21,6 +21,7 @@ public class RequisitionDto {
   private boolean stopped = false;
   private String stopReason;
   private List<RequisitionPauseDto> pauses;
+  private String createdDate;
 
   public Integer getId() {
     return id;
@@ -99,9 +100,18 @@ public class RequisitionDto {
     this.pauses = pauses;
   }
 
+  @JsonProperty("created_date")
+  public String getCreatedDate() {
+    return createdDate;
+  }
+
+  public void setCreatedDate(String createdDate) {
+    this.createdDate = createdDate;
+  }
+
   @Override
   public int hashCode() {
-    return Objects.hash(assayIds, id, name, sampleIds, signOffs, stopped, stopReason, pauses);
+    return Objects.hash(assayIds, id, name, sampleIds, signOffs, stopped, stopReason, pauses, createdDate);
   }
 
   @Override
@@ -120,6 +130,7 @@ public class RequisitionDto {
         && Objects.equals(signOffs, other.signOffs)
         && Objects.equals(stopped, other.stopped)
         && Objects.equals(stopReason, other.stopReason)
-        && Objects.equals(pauses, other.pauses);
+        && Objects.equals(pauses, other.pauses)
+        && Objects.equals(createdDate, other.createdDate);
   }
 }

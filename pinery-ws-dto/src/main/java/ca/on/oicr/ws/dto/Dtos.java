@@ -8,6 +8,7 @@ import com.google.common.collect.Sets;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -653,6 +654,7 @@ public final class Dtos {
     }
     to.setStopped(from.isStopped());
     to.setStopReason(from.getStopReason());
+    to.setCreatedDate(format(from.getCreated()));
     return to;
   }
 
@@ -667,16 +669,23 @@ public final class Dtos {
     if (date == null) {
       return null;
     }
-    return ZonedDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault())
-        .truncatedTo(ChronoUnit.SECONDS)
-        .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    return format(Instant.ofEpochMilli(date.getTime()));
   }
 
-  private static final String format(LocalDate date) {
+  private static String format(LocalDate date) {
     if (date == null) {
       return null;
     }
     return date.format(dateFormatter);
+  }
+
+  private static String format(Instant date) {
+    if (date == null) {
+      return null;
+    }
+    return ZonedDateTime.ofInstant(date, ZoneId.systemDefault())
+        .truncatedTo(ChronoUnit.SECONDS)
+        .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
   }
 
   protected static String format(BigDecimal decimal) {

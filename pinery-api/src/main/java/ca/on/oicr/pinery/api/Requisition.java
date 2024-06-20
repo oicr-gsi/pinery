@@ -1,5 +1,7 @@
 package ca.on.oicr.pinery.api;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -50,4 +52,8 @@ public interface Requisition {
   void setPauses(List<RequisitionPause> pauses);
 
   void addPause(RequisitionPause pause);
+
+  public Instant getCreated();
+
+  public void setCreated(Instant created);
 }

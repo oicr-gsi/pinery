@@ -3,6 +3,8 @@ package ca.on.oicr.pinery.lims;
 import ca.on.oicr.pinery.api.Requisition;
 import ca.on.oicr.pinery.api.RequisitionPause;
 import ca.on.oicr.pinery.api.SignOff;
+
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +22,7 @@ public class DefaultRequisition implements Requisition {
   private boolean stopped = false;
   private String stopReason;
   private List<RequisitionPause> pauses;
+  private Instant created;
 
   @Override
   public Integer getId() {
@@ -152,8 +155,18 @@ public class DefaultRequisition implements Requisition {
   }
 
   @Override
+  public Instant getCreated() {
+    return created;
+  }
+
+  @Override
+  public void setCreated(Instant created) {
+    this.created = created;
+  }
+
+  @Override
   public int hashCode() {
-    return Objects.hash(assayIds, id, name, sampleIds, signOffs, stopped, stopReason);
+    return Objects.hash(assayIds, id, name, sampleIds, signOffs, stopped, stopReason, created);
   }
 
   @Override
@@ -171,6 +184,7 @@ public class DefaultRequisition implements Requisition {
         && Objects.equals(sampleIds, other.sampleIds)
         && Objects.equals(signOffs, other.signOffs)
         && Objects.equals(stopped, other.stopped)
-        && Objects.equals(stopReason, other.stopReason);
+        && Objects.equals(stopReason, other.stopReason)
+        && Objects.equals(created, other.created);
   }
 }
