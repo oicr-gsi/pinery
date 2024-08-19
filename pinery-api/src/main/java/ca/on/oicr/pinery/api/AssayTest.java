@@ -6,6 +6,14 @@ public interface AssayTest {
 
   void setName(String name);
 
+  String getTissueOrigin();
+
+  void setTissueOrigin(String tissueOrigin);
+
+  Boolean getNegateTissueOrigin();
+
+  void setNegateTissueOrigin(Boolean negateTissueOrigin);
+
   String getTissueType();
 
   void setTissueType(String tissueType);

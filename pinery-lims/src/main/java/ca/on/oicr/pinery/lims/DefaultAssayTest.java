@@ -5,6 +5,8 @@ import ca.on.oicr.pinery.api.AssayTest;
 public class DefaultAssayTest implements AssayTest {
 
   private String name;
+  private String tissueOrigin;
+  private Boolean negateTissueOrigin;
   private String tissueType;
   private Boolean negateTissueType;
   private String extractionSampleType;
@@ -22,6 +24,26 @@ public class DefaultAssayTest implements AssayTest {
   @Override
   public void setName(String name) {
     this.name = name;
+  }
+
+  @Override
+  public String getTissueOrigin() {
+    return tissueOrigin;
+  }
+
+  @Override
+  public void setTissueOrigin(String tissueOrigin) {
+    this.tissueOrigin = tissueOrigin;
+  }
+
+  @Override
+  public Boolean getNegateTissueOrigin() {
+    return negateTissueOrigin;
+  }
+
+  @Override
+  public void setNegateTissueOrigin(Boolean negateTissueOrigin) {
+    this.negateTissueOrigin = negateTissueOrigin;
   }
 
   @Override

@@ -10,6 +10,8 @@ import java.util.Objects;
 public class AssayTestDto {
 
   private String name;
+  private String tissueOrigin;
+  private Boolean negateTissueOrigin;
   private String tissueType;
   private Boolean negateTissueType;
   private String extractionSampleType;
@@ -25,6 +27,24 @@ public class AssayTestDto {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  @JsonProperty("tissue_origin")
+  public String getTissueOrigin() {
+    return tissueOrigin;
+  }
+
+  public void setTissueOrigin(String tissueOrigin) {
+    this.tissueOrigin = tissueOrigin;
+  }
+
+  @JsonProperty("negate_tissue_origin")
+  public Boolean getNegateTissueOrigin() {
+    return negateTissueOrigin;
+  }
+
+  public void setNegateTissueOrigin(Boolean negateTissueOrigin) {
+    this.negateTissueOrigin = negateTissueOrigin;
   }
 
   @JsonProperty("tissue_type")
@@ -102,10 +122,14 @@ public class AssayTestDto {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
     AssayTestDto that = (AssayTestDto) o;
     return Objects.equals(name, that.name)
+        && Objects.equals(tissueOrigin, that.tissueOrigin)
+        && Objects.equals(negateTissueOrigin, that.negateTissueOrigin)
         && Objects.equals(tissueType, that.tissueType)
         && Objects.equals(negateTissueType, that.negateTissueType)
         && Objects.equals(extractionSampleType, that.extractionSampleType)
@@ -120,6 +144,8 @@ public class AssayTestDto {
   public int hashCode() {
     return Objects.hash(
         name,
+        tissueOrigin,
+        negateTissueOrigin,
         tissueType,
         negateTissueType,
         extractionSampleType,
