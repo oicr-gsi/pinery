@@ -543,6 +543,8 @@ public final class Dtos {
   public static AssayTestDto asDto(AssayTest from) {
     AssayTestDto to = new AssayTestDto();
     to.setName(from.getName());
+    to.setTissueOrigin(from.getTissueOrigin());
+    to.setNegateTissueOrigin(from.getNegateTissueOrigin());
     to.setTissueType(from.getTissueType());
     to.setNegateTissueType(from.getNegateTissueType());
     to.setExtractionSampleType(from.getExtractionSampleType());
