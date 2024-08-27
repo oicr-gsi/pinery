@@ -23,31 +23,31 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/")
 @ApiIgnore
 public class StatusController {
-  public static final ServerConfig SERVER_CONFIG =
-      new ServerConfig() {
+  public static final ServerConfig SERVER_CONFIG = new ServerConfig() {
 
-        @Override
-        public Stream<NavigationMenu> navigation() {
-          return Stream.empty();
-        }
+    @Override
+    public Stream<NavigationMenu> navigation() {
+      return Stream.empty();
+    }
 
-        @Override
-        public String name() {
-          return "Pinery";
-        }
+    @Override
+    public String name() {
+      return "Pinery";
+    }
 
-        @Override
-        public Stream<Header> headers() {
-          return Stream.empty();
-        }
+    @Override
+    public Stream<Header> headers() {
+      return Stream.empty();
+    }
 
-        @Override
-        public String documentationUrl() {
-          return "swagger-ui.html";
-        }
-      };
+    @Override
+    public String documentationUrl() {
+      return "swagger-ui/index.html";
+    }
+  };
 
-  @Autowired private Cache cache;
+  @Autowired
+  private Cache cache;
 
   @Value("${pinery.cache.interval:900000}")
   private int cacheInterval;

@@ -19,7 +19,7 @@
         <spring.version>5.3.27</spring.version>
         <resteasy.version>3.14.0.Final</resteasy.version>
         <server-utils.version>1.0.1</server-utils.version>
-        <springfox.version>2.9.2</springfox.version>
+        <springfox.version>3.0.0</springfox.version>
         <junit.version>4.13.1</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
         <commons-lang.version>2.6</commons-lang.version>
