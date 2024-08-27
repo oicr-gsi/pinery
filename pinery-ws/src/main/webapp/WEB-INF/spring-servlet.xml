@@ -1,57 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-   xmlns:context="http://www.springframework.org/schema/context"
-   xmlns:aop="http://www.springframework.org/schema/aop"
-   xmlns:task="http://www.springframework.org/schema/task"
-   xmlns:tx="http://www.springframework.org/schema/tx"
-   xmlns:mvc="http://www.springframework.org/schema/mvc"
-   xmlns:util="http://www.springframework.org/schema/util"
-   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
-      http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
-      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
-      http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
-      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-      http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
-   
-   <context:property-placeholder location="classpath:project.properties,${pinery.propertiesFile}" ignore-unresolvable="true"/>
-   <context:component-scan base-package="ca.on.oicr.pinery" />
-   
-    <mvc:annotation-driven>
-      <mvc:message-converters register-defaults="true">
-        <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-          <property name="objectMapper">
-            <bean class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
-              <property name="simpleDateFormat" value="hh:MM:ss'T'HH:mm:ssXXX"/>
-              <property name="featuresToEnable">
-                <array>
-                  <util:constant static-field="com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT"/>
-                </array>
-              </property>
-              <property name="featuresToDisable">
-                <array>
-                  <util:constant static-field="com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS"/>
-                </array>
-              </property>
-            </bean>
-          </property>
-        </bean>
-      </mvc:message-converters>
-    </mvc:annotation-driven>
-   
-   <!-- static mapping for swagger ui -->
-   <mvc:resources location="classpath:/META-INF/resources/" mapping="swagger-ui.html"/>
-   <mvc:resources location="classpath:/META-INF/resources/webjars/" mapping="/webjars/**"/>
-   
-   <bean class="ca.on.oicr.pinery.ws.component.SwaggerConfig"/>
-   
-   <task:annotation-driven/>
-   
-   <!-- Profiles (keep below all other beans) -->
-   <beans profile="external">
-      <import resource="classpath:${pinery.external.springConfigFile}"/>
-   </beans>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:task="http://www.springframework.org/schema/task"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xmlns:mvc="http://www.springframework.org/schema/mvc"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+                      http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+                      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+                      http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+                      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                      http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+  <context:property-placeholder location="classpath:project.properties,${pinery.propertiesFile}"
+    ignore-unresolvable="true" />
+  <context:component-scan base-package="ca.on.oicr.pinery" />
+
+  <mvc:annotation-driven>
+    <mvc:message-converters register-defaults="true">
+      <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="objectMapper">
+          <bean class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+            <property name="simpleDateFormat" value="hh:MM:ss'T'HH:mm:ssXXX" />
+            <property name="featuresToEnable">
+              <array>
+                <util:constant
+                  static-field="com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT" />
+              </array>
+            </property>
+            <property name="featuresToDisable">
+              <array>
+                <util:constant
+                  static-field="com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS" />
+              </array>
+            </property>
+          </bean>
+        </property>
+      </bean>
+    </mvc:message-converters>
+  </mvc:annotation-driven>
+
+  <!-- static mapping for swagger ui -->
+  <mvc:resources location="classpath:/META-INF/resources/webjars/springfox-swagger-ui/"
+    mapping="/swagger-ui/**" />
+
+  <bean class="ca.on.oicr.pinery.ws.component.SwaggerConfig" />
+
+  <task:annotation-driven />
+
+  <!-- Profiles (keep below all other beans) -->
+  <beans profile="external">
+    <import resource="classpath:${pinery.external.springConfigFile}" />
+  </beans>
 
 </beans>
