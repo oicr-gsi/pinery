@@ -20,6 +20,7 @@
 
   <mvc:annotation-driven>
     <mvc:message-converters register-defaults="true">
+      <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
       <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
         <property name="objectMapper">
           <bean class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">

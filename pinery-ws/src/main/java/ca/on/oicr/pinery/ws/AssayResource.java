@@ -5,11 +5,13 @@ import ca.on.oicr.pinery.service.AssayService;
 import ca.on.oicr.pinery.ws.component.RestException;
 import ca.on.oicr.ws.dto.AssayDto;
 import ca.on.oicr.ws.dto.Dtos;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,23 +24,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-@Api(tags = {"Assays"})
+@Tag(name = "Assays")
 public class AssayResource {
 
-  @Autowired private AssayService assayService;
+  @Autowired
+  private AssayService assayService;
 
   @GetMapping("/assays")
-  @ApiOperation(value = "List all assays", response = AssayDto.class, responseContainer = "List")
+  @Operation(summary = "List all assays")
   public List<AssayDto> getAssays() {
     List<Assay> assays = assayService.getAssays();
     return assays.stream().map(Dtos::asDto).collect(Collectors.toList());
   }
 
   @GetMapping("/assay/{id}")
-  @ApiOperation(value = "Find assay by ID", response = AssayDto.class)
-  @ApiResponses({@ApiResponse(code = 404, message = "No assay found")})
+  @Operation(summary = "Find assay by ID")
+  @ApiResponses({
+      @ApiResponse(useReturnTypeSchema = true, responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "404", description = "No assay found", content = @Content)
+  })
   public AssayDto getAssay(
-      @ApiParam(value = "ID of assay to fetch") @PathVariable("id") Integer id) {
+      @Parameter(description = "ID of assay to fetch") @PathVariable("id") Integer id) {
     Assay assay = assayService.getAssay(id);
     if (assay == null) {
       throw new RestException(HttpStatus.NOT_FOUND, String.format("No assay with ID: %d", id));

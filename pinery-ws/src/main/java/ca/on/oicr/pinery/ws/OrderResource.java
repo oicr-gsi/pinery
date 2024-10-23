@@ -8,12 +8,14 @@ import ca.on.oicr.pinery.ws.component.RestException;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.OrderDto;
 import ca.on.oicr.ws.dto.OrderDtoSample;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.google.common.collect.Lists;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +29,18 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-@Api(tags = {"Orders"})
+@Tag(name = "Orders")
 public class OrderResource {
 
-  @Autowired private OrderService orderService;
+  @Autowired
+  private OrderService orderService;
 
   void setOrderService(OrderService orderService) {
     this.orderService = orderService;
   }
 
   @GetMapping("/orders")
-  @ApiOperation(value = "List all orders", response = OrderDto.class, responseContainer = "List")
+  @Operation(summary = "List all orders")
   public List<OrderDto> getOrders(UriComponentsBuilder uriBuilder) {
     List<Order> orders = orderService.getOrder();
     List<OrderDto> result = Lists.newArrayList();
@@ -50,11 +53,14 @@ public class OrderResource {
   }
 
   @GetMapping("/order/{id}")
-  @ApiOperation(value = "Find order by ID", response = OrderDto.class)
-  @ApiResponses({@ApiResponse(code = 404, message = "No order found")})
+  @Operation(summary = "Find order by ID")
+  @ApiResponses({
+      @ApiResponse(useReturnTypeSchema = true, responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "404", description = "No order found", content = @Content)
+  })
   public OrderDto getOrder(
       UriComponentsBuilder uriBuilder,
-      @ApiParam(value = "ID of order to fetch") @PathVariable("id") Integer id) {
+      @Parameter(description = "ID of order to fetch") @PathVariable("id") Integer id) {
     Order order = orderService.getOrder(id);
     if (order == null) {
       throw new RestException(HttpStatus.NOT_FOUND, "No order found with ID: " + id);

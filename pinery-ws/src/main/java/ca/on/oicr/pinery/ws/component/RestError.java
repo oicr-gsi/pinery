@@ -29,6 +29,12 @@ public class RestError {
     this.detail = detail;
   }
 
+  public RestError(int status, String reasonPhrase, String detail) {
+    this.status = status;
+    this.message = reasonPhrase;
+    this.detail = detail;
+  }
+
   /** @return the HTTP status code associated with this error */
   public int getStatus() {
     return status;

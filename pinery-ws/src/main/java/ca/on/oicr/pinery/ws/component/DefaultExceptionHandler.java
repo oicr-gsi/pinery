@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -47,14 +48,27 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
       Exception exception,
       Object body,
       HttpHeaders headers,
-      HttpStatus status,
+      HttpStatusCode status,
       WebRequest request) {
     logError(exception, status);
-    RestError error = new RestError(status, exception.getLocalizedMessage());
+    RestError error = null;
+    if (status instanceof HttpStatus httpStatus) {
+      error = new RestError(httpStatus, exception.getLocalizedMessage());
+    } else {
+      String reasonPhrase = null;
+      if (status.is4xxClientError()) {
+        reasonPhrase = "Client Error";
+      } else if (status.is5xxServerError()) {
+        reasonPhrase = "Server Error";
+      } else {
+        reasonPhrase = "Unknown Error";
+      }
+      error = new RestError(status.value(), reasonPhrase, exception.getLocalizedMessage());
+    }
     return new ResponseEntity<>(error, headers, status);
   }
 
-  private static void logError(Throwable exception, HttpStatus status) {
+  private static void logError(Throwable exception, HttpStatusCode status) {
     if (status.is5xxServerError()) {
       log.error("Error handling REST request", exception);
     } else {

@@ -11,12 +11,15 @@ import ca.on.oicr.pinery.ws.util.MapBuilder;
 import ca.on.oicr.pinery.ws.util.VersionTransformer;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.google.common.annotations.VisibleForTesting;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-@Api(tags = { "Sample Provenance" })
+@Tag(name = "Sample Provenance")
 public class SampleProvenanceResource {
 
   private static final VersionTransformer<SampleProvenance, SampleProvenance> noopTransformer = input -> input;
@@ -133,16 +136,19 @@ public class SampleProvenanceResource {
   private SampleProvenanceService sampleProvenanceService;
 
   @GetMapping("/provenance/versions")
-  @ApiOperation(value = "List available provenance versions", response = String.class, responseContainer = "List")
+  @Operation(summary = "List available provenance versions")
   public List<String> getProvenanceVersions() {
     return transformers.keySet().stream().sorted().collect(Collectors.toList());
   }
 
   @GetMapping("/provenance/{version}/sample-provenance")
-  @ApiOperation(value = "Get all sample provenance records", response = SampleProvenanceDto.class, responseContainer = "List")
-  @ApiResponses({ @ApiResponse(code = 404, message = "Provenance version not found") })
+  @Operation(summary = "Get all sample provenance records")
+  @ApiResponses({
+      @ApiResponse(useReturnTypeSchema = true, responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "404", description = "Provenance version not found", content = @Content)
+  })
   public List<SampleProvenanceDto> getSamples(
-      @ApiParam(allowableValues = versions) @PathVariable String version) {
+      @Parameter(schema = @Schema(allowableValues = versions)) @PathVariable String version) {
     VersionTransformer<SampleProvenance, ? extends SampleProvenance> transformer = transformers.get(version);
     if (transformer == null) {
       throw new RestException(
@@ -156,7 +162,7 @@ public class SampleProvenanceResource {
   }
 
   @GetMapping("/sample-provenance")
-  @ApiOperation("Get version 1 of all sample provenance records")
+  @Operation(summary = "Get version 1 of all sample provenance records")
   @Deprecated
   public List<SampleProvenanceDto> getSamples() {
     return getSamples("v1");
