@@ -17,12 +17,14 @@ import ca.on.oicr.ws.dto.SampleDto;
 import ca.on.oicr.ws.dto.SampleProjectDto;
 import ca.on.oicr.ws.dto.SampleReferenceDto;
 import ca.on.oicr.ws.dto.TypeDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.google.common.collect.Lists;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -41,31 +43,25 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-@Api(tags = {"Samples"})
+@Tag(name = "Samples")
 public class SampleResource {
 
-  @Autowired private SampleService sampleService;
+  @Autowired
+  private SampleService sampleService;
 
   @GetMapping(value = "/samples")
-  @ApiOperation(value = "List all samples", response = SampleDto.class, responseContainer = "List")
-  @ApiResponses({@ApiResponse(code = 400, message = "Invalid parameter")})
+  @Operation(summary = "List all samples")
+  @ApiResponses({
+      @ApiResponse(useReturnTypeSchema = true, responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "400", description = "Invalid parameter", content = @Content)
+  })
   public List<SampleDto> getSamples(
       UriComponentsBuilder uriBuilder,
-      @ApiParam(value = "filter by archived status")
-          @RequestParam(name = "archived", required = false)
-          Boolean archived,
-      @ApiParam(value = "filter by project(s)") @RequestParam(name = "project", required = false)
-          Set<String> projects,
-      @ApiParam(value = "filter by sample type(s)") @RequestParam(name = "type", required = false)
-          Set<String> types,
-      @ApiParam(
-              value = "filter to include samples created before this date",
-              example = "yyyy-mm-dd")
-          @RequestParam(name = "before", required = false)
-          String before,
-      @ApiParam(value = "filter to include samples created after this date", example = "yyyy-mm-dd")
-          @RequestParam(name = "after", required = false)
-          String after) {
+      @Parameter(description = "filter by archived status") @RequestParam(name = "archived", required = false) Boolean archived,
+      @Parameter(description = "filter by project(s)") @RequestParam(name = "project", required = false) Set<String> projects,
+      @Parameter(description = "filter by sample type(s)") @RequestParam(name = "type", required = false) Set<String> types,
+      @Parameter(description = "filter to include samples created before this date", example = "yyyy-mm-dd") @RequestParam(name = "before", required = false) String before,
+      @Parameter(description = "filter to include samples created after this date", example = "yyyy-mm-dd") @RequestParam(name = "after", required = false) String after) {
     ZonedDateTime beforeDateTime = null;
     ZonedDateTime afterDateTime = null;
     try {
@@ -81,8 +77,7 @@ public class SampleResource {
           "Invalid date format in parameter [before] or [after]. Use ISO8601 formatting. "
               + e.getMessage());
     }
-    List<Sample> samples =
-        sampleService.getSamples(archived, projects, types, beforeDateTime, afterDateTime);
+    List<Sample> samples = sampleService.getSamples(archived, projects, types, beforeDateTime, afterDateTime);
     List<SampleDto> result = Lists.newArrayList();
 
     for (Sample sample : samples) {
@@ -94,14 +89,15 @@ public class SampleResource {
   }
 
   @GetMapping("/sample/{id}")
-  @ApiOperation(value = "Find sample by ID", response = SampleDto.class)
+  @Operation(summary = "Find sample by ID")
   @ApiResponses({
-    @ApiResponse(code = 404, message = "No sample found"),
-    @ApiResponse(code = 400, message = "Invalid ID format")
+      @ApiResponse(useReturnTypeSchema = true, responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "404", description = "No sample found", content = @Content),
+      @ApiResponse(responseCode = "400", description = "Invalid ID format", content = @Content)
   })
   public SampleDto getSample(
       UriComponentsBuilder uriBuilder,
-      @ApiParam(value = "ID of sample to fetch") @PathVariable("id") String id) {
+      @Parameter(description = "ID of sample to fetch") @PathVariable("id") String id) {
     Sample sample = null;
     try {
       sample = sampleService.getSample(id);
@@ -117,10 +113,7 @@ public class SampleResource {
   }
 
   @GetMapping("/sample/projects")
-  @ApiOperation(
-      value = "List all projects",
-      response = SampleProjectDto.class,
-      responseContainer = "List")
+  @Operation(summary = "List all projects")
   public List<SampleProjectDto> getSampleProjects() {
     List<SampleProject> projects = sampleService.getSampleProjects();
     List<SampleProjectDto> result = Lists.newArrayList();
@@ -140,10 +133,7 @@ public class SampleResource {
   }
 
   @GetMapping("/sample/types")
-  @ApiOperation(
-      value = "List all sample types",
-      response = TypeDto.class,
-      responseContainer = "List")
+  @Operation(summary = "List all sample types")
   public List<TypeDto> getTypes() {
     List<Type> types = sampleService.getTypes();
     List<TypeDto> result = Lists.newArrayList();
@@ -163,10 +153,7 @@ public class SampleResource {
   }
 
   @GetMapping("/sample/attributenames")
-  @ApiOperation(
-      value = "List all sample attribute names",
-      response = AttributeNameDto.class,
-      responseContainer = "List")
+  @Operation(summary = "List all sample attribute names")
   public List<AttributeNameDto> getAttributeNames() {
     List<AttributeName> attributeNames = sampleService.getAttributeNames();
     List<AttributeNameDto> result = Lists.newArrayList();
@@ -209,10 +196,7 @@ public class SampleResource {
   }
 
   @GetMapping("/sample/changelogs")
-  @ApiOperation(
-      value = "List changelogs for all samples",
-      response = ChangeLogDto.class,
-      responseContainer = "List")
+  @Operation(summary = "List changelogs for all samples")
   public List<ChangeLogDto> getChangeLogs(UriComponentsBuilder uriBuilder) {
     List<ChangeLog> changeLogs = sampleService.getChangeLogs();
     List<ChangeLogDto> result = Lists.newArrayList();
@@ -228,11 +212,14 @@ public class SampleResource {
   }
 
   @GetMapping("/sample/{id}/changelog")
-  @ApiOperation(value = "Find sample changelog by sample ID", response = ChangeLogDto.class)
-  @ApiResponses({@ApiResponse(code = 404, message = "No sample changelog found")})
+  @Operation(summary = "Find sample changelog by sample ID")
+  @ApiResponses({
+      @ApiResponse(useReturnTypeSchema = true, responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "404", description = "No sample changelog found", content = @Content)
+  })
   public ChangeLogDto getChangeLog(
       UriComponentsBuilder uriBuilder,
-      @ApiParam(value = "ID of sample to fetch changelogs for") @PathVariable("id") String id) {
+      @Parameter(description = "ID of sample to fetch changelogs for") @PathVariable("id") String id) {
     ChangeLog changeLog = null;
     try {
       changeLog = sampleService.getChangeLog(id);

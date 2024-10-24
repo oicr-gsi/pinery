@@ -17,9 +17,12 @@ import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.api.Type;
 import ca.on.oicr.pinery.api.User;
-import io.prometheus.client.Gauge;
-import io.prometheus.client.Histogram;
+import io.prometheus.metrics.core.datapoints.Timer;
+import io.prometheus.metrics.core.metrics.Gauge;
+import io.prometheus.metrics.core.metrics.Histogram;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
@@ -38,16 +41,16 @@ public class Cache implements DataProvider {
 
   private static final Logger log = LoggerFactory.getLogger(Cache.class);
 
-  private static final Histogram cacheUpdateTime = Histogram.build()
+  private static final Histogram cacheUpdateTime = Histogram.builder()
       .name("pinery_cache_update_time")
       .help("Time to update the cache (in seconds)")
-      .buckets(60, 180, 300, 600, 900, 1200, 1800, 3600)
+      .classicUpperBounds(60, 180, 300, 600, 900, 1200, 1800, 3600)
       .register();
-  private static final Gauge cacheUpdateFailures = Gauge.build()
+  private static final Gauge cacheUpdateFailures = Gauge.builder()
       .name("pinery_cache_update_failures")
       .help("Number of consecutive cache update failures")
       .register();
-  private static final Gauge cacheLastUpdated = Gauge.build()
+  private static final Gauge cacheLastUpdated = Gauge.builder()
       .name("pinery_cache_last_updated")
       .help("Timestamp of the last cache update (completion)")
       .register();
@@ -115,7 +118,7 @@ public class Cache implements DataProvider {
     }
 
     if (doUpdate) {
-      Histogram.Timer cacheUpdateTimer = cacheUpdateTime.startTimer();
+      Timer cacheUpdateTimer = cacheUpdateTime.startTimer();
       try {
         log.debug("Attempting update");
         List<Requisition> newRequisitions = lims.getRequisitions();
@@ -157,7 +160,7 @@ public class Cache implements DataProvider {
           cacheComplete = true;
           lastUpdated = Instant.now();
           cacheUpdateFailures.set(0);
-          cacheLastUpdated.setToCurrentTime();
+          cacheLastUpdated.set(System.currentTimeMillis());
           log.debug("Update successful");
         }
       } catch (RuntimeException e) {

@@ -1,26 +1,24 @@
 package ca.on.oicr.pinery.ws.component;
 
-import io.prometheus.client.hotspot.DefaultExports;
 import io.prometheus.jmx.JmxCollector;
+import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import javax.management.MalformedObjectNameException;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 public class PineryContextListener implements ServletContextListener {
 
   @Override
-  public void contextDestroyed(ServletContextEvent event) {}
-
-  @Override
   public void contextInitialized(ServletContextEvent event) {
     // Export all JVM HotSpot stats to Prometheus
-    DefaultExports.initialize();
+    JvmMetrics.builder().register();
     try {
-      URL yamlConfig =
-          Thread.currentThread().getContextClassLoader().getResource("tomcat-prometheus.yml");
+      URL yamlConfig = Thread.currentThread().getContextClassLoader().getResource("tomcat-prometheus.yml");
       if (yamlConfig == null) {
         throw new IllegalStateException("Prometheus configuration not found");
       }
@@ -30,4 +28,5 @@ public class PineryContextListener implements ServletContextListener {
       throw new IllegalStateException("Failed to load Prometheus configuration.", e);
     }
   }
+
 }

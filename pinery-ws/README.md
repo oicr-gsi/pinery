@@ -5,14 +5,13 @@ implementation such as the one by [MISO-LIMS](https://github.com/miso-lims/miso-
 
 ## Minimum Requirements
 
-* Maven 3
-* JDK 11
+- Maven 3
+- JDK 17
+- Tomcat 10
 
 ## Deploying to Tomcat
 
 ### Tomcat Configuration
-
-Tomcat 9 is the recommended servlet container for Pinery.
 
 You may wish to set the timezone explicitly, as not all source LIMS provide a time zone. It may also
 be necessary to increase the JVM memory. You can alter these by configuring Tomcat's JAVA_OPTS. e.g.
@@ -33,6 +32,6 @@ JAVA_OPTS="-Duser.timezone=GMT -Djava.awt.headless=true -Xmx6144m -XX:MaxPermSiz
 4. Copy the built `.war` file from the Pinery implemention to `$CATALINA_HOME/webapps/`, naming it
    to match your `context.xml` above. If Tomcat is configured to autodeploy, the webapp will be
    (re)deployed automatically; otherwise, deploy the webapp manually
-   * **WARNING**: In some cases with autodeploy enabled, Tomcat may delete the context XML during redeployment.
+   - **WARNING**: In some cases with autodeploy enabled, Tomcat may delete the context XML during redeployment.
      You can prevent this by stopping tomcat before copying the WAR into the webapps directory, or by making the
      file immutable via `chattr +i <filename>`

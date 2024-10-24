@@ -1,22 +1,36 @@
 package ca.on.oicr.pinery.ws.component;
 
-import com.google.common.collect.ImmutableList;
-import java.util.Collections;
+import org.springdoc.core.configuration.SpringDocConfiguration;
+import org.springdoc.core.configuration.SpringDocSpecPropertiesConfiguration;
+import org.springdoc.core.configuration.SpringDocUIConfiguration;
+import org.springdoc.core.models.GroupedOpenApi;
+import org.springdoc.core.properties.SpringDocConfigProperties;
+import org.springdoc.core.properties.SwaggerUiConfigProperties;
+import org.springdoc.core.properties.SwaggerUiOAuthProperties;
+import org.springdoc.webmvc.core.configuration.MultipleOpenApiSupportConfiguration;
+import org.springdoc.webmvc.core.configuration.SpringDocWebMvcConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.RequestMethod;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.builders.ResponseMessageBuilder;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import org.springframework.context.annotation.Import;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 
 @Configuration
-@EnableSwagger2
+@EnableWebMvc
+@Import({
+    SpringDocConfiguration.class,
+    SpringDocConfigProperties.class,
+    SpringDocSpecPropertiesConfiguration.class,
+    SpringDocWebMvcConfiguration.class,
+    MultipleOpenApiSupportConfiguration.class,
+    org.springdoc.webmvc.ui.SwaggerConfig.class,
+    SwaggerUiConfigProperties.class,
+    SwaggerUiOAuthProperties.class,
+    SpringDocUIConfiguration.class
+})
 public class SwaggerConfig {
 
   @Value("${project.name}")
@@ -26,20 +40,17 @@ public class SwaggerConfig {
   String projectVersion;
 
   @Bean
-  public Docket api() {
-    return new Docket(DocumentationType.SWAGGER_2)
-        .select()
-        .apis(RequestHandlerSelectors.any())
-        .paths(PathSelectors.any())
-        .build()
-        .apiInfo(metaData())
-        .globalResponseMessage(
-            RequestMethod.GET,
-            ImmutableList.of(new ResponseMessageBuilder().code(200).message("OK").build()))
-        .globalResponseMessage(RequestMethod.POST, Collections.emptyList());
+  public GroupedOpenApi api() {
+    return GroupedOpenApi.builder()
+        .group("API")
+        .packagesToScan("ca.on.oicr.pinery")
+        .build();
   }
 
-  private ApiInfo metaData() {
-    return new ApiInfoBuilder().title(projectName).version(projectVersion).build();
+  @Bean
+  public OpenAPI openApi() {
+    return new OpenAPI()
+        .info(new Info().title(projectName).version(projectVersion));
   }
+
 }

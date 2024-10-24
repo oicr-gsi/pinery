@@ -9,12 +9,14 @@ import ca.on.oicr.pinery.ws.component.RestException;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.InstrumentDto;
 import ca.on.oicr.ws.dto.InstrumentModelDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.google.common.collect.Lists;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +30,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-@Api(tags = {"Instruments"})
+@Tag(name = "Instruments")
 public class InstrumentResource {
 
-  @Autowired private InstrumentService instrumentService;
+  @Autowired
+  private InstrumentService instrumentService;
 
   @GetMapping("/instrumentmodels")
-  @ApiOperation(
-      value = "List all instrument models",
-      response = ca.on.oicr.ws.dto.InstrumentModelDto.class,
-      responseContainer = "List")
+  @Operation(summary = "List all instrument models")
   public List<InstrumentModelDto> getInstrumentModels(UriComponentsBuilder uriBuilder) {
     List<InstrumentModel> instrumentModels = instrumentService.getInstrumentModels();
     List<InstrumentModelDto> result = Lists.newArrayList();
@@ -50,13 +50,14 @@ public class InstrumentResource {
   }
 
   @GetMapping("/instrumentmodel/{id}")
-  @ApiOperation(
-      value = "Find instrument model by ID",
-      response = ca.on.oicr.ws.dto.InstrumentModelDto.class)
-  @ApiResponses({@ApiResponse(code = 404, message = "Instrument model not found")})
+  @Operation(summary = "Find instrument model by ID")
+  @ApiResponses({
+      @ApiResponse(useReturnTypeSchema = true, responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "404", description = "Instrument model not found", content = @Content)
+  })
   public InstrumentModelDto getInstrumentModel(
       UriComponentsBuilder uriBuilder,
-      @ApiParam(value = "ID of instrument model to fetch") @PathVariable("id") Integer id) {
+      @Parameter(description = "ID of instrument model to fetch") @PathVariable("id") Integer id) {
     InstrumentModel instrumentModel = instrumentService.getInstrumentModel(id);
     if (instrumentModel == null) {
       throw new RestException(HttpStatus.NOT_FOUND, "Instrument model not found");
@@ -67,10 +68,7 @@ public class InstrumentResource {
   }
 
   @GetMapping("/instruments")
-  @ApiOperation(
-      value = "List all instruments",
-      response = ca.on.oicr.ws.dto.InstrumentDto.class,
-      responseContainer = "List")
+  @Operation(summary = "List all instruments")
   public List<InstrumentDto> getInstruments(UriComponentsBuilder uriBuilder) {
     List<Instrument> instruments = instrumentService.getInstruments();
     List<InstrumentDto> result = Lists.newArrayList();
@@ -83,15 +81,14 @@ public class InstrumentResource {
   }
 
   @GetMapping("/instrumentmodel/{id}/instruments")
-  @ApiOperation(
-      value = "List all instruments for a given instrument model ID",
-      response = ca.on.oicr.ws.dto.InstrumentDto.class,
-      responseContainer = "List")
-  @ApiResponses({@ApiResponse(code = 404, message = "No instruments found")})
+  @Operation(summary = "List all instruments for a given instrument model ID")
+  @ApiResponses({
+      @ApiResponse(useReturnTypeSchema = true, responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "404", description = "No instruments found", content = @Content)
+  })
   public List<InstrumentDto> getInstrumentsModelInstrument(
       UriComponentsBuilder uriBuilder,
-      @ApiParam(value = "ID of instrument model to fetch instruments for") @PathVariable("id")
-          Integer id) {
+      @Parameter(description = "ID of instrument model to fetch instruments for") @PathVariable("id") Integer id) {
     List<Instrument> instruments = instrumentService.getInstrumentModelInstrument(id);
     List<InstrumentDto> result = Lists.newArrayList();
     for (Instrument instrument : instruments) {
@@ -103,11 +100,14 @@ public class InstrumentResource {
   }
 
   @GetMapping("/instrument/{id}")
-  @ApiOperation(value = "Find instrument by ID", response = ca.on.oicr.ws.dto.InstrumentDto.class)
-  @ApiResponses({@ApiResponse(code = 404, message = "No instrument found")})
+  @Operation(summary = "Find instrument by ID")
+  @ApiResponses({
+      @ApiResponse(useReturnTypeSchema = true, responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "404", description = "No instrument found", content = @Content)
+  })
   public InstrumentDto getInstrument(
       UriComponentsBuilder uriBuilder,
-      @ApiParam(value = "ID of instrument to fetch") @PathVariable("id") Integer instrumentId) {
+      @Parameter(description = "ID of instrument to fetch") @PathVariable("id") Integer instrumentId) {
     Instrument instrument = instrumentService.getInstrument(instrumentId);
     if (instrument == null) {
       throw new RestException(HttpStatus.NOT_FOUND, "No instrument found with ID: " + instrumentId);
