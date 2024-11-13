@@ -22,16 +22,19 @@ JAVA_OPTS="-Duser.timezone=GMT -Djava.awt.headless=true -Xmx6144m -XX:MaxPermSiz
 
 ### Deploying
 
-1. copy the example `.properties` file and external `context.xml` from the Pinery implementation
+1. Copy the example `.properties` file and external `context.xml` from the Pinery implementation
    you're using to `$CATALINA_HOME/conf/Catalina/localhost/`, where `$CATALINA_HOME` is your Tomcat
-   base directory
-2. rename `context.xml` to match the context root of your deployment. E.g. if you're deploying to
+   base directory.
+2. Rename `context.xml` to match the context root of your deployment. E.g. if you're deploying to
    `/pinery`, call the context file `pinery.xml`. If you're deploying to the root address, call the
-   file `ROOT.xml`
-3. Configure options specific to the source LIMS in the properties file
+   file `ROOT.xml`.
+3. Configure options specific to the source LIMS in the properties file.
+   - If you are deploying Pinery behind a reverse-proxy and find that the Swagger docs are not
+     working properly, it may be necessary to configure the base URL for Swagger. You can do this by
+     adding a `swagger.baseUrl` property to your properties file.
 4. Copy the built `.war` file from the Pinery implemention to `$CATALINA_HOME/webapps/`, naming it
    to match your `context.xml` above. If Tomcat is configured to autodeploy, the webapp will be
-   (re)deployed automatically; otherwise, deploy the webapp manually
-   - **WARNING**: In some cases with autodeploy enabled, Tomcat may delete the context XML during redeployment.
-     You can prevent this by stopping tomcat before copying the WAR into the webapps directory, or by making the
-     file immutable via `chattr +i <filename>`
+   (re)deployed automatically; otherwise, deploy the webapp manually.
+   - **WARNING**: In some cases with autodeploy enabled, Tomcat may delete the context XML during
+     redeployment. You can prevent this by stopping tomcat before copying the WAR into the webapps
+     directory, or by making the file immutable via `chattr +i <filename>`.
