@@ -1,5 +1,7 @@
 package ca.on.oicr.pinery.ws.component;
 
+import java.util.Collections;
+
 import org.springdoc.core.configuration.SpringDocConfiguration;
 import org.springdoc.core.configuration.SpringDocSpecPropertiesConfiguration;
 import org.springdoc.core.configuration.SpringDocUIConfiguration;
@@ -13,10 +15,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
+import jakarta.servlet.ServletContext;
 
 @Configuration
 @EnableWebMvc
@@ -48,9 +53,13 @@ public class SwaggerConfig {
   }
 
   @Bean
-  public OpenAPI openApi() {
+  public OpenAPI openApi(ServletContext servletContext, @Value("${swagger.baseUrl:#{null}}") String baseUrl) {
+    Server server = new Server()
+        .url(baseUrl != null ? baseUrl : servletContext.getContextPath())
+        .description("Default server URL");
     return new OpenAPI()
-        .info(new Info().title(projectName).version(projectVersion));
+        .info(new Info().title(projectName).version(projectVersion))
+        .servers(Collections.singletonList(server));
   }
 
 }
