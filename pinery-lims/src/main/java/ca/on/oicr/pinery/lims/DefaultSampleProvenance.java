@@ -323,8 +323,25 @@ public class DefaultSampleProvenance implements SampleProvenance {
       return (sequencerRun.getStatus() != null
           && "Failed".equals(sequencerRun.getStatus().getState()))
           || Boolean.TRUE.equals(lane.isAnalysisSkipped())
-          || (runSample.getStatus() != null && "Failed".equals(runSample.getStatus().getState()));
+          || (runSample.getStatus() != null && "Failed".equals(runSample.getStatus().getState()))
+          || isConsentRevoked();
     }
+  }
+
+  private boolean isConsentRevoked() {
+    if (isConsentRevoked(sample)) {
+      return true;
+    }
+    return parentSamples.stream().anyMatch(parent -> isConsentRevoked(parent));
+  }
+
+  private static boolean isConsentRevoked(Sample sample) {
+    if (sample.getAttributes() == null) {
+      return false;
+    }
+    return sample.getAttributes().stream()
+        .filter(attr -> "Consent".equals(attr.getName()))
+        .anyMatch(attr -> "REVOKED".equals(attr.getValue()));
   }
 
   @Override
@@ -454,7 +471,8 @@ public class DefaultSampleProvenance implements SampleProvenance {
       attrs.put("Preparation Kit", sample.getPreparationKit().getName());
     }
 
-    // Geospiza sample type is gDNA - recategorize the "Tissue Type" to the correct attribute name
+    // Geospiza sample type is gDNA - recategorize the "Tissue Type" to the correct
+    // attribute name
     // of "Tissue Preparation"
     if (Arrays.asList("gDNA", "gDNA_wga").contains(sample.getSampleType())
         && (attrs.containsKey(LimsSampleAttribute.TISSUE_TYPE.toString())
@@ -469,7 +487,8 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
   @Override
   public List<String> getBatchIds() {
-    // Should return an empty list if there are none. Null is used to omit the attribue from old
+    // Should return an empty list if there are none. Null is used to omit the
+    // attribue from old
     // provenance versons (see SampleProvenanceDto and SimpleSampleProvenance)
     List<String> batchIds = new ArrayList<>();
     addBatchId(sample, batchIds);
