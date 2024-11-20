@@ -52,7 +52,7 @@
     <artifactId>pinery</artifactId>
     <packaging>pom</packaging>
     <groupId>ca.on.oicr</groupId>
-    <version>3.0.1</version>
+    <version>3.0.2-SNAPSHOT</version>
 
     <modules>
         <module>pinery-api</module>
