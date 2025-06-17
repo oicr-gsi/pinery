@@ -158,8 +158,15 @@ public final class Dtos {
     dto.setContactName(from.getContactName());
     dto.setContactEmail(from.getContactEmail());
     if (from.getDeliverables() != null) {
-      dto.setDeliverables(from.getDeliverables().stream().collect(Collectors.toSet()));
+      dto.setDeliverables(from.getDeliverables().stream().map(Dtos::asDto).collect(Collectors.toSet()));
     }
+    return dto;
+  }
+
+  public static DeliverableDto asDto(Deliverable from) {
+    DeliverableDto dto = new DeliverableDto();
+    dto.setName(from.getName());
+    dto.setCategory(from.getCategory());
     dto.setAnalysisReviewRequired(from.getAnalysisReviewRequired());
     return dto;
   }

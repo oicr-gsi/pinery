@@ -1,5 +1,6 @@
 package ca.on.oicr.pinery.lims;
 
+import ca.on.oicr.pinery.api.Deliverable;
 import ca.on.oicr.pinery.api.SampleProject;
 import java.util.Date;
 import java.util.Set;
@@ -21,8 +22,7 @@ public class DefaultSampleProject implements SampleProject {
   private Integer samplesExpected;
   private String contactName;
   private String contactEmail;
-  private Set<String> deliverables;
-  private Boolean analysisReviewRequired;
+  private Set<Deliverable> deliverables;
 
   @Override
   public String getName() {
@@ -178,22 +178,12 @@ public class DefaultSampleProject implements SampleProject {
   }
 
   @Override
-  public Set<String> getDeliverables() {
+  public Set<Deliverable> getDeliverables() {
     return deliverables;
   }
 
   @Override
-  public void setDeliverables(Set<String> deliverables) {
+  public void setDeliverables(Set<Deliverable> deliverables) {
     this.deliverables = deliverables;
-  }
-
-  @Override
-  public Boolean getAnalysisReviewRequired() {
-    return analysisReviewRequired;
-  }
-
-  @Override
-  public void setAnalysisReviewRequired(Boolean analysisReviewRequired) {
-    this.analysisReviewRequired = analysisReviewRequired;
   }
 }
