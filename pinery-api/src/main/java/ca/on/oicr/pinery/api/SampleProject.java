@@ -65,11 +65,7 @@ public interface SampleProject {
 
   void setContactEmail(String contactEmail);
 
-  Set<String> getDeliverables();
+  Set<Deliverable> getDeliverables();
 
-  void setDeliverables(Set<String> deliverables);
-
-  Boolean getAnalysisReviewRequired();
-
-  void setAnalysisReviewRequired(Boolean analysisReviewRequired);
+  void setDeliverables(Set<Deliverable> deliverables);
 }
