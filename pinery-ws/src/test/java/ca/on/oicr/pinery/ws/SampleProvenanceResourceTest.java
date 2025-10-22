@@ -13,6 +13,7 @@ import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.PreparationKit;
 import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunContainer;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
@@ -23,6 +24,7 @@ import ca.on.oicr.pinery.lims.DefaultInstrument;
 import ca.on.oicr.pinery.lims.DefaultInstrumentModel;
 import ca.on.oicr.pinery.lims.DefaultPreparationKit;
 import ca.on.oicr.pinery.lims.DefaultRun;
+import ca.on.oicr.pinery.lims.DefaultRunContainer;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
 import ca.on.oicr.pinery.lims.DefaultSample;
@@ -44,6 +46,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.junit.Test;
@@ -207,6 +210,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
     sp.setSample(makeBaseSample());
     sp.setRunSample(makeBaseRunSample());
+    sp.setContainer(makeBaseContainer());
     sp.setLane(makeBaseLane());
     sp.setSequencerRun(makeBaseRun());
     sp.setInstrument(makeBaseInstrument());
@@ -309,6 +313,14 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     return s;
   }
 
+  private RunContainer makeBaseContainer() {
+    RunContainer container = new DefaultRunContainer();
+    container.setContainerModel("S4");
+    container.setPositions(Sets.newHashSet(makeBaseLane()));
+    container.setInstrumentPosition("A");
+    return container;
+  }
+
   private RunPosition makeBaseLane() {
     RunPosition l = new DefaultRunPosition();
     l.setPosition(1);
@@ -332,7 +344,6 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     r.setStartDate(makeDate("2018-11-01T00:00:00Z"));
     r.setCompletionDate(makeDate("2018-11-01T00:00:00Z"));
     r.setBarcode("ABCDEFXX");
-    r.setSample(Sets.newHashSet(makeBaseLane()));
     r.setReadLength("2x101");
     r.setRunBasesMask("y101,I9,y101");
     r.setRunDirectory("/path/to/run");
@@ -343,8 +354,8 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     r.setModifiedById(3);
     r.setSequencingParameters("V4 2x126");
     r.setWorkflowType("NovaSeqXp");
-    r.setContainerModel("S4");
     r.setSequencingKit("SomeKit");
+    r.setContainers(Sets.newHashSet(makeBaseContainer()));
     return r;
   }
 
@@ -361,6 +372,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     InstrumentModel m = new DefaultInstrumentModel();
     m.setId(456);
     m.setName("Model");
+    m.setMultipleContainers(false);
     m.setCreated(makeDate("2018-11-01T09:54:23Z"));
     m.setCreatedById(3);
     m.setModified(makeDate("2018-11-01T09:54:23Z"));

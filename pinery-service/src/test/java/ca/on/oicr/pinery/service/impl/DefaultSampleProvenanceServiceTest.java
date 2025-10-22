@@ -7,17 +7,23 @@ import static org.mockito.Mockito.when;
 
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.pinery.api.Attribute;
+import ca.on.oicr.pinery.api.Instrument;
+import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunContainer;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.SampleProject;
 import ca.on.oicr.pinery.lims.DefaultAttribute;
+import ca.on.oicr.pinery.lims.DefaultInstrument;
+import ca.on.oicr.pinery.lims.DefaultInstrumentModel;
 import ca.on.oicr.pinery.lims.DefaultOrder;
 import ca.on.oicr.pinery.lims.DefaultOrderSample;
 import ca.on.oicr.pinery.lims.DefaultRun;
+import ca.on.oicr.pinery.lims.DefaultRunContainer;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
 import ca.on.oicr.pinery.lims.DefaultSample;
@@ -54,10 +60,13 @@ public class DefaultSampleProvenanceServiceTest {
   Sample parentSample;
   Sample sample;
   RunSample runSample;
+  RunContainer container;
   RunPosition lane;
   Run run;
   OrderSample orderSample;
   Order order;
+  Instrument instrument;
+  InstrumentModel instrumentModel;
   ZonedDateTime runCompletionDate = ZonedDateTime.parse("2014-01-01T00:00:00.000Z");
   SampleProvenance before;
 
@@ -98,11 +107,15 @@ public class DefaultSampleProvenanceServiceTest {
     lane.setPosition(1);
     lane.setRunSample(Sets.newHashSet(runSample));
 
+    container = new DefaultRunContainer();
+    container.setPositions(Sets.newHashSet(lane));
+
     run = new DefaultRun();
     run.setId(1);
     run.setName("ABC_123");
-    run.setSample(Sets.newHashSet(lane));
+    run.setContainers(Sets.newHashSet(container));
     run.setCompletionDate(Date.from(runCompletionDate.toInstant()));
+    run.setInstrumentId(1);
 
     orderSample = new DefaultOrderSample();
     orderSample.setId(sampleId);
@@ -112,10 +125,22 @@ public class DefaultSampleProvenanceServiceTest {
     order = new DefaultOrder();
     order.setSample(ImmutableSet.of(orderSample));
 
+    instrument = new DefaultInstrument();
+    instrument.setId(1);
+    instrument.setModelId(1);
+    instrument.setName("NOVA1");
+
+    instrumentModel = new DefaultInstrumentModel();
+    instrumentModel.setId(1);
+    instrumentModel.setMultipleContainers(false);
+    instrumentModel.setName("NovaSeq");
+
     when(lims.getSampleProjects()).thenReturn(Lists.newArrayList(project));
     when(lims.getSamples(null, null, null, null, null)).thenReturn(samples);
     when(lims.getRuns(null)).thenReturn(Lists.newArrayList(run));
     when(lims.getOrders()).thenReturn(Lists.newArrayList(order));
+    when(lims.getInstruments()).thenReturn(Lists.newArrayList(instrument));
+    when(lims.getInstrumentModels()).thenReturn(Lists.newArrayList(instrumentModel));
     before = Dtos.asDto(getSampleProvenanceById("1_1_1"));
   }
 

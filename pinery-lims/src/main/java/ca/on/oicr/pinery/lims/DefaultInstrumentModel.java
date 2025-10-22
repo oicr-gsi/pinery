@@ -12,6 +12,7 @@ public class DefaultInstrumentModel implements InstrumentModel {
   private Date modified;
   private Integer modifiedById;
   private String platform;
+  private boolean multipleContainers;
 
   public Integer getId() {
     return id;
@@ -67,5 +68,13 @@ public class DefaultInstrumentModel implements InstrumentModel {
 
   public void setPlatform(String platform) {
     this.platform = platform;
+  }
+
+  public boolean hasMultipleContainers() {
+    return multipleContainers;
+  }
+
+  public void setMultipleContainers(boolean multipleContainers) {
+    this.multipleContainers = multipleContainers;
   }
 }

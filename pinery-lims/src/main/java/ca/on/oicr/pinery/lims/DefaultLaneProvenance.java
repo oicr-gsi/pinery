@@ -4,6 +4,7 @@ import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunContainer;
 import ca.on.oicr.pinery.api.RunPosition;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Multimaps;
@@ -23,6 +24,7 @@ public class DefaultLaneProvenance implements LaneProvenance {
   private Instrument instrument;
   private InstrumentModel instrumentModel;
   private Run sequencerRun;
+  private RunContainer container;
   private RunPosition lane;
 
   public void setInstrument(Instrument instrument) {
@@ -35,6 +37,10 @@ public class DefaultLaneProvenance implements LaneProvenance {
 
   public void setSequencerRun(Run sequencerRun) {
     this.sequencerRun = sequencerRun;
+  }
+
+  public void setContainer(RunContainer container) {
+    this.container = container;
   }
 
   public void setLane(RunPosition lane) {
@@ -64,7 +70,11 @@ public class DefaultLaneProvenance implements LaneProvenance {
         attrs.put(
             LimsSequencerRunAttribute.RUN_BASES_MASK.getKey(), sequencerRun.getRunBasesMask());
       }
-      if (sequencerRun.getSequencingParameters() != null) {
+      if (container.getSequencingParameters() != null) {
+        attrs.put(
+            LimsSequencerRunAttribute.SEQUENCING_PARAMETERS.getKey(),
+            container.getSequencingParameters());
+      } else if (sequencerRun.getSequencingParameters() != null) {
         attrs.put(
             LimsSequencerRunAttribute.SEQUENCING_PARAMETERS.getKey(),
             sequencerRun.getSequencingParameters());
@@ -72,9 +82,9 @@ public class DefaultLaneProvenance implements LaneProvenance {
       if (sequencerRun.getWorkflowType() != null) {
         attrs.put(LimsSequencerRunAttribute.WORKFLOW_TYPE.getKey(), sequencerRun.getWorkflowType());
       }
-      if (sequencerRun.getContainerModel() != null) {
+      if (container.getContainerModel() != null) {
         attrs.put(
-            LimsSequencerRunAttribute.CONTAINER_MODEL.getKey(), sequencerRun.getContainerModel());
+            LimsSequencerRunAttribute.CONTAINER_MODEL.getKey(), container.getContainerModel());
       }
       if (sequencerRun.getSequencingKit() != null) {
         attrs.put(
@@ -95,8 +105,8 @@ public class DefaultLaneProvenance implements LaneProvenance {
 
   @Override
   public String getLaneNumber() {
-    if (lane == null) {
-      return null;
+    if (instrumentModel.hasMultipleContainers()) {
+      return container.getInstrumentPosition() + "_" + lane.getPosition().toString();
     } else {
       return lane.getPosition().toString();
     }
@@ -124,19 +134,19 @@ public class DefaultLaneProvenance implements LaneProvenance {
   @Override
   public Boolean getSkip() {
     if ((sequencerRun.getStatus() == null
-            || "Not Ready".equals(sequencerRun.getStatus().getState()))
+        || "Not Ready".equals(sequencerRun.getStatus().getState()))
         && lane.isAnalysisSkipped() == null) {
       return null;
     } else {
       return (sequencerRun.getStatus() != null
-              && "Failed".equals(sequencerRun.getStatus().getState()))
+          && "Failed".equals(sequencerRun.getStatus().getState()))
           || Boolean.TRUE.equals(lane.isAnalysisSkipped());
     }
   }
 
   @Override
   public String getLaneProvenanceId() {
-    return sequencerRun.getId() + "_" + lane.getPosition();
+    return sequencerRun.getId() + "_" + getLaneNumber();
   }
 
   @Override
@@ -160,19 +170,19 @@ public class DefaultLaneProvenance implements LaneProvenance {
   public ZonedDateTime getLastModified() {
     return Util.optionalDateToZDT(
         Stream.of(
-                sequencerRun.getCreatedDate(),
-                sequencerRun.getCompletionDate(),
-                sequencerRun.getModified(),
-                lane == null ? null : lane.getPoolCreated(),
-                lane == null ? null : lane.getPoolModified())
+            sequencerRun.getCreatedDate(),
+            sequencerRun.getCompletionDate(),
+            sequencerRun.getModified(),
+            lane == null ? null : lane.getPoolCreated(),
+            lane == null ? null : lane.getPoolModified())
             .filter(Objects::nonNull)
             .max(Date::compareTo));
   }
 
   @Override
   public ZonedDateTime getCreatedDate() {
-    // completion date is used as this is the first date that this provenance object is ready for
-    // processing
+    // completion date is used as this is the first date that this provenance object
+    // is ready for processing
     return Util.optionalDateToZDT(
         Stream.of(sequencerRun.getCompletionDate()).filter(Objects::nonNull).min(Date::compareTo));
   }

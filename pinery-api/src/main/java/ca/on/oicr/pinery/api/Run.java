@@ -6,107 +6,104 @@ import java.util.Set;
 
 public interface Run {
 
-  public String getState();
+  String getState();
 
-  public void setState(String state);
+  void setState(String state);
 
-  public String getName();
+  String getName();
 
-  public void setName(String name);
+  void setName(String name);
 
-  public String getBarcode();
+  String getBarcode();
 
-  public void setBarcode(String barcode);
+  void setBarcode(String barcode);
 
-  public String getBarcodeTwo();
+  String getBarcodeTwo();
 
-  public void setBarcodeTwo(String barcodeTwo);
+  void setBarcodeTwo(String barcodeTwo);
 
-  public Set<RunPosition> getSamples();
+  Date getCreatedDate();
 
-  public void setSample(Set<RunPosition> samples);
+  void setCreatedDate(Date createdDate);
 
-  public Date getCreatedDate();
+  Integer getId();
 
-  public void setCreatedDate(Date createdDate);
+  void setId(Integer id);
 
-  public Integer getId();
+  Integer getCreatedById();
 
-  public void setId(Integer id);
+  void setCreatedById(Integer createdById);
 
-  public Integer getCreatedById();
+  Integer getInstrumentId();
 
-  public void setCreatedById(Integer createdById);
+  void setInstrumentId(Integer instrumentId);
 
-  public Integer getInstrumentId();
+  String getInstrumentName();
 
-  public void setInstrumentId(Integer instrumentId);
+  void setInstrumentName(String instrumentName);
 
-  public String getInstrumentName();
+  String getReadLength();
 
-  public void setInstrumentName(String instrumentName);
+  void setReadLength(String readLength);
 
-  public String getReadLength();
+  Date getStartDate();
 
-  public void setReadLength(String readLength);
+  void setStartDate(Date startDate);
 
-  public Date getStartDate();
+  Date getCompletionDate();
 
-  public void setStartDate(Date startDate);
+  void setCompletionDate(Date endDate);
 
-  public Date getCompletionDate();
+  Date getModified();
 
-  public void setCompletionDate(Date endDate);
+  void setModified(Date modified);
 
-  public Date getModified();
+  Integer getModifiedById();
 
-  public void setModified(Date modified);
+  void setModifiedById(Integer modifiedById);
 
-  public Integer getModifiedById();
+  String getRunDirectory();
 
-  public void setModifiedById(Integer modifiedById);
+  void setRunDirectory(String runDirectory);
 
-  public String getRunDirectory();
+  String getRunBasesMask();
 
-  public void setRunDirectory(String runDirectory);
+  void setRunBasesMask(String runBasesMask);
 
-  public String getRunBasesMask();
+  String getSequencingParameters();
 
-  public void setRunBasesMask(String runBasesMask);
+  void setSequencingParameters(String sequencingParameters);
 
-  public String getSequencingParameters();
+  String getChemistry();
 
-  public void setSequencingParameters(String sequencingParameters);
+  void setChemistry(String chemistry);
 
-  public String getChemistry();
+  String getWorkflowType();
 
-  public void setChemistry(String chemistry);
+  void setWorkflowType(String workflowType);
 
-  public String getWorkflowType();
+  String getSequencingKit();
 
-  public void setWorkflowType(String workflowType);
+  void setSequencingKit(String sequencingKit);
 
-  public String getContainerModel();
+  Status getStatus();
 
-  public void setContainerModel(String containerModel);
+  void setStatus(Status status);
 
-  public String getSequencingKit();
+  Boolean getDataReview();
 
-  public void setSequencingKit(String sequencingKit);
+  void setDataReview(Boolean dataReview);
 
-  public Status getStatus();
+  LocalDate getDataReviewDate();
 
-  public void setStatus(Status status);
+  void setDataReviewDate(LocalDate dataReviewDate);
 
-  public Boolean getDataReview();
+  Integer getDataReviewerId();
 
-  public void setDataReview(Boolean dataReview);
+  void setDataReviewerId(Integer dataReviewerId);
 
-  public LocalDate getDataReviewDate();
+  Set<RunContainer> getContainers();
 
-  public void setDataReviewDate(LocalDate dataReviewDate);
+  void setContainers(Set<RunContainer> containers);
 
-  public Integer getDataReviewerId();
-
-  public void setDataReviewerId(Integer dataReviewerId);
 }

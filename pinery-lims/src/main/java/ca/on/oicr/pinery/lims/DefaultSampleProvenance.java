@@ -5,6 +5,7 @@ import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunContainer;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
@@ -42,6 +43,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
   private Instrument instrument;
   private InstrumentModel instrumentModel;
   private Run sequencerRun;
+  private RunContainer container;
   private RunPosition lane;
   private RunSample runSample;
   private Sample sample;
@@ -69,6 +71,10 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
   public void setRunSample(RunSample runSample) {
     this.runSample = runSample;
+  }
+
+  public void setContainer(RunContainer container) {
+    this.container = container;
   }
 
   public void setLane(RunPosition lane) {
@@ -237,7 +243,11 @@ public class DefaultSampleProvenance implements SampleProvenance {
         attrs.put(
             LimsSequencerRunAttribute.RUN_BASES_MASK.getKey(), sequencerRun.getRunBasesMask());
       }
-      if (sequencerRun.getSequencingParameters() != null) {
+      if (container.getSequencingParameters() != null) {
+        attrs.put(
+            LimsSequencerRunAttribute.SEQUENCING_PARAMETERS.getKey(),
+            container.getSequencingParameters());
+      } else if (sequencerRun.getSequencingParameters() != null) {
         attrs.put(
             LimsSequencerRunAttribute.SEQUENCING_PARAMETERS.getKey(),
             sequencerRun.getSequencingParameters());
@@ -245,9 +255,9 @@ public class DefaultSampleProvenance implements SampleProvenance {
       if (sequencerRun.getWorkflowType() != null) {
         attrs.put(LimsSequencerRunAttribute.WORKFLOW_TYPE.getKey(), sequencerRun.getWorkflowType());
       }
-      if (sequencerRun.getContainerModel() != null) {
+      if (container.getContainerModel() != null) {
         attrs.put(
-            LimsSequencerRunAttribute.CONTAINER_MODEL.getKey(), sequencerRun.getContainerModel());
+            LimsSequencerRunAttribute.CONTAINER_MODEL.getKey(), container.getContainerModel());
       }
       if (sequencerRun.getSequencingKit() != null) {
         attrs.put(
@@ -268,8 +278,8 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
   @Override
   public String getLaneNumber() {
-    if (lane == null) {
-      return null;
+    if (instrumentModel.hasMultipleContainers()) {
+      return container.getInstrumentPosition() + "_" + lane.getPosition().toString();
     } else {
       return lane.getPosition().toString();
     }
@@ -346,7 +356,7 @@ public class DefaultSampleProvenance implements SampleProvenance {
 
   @Override
   public String getSampleProvenanceId() {
-    return sequencerRun.getId() + "_" + lane.getPosition() + "_" + sample.getId();
+    return sequencerRun.getId() + "_" + getLaneNumber() + "_" + sample.getId();
   }
 
   @Override

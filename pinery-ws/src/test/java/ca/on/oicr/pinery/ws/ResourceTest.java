@@ -7,11 +7,13 @@ import static org.mockito.Mockito.*;
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunContainer;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.lims.DefaultOrder;
 import ca.on.oicr.pinery.lims.DefaultOrderSample;
 import ca.on.oicr.pinery.lims.DefaultRun;
+import ca.on.oicr.pinery.lims.DefaultRunContainer;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
 import ca.on.oicr.pinery.service.OrderService;
@@ -20,6 +22,7 @@ import ca.on.oicr.ws.dto.AttributeDto;
 import ca.on.oicr.ws.dto.OrderDto;
 import ca.on.oicr.ws.dto.OrderDtoSample;
 import ca.on.oicr.ws.dto.RunDto;
+import ca.on.oicr.ws.dto.RunDtoContainer;
 import ca.on.oicr.ws.dto.RunDtoPosition;
 import ca.on.oicr.ws.dto.RunDtoSample;
 import com.google.common.collect.Lists;
@@ -394,25 +397,25 @@ public class ResourceTest {
     runDto.setState("Complete");
     runDto.setUrl("http://test/run//2");
 
-    RunDtoPosition runPosition = new RunDtoPosition();
+    RunDtoContainer container = new RunDtoContainer();
+    Set<RunDtoContainer> containers = Sets.newHashSet();
+    containers.add(container);
+
+    RunDtoPosition position = new RunDtoPosition();
+    position.setPosition(54);
     Set<RunDtoPosition> positions = Sets.newHashSet();
-    positions.add(runPosition);
+    positions.add(position);
 
-    RunDtoSample sampleObj = new RunDtoSample();
-    Set<RunDtoSample> runSample = Sets.newHashSet();
-    runSample.add(sampleObj);
+    RunDtoSample sample = new RunDtoSample();
+    sample.setBarcode("ABC");
+    sample.setId("45");
+    sample.setUrl("http://test/run/45");
+    Set<RunDtoSample> samples = Sets.newHashSet();
+    samples.add(sample);
 
-    for (RunDtoPosition position : positions) {
-      position.setPosition(54);
-      for (RunDtoSample sample : runSample) {
-        sample.setBarcode("ABC");
-        sample.setId("45");
-        sample.setUrl("http://test/run/45");
-      }
-      position.setSamples(runSample);
-    }
-
-    runDto.setPositions(positions);
+    position.setSamples(samples);
+    container.setPositions(positions);
+    runDto.setContainers(containers);
 
     listRunDto.add(runDto);
 
@@ -427,24 +430,24 @@ public class ResourceTest {
     run.setName("130906_SN203_0196_AC2D4DACXX");
     run.setState("Complete");
 
-    RunPosition runPosition = new DefaultRunPosition();
+    RunContainer container = new DefaultRunContainer();
+    Set<RunContainer> containers = Sets.newHashSet();
+    containers.add(container);
+
+    RunPosition position = new DefaultRunPosition();
+    position.setPosition(54);
     Set<RunPosition> positions = Sets.newHashSet();
-    positions.add(runPosition);
+    positions.add(position);
 
-    RunSample sampleObj = new DefaultRunSample();
-    Set<RunSample> runSample = Sets.newHashSet();
-    runSample.add(sampleObj);
+    RunSample sample = new DefaultRunSample();
+    sample.setBarcode("ABC");
+    sample.setId("45");
+    Set<RunSample> samples = Sets.newHashSet();
+    samples.add(sample);
 
-    for (RunPosition position : positions) {
-      position.setPosition(54);
-      for (RunSample sample : runSample) {
-        sample.setBarcode("ABC");
-        sample.setId("45");
-      }
-      position.setRunSample(runSample);
-    }
-
-    run.setSample(positions);
+    position.setRunSample(samples);
+    container.setPositions(positions);
+    run.setContainers(containers);
     return run;
   }
 
@@ -488,24 +491,24 @@ public class ResourceTest {
     run.setBarcode("C2D8J");
     run.setState("Complete");
 
-    RunPosition runPosition = new DefaultRunPosition();
+    RunContainer container = new DefaultRunContainer();
+    Set<RunContainer> containers = Sets.newHashSet();
+    containers.add(container);
+
+    RunPosition position = new DefaultRunPosition();
+    position.setPosition(54);
     Set<RunPosition> positions = Sets.newHashSet();
-    positions.add(runPosition);
+    positions.add(position);
 
-    RunSample sampleObj = new DefaultRunSample();
-    Set<RunSample> runSample = Sets.newHashSet();
-    runSample.add(sampleObj);
+    RunSample sample = new DefaultRunSample();
+    sample.setBarcode("ABC");
+    sample.setId("45");
+    Set<RunSample> samples = Sets.newHashSet();
+    samples.add(sample);
 
-    for (RunPosition position : positions) {
-      position.setPosition(54);
-      for (RunSample sample : runSample) {
-        sample.setBarcode("ABC");
-        sample.setId("45");
-      }
-      position.setRunSample(runSample);
-    }
-
-    run.setSample(positions);
+    position.setRunSample(samples);
+    container.setPositions(positions);
+    run.setContainers(containers);
 
     list.add(run);
 
