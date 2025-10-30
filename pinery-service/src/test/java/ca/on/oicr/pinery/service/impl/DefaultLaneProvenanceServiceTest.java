@@ -9,10 +9,12 @@ import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunContainer;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.lims.DefaultInstrument;
 import ca.on.oicr.pinery.lims.DefaultInstrumentModel;
 import ca.on.oicr.pinery.lims.DefaultRun;
+import ca.on.oicr.pinery.lims.DefaultRunContainer;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.ws.dto.Dtos;
 import com.google.common.collect.Iterables;
@@ -41,6 +43,7 @@ public class DefaultLaneProvenanceServiceTest {
   Instrument instrument;
   InstrumentModel instrumentModel;
   Run run;
+  RunContainer container;
   RunPosition lane;
   LaneProvenance before;
 
@@ -58,10 +61,13 @@ public class DefaultLaneProvenanceServiceTest {
     lane = new DefaultRunPosition();
     lane.setPosition(1);
 
+    container = new DefaultRunContainer();
+    container.setPositions(Sets.newHashSet(lane));
+
     run = new DefaultRun();
     run.setId(1);
     run.setName("ABC_123");
-    run.setSample(Sets.newHashSet(lane));
+    run.setContainers(Sets.newHashSet(container));
     run.setInstrumentId(111);
     run.setInstrumentName("asdasd");
 

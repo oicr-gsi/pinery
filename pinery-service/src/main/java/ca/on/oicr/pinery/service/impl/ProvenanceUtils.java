@@ -8,6 +8,7 @@ import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunContainer;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.api.Sample;
@@ -104,8 +105,7 @@ public class ProvenanceUtils {
           for (Attribute attr : orderSample.getAttributes()) {
             LimsSampleAttribute sa = LimsSampleAttribute.fromString(attr.getName());
             if (LimsSampleAttribute.TARGETED_RESEQUENCING == sa) {
-              String key =
-                  orderSample.getId() + orderSample.getBarcode() + orderSample.getBarcodeTwo();
+              String key = orderSample.getId() + orderSample.getBarcode() + orderSample.getBarcodeTwo();
               if (sampleTargetedRequencingTypeFromSampleIdAndBarcode.containsKey(key)) {
                 if (sampleTargetedRequencingTypeFromSampleIdAndBarcode
                     .get(key)
@@ -142,48 +142,51 @@ public class ProvenanceUtils {
 
     List<SampleProvenance> sps = new ArrayList<>();
 
-    // iterate over all sequencer runs -> lanes -> samples to build sample provenance
+    // iterate over all sequencer runs -> lanes -> samples to build sample
+    // provenance
     for (Run sequencerRun : runs) {
 
       Instrument instrument = instrumentById.get(sequencerRun.getInstrumentId());
-      InstrumentModel instrumentModel =
-          instrument == null ? null : instrumentModelById.get(instrument.getModelId());
+      InstrumentModel instrumentModel = instrument == null ? null : instrumentModelById.get(instrument.getModelId());
+      if (sequencerRun.getContainers() != null) {
+        for (RunContainer container : sequencerRun.getContainers()) {
+          if (container.getPositions() != null) {
+            for (RunPosition lane : container.getPositions()) {
+              if (lane.getRunSample() != null) {
+                for (RunSample runSample : lane.getRunSample()) {
 
-      if (sequencerRun.getSamples() != null) {
-        for (RunPosition lane : sequencerRun.getSamples()) {
-          if (lane.getRunSample() != null) {
-            for (RunSample runSample : lane.getRunSample()) {
+                  Sample sample = samplesById.get(runSample.getId());
+                  if (sample != null) {
+                    DefaultSampleProvenance sp = new DefaultSampleProvenance();
+                    sp.setSample(sample);
+                    sp.setRunSample(runSample);
+                    sp.setContainer(container);
+                    sp.setLane(lane);
+                    sp.setSequencerRun(sequencerRun);
+                    sp.setInstrument(instrument);
+                    sp.setInstrumentModel(instrumentModel);
+                    sp.setSampleProject(projectByName.get(sample.getProject()));
 
-              Sample sample = samplesById.get(runSample.getId());
-              if (sample != null) {
-                DefaultSampleProvenance sp = new DefaultSampleProvenance();
-                sp.setSample(sample);
-                sp.setRunSample(runSample);
-                sp.setLane(lane);
-                sp.setSequencerRun(sequencerRun);
-                sp.setInstrument(instrument);
-                sp.setInstrumentModel(instrumentModel);
-                sp.setSampleProject(projectByName.get(sample.getProject()));
-
-                // special handling of target resequencing type, as this attribute is currently not
-                // stored in sample or run sample attrs
-                String targetedResequencing =
-                    sampleTargetedRequencingTypeFromSampleIdAndBarcode.get(
+                    // special handling of target resequencing type, as this attribute is currently
+                    // not stored in sample or run sample attrs
+                    String targetedResequencing = sampleTargetedRequencingTypeFromSampleIdAndBarcode.get(
                         runSample.getId() + runSample.getBarcode() + runSample.getBarcodeTwo());
-                if (targetedResequencing != null && !"No Target".equals(targetedResequencing)) {
-                  sp.setAdditionalSampleAttributes(
-                      ImmutableMap.<LimsSampleAttribute, Set<String>>of(
-                          LimsSampleAttribute.TARGETED_RESEQUENCING,
-                          ImmutableSet.of(targetedResequencing)));
-                }
+                    if (targetedResequencing != null && !"No Target".equals(targetedResequencing)) {
+                      sp.setAdditionalSampleAttributes(
+                          ImmutableMap.<LimsSampleAttribute, Set<String>>of(
+                              LimsSampleAttribute.TARGETED_RESEQUENCING,
+                              ImmutableSet.of(targetedResequencing)));
+                    }
 
-                LinkedHashSet<Sample> parentSamples = new LinkedHashSet<>();
-                for (String id : sampleHierarchy.getAncestorSampleIds(sample.getId())) {
-                  parentSamples.add(samplesById.get(id));
-                }
-                sp.setParentSamples(parentSamples);
+                    LinkedHashSet<Sample> parentSamples = new LinkedHashSet<>();
+                    for (String id : sampleHierarchy.getAncestorSampleIds(sample.getId())) {
+                      parentSamples.add(samplesById.get(id));
+                    }
+                    sp.setParentSamples(parentSamples);
 
-                sps.add(sp);
+                    sps.add(sp);
+                  }
+                }
               }
             }
           }
@@ -216,20 +219,21 @@ public class ProvenanceUtils {
     for (Run sequencerRun : runs) {
 
       Instrument instrument = instrumentById.get(sequencerRun.getInstrumentId());
-      InstrumentModel instrumentModel =
-          instrument == null ? null : instrumentModelById.get(instrument.getModelId());
+      InstrumentModel instrumentModel = instrument == null ? null : instrumentModelById.get(instrument.getModelId());
 
-      Set<RunPosition> lanes = sequencerRun.getSamples();
-      if (lanes == null || lanes.isEmpty()) {
-        log.warn("Run [{}] does not have any lanes", sequencerRun.getName());
-      } else {
-        for (RunPosition lane : lanes) {
-          DefaultLaneProvenance lp = new DefaultLaneProvenance();
-          lp.setLane(lane);
-          lp.setSequencerRun(sequencerRun);
-          lp.setInstrument(instrument);
-          lp.setInstrumentModel(instrumentModel);
-          lps.add(lp);
+      if (sequencerRun.getContainers() != null) {
+        for (RunContainer container : sequencerRun.getContainers()) {
+          if (container.getPositions() != null) {
+            for (RunPosition lane : container.getPositions()) {
+              DefaultLaneProvenance lp = new DefaultLaneProvenance();
+              lp.setContainer(container);
+              lp.setLane(lane);
+              lp.setSequencerRun(sequencerRun);
+              lp.setInstrument(instrument);
+              lp.setInstrumentModel(instrumentModel);
+              lps.add(lp);
+            }
+          }
         }
       }
     }

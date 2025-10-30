@@ -14,7 +14,6 @@ public class RunDto {
   private String name;
   private String barcode;
   private String instrumentName;
-  private Set<RunDtoPosition> positions;
   private String readLength;
   private Integer createdById;
   private String createdByUrl;
@@ -33,12 +32,12 @@ public class RunDto {
   private String sequencingParameters;
   private String chemistry;
   private String workflowType;
-  private String containerModel;
   private String sequencingKit;
   private StatusDto status;
   private String dataReview;
   private String dataReviewDate;
   private Integer dataReviewerId;
+  private Set<RunDtoContainer> containers;
 
   public String getState() {
     return state;
@@ -62,14 +61,6 @@ public class RunDto {
 
   public void setBarcode(String barcode) {
     this.barcode = barcode;
-  }
-
-  public Set<RunDtoPosition> getPositions() {
-    return positions;
-  }
-
-  public void setPositions(Set<RunDtoPosition> positions) {
-    this.positions = positions;
   }
 
   @JsonProperty("read_length")
@@ -240,14 +231,6 @@ public class RunDto {
     this.workflowType = workflowType;
   }
 
-  public String getContainerModel() {
-    return containerModel;
-  }
-
-  public void setContainerModel(String containerModel) {
-    this.containerModel = containerModel;
-  }
-
   public String getSequencingKit() {
     return sequencingKit;
   }
@@ -291,6 +274,14 @@ public class RunDto {
     this.dataReviewerId = dataReviewerId;
   }
 
+  public Set<RunDtoContainer> getContainers() {
+    return containers;
+  }
+
+  public void setContainers(Set<RunDtoContainer> containers) {
+    this.containers = containers;
+  }
+
   @Override
   public String toString() {
     return "RunDto [state="
@@ -301,8 +292,8 @@ public class RunDto {
         + barcode
         + ", instrumentName="
         + instrumentName
-        + ", positions="
-        + positions
+        + ", containers="
+        + containers
         + ", createdById="
         + createdById
         + ", createdByUrl="
@@ -335,8 +326,6 @@ public class RunDto {
         + sequencingParameters
         + ", workflowType="
         + workflowType
-        + ", containerModel="
-        + containerModel
         + ", sequencingKit="
         + sequencingKit
         + "]";
@@ -354,16 +343,14 @@ public class RunDto {
     result = prime * result + ((instrumentId == null) ? 0 : instrumentId.hashCode());
     result = prime * result + ((instrumentName == null) ? 0 : instrumentName.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
-    result = prime * result + ((positions == null) ? 0 : positions.hashCode());
+    result = prime * result + ((containers == null) ? 0 : containers.hashCode());
     result = prime * result + ((readLength == null) ? 0 : readLength.hashCode());
     result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
     result = prime * result + ((state == null) ? 0 : state.hashCode());
     result = prime * result + ((runDirectory == null) ? 0 : runDirectory.hashCode());
     result = prime * result + ((runBasesMask == null) ? 0 : runBasesMask.hashCode());
-    result =
-        prime * result + ((sequencingParameters == null) ? 0 : sequencingParameters.hashCode());
+    result = prime * result + ((sequencingParameters == null) ? 0 : sequencingParameters.hashCode());
     result = prime * result + ((workflowType == null) ? 0 : workflowType.hashCode());
-    result = prime * result + ((containerModel == null) ? 0 : containerModel.hashCode());
     result = prime * result + ((sequencingKit == null) ? 0 : sequencingKit.hashCode());
     result = prime * result + ((status == null) ? 0 : status.hashCode());
     result = prime * result + ((dataReview == null) ? 0 : dataReview.hashCode());
@@ -374,76 +361,118 @@ public class RunDto {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     RunDto other = (RunDto) obj;
     if (barcode == null) {
-      if (other.barcode != null) return false;
-    } else if (!barcode.equals(other.barcode)) return false;
+      if (other.barcode != null)
+        return false;
+    } else if (!barcode.equals(other.barcode))
+      return false;
     if (completionDate == null) {
-      if (other.completionDate != null) return false;
-    } else if (!completionDate.equals(other.completionDate)) return false;
+      if (other.completionDate != null)
+        return false;
+    } else if (!completionDate.equals(other.completionDate))
+      return false;
     if (createdById == null) {
-      if (other.createdById != null) return false;
-    } else if (!createdById.equals(other.createdById)) return false;
+      if (other.createdById != null)
+        return false;
+    } else if (!createdById.equals(other.createdById))
+      return false;
     if (createdDate == null) {
-      if (other.createdDate != null) return false;
-    } else if (!createdDate.equals(other.createdDate)) return false;
+      if (other.createdDate != null)
+        return false;
+    } else if (!createdDate.equals(other.createdDate))
+      return false;
     if (id == null) {
-      if (other.id != null) return false;
-    } else if (!id.equals(other.id)) return false;
+      if (other.id != null)
+        return false;
+    } else if (!id.equals(other.id))
+      return false;
     if (instrumentId == null) {
-      if (other.instrumentId != null) return false;
-    } else if (!instrumentId.equals(other.instrumentId)) return false;
+      if (other.instrumentId != null)
+        return false;
+    } else if (!instrumentId.equals(other.instrumentId))
+      return false;
     if (instrumentName == null) {
-      if (other.instrumentName != null) return false;
-    } else if (!instrumentName.equals(other.instrumentName)) return false;
+      if (other.instrumentName != null)
+        return false;
+    } else if (!instrumentName.equals(other.instrumentName))
+      return false;
     if (name == null) {
-      if (other.name != null) return false;
-    } else if (!name.equals(other.name)) return false;
-    if (positions == null) {
-      if (other.positions != null) return false;
-    } else if (!positions.equals(other.positions)) return false;
+      if (other.name != null)
+        return false;
+    } else if (!name.equals(other.name))
+      return false;
+    if (containers == null) {
+      if (other.containers != null)
+        return false;
+    } else if (!containers.equals(other.containers))
+      return false;
     if (readLength == null) {
-      if (other.readLength != null) return false;
-    } else if (!readLength.equals(other.readLength)) return false;
+      if (other.readLength != null)
+        return false;
+    } else if (!readLength.equals(other.readLength))
+      return false;
     if (startDate == null) {
-      if (other.startDate != null) return false;
-    } else if (!startDate.equals(other.startDate)) return false;
+      if (other.startDate != null)
+        return false;
+    } else if (!startDate.equals(other.startDate))
+      return false;
     if (state == null) {
-      if (other.state != null) return false;
-    } else if (!state.equals(other.state)) return false;
+      if (other.state != null)
+        return false;
+    } else if (!state.equals(other.state))
+      return false;
     if (runDirectory == null) {
-      if (other.runDirectory != null) return false;
-    } else if (!runDirectory.equals(other.runDirectory)) return false;
+      if (other.runDirectory != null)
+        return false;
+    } else if (!runDirectory.equals(other.runDirectory))
+      return false;
     if (runBasesMask == null) {
-      if (other.runBasesMask != null) return false;
-    } else if (!runBasesMask.equals(other.runBasesMask)) return false;
+      if (other.runBasesMask != null)
+        return false;
+    } else if (!runBasesMask.equals(other.runBasesMask))
+      return false;
     if (sequencingParameters == null) {
-      if (other.sequencingParameters != null) return false;
-    } else if (!sequencingParameters.equals(other.sequencingParameters)) return false;
+      if (other.sequencingParameters != null)
+        return false;
+    } else if (!sequencingParameters.equals(other.sequencingParameters))
+      return false;
     if (workflowType == null) {
-      if (other.workflowType != null) return false;
-    } else if (!workflowType.equals(other.workflowType)) return false;
-    if (containerModel == null) {
-      if (other.containerModel != null) return false;
-    } else if (!containerModel.equals(other.containerModel)) return false;
+      if (other.workflowType != null)
+        return false;
+    } else if (!workflowType.equals(other.workflowType))
+      return false;
     if (sequencingKit == null) {
-      if (other.sequencingKit != null) return false;
-    } else if (!sequencingKit.equals(other.sequencingKit)) return false;
+      if (other.sequencingKit != null)
+        return false;
+    } else if (!sequencingKit.equals(other.sequencingKit))
+      return false;
     if (status == null) {
-      if (other.status != null) return false;
-    } else if (!status.equals(other.status)) return false;
+      if (other.status != null)
+        return false;
+    } else if (!status.equals(other.status))
+      return false;
     if (dataReview == null) {
-      if (other.dataReview != null) return false;
-    } else if (!dataReview.equals(other.dataReview)) return false;
+      if (other.dataReview != null)
+        return false;
+    } else if (!dataReview.equals(other.dataReview))
+      return false;
     if (dataReviewDate == null) {
-      if (other.dataReviewDate != null) return false;
-    } else if (!dataReviewDate.equals(other.dataReviewDate)) return false;
+      if (other.dataReviewDate != null)
+        return false;
+    } else if (!dataReviewDate.equals(other.dataReviewDate))
+      return false;
     if (dataReviewerId == null) {
-      if (other.dataReviewerId != null) return false;
-    } else if (!dataReviewerId.equals(other.dataReviewerId)) return false;
+      if (other.dataReviewerId != null)
+        return false;
+    } else if (!dataReviewerId.equals(other.dataReviewerId))
+      return false;
     return true;
   }
 }

@@ -275,7 +275,8 @@ public class Cache implements DataProvider {
     } else {
       return runs.stream()
           .filter(
-              run -> run.getSamples().stream()
+              run -> run.getContainers().stream()
+                  .flatMap(container -> container.getPositions().stream())
                   .flatMap(pos -> pos.getRunSample().stream())
                   .anyMatch(sample -> sampleIds.contains(sample.getId())))
           .collect(Collectors.toList());

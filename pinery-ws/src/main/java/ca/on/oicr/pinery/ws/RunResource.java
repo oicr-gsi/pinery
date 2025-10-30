@@ -7,6 +7,7 @@ import ca.on.oicr.pinery.service.RunService;
 import ca.on.oicr.pinery.ws.component.RestException;
 import ca.on.oicr.ws.dto.Dtos;
 import ca.on.oicr.ws.dto.RunDto;
+import ca.on.oicr.ws.dto.RunDtoContainer;
 import ca.on.oicr.ws.dto.RunDtoPosition;
 import ca.on.oicr.ws.dto.RunDtoSample;
 import io.swagger.v3.oas.annotations.Operation;
@@ -104,11 +105,15 @@ public class RunResource {
     URI baseUri = getBaseUri(uriBuilder);
     dto.setUrl(buildRunUrl(baseUri, dto.getId()));
 
-    if (dto.getPositions() != null) {
-      for (RunDtoPosition runDtoPosition : dto.getPositions()) {
-        if (runDtoPosition.getSamples() != null && !runDtoPosition.getSamples().isEmpty()) {
-          for (RunDtoSample runDtoSample : runDtoPosition.getSamples()) {
-            runDtoSample.setUrl(buildSampleUrl(baseUri, runDtoSample.getId()));
+    if (dto.getContainers() != null) {
+      for (RunDtoContainer container : dto.getContainers()) {
+        if (container.getPositions() != null) {
+          for (RunDtoPosition runDtoPosition : container.getPositions()) {
+            if (runDtoPosition.getSamples() != null && !runDtoPosition.getSamples().isEmpty()) {
+              for (RunDtoSample runDtoSample : runDtoPosition.getSamples()) {
+                runDtoSample.setUrl(buildSampleUrl(baseUri, runDtoSample.getId()));
+              }
+            }
           }
         }
       }

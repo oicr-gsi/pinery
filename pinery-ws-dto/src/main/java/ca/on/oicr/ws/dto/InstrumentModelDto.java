@@ -20,6 +20,7 @@ public class InstrumentModelDto {
   private String instrumentsUrl;
   private Integer id;
   private String platform;
+  private boolean multipleContainers;
 
   public String getUrl() {
     return url;
@@ -114,5 +115,14 @@ public class InstrumentModelDto {
 
   public void setPlatform(String platform) {
     this.platform = platform;
+  }
+
+  @JsonProperty("multiple_containers")
+  public boolean hasMultipleContainers() {
+    return multipleContainers;
+  }
+
+  public void setMultipleContainers(boolean multipleContainers) {
+    this.multipleContainers = multipleContainers;
   }
 }

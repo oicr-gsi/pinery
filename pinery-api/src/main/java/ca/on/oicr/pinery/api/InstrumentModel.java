@@ -4,31 +4,36 @@ import java.util.Date;
 
 public interface InstrumentModel {
 
-  public Integer getId();
+  Integer getId();
 
-  public void setId(Integer id);
+  void setId(Integer id);
 
-  public String getName();
+  String getName();
 
-  public void setName(String name);
+  void setName(String name);
 
-  public Date getCreated();
+  Date getCreated();
 
-  public void setCreated(Date created);
+  void setCreated(Date created);
 
-  public Integer getCreatedById();
+  Integer getCreatedById();
 
-  public void setCreatedById(Integer createdById);
+  void setCreatedById(Integer createdById);
 
-  public Date getModified();
+  Date getModified();
 
-  public void setModified(Date modified);
+  void setModified(Date modified);
 
-  public Integer getModifiedById();
+  Integer getModifiedById();
 
-  public void setModifiedById(Integer modifiedById);
+  void setModifiedById(Integer modifiedById);
 
-  public void setPlatform(String platform);
+  void setPlatform(String platform);
 
-  public String getPlatform();
+  String getPlatform();
+
+  boolean hasMultipleContainers();
+
+  void setMultipleContainers(boolean multipleContainers);
+  
 }

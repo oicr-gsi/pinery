@@ -8,12 +8,14 @@ import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
 import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunContainer;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.lims.DefaultAttribute;
 import ca.on.oicr.pinery.lims.DefaultOrder;
 import ca.on.oicr.pinery.lims.DefaultOrderSample;
 import ca.on.oicr.pinery.lims.DefaultRun;
+import ca.on.oicr.pinery.lims.DefaultRunContainer;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
 import java.math.BigDecimal;
@@ -216,13 +218,17 @@ public class DtosTest {
   @Test
   public void testRun7() throws Exception {
     Run input = new DefaultRun();
-    Set<RunPosition> sample = new HashSet<>();
+    Set<RunContainer> containers = new HashSet<>();
+    RunContainer container = new DefaultRunContainer();
+    Set<RunPosition> positions = new HashSet<>();
     RunPosition runPosition = new DefaultRunPosition();
     runPosition.setPosition(23);
-    sample.add(runPosition);
-    input.setSample(sample);
+    positions.add(runPosition);
+    container.setPositions(positions);
+    containers.add(container);
+    input.setContainers(containers);
     RunDto output = Dtos.asDto(input);
-    assertThat(output.getPositions().iterator().next().getPosition(), is(23));
+    assertThat(output.getContainers().iterator().next().getPositions().iterator().next().getPosition(), is(23));
   }
 
   @Test
@@ -239,7 +245,7 @@ public class DtosTest {
     RunPosition runPosition = new DefaultRunPosition();
     runPosition.setPosition(12);
     input.add(runPosition);
-    Set<RunDtoPosition> output = Dtos.asDto2(input);
+    Set<RunDtoPosition> output = Dtos.asRunPositionDtos(input);
     assertThat(output.toArray().length, is(1));
   }
 

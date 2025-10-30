@@ -8,7 +8,6 @@ import com.google.common.collect.Sets;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -307,9 +306,7 @@ public final class Dtos {
     if (from.getCreatedDate() != null) {
       dto.setCreatedDate(format(from.getCreatedDate()));
     }
-    if (from.getSamples() != null && !from.getSamples().isEmpty()) {
-      dto.setPositions(asDto2(from.getSamples()));
-    }
+    dto.setContainers(asRunContainerDtos(from.getContainers()));
     if (from.getCreatedById() != null) {
       dto.setCreatedById(from.getCreatedById());
     }
@@ -335,7 +332,6 @@ public final class Dtos {
     dto.setSequencingParameters(from.getSequencingParameters());
     dto.setChemistry(from.getChemistry());
     dto.setWorkflowType(from.getWorkflowType());
-    dto.setContainerModel(from.getContainerModel());
     dto.setSequencingKit(from.getSequencingKit());
     if (from.getStatus() != null) {
       dto.setStatus(asDto(from.getStatus()));
@@ -350,8 +346,26 @@ public final class Dtos {
     return dto;
   }
 
-  public static Set<RunDtoPosition> asDto2(Set<RunPosition> from) {
+  public static Set<RunDtoContainer> asRunContainerDtos(Set<RunContainer> from) {
+    if (from == null || from.isEmpty()) {
+      return null;
+    }
+    return from.stream().map(Dtos::asDto).collect(Collectors.toSet());
+  }
 
+  public static RunDtoContainer asDto(RunContainer from) {
+    RunDtoContainer dto = new RunDtoContainer();
+    dto.setInstrumentPosition(from.getInstrumentPosition());
+    dto.setContainerModel(from.getContainerModel());
+    dto.setSequencingParameters(from.getSequencingParameters());
+    dto.setPositions(asRunPositionDtos(from.getPositions()));
+    return dto;
+  }
+
+  public static Set<RunDtoPosition> asRunPositionDtos(Set<RunPosition> from) {
+    if (from == null || from.isEmpty()) {
+      return null;
+    }
     Set<RunDtoPosition> dtoSet = Sets.newHashSet();
     for (RunPosition runSample : from) {
       dtoSet.add(asDto(runSample));
@@ -376,7 +390,7 @@ public final class Dtos {
     if (from.getPoolModified() != null)
       dto.setPoolModified(format(from.getPoolModified()));
     if (from.getRunSample() != null && !from.getRunSample().isEmpty()) {
-      dto.setSamples(asDto3(from.getRunSample()));
+      dto.setSamples(asRunSampleDtos(from.getRunSample()));
     }
     dto.setQcStatus(from.getQcStatus());
     dto.setAnalysisSkipped(from.isAnalysisSkipped());
@@ -384,15 +398,18 @@ public final class Dtos {
     return dto;
   }
 
-  public static Set<RunDtoSample> asDto3(Set<RunSample> from) {
+  public static Set<RunDtoSample> asRunSampleDtos(Set<RunSample> from) {
+    if (from == null || from.isEmpty()) {
+      return null;
+    }
     Set<RunDtoSample> dtoSet = Sets.newHashSet();
     for (RunSample runSample : from) {
-      dtoSet.add(asDto3(runSample));
+      dtoSet.add(asDto(runSample));
     }
     return dtoSet;
   }
 
-  public static RunDtoSample asDto3(RunSample from) {
+  public static RunDtoSample asDto(RunSample from) {
     RunDtoSample dto = new RunDtoSample();
     dto.setId(from.getId());
     if (from.getAttributes() != null && !from.getAttributes().isEmpty()) {
@@ -485,6 +502,7 @@ public final class Dtos {
     if (from.getPlatform() != null) {
       dto.setPlatform(from.getPlatform());
     }
+    dto.setMultipleContainers(from.hasMultipleContainers());
     return dto;
   }
 

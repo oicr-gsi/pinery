@@ -12,6 +12,7 @@ import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Instrument;
 import ca.on.oicr.pinery.api.InstrumentModel;
 import ca.on.oicr.pinery.api.Run;
+import ca.on.oicr.pinery.api.RunContainer;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
 import ca.on.oicr.pinery.lims.DefaultAttribute;
@@ -19,6 +20,7 @@ import ca.on.oicr.pinery.lims.DefaultInstrument;
 import ca.on.oicr.pinery.lims.DefaultInstrumentModel;
 import ca.on.oicr.pinery.lims.DefaultLaneProvenance;
 import ca.on.oicr.pinery.lims.DefaultRun;
+import ca.on.oicr.pinery.lims.DefaultRunContainer;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
 import ca.on.oicr.pinery.service.LaneProvenanceService;
@@ -193,6 +195,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
     lp.setInstrumentModel(makeBaseInstrumentModel());
     lp.setInstrument(makeBaseInstrument());
     lp.setSequencerRun(makeBaseRun());
+    lp.setContainer(makeBaseContainer());
     lp.setLane(makeBaseLane());
     return lp;
   }
@@ -201,6 +204,7 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
     InstrumentModel m = new DefaultInstrumentModel();
     m.setId(456);
     m.setName("Model");
+    m.setMultipleContainers(false);
     m.setCreated(makeDate("2018-11-01T09:54:23Z"));
     m.setCreatedById(3);
     m.setModified(makeDate("2018-11-01T09:54:23Z"));
@@ -215,6 +219,14 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
     i.setModelId(456);
     i.setCreated(makeDate("2018-11-01T09:56:01Z"));
     return i;
+  }
+
+  private RunContainer makeBaseContainer() {
+    RunContainer container = new DefaultRunContainer();
+    container.setContainerModel("S4");
+    container.setPositions(Sets.newHashSet(makeBaseLane()));
+    container.setInstrumentPosition("A");
+    return container;
   }
 
   private RunPosition makeBaseLane() {
@@ -256,7 +268,6 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
     r.setStartDate(makeDate("2018-11-01T00:00:00Z"));
     r.setCompletionDate(makeDate("2018-11-01T00:00:00Z"));
     r.setBarcode("ABCDEFXX");
-    r.setSample(Sets.newHashSet(makeBaseLane()));
     r.setReadLength("2x101");
     r.setRunBasesMask("y101,I9,y101");
     r.setRunDirectory("/path/to/run");
@@ -267,8 +278,8 @@ public class LaneProvenanceResourceTest extends AbstractResourceTest {
     r.setModifiedById(3);
     r.setSequencingParameters("V4 2x126");
     r.setWorkflowType("NovaSeqXp");
-    r.setContainerModel("S4");
     r.setSequencingKit("SomeKit");
+    r.setContainers(Sets.newHashSet(makeBaseContainer()));
     return r;
   }
 
