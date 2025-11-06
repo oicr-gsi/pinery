@@ -14,14 +14,6 @@ public interface Run {
 
   void setName(String name);
 
-  String getBarcode();
-
-  void setBarcode(String barcode);
-
-  String getBarcodeTwo();
-
-  void setBarcodeTwo(String barcodeTwo);
-
   Date getCreatedDate();
 
   void setCreatedDate(Date createdDate);

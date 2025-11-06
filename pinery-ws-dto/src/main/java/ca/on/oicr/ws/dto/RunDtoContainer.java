@@ -11,10 +11,19 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RunDtoContainer {
 
+  private String barcode;
   private String instrumentPosition;
   private String containerModel;
   private String sequencingParameters;
   private Set<RunDtoPosition> positions;
+
+  public String getBarcode() {
+    return barcode;
+  }
+
+  public void setBarcode(String barcode) {
+    this.barcode = barcode;
+  }
 
   @JsonProperty("instrument_position")
   public String getInstrumentPosition() {
@@ -55,6 +64,7 @@ public class RunDtoContainer {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
+    result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
     result = prime * result + ((instrumentPosition == null) ? 0 : instrumentPosition.hashCode());
     result = prime * result + ((containerModel == null) ? 0 : containerModel.hashCode());
     result = prime * result + ((sequencingParameters == null) ? 0 : sequencingParameters.hashCode());
@@ -71,6 +81,11 @@ public class RunDtoContainer {
     if (getClass() != obj.getClass())
       return false;
     RunDtoContainer other = (RunDtoContainer) obj;
+    if (barcode == null) {
+      if (other.barcode != null)
+        return false;
+    } else if (!barcode.equals(other.barcode))
+      return false;
     if (instrumentPosition == null) {
       if (other.instrumentPosition != null)
         return false;

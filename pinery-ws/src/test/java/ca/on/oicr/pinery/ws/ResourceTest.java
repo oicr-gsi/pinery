@@ -322,7 +322,7 @@ public class ResourceTest {
     runResource.setRunService(runService);
     RunDto runDto = runResource.getRun(getUriBuilder(), 1);
 
-    assertThat(runDto.getBarcode(), is("C2D8J"));
+    assertThat(runDto.getContainers().iterator().next().getBarcode(), is("C2D8J"));
   }
 
   @Test
@@ -393,11 +393,11 @@ public class ResourceTest {
     runDto.setCreatedDate(sf.format(expectedDate));
     runDto.setId(2);
     runDto.setName("130906_SN804_0130_AC2D8JACXX");
-    runDto.setBarcode("C2D8J");
     runDto.setState("Complete");
     runDto.setUrl("http://test/run//2");
 
     RunDtoContainer container = new RunDtoContainer();
+    container.setBarcode("C2D8J");
     Set<RunDtoContainer> containers = Sets.newHashSet();
     containers.add(container);
 
@@ -426,11 +426,11 @@ public class ResourceTest {
     Run run = new DefaultRun();
     run.setCreatedDate(expectedDate);
     run.setId(2);
-    run.setBarcode("C2D8J");
     run.setName("130906_SN203_0196_AC2D4DACXX");
     run.setState("Complete");
 
     RunContainer container = new DefaultRunContainer();
+    container.setBarcode("C2D8J");
     Set<RunContainer> containers = Sets.newHashSet();
     containers.add(container);
 
@@ -488,10 +488,10 @@ public class ResourceTest {
     run.setCreatedDate(expectedDate);
     run.setId(2);
     run.setName("130906_SN804_0130_AC2D8JACXX");
-    run.setBarcode("C2D8J");
     run.setState("Complete");
 
     RunContainer container = new DefaultRunContainer();
+    container.setBarcode("C2D8J");
     Set<RunContainer> containers = Sets.newHashSet();
     containers.add(container);
 

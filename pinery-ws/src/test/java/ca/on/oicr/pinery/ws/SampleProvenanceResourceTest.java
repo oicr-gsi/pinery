@@ -46,7 +46,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.junit.Test;
@@ -315,6 +314,7 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
 
   private RunContainer makeBaseContainer() {
     RunContainer container = new DefaultRunContainer();
+    container.setBarcode("ABCDEFXX");
     container.setContainerModel("S4");
     container.setPositions(Sets.newHashSet(makeBaseLane()));
     container.setInstrumentPosition("A");
@@ -343,7 +343,6 @@ public class SampleProvenanceResourceTest extends AbstractResourceTest {
     r.setState("Completed");
     r.setStartDate(makeDate("2018-11-01T00:00:00Z"));
     r.setCompletionDate(makeDate("2018-11-01T00:00:00Z"));
-    r.setBarcode("ABCDEFXX");
     r.setReadLength("2x101");
     r.setRunBasesMask("y101,I9,y101");
     r.setRunDirectory("/path/to/run");

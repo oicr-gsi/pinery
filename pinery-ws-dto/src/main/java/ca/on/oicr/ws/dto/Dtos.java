@@ -300,9 +300,6 @@ public final class Dtos {
     if (!isBlank(from.getName())) {
       dto.setName(from.getName());
     }
-    if (!isBlank(from.getBarcode())) {
-      dto.setBarcode(from.getBarcode());
-    }
     if (from.getCreatedDate() != null) {
       dto.setCreatedDate(format(from.getCreatedDate()));
     }
@@ -355,6 +352,9 @@ public final class Dtos {
 
   public static RunDtoContainer asDto(RunContainer from) {
     RunDtoContainer dto = new RunDtoContainer();
+    if (!isBlank(from.getBarcode())) {
+      dto.setBarcode(from.getBarcode());
+    }
     dto.setInstrumentPosition(from.getInstrumentPosition());
     dto.setContainerModel(from.getContainerModel());
     dto.setSequencingParameters(from.getSequencingParameters());
