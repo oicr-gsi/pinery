@@ -4,6 +4,10 @@ import java.util.Set;
 
 public interface RunContainer {
 
+  String getBarcode();
+
+  void setBarcode(String barcode);
+
   String getInstrumentPosition();
 
   void setInstrumentPosition(String instrumentPosition);

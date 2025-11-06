@@ -12,7 +12,6 @@ public class RunDto {
 
   private String state;
   private String name;
-  private String barcode;
   private String instrumentName;
   private String readLength;
   private Integer createdById;
@@ -53,14 +52,6 @@ public class RunDto {
 
   public void setName(String name) {
     this.name = name;
-  }
-
-  public String getBarcode() {
-    return barcode;
-  }
-
-  public void setBarcode(String barcode) {
-    this.barcode = barcode;
   }
 
   @JsonProperty("read_length")
@@ -288,8 +279,6 @@ public class RunDto {
         + state
         + ", name="
         + name
-        + ", barcode="
-        + barcode
         + ", instrumentName="
         + instrumentName
         + ", containers="
@@ -335,7 +324,6 @@ public class RunDto {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
     result = prime * result + ((completionDate == null) ? 0 : completionDate.hashCode());
     result = prime * result + ((createdById == null) ? 0 : createdById.hashCode());
     result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
@@ -368,11 +356,6 @@ public class RunDto {
     if (getClass() != obj.getClass())
       return false;
     RunDto other = (RunDto) obj;
-    if (barcode == null) {
-      if (other.barcode != null)
-        return false;
-    } else if (!barcode.equals(other.barcode))
-      return false;
     if (completionDate == null) {
       if (other.completionDate != null)
         return false;

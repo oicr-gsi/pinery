@@ -7,10 +7,21 @@ import ca.on.oicr.pinery.api.RunPosition;
 
 public class DefaultRunContainer implements RunContainer {
 
+  private String barcode;
   private String instrumentPosition;
   private String containerModel;
   private String sequencingParameters;
   private Set<RunPosition> positions;
+
+  @Override
+  public String getBarcode() {
+    return barcode;
+  }
+
+  @Override
+  public void setBarcode(String barcode) {
+    this.barcode = barcode;
+  }
 
   public String getInstrumentPosition() {
     return instrumentPosition;
@@ -48,6 +59,7 @@ public class DefaultRunContainer implements RunContainer {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
+    result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
     result = prime * result + ((instrumentPosition == null) ? 0 : instrumentPosition.hashCode());
     result = prime * result + ((containerModel == null) ? 0 : containerModel.hashCode());
     result = prime * result + ((sequencingParameters == null) ? 0 : sequencingParameters.hashCode());
@@ -64,6 +76,11 @@ public class DefaultRunContainer implements RunContainer {
     if (getClass() != obj.getClass())
       return false;
     DefaultRunContainer other = (DefaultRunContainer) obj;
+    if (barcode == null) {
+      if (other.barcode != null)
+        return false;
+    } else if (!barcode.equals(other.barcode))
+      return false;
     if (instrumentPosition == null) {
       if (other.instrumentPosition != null)
         return false;

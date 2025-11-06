@@ -12,8 +12,6 @@ public class DefaultRun implements Run {
 
   private String state;
   private String name;
-  private String barcode;
-  private String barcodeTwo;
   private Set<RunContainer> containers;
   private String createdByUrl;
   private Date createdDate;
@@ -55,16 +53,6 @@ public class DefaultRun implements Run {
   @Override
   public void setName(String name) {
     this.name = name;
-  }
-
-  @Override
-  public String getBarcode() {
-    return barcode;
-  }
-
-  @Override
-  public void setBarcode(String barcode) {
-    this.barcode = barcode;
   }
 
   @Override
@@ -115,16 +103,6 @@ public class DefaultRun implements Run {
   @Override
   public void setInstrumentId(Integer instrumentId) {
     this.instrumentId = instrumentId;
-  }
-
-  @Override
-  public String getBarcodeTwo() {
-    return barcodeTwo;
-  }
-
-  @Override
-  public void setBarcodeTwo(String barcodeTwo) {
-    this.barcodeTwo = barcodeTwo;
   }
 
   @Override
@@ -293,10 +271,6 @@ public class DefaultRun implements Run {
         + state
         + ", name="
         + name
-        + ", barcode="
-        + barcode
-        + ", barcodeTwo="
-        + barcodeTwo
         + ", containers="
         + containers
         + ", createdByUrl="
@@ -338,8 +312,6 @@ public class DefaultRun implements Run {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((barcode == null) ? 0 : barcode.hashCode());
-    result = prime * result + ((barcodeTwo == null) ? 0 : barcodeTwo.hashCode());
     result = prime * result + ((completionDate == null) ? 0 : completionDate.hashCode());
     result = prime * result + ((createdById == null) ? 0 : createdById.hashCode());
     result = prime * result + ((createdByUrl == null) ? 0 : createdByUrl.hashCode());
@@ -375,16 +347,6 @@ public class DefaultRun implements Run {
     if (getClass() != obj.getClass())
       return false;
     DefaultRun other = (DefaultRun) obj;
-    if (barcode == null) {
-      if (other.barcode != null)
-        return false;
-    } else if (!barcode.equals(other.barcode))
-      return false;
-    if (barcodeTwo == null) {
-      if (other.barcodeTwo != null)
-        return false;
-    } else if (!barcodeTwo.equals(other.barcodeTwo))
-      return false;
     if (completionDate == null) {
       if (other.completionDate != null)
         return false;

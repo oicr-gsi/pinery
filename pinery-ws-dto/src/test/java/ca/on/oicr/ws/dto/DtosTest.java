@@ -190,14 +190,6 @@ public class DtosTest {
   }
 
   @Test
-  public void testOrderRun3() throws Exception {
-    Run input = new DefaultRun();
-    input.setBarcode("C2D8J");
-    RunDto output = Dtos.asDto(input);
-    assertThat(output.getBarcode(), is("C2D8J"));
-  }
-
-  @Test
   public void testRun5() throws Exception {
     Run input = new DefaultRun();
     SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
