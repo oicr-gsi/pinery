@@ -20,6 +20,10 @@ public interface Assay {
 
   void setVersion(String version);
 
+  Boolean getArchived();
+
+  void setArchived(Boolean archived);
+
   Set<AssayTest> getTests();
 
   void setTests(Set<AssayTest> tests);
