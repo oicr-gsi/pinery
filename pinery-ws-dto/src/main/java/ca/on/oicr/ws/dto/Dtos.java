@@ -631,6 +631,7 @@ public final class Dtos {
     to.setName(from.getName());
     to.setDescription(from.getDescription());
     to.setVersion(from.getVersion());
+    to.setArchived(from.getArchived());
     if (from.getTests() != null && !from.getTests().isEmpty()) {
       to.setTests(from.getTests().stream().map(Dtos::asDto).collect(Collectors.toSet()));
     }

@@ -14,6 +14,7 @@ public class DefaultAssay implements Assay {
   private String name;
   private String description;
   private String version;
+  private Boolean archived;
   private Set<AssayTest> tests;
   private Set<AssayMetric> metrics;
   private AssayTargets targets;
@@ -57,6 +58,12 @@ public class DefaultAssay implements Assay {
   public void setVersion(String version) {
     this.version = version;
   }
+
+  @Override
+  public Boolean getArchived() { return archived; }
+
+  @Override
+  public void setArchived(Boolean archived) { this.archived = archived; }
 
   @Override
   public Set<AssayTest> getTests() {
