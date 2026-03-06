@@ -88,7 +88,6 @@ public class LaneProvenanceResource {
       .put("v1", v1Transformer) //
       .build();
 
-  private static final String versions = "latest, v9, v8, v7, v6, v5, v4, v3, v2, v1";
 
   @Autowired
   private LaneProvenanceService laneProvenanceService;
@@ -100,7 +99,7 @@ public class LaneProvenanceResource {
       @ApiResponse(responseCode = "404", description = "Provenance version not found", content = @Content)
   })
   public List<LaneProvenanceDto> getLanes(
-      @Parameter(schema = @Schema(allowableValues = versions)) @PathVariable String version) {
+      @Parameter(schema = @Schema(allowableValues = {"latest", "v9", "v8", "v7", "v6", "v5", "v4", "v3", "v2", "v1"})) @PathVariable String version) {
     VersionTransformer<LaneProvenance, ? extends LaneProvenance> transformer = transformers.get(version);
     if (transformer == null) {
       throw new RestException(
