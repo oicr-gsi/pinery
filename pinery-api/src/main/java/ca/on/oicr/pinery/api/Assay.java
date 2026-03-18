@@ -20,6 +20,10 @@ public interface Assay {
 
   void setVersion(String version);
 
+  Boolean getDraft();
+
+  void setDraft(Boolean draft);
+
   Boolean getArchived();
 
   void setArchived(Boolean archived);

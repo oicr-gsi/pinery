@@ -14,6 +14,7 @@ public class DefaultAssay implements Assay {
   private String name;
   private String description;
   private String version;
+  private Boolean draft;
   private Boolean archived;
   private Set<AssayTest> tests;
   private Set<AssayMetric> metrics;
@@ -57,6 +58,16 @@ public class DefaultAssay implements Assay {
   @Override
   public void setVersion(String version) {
     this.version = version;
+  }
+
+  @Override
+  public Boolean getDraft() {
+    return draft;
+  }
+
+  @Override
+  public void setDraft(Boolean draft) {
+    this.draft = draft;
   }
 
   @Override
