@@ -14,6 +14,7 @@ public class AssayDto {
   private String name;
   private String description;
   private String version;
+  private Boolean draft;
   private Boolean archived;
   private Set<AssayTestDto> tests;
   private Set<AssayMetricDto> metrics;
@@ -49,6 +50,14 @@ public class AssayDto {
 
   public void setVersion(String version) {
     this.version = version;
+  }
+
+  public Boolean getDraft() {
+    return draft;
+  }
+
+  public void setDraft(Boolean draft) {
+    this.draft = draft;
   }
 
   public Boolean getArchived() { return archived; }
