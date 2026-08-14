@@ -2,9 +2,11 @@ package ca.on.oicr.pinery.lims;
 
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.PreparationKit;
+import ca.on.oicr.pinery.api.Qc;
 import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.api.Status;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public class DefaultSample implements Sample {
@@ -28,6 +30,7 @@ public class DefaultSample implements Sample {
     result = prime * result + ((parents == null) ? 0 : parents.hashCode());
     result = prime * result + ((preparationKit == null) ? 0 : preparationKit.hashCode());
     result = prime * result + ((project == null) ? 0 : project.hashCode());
+    result = prime * result + ((qcs == null) ? 0 : qcs.hashCode());
     result = prime * result + ((sampleType == null) ? 0 : sampleType.hashCode());
     result = prime * result + ((status == null) ? 0 : status.hashCode());
     result = prime * result + ((storageLocation == null) ? 0 : storageLocation.hashCode());
@@ -89,6 +92,9 @@ public class DefaultSample implements Sample {
     if (project == null) {
       if (other.project != null) return false;
     } else if (!project.equals(other.project)) return false;
+    if (qcs == null) {
+      if (other.qcs != null) return false;
+    } else if (!qcs.equals(other.qcs)) return false;
     if (sampleType == null) {
       if (other.sampleType != null) return false;
     } else if (!sampleType.equals(other.sampleType)) return false;
@@ -123,6 +129,7 @@ public class DefaultSample implements Sample {
   protected String tissueType;
   protected String project;
   protected Set<Attribute> attributes;
+  protected List<Qc> qcs;
   protected Boolean archived;
   protected Date created;
   protected Integer createdById;
@@ -249,6 +256,16 @@ public class DefaultSample implements Sample {
   @Override
   public void setAttributes(Set<Attribute> attributes) {
     this.attributes = attributes;
+  }
+
+  @Override
+  public List<Qc> getQcs() {
+    return qcs;
+  }
+
+  @Override
+  public void setQcs(List<Qc> qcs) {
+    this.qcs = qcs;
   }
 
   @Override

@@ -75,6 +75,9 @@ public final class Dtos {
     if (from.getAttributes() != null && !from.getAttributes().isEmpty()) {
       dto.setAttributes(asDto(from.getAttributes()));
     }
+    if (from.getQcs() != null && !from.getQcs().isEmpty()) {
+      dto.setQcs(from.getQcs().stream().map(Dtos::asDto).collect(Collectors.toList()));
+    }
     if (from.getSampleType() != null && !from.getSampleType().equals("")) {
       dto.setSampleType(from.getSampleType());
     }
@@ -115,6 +118,15 @@ public final class Dtos {
       dto.setName(from.getName());
     }
 
+    return dto;
+  }
+
+  public static QcDto asDto(Qc from) {
+    QcDto dto = new QcDto();
+    dto.setName(from.getName());
+    dto.setDate(format(from.getDate()));
+    dto.setResult(from.getResult());
+    dto.setUnits(from.getUnits());
     return dto;
   }
 

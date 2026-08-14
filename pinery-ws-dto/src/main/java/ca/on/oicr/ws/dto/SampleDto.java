@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import java.util.Set;
 
 @JsonInclude(Include.NON_NULL)
@@ -30,6 +31,7 @@ public class SampleDto {
   private String projectName;
   private String sampleType;
   private Set<AttributeDto> attributes;
+  private List<QcDto> qcs;
   private StatusDto status;
   private Set<SampleReferenceDto> children;
   private Set<SampleReferenceDto> parents;
@@ -169,6 +171,14 @@ public class SampleDto {
 
   public void setAttributes(Set<AttributeDto> attributes) {
     this.attributes = attributes;
+  }
+
+  public List<QcDto> getQcs() {
+    return qcs;
+  }
+
+  public void setQcs(List<QcDto> qcs) {
+    this.qcs = qcs;
   }
 
   public StatusDto getStatus() {
