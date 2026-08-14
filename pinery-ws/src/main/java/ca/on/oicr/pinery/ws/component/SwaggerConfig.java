@@ -4,7 +4,6 @@ import java.util.Collections;
 
 import org.springdoc.core.configuration.SpringDocConfiguration;
 import org.springdoc.core.configuration.SpringDocSpecPropertiesConfiguration;
-import org.springdoc.core.configuration.SpringDocUIConfiguration;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.properties.SwaggerUiConfigProperties;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.web.filter.ForwardedHeaderFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import io.swagger.v3.oas.models.OpenAPI;
@@ -33,8 +31,7 @@ import jakarta.servlet.ServletContext;
     MultipleOpenApiSupportConfiguration.class,
     org.springdoc.webmvc.ui.SwaggerConfig.class,
     SwaggerUiConfigProperties.class,
-    SwaggerUiOAuthProperties.class,
-    SpringDocUIConfiguration.class
+    SwaggerUiOAuthProperties.class
 })
 public class SwaggerConfig {
 
