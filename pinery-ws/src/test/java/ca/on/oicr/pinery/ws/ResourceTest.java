@@ -516,6 +516,6 @@ public class ResourceTest {
   }
 
   private UriComponentsBuilder getUriBuilder() {
-    return UriComponentsBuilder.fromHttpUrl("http://test");
+    return UriComponentsBuilder.fromUriString("http://test");
   }
 }
