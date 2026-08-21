@@ -7,21 +7,27 @@ import static org.junit.Assert.*;
 import ca.on.oicr.pinery.api.Attribute;
 import ca.on.oicr.pinery.api.Order;
 import ca.on.oicr.pinery.api.OrderSample;
+import ca.on.oicr.pinery.api.Qc;
 import ca.on.oicr.pinery.api.Run;
 import ca.on.oicr.pinery.api.RunContainer;
 import ca.on.oicr.pinery.api.RunPosition;
 import ca.on.oicr.pinery.api.RunSample;
+import ca.on.oicr.pinery.api.Sample;
 import ca.on.oicr.pinery.lims.DefaultAttribute;
 import ca.on.oicr.pinery.lims.DefaultOrder;
 import ca.on.oicr.pinery.lims.DefaultOrderSample;
+import ca.on.oicr.pinery.lims.DefaultQc;
 import ca.on.oicr.pinery.lims.DefaultRun;
 import ca.on.oicr.pinery.lims.DefaultRunContainer;
 import ca.on.oicr.pinery.lims.DefaultRunPosition;
 import ca.on.oicr.pinery.lims.DefaultRunSample;
+import ca.on.oicr.pinery.lims.DefaultSample;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.junit.Test;
 
@@ -317,6 +323,50 @@ public class DtosTest {
       }
     }
     return false;
+  }
+
+  @Test
+  public void testSample_to_SampleDto_noQcs() throws Exception {
+    Sample sample = new DefaultSample();
+    sample.setId("SAM1");
+    SampleDto dto = Dtos.asDto(sample);
+    assertNull(dto.getQcs());
+  }
+
+  @Test
+  public void testSample_to_SampleDto_qcs() throws Exception {
+    Sample sample = new DefaultSample();
+    sample.setId("SAM1");
+
+    Qc qc1 = new DefaultQc();
+    qc1.setName("Qubit");
+    qc1.setDate(LocalDate.of(2024, 1, 15));
+    qc1.setResult("25.4");
+    qc1.setUnits("ng/uL");
+
+    Qc qc2 = new DefaultQc();
+    qc2.setName("RIN");
+    qc2.setDate(LocalDate.of(2024, 2, 1));
+    qc2.setResult("8.2");
+    qc2.setUnits(null);
+
+    sample.setQcs(List.of(qc1, qc2));
+
+    SampleDto dto = Dtos.asDto(sample);
+
+    assertThat(dto.getQcs().size(), is(2));
+
+    QcDto qubitDto = dto.getQcs().get(0);
+    assertThat(qubitDto.getName(), is("Qubit"));
+    assertThat(qubitDto.getDate(), is("2024-01-15"));
+    assertThat(qubitDto.getResult(), is("25.4"));
+    assertThat(qubitDto.getUnits(), is("ng/uL"));
+
+    QcDto rinDto = dto.getQcs().get(1);
+    assertThat(rinDto.getName(), is("RIN"));
+    assertThat(rinDto.getDate(), is("2024-02-01"));
+    assertThat(rinDto.getResult(), is("8.2"));
+    assertNull(rinDto.getUnits());
   }
 
   @Test

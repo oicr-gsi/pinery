@@ -1,6 +1,7 @@
 package ca.on.oicr.pinery.api;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public interface Sample {
@@ -44,6 +45,10 @@ public interface Sample {
   public Set<Attribute> getAttributes();
 
   public void setAttributes(Set<Attribute> attributes);
+
+  public List<Qc> getQcs();
+
+  public void setQcs(List<Qc> qcs);
 
   public Boolean getArchived();
 
