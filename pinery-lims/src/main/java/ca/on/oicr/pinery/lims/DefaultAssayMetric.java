@@ -23,6 +23,7 @@ public class DefaultAssayMetric implements AssayMetric {
   private String containerModel;
   private Integer readLength;
   private Integer readLength2;
+  private Boolean optional;
 
   @Override
   public String getName() {
@@ -185,6 +186,16 @@ public class DefaultAssayMetric implements AssayMetric {
   }
 
   @Override
+  public Boolean getOptional() {
+    return optional;
+  }
+
+  @Override
+  public void setOptional(Boolean optional) {
+    this.optional = optional;
+  }
+
+  @Override
   public int hashCode() {
     return Objects.hash(
         category,
@@ -202,7 +213,8 @@ public class DefaultAssayMetric implements AssayMetric {
         tissueMaterial,
         tissueOrigin,
         tissueType,
-        units);
+        units,
+        optional);
   }
 
   @Override
@@ -226,6 +238,7 @@ public class DefaultAssayMetric implements AssayMetric {
         && Objects.equals(tissueMaterial, other.tissueMaterial)
         && Objects.equals(tissueOrigin, other.tissueOrigin)
         && Objects.equals(tissueType, other.tissueType)
-        && Objects.equals(units, other.units);
+        && Objects.equals(units, other.units)
+        && Objects.equals(optional, other.optional);
   }
 }
