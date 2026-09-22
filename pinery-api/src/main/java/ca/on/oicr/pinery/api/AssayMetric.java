@@ -67,4 +67,8 @@ public interface AssayMetric {
   Integer getReadLength2();
 
   void setReadLength2(Integer readLength2);
+
+  Boolean getOptional();
+
+  void setOptional(Boolean optional);
 }

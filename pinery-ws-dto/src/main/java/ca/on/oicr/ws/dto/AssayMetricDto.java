@@ -26,6 +26,7 @@ public class AssayMetricDto {
   private String containerModel;
   private Integer readLength;
   private Integer readLength2;
+  private Boolean optional;
 
   public String getName() {
     return name;
@@ -165,6 +166,14 @@ public class AssayMetricDto {
     this.readLength2 = readLength2;
   }
 
+  public Boolean getOptional() {
+    return optional;
+  }
+
+  public void setOptional(Boolean optional) {
+    this.optional = optional;
+  }
+
   @Override
   public int hashCode() {
     return Objects.hash(
@@ -183,7 +192,8 @@ public class AssayMetricDto {
         tissueMaterial,
         tissueOrigin,
         tissueType,
-        units);
+        units,
+        optional);
   }
 
   @Override
@@ -207,6 +217,7 @@ public class AssayMetricDto {
         && Objects.equals(tissueMaterial, other.tissueMaterial)
         && Objects.equals(tissueOrigin, other.tissueOrigin)
         && Objects.equals(tissueType, other.tissueType)
-        && Objects.equals(units, other.units);
+        && Objects.equals(units, other.units)
+        && Objects.equals(optional, other.optional);
   }
 }

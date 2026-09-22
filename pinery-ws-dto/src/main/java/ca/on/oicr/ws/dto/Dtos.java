@@ -620,6 +620,7 @@ public final class Dtos {
     to.setContainerModel(from.getContainerModel());
     to.setReadLength(from.getReadLength());
     to.setReadLength2(from.getReadLength2());
+    to.setOptional(from.getOptional());
     return to;
   }
 
