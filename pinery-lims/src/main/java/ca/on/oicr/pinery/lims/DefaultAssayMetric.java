@@ -24,6 +24,7 @@ public class DefaultAssayMetric implements AssayMetric {
   private Integer readLength;
   private Integer readLength2;
   private Boolean optional;
+  private Boolean topUp;
 
   @Override
   public String getName() {
@@ -196,6 +197,16 @@ public class DefaultAssayMetric implements AssayMetric {
   }
 
   @Override
+  public Boolean getTopUp() {
+    return topUp;
+  }
+
+  @Override
+  public void setTopUp(Boolean topUp) {
+    this.topUp = topUp;
+  }
+
+  @Override
   public int hashCode() {
     return Objects.hash(
         category,
@@ -214,7 +225,8 @@ public class DefaultAssayMetric implements AssayMetric {
         tissueOrigin,
         tissueType,
         units,
-        optional);
+        optional,
+      topUp);
   }
 
   @Override
@@ -239,6 +251,7 @@ public class DefaultAssayMetric implements AssayMetric {
         && Objects.equals(tissueOrigin, other.tissueOrigin)
         && Objects.equals(tissueType, other.tissueType)
         && Objects.equals(units, other.units)
-        && Objects.equals(optional, other.optional);
+        && Objects.equals(optional, other.optional)
+        && Objects.equals(topUp, other.topUp);
   }
 }
