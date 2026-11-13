@@ -621,6 +621,7 @@ public final class Dtos {
     to.setReadLength(from.getReadLength());
     to.setReadLength2(from.getReadLength2());
     to.setOptional(from.getOptional());
+    to.setTopUp(from.getTopUp());
     return to;
   }
 

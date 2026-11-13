@@ -27,6 +27,7 @@ public class AssayMetricDto {
   private Integer readLength;
   private Integer readLength2;
   private Boolean optional;
+  private Boolean topUp;
 
   public String getName() {
     return name;
@@ -174,6 +175,15 @@ public class AssayMetricDto {
     this.optional = optional;
   }
 
+  @JsonProperty("top-up")
+  public Boolean getTopUp() {
+    return topUp;
+  }
+
+  public void setTopUp(Boolean topUp) {
+    this.topUp = topUp;
+  }
+
   @Override
   public int hashCode() {
     return Objects.hash(
@@ -193,7 +203,8 @@ public class AssayMetricDto {
         tissueOrigin,
         tissueType,
         units,
-        optional);
+        optional,
+        topUp);
   }
 
   @Override
@@ -218,6 +229,7 @@ public class AssayMetricDto {
         && Objects.equals(tissueOrigin, other.tissueOrigin)
         && Objects.equals(tissueType, other.tissueType)
         && Objects.equals(units, other.units)
-        && Objects.equals(optional, other.optional);
+        && Objects.equals(optional, other.optional)
+        && Objects.equals(topUp, other.topUp);
   }
 }
