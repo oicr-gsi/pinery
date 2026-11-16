@@ -175,7 +175,7 @@ public class AssayMetricDto {
     this.optional = optional;
   }
 
-  @JsonProperty("top-up")
+  @JsonProperty("top_up")
   public Boolean getTopUp() {
     return topUp;
   }
