@@ -71,4 +71,8 @@ public interface AssayMetric {
   Boolean getOptional();
 
   void setOptional(Boolean optional);
+
+  Boolean getTopUp();
+
+  void setTopUp(Boolean topUp);
 }
